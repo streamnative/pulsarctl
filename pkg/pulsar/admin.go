@@ -226,7 +226,9 @@ func decodeJsonBody(resp *http.Response, out interface{}) error {
 // safeRespClose is used to close a respone body
 func safeRespClose(resp *http.Response) {
 	if resp != nil {
-		resp.Body.Close()
+		if err := resp.Body.Close(); err != nil {
+			// ignore error since it is closing a response body
+		}
 	}
 }
 
@@ -240,11 +242,16 @@ func responseError(resp *http.Response) error  {
 		return e
 	}
 
-	json.Unmarshal(body, &e)
-	e.Code = resp.StatusCode
+	jsonErr := json.Unmarshal(body, &e)
 
-	if e.Reason == "" {
-		e.Reason = unknownErrorReason
+	if jsonErr != nil {
+		e.Code = http.StatusPartialContent
+	} else {
+		e.Code = resp.StatusCode
+
+		if e.Reason == "" {
+			e.Reason = unknownErrorReason
+		}
 	}
 
 	return e
