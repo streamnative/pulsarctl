@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
+	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
 	"os"
 )
 
@@ -59,6 +60,7 @@ func init() {
 
 func addCommands(flagGrouping *cmdutils.FlagGrouping) {
 	rootCmd.AddCommand(cluster.Command(flagGrouping))
+	rootCmd.AddCommand(completion.Command(rootCmd))
 }
 
 func main() {
