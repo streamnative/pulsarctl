@@ -26,5 +26,6 @@ jobs:
       
     - name: Test
       run: |
+        docker ps
         ./pulsarctl clusters list
         go test -v ./...
