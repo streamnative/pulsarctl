@@ -20,6 +20,7 @@ jobs:
       run: |
         docker pull apachepulsar/pulsar
         docker run -d -p 8080:8080 -p 6650:6650 apachepulsar/pulsar bin/pulsar standalone
+        sleep 10
 
     - name: Build
       run: go build .
