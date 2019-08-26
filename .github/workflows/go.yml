@@ -17,9 +17,10 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Get dependencies
-      run: |
-        go build .
-        go version
+      run: docker pull apachepulsar/pulsar
 
     - name: Build
-      run: docker --help
+      run: go build .
+      
+    - name: Test
+      run: go test -v ./...
