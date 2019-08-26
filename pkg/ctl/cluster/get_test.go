@@ -22,7 +22,7 @@ func TestGetClusterConfiguration(t *testing.T) {
 		fmt.Println(err)
 	}
 
-	pulsarUrl, err := regexp.Compile("^pulsar://[a-z-A-Z]*:6650$")
+	pulsarUrl, err := regexp.Compile("^pulsar://[a-z-A-Z0-9]*:6650$")
 	if err != nil {
 		t.Error(err)
 	}
@@ -30,7 +30,7 @@ func TestGetClusterConfiguration(t *testing.T) {
 	res := pulsarUrl.MatchString(c.BrokerServiceURL)
 	assert.True(t, res)
 
-	httpUrl, err := regexp.Compile("^http://[a-z-A-Z]*:8080$")
+	httpUrl, err := regexp.Compile("^http://[a-z-A-Z0-9]*:8080$")
 	if err != nil {
 		t.Error(err)
 	}
