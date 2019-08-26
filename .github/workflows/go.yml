@@ -22,4 +22,4 @@ jobs:
         go version
 
     - name: Build
-      run: echo "hello again"
+      run: docker --help
