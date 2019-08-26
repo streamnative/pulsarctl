@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 	"regexp"
 	"testing"
 )
@@ -28,7 +28,7 @@ func TestGetClusterConfiguration(t *testing.T) {
 	}
 
 	res := pulsarUrl.MatchString(c.BrokerServiceURL)
-	assert.Equal(t, res, true)
+	assert.True(t, res)
 
 	httpUrl, err := regexp.Compile("^http://[a-z-A-Z]*:8080$")
 	if err != nil {
@@ -36,6 +36,6 @@ func TestGetClusterConfiguration(t *testing.T) {
 	}
 
 	res = httpUrl.MatchString(c.ServiceURL)
-	assert.Equal(t, res, true)
+	assert.True(t, res)
 }
 
