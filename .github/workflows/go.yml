@@ -17,10 +17,14 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Get dependencies
-      run: docker pull apachepulsar/pulsar
+      run: |
+        docker pull apachepulsar/pulsar
+        docker run -d -p 8080:8080 -p 6650:6650 apachepulsar/pulsar bin/pulsar standalone
 
     - name: Build
       run: go build .
       
     - name: Test
-      run: go test -v ./...
+      run: |
+        ./pulsarctl clusters list
+        go test -v ./...
