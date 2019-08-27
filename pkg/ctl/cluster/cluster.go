@@ -15,6 +15,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createClusterCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listClustersCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getClusterDataCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteClusterCmd)
 
 	return resourceCmd
 }
