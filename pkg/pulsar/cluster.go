@@ -7,6 +7,7 @@ type Clusters interface {
 	Get(string) (ClusterData, error)
 	Create(ClusterData) error
 	Delete(string) error
+	Update(ClusterData) error
 }
 
 type clusters struct {
@@ -43,6 +44,11 @@ func (c *clusters) Create(cdata ClusterData) error {
 func (c *clusters) Delete(name string) error {
 	endpoint := c.client.endpoint(c.basePath, name)
 	return c.client.delete(endpoint, nil)
+}
+
+func (c *clusters) Update(cdata ClusterData) error {
+	endpoint := c.client.endpoint(c.basePath, cdata.Name)
+	return c.client.post(endpoint, &cdata, nil)
 }
 
 
