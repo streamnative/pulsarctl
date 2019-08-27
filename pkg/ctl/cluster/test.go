@@ -7,7 +7,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func TestCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error)  {
+func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error)  {
 	var rootCmd = &cobra.Command {
 		Use:	"pulsarctl [command]",
 		Short: 	"a CLI for Apache Pulsar",

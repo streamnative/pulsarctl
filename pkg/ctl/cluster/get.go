@@ -2,32 +2,36 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
+	"errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func getClusterConfiguration(vc *cmdutils.VerbCmd)  {
+func getClusterDataCmd(vc *cmdutils.VerbCmd)  {
 	vc.SetDescription(
 		"get",
 		"Get the configuration data for the specified cluster",
-		"This command is used for getting the configuration data of the specified cluster.",
+		"This command is used for getting the cluster data of the specified cluster.\n" +
+			"The output like this: \n" +
+			"    { \n" +
+			"        serviceUrl : http://localhost:8080, \n" +
+			"        serviceUrlTls : https://localhost:8080, \n" +
+			"        brokerServiceUrl: pulsar://localhost:6650, \n" +
+			"        brokerServiceUrlTls: pulsar://localhost:6650, \n" +
+			"        peerClusterNames: \"\" \n" +
+			"    } \n",
 		"get")
 
-	var clusterName string
-
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetClusterConfiguration(vc, clusterName)
+		return doGetClusterData(vc)
 	})
-
-	vc.FlagSetGroup.InFlagSet("ClusterName", func(flagSet *pflag.FlagSet) {
-		flagSet.StringVar(&clusterName, "cluster-name", "", "Pulsar cluster name, e.g. pulsar-cluster")
-		cobra.MarkFlagRequired(flagSet, "cluster-name")
-	})
-
 }
 
-func doGetClusterConfiguration(vc *cmdutils.VerbCmd, clusterName string) error {
+func doGetClusterData(vc *cmdutils.VerbCmd) error {
+	clusterName := vc.NameArg
+	if clusterName == "" {
+		return errors.New("Should specified a cluster name")
+	}
+
 	admin := cmdutils.NewPulsarClient()
 	clusterData, err := admin.Clusters().Get(clusterName)
 	if err != nil {

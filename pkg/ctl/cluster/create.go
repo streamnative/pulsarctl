@@ -1,7 +1,6 @@
 package cluster
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -55,7 +54,6 @@ func createClusterCmd(vc *cmdutils.VerbCmd) {
 			"p",
 			[]string{""},
 			"Cluster to be registered as a peer-cluster of this cluster.")
-		cobra.MarkFlagRequired(flagSet, "broker-url")
 	})
 }
 

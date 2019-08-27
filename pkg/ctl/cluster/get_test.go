@@ -10,9 +10,9 @@ import (
 )
 
 
-func TestGetClusterConfiguration(t *testing.T) {
-	args := []string{"get","--cluster-name", "standalone"}
-	out, err := TestCommands(getClusterConfiguration, args)
+func TestGetClusterData(t *testing.T) {
+	args := []string{"get", "standalone"}
+	out, err := TestClusterCommands(getClusterDataCmd, args)
 	if err != nil {
 		t.Error(err)
 	}
