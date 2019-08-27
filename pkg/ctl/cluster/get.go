@@ -6,19 +6,23 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
+
+var commandUsedFor = "This command is used for getting the cluster data of the specified cluster."
+var commandExample =
+		"{\n" +
+		"    serviceUrl : http://localhost:8080, \n" +
+		"    serviceUrlTls : https://localhost:8080, \n" +
+		"    brokerServiceUrl: pulsar://localhost:6650, \n" +
+		"    brokerServiceUrlTls: pulsar+ssl://localhost:6650, \n" +
+		"    peerClusterNames: \"\" \n" +
+		"}\n"
+var commandPermission = "This command only admin can use."
+
 func getClusterDataCmd(vc *cmdutils.VerbCmd)  {
 	vc.SetDescription(
 		"get",
 		"Get the configuration data for the specified cluster",
-		"This command is used for getting the cluster data of the specified cluster.\n" +
-			"The output like this: \n" +
-			"    { \n" +
-			"        serviceUrl : http://localhost:8080, \n" +
-			"        serviceUrlTls : https://localhost:8080, \n" +
-			"        brokerServiceUrl: pulsar://localhost:6650, \n" +
-			"        brokerServiceUrlTls: pulsar://localhost:6650, \n" +
-			"        peerClusterNames: \"\" \n" +
-			"    } \n",
+		concat("\n"),
 		"get")
 
 	vc.SetRunFuncWithNameArg(func() error {
@@ -45,4 +49,10 @@ func doGetClusterData(vc *cmdutils.VerbCmd) error {
 	}
 
 	return err
+}
+
+func concat(join string) string {
+	return "USED FOR:" + join + "\t" + commandUsedFor  + join +
+		"PERMISSION:" + join + "\t" + commandPermission + join +
+		"EXAMPLE:" + join + commandExample
 }
