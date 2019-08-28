@@ -33,7 +33,6 @@ type Config struct {
 type TLSOptions struct {
 	TrustCertsFilePath      string
 	AllowInsecureConnection bool
-	ValidateHostname        bool
 }
 
 // DefaultConfig returns a default configuration for the pulsar admin client
@@ -45,7 +44,6 @@ func DefaultConfig() *Config {
 
 		TlsOptions: &TLSOptions{
 			AllowInsecureConnection: false,
-			ValidateHostname:        false,
 		},
 	}
 	return config
@@ -83,7 +81,7 @@ func New(config *Config) Client {
 	return c
 }
 
-func (c *client) getTLSConfig(hostName string) (*tls.Config, error) {
+func (c *client) getTLSConfig() (*tls.Config, error) {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: c.tlsOptions.AllowInsecureConnection,
 	}
@@ -282,7 +280,7 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.useragent())
 
-	tlsConf, err := c.getTLSConfig(req.Host)
+	tlsConf, err := c.getTLSConfig()
 	if err != nil {
 		return nil, err
 	}
