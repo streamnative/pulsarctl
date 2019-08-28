@@ -4,25 +4,26 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-
-var commandUsedFor = "This command is used for getting the cluster data of the specified cluster."
-var commandExample =
-		"{\n" +
-		"    serviceUrl : http://localhost:8080, \n" +
-		"    serviceUrlTls : https://localhost:8080, \n" +
-		"    brokerServiceUrl: pulsar://localhost:6650, \n" +
-		"    brokerServiceUrlTls: pulsar+ssl://localhost:6650, \n" +
-		"    peerClusterNames: \"\" \n" +
-		"}\n"
-var commandPermission = "This command only admin can use."
-
 func getClusterDataCmd(vc *cmdutils.VerbCmd)  {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "This command is used for getting the cluster data of the specified cluster."
+	desc.CommandPermission = "This command requires super-user permissions."
+
+	var examples []pulsar.Example
+	get := pulsar.Example{
+		Desc: "getting the <cluster-name> data.",
+		Command: "pulsarctl clusters get <cluster-name>",
+	}
+	examples = append(examples, get)
+
+	desc.CommandExamples = examples
 	vc.SetDescription(
 		"get",
 		"Get the configuration data for the specified cluster",
-		concat("\n"),
+		desc.ToString(),
 		"get")
 
 	vc.SetRunFuncWithNameArg(func() error {
@@ -49,10 +50,4 @@ func doGetClusterData(vc *cmdutils.VerbCmd) error {
 	}
 
 	return err
-}
-
-func concat(join string) string {
-	return "USED FOR:" + join + "\t" + commandUsedFor  + join +
-		"PERMISSION:" + join + "\t" + commandPermission + join +
-		"EXAMPLE:" + join + commandExample
 }
