@@ -30,7 +30,7 @@ func NewResourceCmd(use, short, long string, aliases ...string) *cobra.Command {
 
 // GetNameArg tests to ensure there is only 1 name argument
 func GetNameArg(args []string) string {
-	if len(args) > 1 {
+	if len(args) > 1 || len(args) == 0 {
 		logger.Critical("only one argument is allowed to be used as a name")
 		os.Exit(1)
 	}
