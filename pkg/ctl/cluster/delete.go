@@ -53,9 +53,6 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 
 func doDeleteCluster(vc *cmdutils.VerbCmd) error {
 	clusterName := vc.NameArg
-	if clusterName == "" {
-		return errors.New("Should specified a cluster ")
-	}
 
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().Delete(clusterName)
