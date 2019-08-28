@@ -7,13 +7,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/auth"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
 	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/auth"
 )
 
 const (
@@ -26,8 +27,7 @@ type Config struct {
 	HttpClient    *http.Client
 	Auth          auth.Provider
 	AuthParams    string
-
-	TlsOptions *TLSOptions
+	TlsOptions    *TLSOptions
 }
 
 type TLSOptions struct {
@@ -99,10 +99,6 @@ func (c *client) getTLSConfig(hostName string) (*tls.Config, error) {
 		if !ok {
 			return nil, errors.New("failed to parse root CAs certificates")
 		}
-	}
-
-	if c.tlsOptions.ValidateHostname {
-		tlsConfig.ServerName = hostName
 	}
 
 	cert, err := c.auth.GetTLSCertificate()

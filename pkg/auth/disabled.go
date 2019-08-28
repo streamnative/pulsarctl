@@ -30,18 +30,10 @@ func (disabled) Init() error {
 	return nil
 }
 
-func (disabled) GetData() ([]byte, error) {
-	return nil, nil
-}
-
 func (disabled) Name() string {
 	return ""
 }
 
 func (disabled) GetTLSCertificate() (*tls.Certificate, error) {
 	return nil, nil
-}
-
-func (disabled) Close() error {
-	return nil
 }

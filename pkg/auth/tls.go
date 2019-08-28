@@ -54,11 +54,3 @@ func (p *tlsAuthProvider) GetTLSCertificate() (*tls.Certificate, error) {
 	cert, err := tls.LoadX509KeyPair(p.certificatePath, p.privateKeyPath)
 	return &cert, err
 }
-
-func (p *tlsAuthProvider) GetData() ([]byte, error) {
-	return nil, nil
-}
-
-func (tlsAuthProvider) Close() error {
-	return nil
-}

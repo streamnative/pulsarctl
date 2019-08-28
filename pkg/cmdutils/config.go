@@ -37,9 +37,8 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		&c.AuthParams,
 		"auth-params",
 		"",
-		"Authentication parameters, whose format is determined by the implementation"+
-			"of method `configure` in authentication plugin class, for example \"key1:val1,key2:val2\""+
-			"or \"{\"key1\":\"val1\",\"key2\":\"val2\"}.")
+		"Authentication parameters are used to configure the public and private key files required by tls\n" +
+			" For example: \"tlsCertFile:val1,tlsKeyFile:val2\"")
 
 	flags.BoolVar(
 		&c.TlsAllowInsecureConnection,

@@ -19,9 +19,6 @@ package auth
 
 import (
 	"crypto/tls"
-	"errors"
-	"fmt"
-	"io"
 )
 
 // Provider is a interface of authentication providers.
@@ -34,35 +31,4 @@ type Provider interface {
 
 	// return a client certificate chain, or nil if the data are not available
 	GetTLSCertificate() (*tls.Certificate, error)
-
-	// GetData returns the authentication data identifying this client that will be sent to the broker.
-	GetData() ([]byte, error)
-
-	io.Closer
-}
-
-// NewProvider get/create an authentication data provider which provides the data
-// that this client will be sent to the broker.
-// Some authentication method need to auth between each client channel. So it need
-// the broker, who it will talk to.
-func NewProvider(name string, params string) (Provider, error) {
-	m := parseParams(params)
-
-	switch name {
-	case "":
-		return NewAuthDisabled(), nil
-
-	case "tls", "org.apache.pulsar.client.impl.auth.AuthenticationTls":
-		return NewAuthenticationTLSWithParams(m), nil
-
-	case "token", "org.apache.pulsar.client.impl.auth.AuthenticationToken":
-		return NewAuthenticationTokenWithParams(m)
-
-	default:
-		return nil, errors.New(fmt.Sprintf("invalid auth provider '%s'", name))
-	}
-}
-
-func parseParams(params string) map[string]string {
-	return nil
 }
