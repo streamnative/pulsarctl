@@ -1,7 +1,6 @@
 package cluster
 
 import (
-	"errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
