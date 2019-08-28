@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestUpdateCluster(t *testing.T)  {
+func TestUpdateCluster(t *testing.T) {
 	args := []string{
 		"update",
 		"--url", "http://example:8080",
