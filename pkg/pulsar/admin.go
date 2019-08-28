@@ -128,6 +128,28 @@ func (c *client) delete(endpoint string, obj interface{}) error {
 	return nil
 }
 
+func (c *client) post(endpoint string, in, obj interface{}) error {
+	req, err := c.newRequest(http.MethodPut, endpoint)
+	if err != nil {
+		return err
+	}
+	req.obj = in
+
+	resp, err := checkSuccessful(c.doRequest(req))
+	if err != nil {
+		return err
+	}
+	defer safeRespClose(resp)
+
+	if obj != nil {
+		if err := decodeJsonBody(resp, &obj); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 type request struct {
 	method string
 	url *url.URL
@@ -187,6 +209,7 @@ func (c *client) useragent() string {
 
 func (c *client) doRequest(r *request) (*http.Response, error) {
 	req, err := r.toHTTP()
+	r.toHTTP()
 	if err != nil {
 		return nil, err
 	}
