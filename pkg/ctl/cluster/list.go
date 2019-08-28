@@ -19,7 +19,7 @@ func listClustersCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doListClusters(vc *cmdutils.VerbCmd) error {
-	admin := cmdutils.NewPulsarClient()
+	admin := cmdutils.NewPulsarClient("")
 	clusters, err := admin.Clusters().List()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

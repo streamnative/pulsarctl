@@ -60,7 +60,7 @@ func createClusterCmd(vc *cmdutils.VerbCmd) {
 func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *pulsar.ClusterData) error {
 	clusterData.Name = vc.NameArg
 
-	admin := cmdutils.NewPulsarClient()
+	admin := cmdutils.NewPulsarClient("")
 	err := admin.Clusters().Create(*clusterData)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
