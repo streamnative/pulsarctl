@@ -14,12 +14,14 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd)  {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc: "getting the <cluster-name> data.",
+		Desc: "getting the <cluster-name> data",
 		Command: "pulsarctl clusters get <cluster-name>",
 	}
 	examples = append(examples, get)
 
 	desc.CommandExamples = examples
+	desc.CommandOutput = "The configuration data of the specified cluster"
+
 	vc.SetDescription(
 		"get",
 		"Get the configuration data for the specified cluster",
