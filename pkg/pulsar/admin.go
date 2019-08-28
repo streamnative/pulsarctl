@@ -12,13 +12,15 @@ import (
 )
 
 const (
-	DefaultWebServiceURL 	= "http://localhost:8080"
+	DefaultWebServiceURL = "http://localhost:8080"
+	DefaultApiVersion    = "v2"
 )
 
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
+	ApiVersion    string
 }
 
 // DefaultConfig returns a default configuration for the pulsar admin client
@@ -26,6 +28,7 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceUrl: DefaultWebServiceURL,
 		HttpClient:    http.DefaultClient,
+		ApiVersion:    DefaultApiVersion,
 	}
 	return config
 }
@@ -51,7 +54,7 @@ func New(config *Config) Client {
 
 	c := &client{
 		// TODO: make api version configurable
-		apiVersion:    "v2",
+		apiVersion:    config.ApiVersion,
 		webServiceUrl: config.WebServiceUrl,
 	}
 
@@ -130,10 +133,10 @@ func (c *client) delete(endpoint string, obj interface{}) error {
 
 type request struct {
 	method string
-	url *url.URL
+	url    *url.URL
 	params url.Values
 
-	obj interface{}
+	obj  interface{}
 	body io.Reader
 }
 
@@ -160,7 +163,6 @@ func (r *request) toHTTP() (*http.Request, error) {
 	return req, nil
 }
 
-
 func (c *client) newRequest(method, path string) (*request, error) {
 	base, _ := url.Parse(c.webServiceUrl)
 	u, err := url.Parse(path)
@@ -171,9 +173,9 @@ func (c *client) newRequest(method, path string) (*request, error) {
 		method: method,
 		url: &url.URL{
 			Scheme: base.Scheme,
-			User: base.User,
-			Host: base.Host,
-			Path: endpoint(base.Path, u.Path),
+			User:   base.User,
+			Host:   base.Host,
+			Path:   endpoint(base.Path, u.Path),
 		},
 		params: make(url.Values),
 	}
@@ -205,7 +207,6 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	return resp, err
 }
 
-
 // decodeJsonBody is used to JSON encode a body
 func encodeJsonBody(obj interface{}) (io.Reader, error) {
 	buf := bytes.NewBuffer(nil)
@@ -215,7 +216,6 @@ func encodeJsonBody(obj interface{}) (io.Reader, error) {
 	}
 	return buf, nil
 }
-
 
 // decodeJsonBody is used to JSON decode a body
 func decodeJsonBody(resp *http.Response, out interface{}) error {
@@ -233,7 +233,7 @@ func safeRespClose(resp *http.Response) {
 }
 
 // responseError is used to parse a response into a pulsar error
-func responseError(resp *http.Response) error  {
+func responseError(resp *http.Response) error {
 	var e Error
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -280,4 +280,3 @@ func checkSuccessful(resp *http.Response, err error) (*http.Response, error) {
 func endpoint(parts ...string) string {
 	return path.Join(parts...)
 }
-
