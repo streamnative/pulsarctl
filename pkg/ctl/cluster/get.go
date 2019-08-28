@@ -25,9 +25,9 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out: "{\n  " +
-			"\"serviceUrl\": \"http://f73710b9da2a:8080\",\n  " +
+			"\"serviceUrl\": \"http://localhost:8080\",\n  " +
 			"\"serviceUrlTls\": \"\",\n  " +
-			"\"brokerServiceUrl\": \"pulsar://f73710b9da2a:6650\",\n  " +
+			"\"brokerServiceUrl\": \"pulsar://localhost:6650\",\n  " +
 			"\"brokerServiceUrlTls\": \"\",\n  " +
 			"\"peerClusterNames\": null\n" +
 			"}",
