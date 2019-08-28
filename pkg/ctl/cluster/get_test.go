@@ -2,7 +2,6 @@ package cluster
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"regexp"
@@ -19,7 +18,7 @@ func TestGetClusterData(t *testing.T) {
 	c := pulsar.ClusterData{}
 	err = json.Unmarshal(out.Bytes(), &c)
 	if err != nil {
-		fmt.Println(err)
+		t.Error(err)
 	}
 
 	pulsarUrl, err := regexp.Compile("^pulsar://[a-z-A-Z0-9]*:6650$")
