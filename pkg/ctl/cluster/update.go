@@ -6,11 +6,70 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func updateClusterCmd(vc *cmdutils.VerbCmd)  {
+func updateClusterCmd(vc *cmdutils.VerbCmd) {
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for updating the cluster data of the specified cluster."
+	desc.CommandPermission = "This command requires super-user permissions."
+
+	var examples []pulsar.Example
+
+	updateUrl := pulsar.Example{
+		Desc:    "updating the web service url of the <cluster-name>",
+		Command: "pulsarctl clusters update --url http://example:8080 <cluster-name>",
+	}
+	examples = append(examples, updateUrl)
+
+	updateUrlTls := pulsar.Example{
+		Desc:    "updating the tls secured web service url of the <cluster-name>",
+		Command: "pulsarctl clusters update --url-tls https://example:8080 <cluster-name>",
+	}
+	examples = append(examples, updateUrlTls)
+
+	updateBrokerUrl := pulsar.Example{
+		Desc:    "updating the broker service url of the <cluster-name>",
+		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 <cluster-name>",
+	}
+	examples = append(examples, updateBrokerUrl)
+
+	updateBrokerUrlTls := pulsar.Example{
+		Desc:    "updating the tls secured web service url of the <cluster-name>",
+		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 <cluster-name>",
+	}
+	examples = append(examples, updateBrokerUrlTls)
+
+	updatePeerCluster := pulsar.Example{
+		Desc:    "registered as a peer-cluster of the <cluster-name> clusters",
+		Command: "pulsarctl clusters update -p <cluster-a>,<cluster-b> <cluster>",
+	}
+	examples = append(examples, updatePeerCluster)
+
+	desc.CommandExamples = examples
+
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Cluster <cluster-name> updated",
+	}
+	out = append(out, successOut)
+
+	failOut := pulsar.Output{
+		Desc: "output of doesn't specified  a cluster name",
+		Out:  "[✖]  only one argument is allowed to be used as a name",
+	}
+	out = append(out, failOut)
+
+	clusterNonExist := pulsar.Output{
+		Desc: "Output of cluster doesn't exist",
+		Out:  "[✖]  code: 404 reason: Cluster does not exist",
+	}
+	out = append(out, clusterNonExist)
+
+	desc.CommandOutput = out
+
 	vc.SetDescription(
 		"update",
 		"Update a pulsar cluster",
-		"",
+		desc.ToString(),
 		"update")
 
 	clusterData := &pulsar.ClusterData{}
@@ -56,10 +115,8 @@ func doUpdateCluster(vc *cmdutils.VerbCmd, clusterData *pulsar.ClusterData) erro
 
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().Update(*clusterData)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		vc.Command.Printf("Cluster %s updated\n", clusterData.Name)
+	if err == nil {
+		vc.Command.Printf("Cluster %s updated", clusterData.Name)
 	}
 	return err
 }
