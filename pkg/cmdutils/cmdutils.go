@@ -40,8 +40,8 @@ func GetNameArg(args []string) string {
 	return ""
 }
 
-func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client()
+func NewPulsarClient(version string) pulsar.Client {
+	return PulsarCtlConfig.Client(version)
 }
 
 func PrintJson(w io.Writer, obj interface{}) {
