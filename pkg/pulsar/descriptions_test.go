@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-func TestLongDescription_exampleToString(t *testing.T)  {
+func TestLongDescription_exampleToString(t *testing.T) {
 	desc := LongDescription{}
 	example := Example{
-		Desc: "command description",
+		Desc:    "command description",
 		Command: "command",
 	}
 	desc.CommandExamples = []Example{example}
-	res := desc.exampleToString("    ")
+	res := desc.exampleToString()
 
 	expect := "    #command description\n" +
-		      "    command\n"
+		"    command\n"
 
 	assert.Equal(t, expect, res)
 }
@@ -28,17 +28,23 @@ func TestLongDescription_ToString(t *testing.T) {
 	example.Desc = "command description"
 	example.Command = "command"
 	desc.CommandExamples = []Example{example}
-	desc.CommandOutput = "out"
+	out := Output{
+		Desc: "Output",
+		Out:  "Out line 1\nOut line 2",
+	}
+	desc.CommandOutput = []Output{out}
 
 	expect := "USED FOR:\n" +
-		"    " + desc.CommandUsedFor + "\n" +
+		"    " + desc.CommandUsedFor + "\n\n" +
 		"REQUIRED PERMISSION:\n" +
-		"    " + desc.CommandPermission  + "\n" +
+		"    " + desc.CommandPermission + "\n\n" +
 		"EXAMPLES:\n" +
 		"    " + "#" + example.Desc + "\n" +
-		"    " + example.Command + "\n" +
+		"    " + example.Command + "\n\n" +
 		"OUTPUT:\n" +
-		"    " + desc.CommandOutput  + "\n"
+		"    " + "#" + out.Desc + "\n" +
+		"    " + "Out line 1" + "\n" +
+		"    " + "Out line 2" + "\n\n"
 
 	result := desc.ToString()
 
