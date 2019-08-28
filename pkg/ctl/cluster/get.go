@@ -10,7 +10,7 @@ import (
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "This command is used for getting the cluster data of the specified cluster."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "All users can use."
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
@@ -36,7 +36,7 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 
 	failOut := pulsar.Output{
 		Desc: "output of doesn't specified a cluster name",
-		Out:  "only one argument is allowed to be used as a name",
+		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 	out = append(out, failOut)
 
