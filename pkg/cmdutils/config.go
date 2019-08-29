@@ -1,6 +1,5 @@
 package cmdutils
 
-
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -73,6 +72,8 @@ func (c *ClusterConfig) Client(version pulsar.ApiVersion) pulsar.Client {
 	if len(c.AuthParams) > 0 && c.AuthParams != config.AuthParams {
 		config.AuthParams = c.AuthParams
 	}
+
+	config.ApiVersion = version
 
 	client, err := pulsar.New(config)
 	if err != nil {

@@ -79,8 +79,11 @@ func New(config *Config) (Client, error) {
 	}
 
 	if strings.HasPrefix(c.webServiceUrl, "https://") {
+		c.authParams = config.AuthParams
+		c.tlsOptions = config.TlsOptions
 		mapAuthParams := make(map[string]string)
-		err := json.Unmarshal([]byte(c.authParams), mapAuthParams)
+
+		err := json.Unmarshal([]byte(c.authParams), &mapAuthParams)
 		if err != nil {
 			return nil, err
 		}
@@ -95,9 +98,6 @@ func New(config *Config) (Client, error) {
 			MaxIdleConnsPerHost: 10,
 			TLSClientConfig:     tlsConf,
 		}
-
-		c.authParams = config.AuthParams
-		c.tlsOptions = config.TlsOptions
 	}
 
 	return c, nil
