@@ -3,6 +3,7 @@ package cmdutils
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	`log`
 )
 
 var PulsarCtlConfig = ClusterConfig{}
@@ -72,5 +73,9 @@ func (c *ClusterConfig) Client() pulsar.Client {
 		config.AuthParams = c.AuthParams
 	}
 
-	return pulsar.New(config)
+	client, err := pulsar.New(config)
+	if err != nil {
+		log.Fatalf("create pulsar client error: %s", err.Error())
+	}
+	return client
 }

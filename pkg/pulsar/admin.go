@@ -7,13 +7,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/auth"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
-	`strings`
+	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/auth"
 )
 
 const (
@@ -24,7 +25,7 @@ const (
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
-	Auth          auth.Provider
+	Auth          *auth.TlsAuthProvider
 	AuthParams    string
 	TlsOptions    *TLSOptions
 }
@@ -39,7 +40,6 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceUrl: DefaultWebServiceURL,
 		HttpClient:    http.DefaultClient,
-		Auth:          auth.NewAuthDisabled(),
 
 		TlsOptions: &TLSOptions{
 			AllowInsecureConnection: false,
@@ -57,15 +57,16 @@ type client struct {
 	webServiceUrl string
 	apiVersion    string
 	httpClient    *http.Client
-	auth          auth.Provider
-	authParams    string
 
+	// TLS config
+	auth       *auth.TlsAuthProvider
+	authParams string
 	tlsOptions *TLSOptions
 	transport  *http.Transport
 }
 
 // New returns a new client
-func New(config *Config) Client {
+func New(config *Config) (Client, error) {
 	if len(config.WebServiceUrl) == 0 {
 		config.WebServiceUrl = DefaultWebServiceURL
 	}
@@ -74,30 +75,31 @@ func New(config *Config) Client {
 		// TODO: make api version configurable
 		apiVersion:    "v2",
 		webServiceUrl: config.WebServiceUrl,
-		authParams:    config.AuthParams,
-		tlsOptions:    config.TlsOptions,
 	}
 
 	if strings.HasPrefix(c.webServiceUrl, "https://") {
 		mapAuthParams := make(map[string]string)
 		err := json.Unmarshal([]byte(c.authParams), mapAuthParams)
 		if err != nil {
-			return nil
+			return nil, err
 		}
 		c.auth = auth.NewAuthenticationTLSWithParams(mapAuthParams)
 
 		tlsConf, err := c.getTLSConfig()
 		if err != nil {
-			return nil
+			return nil, err
 		}
 
-		c.transport= &http.Transport{
+		c.transport = &http.Transport{
 			MaxIdleConnsPerHost: 10,
 			TLSClientConfig:     tlsConf,
 		}
+
+		c.authParams = config.AuthParams
+		c.tlsOptions = config.TlsOptions
 	}
 
-	return c
+	return c, nil
 }
 
 func (c *client) getTLSConfig() (*tls.Config, error) {
