@@ -33,6 +33,7 @@ func DefaultConfig() *Config {
 // Client provides a client to the Pulsar Restful API
 type Client interface {
 	Clusters() Clusters
+	Functions() Functions
 }
 
 type client struct {
@@ -51,7 +52,7 @@ func New(config *Config) Client {
 
 	c := &client{
 		// TODO: make api version configurable
-		apiVersion:    "v2",
+		apiVersion:    "v3",
 		webServiceUrl: config.WebServiceUrl,
 	}
 
