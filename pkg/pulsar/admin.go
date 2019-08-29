@@ -13,14 +13,13 @@ import (
 
 const (
 	DefaultWebServiceURL = "http://localhost:8080"
-	DefaultApiVersion    = "v2"
 )
 
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
-	ApiVersion    string
+	ApiVersion    ApiVersion
 }
 
 // DefaultConfig returns a default configuration for the pulsar admin client
@@ -28,7 +27,6 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceUrl: DefaultWebServiceURL,
 		HttpClient:    http.DefaultClient,
-		ApiVersion:    DefaultApiVersion,
 	}
 	return config
 }
@@ -54,7 +52,7 @@ func New(config *Config) Client {
 
 	c := &client{
 		// TODO: make api version configurable
-		apiVersion:    config.ApiVersion,
+		apiVersion:    config.ApiVersion.String(),
 		webServiceUrl: config.WebServiceUrl,
 	}
 

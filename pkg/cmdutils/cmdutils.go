@@ -40,7 +40,11 @@ func GetNameArg(args []string) string {
 	return ""
 }
 
-func NewPulsarClient(version string) pulsar.Client {
+func NewPulsarClient() pulsar.Client {
+	return PulsarCtlConfig.Client(pulsar.V2)
+}
+
+func NewPulsarClientWithApiVersion(version pulsar.ApiVersion) pulsar.Client {
 	return PulsarCtlConfig.Client(version)
 }
 
