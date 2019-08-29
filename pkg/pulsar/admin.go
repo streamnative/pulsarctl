@@ -7,14 +7,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/streamnative/pulsarctl/pkg/auth"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
-	"strings"
-
-	"github.com/streamnative/pulsarctl/pkg/auth"
+	`strings`
 )
 
 const (
@@ -62,6 +61,7 @@ type client struct {
 	authParams    string
 
 	tlsOptions *TLSOptions
+	transport  *http.Transport
 }
 
 // New returns a new client
@@ -76,6 +76,25 @@ func New(config *Config) Client {
 		webServiceUrl: config.WebServiceUrl,
 		authParams:    config.AuthParams,
 		tlsOptions:    config.TlsOptions,
+	}
+
+	if strings.HasPrefix(c.webServiceUrl, "https://") {
+		mapAuthParams := make(map[string]string)
+		err := json.Unmarshal([]byte(c.authParams), mapAuthParams)
+		if err != nil {
+			return nil
+		}
+		c.auth = auth.NewAuthenticationTLSWithParams(mapAuthParams)
+
+		tlsConf, err := c.getTLSConfig()
+		if err != nil {
+			return nil
+		}
+
+		c.transport= &http.Transport{
+			MaxIdleConnsPerHost: 10,
+			TLSClientConfig:     tlsConf,
+		}
 	}
 
 	return c
@@ -242,15 +261,6 @@ func (c *client) newRequest(method, path string) (*request, error) {
 		return nil, err
 	}
 
-	if strings.HasPrefix(c.webServiceUrl, "https://") {
-		mapAuthParams := make(map[string]string)
-		err := json.Unmarshal([]byte(c.authParams), mapAuthParams)
-		if err != nil {
-			return nil, err
-		}
-		c.auth = auth.NewAuthenticationTLSWithParams(mapAuthParams)
-	}
-
 	req := &request{
 		method: method,
 		url: &url.URL{
@@ -280,21 +290,13 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.useragent())
 
-	tlsConf, err := c.getTLSConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	trSkipVerify := &http.Transport{
-		MaxIdleConnsPerHost: 10,
-		TLSClientConfig:     tlsConf,
-	}
-
 	hc := c.httpClient
 	if hc == nil {
 		hc = http.DefaultClient
 	}
-	hc.Transport = trSkipVerify
+	if c.transport != nil {
+		hc.Transport = c.transport
+	}
 
 	resp, err := hc.Do(req)
 	return resp, err
