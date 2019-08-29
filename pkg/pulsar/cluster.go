@@ -52,6 +52,7 @@ func (c *clusters) Update(cdata ClusterData) error {
 	endpoint := c.client.endpoint(c.basePath, cdata.Name)
 	return c.client.post(endpoint, &cdata, nil)
 }
+
 func (c *clusters) GetPeerClusters(name string) ([]string, error) {
 	var peerClusters []string
 	endpoint := c.client.endpoint(c.basePath, name, "peers")
