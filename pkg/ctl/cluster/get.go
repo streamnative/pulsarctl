@@ -10,7 +10,7 @@ import (
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "This command is used for getting the cluster data of the specified cluster."
-	desc.CommandPermission = "This command requires super-user permission."
+	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
