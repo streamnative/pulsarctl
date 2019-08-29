@@ -33,13 +33,8 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 	out = append(out, successOut)
-
-	failOut := pulsar.Output{
-		Desc: "the cluster name is not specified in the output",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
-	}
-	out = append(out, failOut)
-
+	out = append(out, argsError)
+	out = append(out, clusterNonExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
