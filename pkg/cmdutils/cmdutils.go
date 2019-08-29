@@ -31,7 +31,7 @@ func NewResourceCmd(use, short, long string, aliases ...string) *cobra.Command {
 
 // GetNameArg tests to ensure there is only 1 name argument
 func GetNameArg(args []string) string {
-	if len(args) > 1 {
+	if len(args) > 1 || len(args) == 0 {
 		logger.Critical("only one argument is allowed to be used as a name")
 		os.Exit(1)
 	}
@@ -42,7 +42,11 @@ func GetNameArg(args []string) string {
 }
 
 func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client()
+	return PulsarCtlConfig.Client(pulsar.V2)
+}
+
+func NewPulsarClientWithApiVersion(version pulsar.ApiVersion) pulsar.Client {
+	return PulsarCtlConfig.Client(version)
 }
 
 func PrintJson(w io.Writer, obj interface{}) {

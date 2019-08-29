@@ -25,6 +25,8 @@ const (
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
+	ApiVersion    ApiVersion
+
 	Auth          *auth.TlsAuthProvider
 	AuthParams    string
 	TlsOptions    *TLSOptions
@@ -72,8 +74,7 @@ func New(config *Config) (Client, error) {
 	}
 
 	c := &client{
-		// TODO: make api version configurable
-		apiVersion:    "v2",
+		apiVersion:    config.ApiVersion.String(),
 		webServiceUrl: config.WebServiceUrl,
 	}
 

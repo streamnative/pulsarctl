@@ -1,5 +1,6 @@
 package cmdutils
 
+
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -54,7 +55,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 	return flags
 }
 
-func (c *ClusterConfig) Client() pulsar.Client {
+func (c *ClusterConfig) Client(version pulsar.ApiVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
 
 	if len(c.WebServiceUrl) > 0 && c.WebServiceUrl != config.WebServiceUrl {
