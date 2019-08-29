@@ -8,6 +8,4 @@ type ClusterData struct {
 	BrokerServiceURL string `json:"brokerServiceUrl"`
 	BrokerServiceURLTls string `json:"brokerServiceUrlTls"`
 	PeerClusterNames []string `json:"peerClusterNames"`
-
-	test int
 }
