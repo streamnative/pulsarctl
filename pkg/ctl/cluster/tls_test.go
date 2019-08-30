@@ -1,3 +1,5 @@
+// +build tls
+
 package cluster
 
 import (
