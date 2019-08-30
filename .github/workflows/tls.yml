@@ -1,5 +1,5 @@
 name: TLS_Test
-on: [pull_request,push]
+on: [pull_request]
 jobs:
 
   tls-build:
@@ -7,11 +7,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-
     - name: Set up Go 1.12
       uses: actions/setup-go@v1
       with:
