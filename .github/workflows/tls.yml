@@ -13,10 +13,10 @@ tls-build:
         java-version: 1.8
 
     - name: Set up Go 1.12
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.12
-        id: go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
 
     - name: Checkout code
       uses: actions/checkout@master
@@ -30,4 +30,5 @@ tls-build:
     - name: Test TLS
       run: |
         docker ps
-        go test -v ./pkg/ctl/cluster/tls_test.go ./pkg/ctl/cluster/test.go ./pkg/ctl/cluster/create.go ./pkg/ctl/cluster/delete.go ./pkg/ctl/cluster/list.go
+        cd pkg/ctl/cluster
+        go test -v -run TestTLS
