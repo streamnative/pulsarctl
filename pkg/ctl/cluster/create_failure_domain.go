@@ -50,10 +50,6 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var failureDomainData pulsar.FailureDomainData
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doCreateFailureDomain(vc, &failureDomainData)
-	})
-
 	checkArgs := func(args []string) error {
 		if len(args) != 2 {
 			return errors.New("need to specified two names for cluster and failure domain")
