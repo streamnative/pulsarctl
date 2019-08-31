@@ -36,52 +36,52 @@ const (
 type FunctionConfig struct {
     // Any flags that you want to pass to the runtime.
     // note that in thread mode, these flags will have no impact
-    RuntimeFlags string
+    RuntimeFlags string `json:"runtimeFlags"`
 
-    Tenant    string
-    Namespace string
-    Name      string
-    ClassName string
+    Tenant    string `json:"tenant"`
+    Namespace string `json:"namespace"`
+    Name      string `json:"name"`
+    ClassName string `json:"className"`
 
-    Inputs             []string
-    CustomSerdeInputs  map[string]string
-    TopicsPattern      string
-    CustomSchemaInputs map[string]string
+    Inputs             []string          `json:"inputs"`
+    CustomSerdeInputs  map[string]string `json:"customSerdeInputs"`
+    TopicsPattern      *string           `json:"topicsPattern"`
+    CustomSchemaInputs map[string]string `json:"customSchemaInputs"`
 
     // A generalized way of specifying inputs
-    InputSpecs map[string]ConsumerConfig
+    InputSpecs map[string]ConsumerConfig `json:"inputSpecs"`
 
-    Output string
+    Output string `json:"output"`
 
     // Represents either a builtin schema type (eg: 'avro', 'json', ect) or the class name for a Schema implementation
-    OutputSchemaType string
+    OutputSchemaType string `json:"outputSchemaType"`
 
-    OutputSerdeClassName string
-    LogTopic             string
-    ProcessingGuarantees ProcessingGuarantees
-    RetainOrdering       bool
-    UserConfig           map[string]interface{}
+    OutputSerdeClassName string                 `json:"outputSerdeClassName"`
+    LogTopic             string                 `json:"logTopic"`
+    ProcessingGuarantees ProcessingGuarantees   `json:"processingGuarantees"`
+    RetainOrdering       bool                   `json:"retainOrdering"`
+    UserConfig           map[string]interface{} `json:"userConfig"`
 
     // This is a map of secretName(aka how the secret is going to be
     // accessed in the function via context) to an object that
     // encapsulates how the secret is fetched by the underlying
     // secrets provider. The type of an value here can be found by the
     // SecretProviderConfigurator.getSecretObjectType() method.
-    Secrets map[string]interface{}
+    Secrets map[string]interface{} `json:"secrets"`
 
-    Runtime           Runtime
-    AutoAck           bool
-    MaxMessageRetries int
-    DeadLetterTopic   string
-    SubName           string
-    Parallelism       int
-    Resources         *Resources
-    FQFN              string
-    WindowConfig      *WindowConfig
-    TimeoutMs         int64
-    Jar               string
-    Py                string
-    Go                string
+    Runtime           Runtime       `json:"runtime"`
+    AutoAck           bool          `json:"autoAck"`
+    MaxMessageRetries int           `json:"maxMessageRetries"`
+    DeadLetterTopic   string        `json:"deadLetterTopic"`
+    SubName           string        `json:"subName"`
+    Parallelism       int           `json:"parallelism"`
+    Resources         *Resources    `json:"resources"`
+    FQFN              string        `json:"fqfn"`
+    WindowConfig      *WindowConfig `json:"windowConfig"`
+    TimeoutMs         *int64         `json:"timeoutMs"`
+    Jar               string        `json:"jar"`
+    Py                string        `json:"py"`
+    Go                string        `json:"go"`
     // Whether the subscriptions the functions created/used should be deleted when the functions is deleted
-    CleanupSubscription bool
+    CleanupSubscription bool `json:"cleanupSubscription"`
 }

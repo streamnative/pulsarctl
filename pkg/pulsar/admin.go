@@ -224,8 +224,7 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 		hc = http.DefaultClient
 	}
 
-	resp, err := hc.Do(req)
-	return resp, err
+	return hc.Do(req)
 }
 
 

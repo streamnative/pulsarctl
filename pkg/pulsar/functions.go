@@ -61,45 +61,39 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
     endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
 
     // buffer to store our request as bytes
-    var requestBody bytes.Buffer
+    bodyBuf := bytes.NewBufferString("")
 
-    multiPartWriter := multipart.NewWriter(&requestBody)
+    multiPartWriter := multipart.NewWriter(bodyBuf)
 
-    res, err := json.Marshal(funcConf)
+    jsonData, err := json.Marshal(funcConf)
     if err != nil {
         return err
     }
 
-    filedWriter, err := multiPartWriter.CreateFormField("functionConfig")
+    err = multiPartWriter.WriteField("functionConfig", string(jsonData))
     if err != nil {
-        return err
-    }
-
-    _, err = filedWriter.Write(res)
-    if err != nil {
-
         return err
     }
 
     if fileName != "" && !strings.HasPrefix(fileName, "builtin://") {
-        // If the function code is built in, we don't need to submit here
-        file, err := os.Open(fileName)
-        if err != nil {
-            return err
-        }
-        defer file.Close()
+       // If the function code is built in, we don't need to submit here
+       file, err := os.Open(fileName)
+       if err != nil {
+           return err
+       }
+       defer file.Close()
 
-        part, err := multiPartWriter.CreateFormFile("data", filepath.Base(file.Name()))
+       part, err := multiPartWriter.CreateFormFile("data", filepath.Base(file.Name()))
 
-        if err != nil {
-            return err
-        }
+       if err != nil {
+           return err
+       }
 
-        // copy the actual file content to the filed's writer
-        _, err = io.Copy(part, file)
-        if err != nil {
-            return err
-        }
+       // copy the actual file content to the filed's writer
+       _, err = io.Copy(part, file)
+       if err != nil {
+           return err
+       }
     }
 
     // In here, we completed adding the file and the fields, let's close the multipart writer
@@ -108,13 +102,15 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
         return err
     }
 
-    req, err := http.NewRequest("POST", endpoint, &requestBody)
+    url := fmt.Sprintf("http://localhost:8080%s", endpoint)
+
+    req, err := http.NewRequest(http.MethodPost, url, bodyBuf)
     if err != nil {
-        return err
+       return err
     }
 
-    // we need to set the content type from the writer, it includes necessary boundary as well.
-    req.Header.Set("Content-Type", multiPartWriter.FormDataContentType())
+    //we need to set the content type from the writer, it includes necessary boundary as well.
+    req.Header.Set("Content-Type",multiPartWriter.FormDataContentType())
 
     // Do the request
     client := new(http.Client)
@@ -122,11 +118,11 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
     // TODO: need add auth headers
     response, err := client.Do(req)
     if err != nil {
-        return err
+       return err
     }
 
     if response.StatusCode < 200 || response.StatusCode >= 300 {
-        return fmt.Errorf("response status:%s, response status code:%d", response.Status, response.StatusCode)
+       return fmt.Errorf("response status:%s, response status code:%d", response.Status, response.StatusCode)
     }
 
     return nil

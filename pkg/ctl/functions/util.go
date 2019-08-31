@@ -113,7 +113,7 @@ func isFileExist(filename string) bool {
 func processArgs(funcData *pulsar.FunctionData) error {
     // Initialize config builder either from a supplied YAML config file or from scratch
     if funcData.FuncConf != nil {
-        //funcData.FuncConf =
+        // no-op
     } else {
         funcData.FuncConf = new(pulsar.FunctionConfig)
     }
@@ -149,10 +149,6 @@ func processArgs(funcData *pulsar.FunctionData) error {
         funcData.FuncConf.CustomSerdeInputs = customSerdeInputMap
     }
 
-    if funcData.FuncConf.CustomSerdeInputs == nil {
-        funcData.FuncConf.CustomSerdeInputs = make(map[string]string)
-    }
-
     if funcData.CustomSchemaInput != "" {
         customSchemaInputMap := make(map[string]string)
         err := json.Unmarshal([]byte(funcData.CustomSchemaInput), &customSchemaInputMap)
@@ -162,12 +158,8 @@ func processArgs(funcData *pulsar.FunctionData) error {
         funcData.FuncConf.CustomSchemaInputs = customSchemaInputMap
     }
 
-    if funcData.FuncConf.CustomSchemaInputs == nil {
-        funcData.FuncConf.CustomSchemaInputs = make(map[string]string)
-    }
-
     if funcData.TopicsPattern != "" {
-        funcData.FuncConf.TopicsPattern = funcData.TopicsPattern
+        funcData.FuncConf.TopicsPattern = &funcData.TopicsPattern
     }
 
     if funcData.Output != "" {
@@ -226,6 +218,8 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
     if funcData.Parallelism != 0 {
         funcData.FuncConf.Parallelism = funcData.Parallelism
+    } else {
+        funcData.FuncConf.Parallelism = 1
     }
 
     if funcData.CPU != 0 {
@@ -253,7 +247,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
     }
 
     if funcData.TimeoutMs != 0 {
-        funcData.FuncConf.TimeoutMs = funcData.TimeoutMs
+        funcData.FuncConf.TimeoutMs = &funcData.TimeoutMs
     }
 
     // window configs

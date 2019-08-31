@@ -33,8 +33,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd)  {
 
     functionData := &pulsar.FunctionData{}
 
-    // set the run function with name argument
-    vc.SetRunFuncWithNameArg(func() error {
+    // set the run function
+    vc.SetRunFunc(func() error {
         return doCreateFunctions(vc, functionData)
     })
 
@@ -248,16 +248,21 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd)  {
 }
 
 func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+    err := processArgs(funcData)
+    if err != nil {
+        return err
+    }
+
     admin := cmdutils.NewPulsarClient()
 
     if isFunctionPackageUrlSupported(funcData.Jar) {
-        err := admin.Functions().CreateFuncWithUrl(funcData.FuncConf, funcData.Jar)
+        err = admin.Functions().CreateFuncWithUrl(funcData.FuncConf, funcData.Jar)
         if err != nil {
             cmdutils.PrintError(vc.Command.OutOrStderr(), err)
             return err
         }
     } else {
-        err := admin.Functions().CreateFunc(funcData.FuncConf, funcData.UserCodeFile)
+        err = admin.Functions().CreateFunc(funcData.FuncConf, funcData.UserCodeFile)
         if err != nil {
             cmdutils.PrintError(vc.Command.OutOrStderr(), err)
             return err
