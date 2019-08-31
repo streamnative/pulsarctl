@@ -149,10 +149,10 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd)  {
             "",
             "The path to a YAML config file that specifies the configuration of a Pulsar Function")
 
-        flagSet.IntVar(
+        flagSet.StringVar(
             &functionData.ProcessingGuarantees,
             "processing-guarantees",
-            0,
+            "",
             "The processing guarantees (aka delivery semantics) applied to the function")
 
         flagSet.StringVar(

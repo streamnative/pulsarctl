@@ -293,7 +293,6 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	}
 
 	if r.contentType != "" {
-		fmt.Println("()()()()()()()()()()()")
 		req.Header.Set("Content-Type", r.contentType)
 	} else {
 		// add default headers
@@ -302,12 +301,6 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	}
 
 	req.Header.Set("User-Agent", c.useragent())
-
-	fmt.Println("==============request header=================")
-	fmt.Println(req.Header)
-	fmt.Println("==============request Body==================")
-	fmt.Println(req.Body)
-	fmt.Println("==============request Body==================")
 
 	hc := c.httpClient
 	if hc == nil {

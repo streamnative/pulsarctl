@@ -29,7 +29,7 @@ type FunctionData struct {
 	CustomSchemaInput         string  `json:"customSchemaInputString"`
 	OutputSerDeClassName      string  `json:"outputSerdeClassName"`
 	FunctionConfigFile        string  `json:"fnConfigFile"`
-	ProcessingGuarantees      int     `json:"processingGuarantees"`
+	ProcessingGuarantees      string  `json:"processingGuarantees"`
 	UserConfig                string  `json:"userConfigString"`
 	RetainOrdering            bool    `json:"retainOrdering"`
 	SubsName                  string  `json:"subsName"`
@@ -48,19 +48,4 @@ type FunctionData struct {
 
 	FuncConf     *FunctionConfig `json:"-"`
 	UserCodeFile string          `json:"-"`
-
-	Backwards *LocalRunForBackwards `json:"-"`
-}
-
-// LocalRunForBackwards for backwards compatibility purposes
-type LocalRunForBackwards struct {
-	StateStorageServiceUrl         string `json:"stateStorageServiceUrl"`
-	BrokerServiceUrl               string `json:"brokerServiceUrl"`
-	ClientAuthPlugin               string `json:"clientAuthPlugin"`
-	ClientAuthParams               string `json:"clientAuthParams"`
-	UseTls                         bool   `json:"useTls"`
-	TlsAllowInsecureConnection     bool   `json:"tlsAllowInsecureConnection"`
-	TlsHostNameVerificationEnabled bool   `json:"tlsHostNameVerificationEnabled"`
-	TlsTrustCertFilePath           string `json:"tlsTrustCertFilePath"`
-	InstanceIdOffset               int    `json:"instanceIdOffset"`
 }

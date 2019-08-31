@@ -183,12 +183,14 @@ func processArgs(funcData *pulsar.FunctionData) error {
     }
 
     // processingGuarantees default value is 0, means AtLeastOnce.
-    if funcData.ProcessingGuarantees != 0 {
+    if funcData.ProcessingGuarantees != "" {
         switch funcData.ProcessingGuarantees {
-        case 1:
+        case "ATMOST_ONCE":
             funcData.FuncConf.ProcessingGuarantees = pulsar.AtMostOnce
-        case 2:
+        case "EFFECTIVELY_ONCE":
             funcData.FuncConf.ProcessingGuarantees = pulsar.EffectivelyOnce
+        case "ATLEAST_ONCE":
+            funcData.FuncConf.ProcessingGuarantees = pulsar.AtLeasetOnce
         default:
             funcData.FuncConf.ProcessingGuarantees = pulsar.AtLeasetOnce
         }
