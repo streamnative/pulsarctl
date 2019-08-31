@@ -204,12 +204,14 @@ func (c *client) delete(endpoint string, obj interface{}) error {
 	return nil
 }
 
-func (c *client) post(endpoint string, in, obj interface{}) error {
+func (c *client) post(endpoint string, in, obj interface{}, body io.Reader, contentType string) error {
 	req, err := c.newRequest(http.MethodPost, endpoint)
 	if err != nil {
 		return err
 	}
 	req.obj = in
+	req.body = body
+	req.contentType = contentType
 
 	resp, err := checkSuccessful(c.doRequest(req))
 	if err != nil {
@@ -227,9 +229,10 @@ func (c *client) post(endpoint string, in, obj interface{}) error {
 }
 
 type request struct {
-	method string
-	url    *url.URL
-	params url.Values
+	method      string
+	contentType string
+	url         *url.URL
+	params      url.Values
 
 	obj  interface{}
 	body io.Reader
@@ -289,10 +292,22 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 		return nil, err
 	}
 
-	// add default headers
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	if r.contentType != "" {
+		fmt.Println("()()()()()()()()()()()")
+		req.Header.Set("Content-Type", r.contentType)
+	} else {
+		// add default headers
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Accept", "application/json")
+	}
+
 	req.Header.Set("User-Agent", c.useragent())
+
+	fmt.Println("==============request header=================")
+	fmt.Println(req.Header)
+	fmt.Println("==============request Body==================")
+	fmt.Println(req.Body)
+	fmt.Println("==============request Body==================")
 
 	hc := c.httpClient
 	if hc == nil {
