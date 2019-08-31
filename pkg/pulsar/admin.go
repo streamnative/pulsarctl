@@ -2,23 +2,39 @@ package pulsar
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
+	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/auth"
 )
 
 const (
-	DefaultWebServiceURL 	= "http://localhost:8080"
+	DefaultWebServiceURL = "http://localhost:8080"
 )
 
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
+	ApiVersion    ApiVersion
+
+	Auth          *auth.TlsAuthProvider
+	AuthParams    string
+	TlsOptions    *TLSOptions
+}
+
+type TLSOptions struct {
+	TrustCertsFilePath      string
+	AllowInsecureConnection bool
 }
 
 // DefaultConfig returns a default configuration for the pulsar admin client
@@ -26,6 +42,10 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceUrl: DefaultWebServiceURL,
 		HttpClient:    http.DefaultClient,
+
+		TlsOptions: &TLSOptions{
+			AllowInsecureConnection: false,
+		},
 	}
 	return config
 }
@@ -40,23 +60,78 @@ type client struct {
 	webServiceUrl string
 	apiVersion    string
 	httpClient    *http.Client
+
+	// TLS config
+	auth       *auth.TlsAuthProvider
+	authParams string
+	tlsOptions *TLSOptions
+	transport  *http.Transport
 }
 
 // New returns a new client
-func New(config *Config) Client {
-	defConfig := DefaultConfig()
-
+func New(config *Config) (Client, error) {
 	if len(config.WebServiceUrl) == 0 {
-		config.WebServiceUrl = defConfig.WebServiceUrl
+		config.WebServiceUrl = DefaultWebServiceURL
 	}
 
 	c := &client{
-		// TODO: make api version configurable
-		apiVersion:    "v3",
+		apiVersion:    config.ApiVersion.String(),
 		webServiceUrl: config.WebServiceUrl,
 	}
 
-	return c
+	if strings.HasPrefix(c.webServiceUrl, "https://") {
+		c.authParams = config.AuthParams
+		c.tlsOptions = config.TlsOptions
+		mapAuthParams := make(map[string]string)
+
+		err := json.Unmarshal([]byte(c.authParams), &mapAuthParams)
+		if err != nil {
+			return nil, err
+		}
+		c.auth = auth.NewAuthenticationTLSWithParams(mapAuthParams)
+
+		tlsConf, err := c.getTLSConfig()
+		if err != nil {
+			return nil, err
+		}
+
+		c.transport = &http.Transport{
+			MaxIdleConnsPerHost: 10,
+			TLSClientConfig:     tlsConf,
+		}
+	}
+
+	return c, nil
+}
+
+func (c *client) getTLSConfig() (*tls.Config, error) {
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: c.tlsOptions.AllowInsecureConnection,
+	}
+
+	if c.tlsOptions.TrustCertsFilePath != "" {
+		caCerts, err := ioutil.ReadFile(c.tlsOptions.TrustCertsFilePath)
+		if err != nil {
+			return nil, err
+		}
+
+		tlsConfig.RootCAs = x509.NewCertPool()
+		ok := tlsConfig.RootCAs.AppendCertsFromPEM(caCerts)
+		if !ok {
+			return nil, errors.New("failed to parse root CAs certificates")
+		}
+	}
+
+	cert, err := c.auth.GetTLSCertificate()
+	if err != nil {
+		return nil, err
+	}
+
+	if cert != nil {
+		tlsConfig.Certificates = []tls.Certificate{*cert}
+	}
+
+	return tlsConfig, nil
 }
 
 func (c *client) endpoint(componentPath string, parts ...string) string {
@@ -153,10 +228,10 @@ func (c *client) post(endpoint string, in, obj interface{}) error {
 
 type request struct {
 	method string
-	url *url.URL
+	url    *url.URL
 	params url.Values
 
-	obj interface{}
+	obj  interface{}
 	body io.Reader
 }
 
@@ -183,20 +258,20 @@ func (r *request) toHTTP() (*http.Request, error) {
 	return req, nil
 }
 
-
 func (c *client) newRequest(method, path string) (*request, error) {
 	base, _ := url.Parse(c.webServiceUrl)
 	u, err := url.Parse(path)
 	if err != nil {
 		return nil, err
 	}
+
 	req := &request{
 		method: method,
 		url: &url.URL{
 			Scheme: base.Scheme,
-			User: base.User,
-			Host: base.Host,
-			Path: endpoint(base.Path, u.Path),
+			User:   base.User,
+			Host:   base.Host,
+			Path:   endpoint(base.Path, u.Path),
 		},
 		params: make(url.Values),
 	}
@@ -223,10 +298,12 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	if hc == nil {
 		hc = http.DefaultClient
 	}
+	if c.transport != nil {
+		hc.Transport = c.transport
+	}
 
 	return hc.Do(req)
 }
-
 
 // decodeJsonBody is used to JSON encode a body
 func encodeJsonBody(obj interface{}) (io.Reader, error) {
@@ -237,7 +314,6 @@ func encodeJsonBody(obj interface{}) (io.Reader, error) {
 	}
 	return buf, nil
 }
-
 
 // decodeJsonBody is used to JSON decode a body
 func decodeJsonBody(resp *http.Response, out interface{}) error {
@@ -255,7 +331,7 @@ func safeRespClose(resp *http.Response) {
 }
 
 // responseError is used to parse a response into a pulsar error
-func responseError(resp *http.Response) error  {
+func responseError(resp *http.Response) error {
 	var e Error
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -302,4 +378,3 @@ func checkSuccessful(resp *http.Response, err error) (*http.Response, error) {
 func endpoint(parts ...string) string {
 	return path.Join(parts...)
 }
-

@@ -3,12 +3,13 @@ package cmdutils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kris-nova/logger"
-	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/kris-nova/logger"
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 const IncompatibleFlags = "cannot be used at the same time"
@@ -41,7 +42,11 @@ func GetNameArg(args []string) string {
 }
 
 func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client()
+	return PulsarCtlConfig.Client(pulsar.V2)
+}
+
+func NewPulsarClientWithApiVersion(version pulsar.ApiVersion) pulsar.Client {
+	return PulsarCtlConfig.Client(version)
 }
 
 func PrintJson(w io.Writer, obj interface{}) {

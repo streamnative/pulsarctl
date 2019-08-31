@@ -253,7 +253,7 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
         return err
     }
 
-    admin := cmdutils.NewPulsarClient()
+    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
 
     if isFunctionPackageUrlSupported(funcData.Jar) {
         err = admin.Functions().CreateFuncWithUrl(funcData.FuncConf, funcData.Jar)
