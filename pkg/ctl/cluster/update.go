@@ -39,7 +39,7 @@ func updateClusterCmd(vc *cmdutils.VerbCmd) {
 
 	updatePeerCluster := pulsar.Example{
 		Desc:    "registered as a peer-cluster of the <cluster-name> clusters",
-		Command: "pulsarctl clusters update -p <cluster-a>,<cluster-b> <cluster>",
+		Command: "pulsarctl clusters update -p <cluster-a> -p <cluster-b> <cluster>",
 	}
 	examples = append(examples, updatePeerCluster)
 
@@ -100,7 +100,7 @@ func updateClusterCmd(vc *cmdutils.VerbCmd) {
 			"broker-url-tls",
 			"",
 			"Pulsar cluster tls secured broker service url, e.g. pulsar+ssl://example.pulsar.io:6651")
-		flagSet.StringArrayVarP(
+		flagSet.StringSliceVarP(
 			&clusterData.PeerClusterNames,
 			"peer-cluster",
 			"p",

@@ -14,7 +14,8 @@ func TestUpdateCluster(t *testing.T) {
 		"--url-tls", "https://example:8080",
 		"--broker-url", "pulsar://example:6650",
 		"--broker-url-tls", "pulsar+ssl://example:6650",
-		"-p", "cluster-a,cluster-b",
+		"-p", "cluster-a",
+		"-p", "cluster-b",
 		"standalone",
 	}
 
