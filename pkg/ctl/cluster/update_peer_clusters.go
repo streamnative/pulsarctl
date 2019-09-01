@@ -14,7 +14,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	update := pulsar.Example{
 		Desc:    "updating the <cluster-name> peer clusters",
-		Command: "pulsarctl clusters update-peer-clusters -p cluster-a,cluster-b <cluster-name>",
+		Command: "pulsarctl clusters update-peer-clusters -p cluster-a -p cluster-b <cluster-name>",
 	}
 	examples = append(examples, update)
 	desc.CommandExamples = examples
@@ -53,7 +53,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	vc.FlagSetGroup.InFlagSet("Update peer clusters", func(set *pflag.FlagSet) {
-		set.StringArrayVarP(
+		set.StringSliceVarP(
 			&clusterData.PeerClusterNames,
 			"peer-cluster",
 			"p",
