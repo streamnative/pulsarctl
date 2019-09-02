@@ -18,6 +18,7 @@
 package functions
 
 import (
+    `fmt`
     `github.com/stretchr/testify/assert`
     `testing`
 )
@@ -61,5 +62,29 @@ func TestCreateFunctions(t *testing.T) {
     }
 
     _, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
+    assert.Nil(t, err)
+}
+
+func TestCreateFunctionsWithUrl(t *testing.T) {
+    basePath, err := getDirHelp()
+    if basePath == "" || err != nil {
+        t.Error(err)
+    }
+
+    url := fmt.Sprintf("file:%s/test/functions/api-examples.jar",basePath)
+    t.Logf("url path is:[%s]", url)
+
+    args := []string{"create",
+        "--tenant", "public",
+        "--namespace", "default",
+        "--name", "test-functions-create-file",
+        "--inputs", "test-input-topic",
+        "--output", "persistent://public/default/test-output-topic",
+        "--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+        "--jar", url,
+        "--processing-guarantees", "EFFECTIVELY_ONCE",
+    }
+
+    _, err = TestFunctionsCommands(createFunctionsCmd, args)
     assert.Nil(t, err)
 }

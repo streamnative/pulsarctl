@@ -23,6 +23,7 @@ import (
     `fmt`
     `io`
     `mime/multipart`
+    `net/http`
     `net/textproto`
     `os`
     `path/filepath`
@@ -46,14 +47,14 @@ type Functions interface {
 }
 
 type functions struct {
-    client 		*client
-    basePath 	string
+    client   *client
+    basePath string
 }
 
 func (c *client) Functions() Functions {
     return &functions{
-        client: c,
-        basePath:"/functions",
+        client:   c,
+        basePath: "/functions",
     }
 }
 
@@ -61,6 +62,13 @@ func (f *functions) createStringFromField(w *multipart.Writer, value string) (io
     h := make(textproto.MIMEHeader)
     h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "functionConfig"))
     h.Set("Content-Type", "application/json")
+    return w.CreatePart(h)
+}
+
+func (f *functions) createTextFromFiled(w *multipart.Writer, value string) (io.Writer, error) {
+    h := make(textproto.MIMEHeader)
+    h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "url"))
+    h.Set("Content-Type", "text/plain")
     return w.CreatePart(h)
 }
 
@@ -114,7 +122,7 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
         return err
     }
 
-    contentType:=multiPartWriter.FormDataContentType()
+    contentType := multiPartWriter.FormDataContentType()
     err = f.client.post(endpoint, nil, nil, bodyBuf, contentType)
     if err != nil {
         return err
@@ -123,9 +131,56 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
     return nil
 }
 
-func (f *functions) CreateFuncWithUrl(data *FunctionConfig, pkgUrl string) error {
+func (f *functions) CreateFuncWithUrl(funcConf *FunctionConfig, pkgUrl string) error {
+    endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
+    // buffer to store our request as bytes
+    bodyBuf := bytes.NewBufferString("")
+
+    multiPartWriter := multipart.NewWriter(bodyBuf)
+
+    textWriter, err := f.createTextFromFiled(multiPartWriter, "url")
+    if err != nil {
+        return err
+    }
+
+    _, err = textWriter.Write([]byte(pkgUrl))
+    if err != nil {
+        return err
+    }
+
+    jsonData, err := json.Marshal(funcConf)
+    if err != nil {
+        return err
+    }
+
+    stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
+    if err != nil {
+        return err
+    }
+
+    _, err = stringWriter.Write(jsonData)
+    if err != nil {
+        return err
+    }
+
+    if err = multiPartWriter.Close(); err != nil {
+        return err
+    }
+
+    url := fmt.Sprintf("http://localhost:8080%s", endpoint)
+    req, err := http.NewRequest(http.MethodPost, url, bodyBuf)
+    if err != nil {
+        return err
+    }
+    req.Header.Set("Content-Type", multiPartWriter.FormDataContentType())
+    client := new(http.Client)
+    response, err := client.Do(req)
+    if err != nil {
+        return err
+    }
+    if response.StatusCode < 200 || response.StatusCode >= 300 {
+        return fmt.Errorf("response status:%s, response status code:%d", response.Status, response.StatusCode)
+    }
+
     return nil
 }
-
-
-
