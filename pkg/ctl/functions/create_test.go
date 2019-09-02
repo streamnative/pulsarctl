@@ -18,8 +18,8 @@
 package functions
 
 import (
-    `fmt`
     `github.com/stretchr/testify/assert`
+    `os`
     `testing`
 )
 
@@ -30,6 +30,9 @@ func TestCreateFunctions(t *testing.T) {
     }
     t.Logf("base path: %s", basePath)
 
+    jarName := "dummyExample.jar"
+    _, err = os.Create(jarName)
+    assert.Nil(t, err)
     // $ ./pulsarctl functions create
     // --tenant public
     // --namespace default
@@ -46,7 +49,7 @@ func TestCreateFunctions(t *testing.T) {
         "--inputs", "test-input-topic",
         "--output", "persistent://public/default/test-output-topic",
         "--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-        "--jar", basePath + "/test/functions/api-examples.jar",
+        "--jar", jarName,
         "--processing-guarantees", "EFFECTIVELY_ONCE",
     }
 
@@ -58,33 +61,26 @@ func TestCreateFunctions(t *testing.T) {
     // --jar examples/api-examples.jar
     argsWithConf := []string{"create",
         "--function-config-file", basePath + "/test/functions/example-function-config.yaml",
-        "--jar", basePath + "/test/functions/api-examples.jar",
+        "--jar", jarName,
     }
 
     _, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
     assert.Nil(t, err)
-}
 
-func TestCreateFunctionsWithUrl(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-
-    url := fmt.Sprintf("file:%s/test/functions/api-examples.jar",basePath)
-    t.Logf("url path is:[%s]", url)
-
-    args := []string{"create",
+    argsWithFileUrl := []string{"create",
         "--tenant", "public",
         "--namespace", "default",
         "--name", "test-functions-create-file",
         "--inputs", "test-input-topic",
         "--output", "persistent://public/default/test-output-topic",
         "--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-        "--jar", url,
+        "--jar", "file:" + basePath + "/" + jarName,
         "--processing-guarantees", "EFFECTIVELY_ONCE",
     }
 
-    _, err = TestFunctionsCommands(createFunctionsCmd, args)
+    _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileUrl)
+    assert.Nil(t, err)
+
+    err = os.Remove(jarName)
     assert.Nil(t, err)
 }
