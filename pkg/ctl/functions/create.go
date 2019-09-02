@@ -24,11 +24,48 @@ import (
     `github.com/streamnative/pulsarctl/pkg/pulsar`
 )
 
-func createFunctionsCmd(vc *cmdutils.VerbCmd)  {
+func createFunctionsCmd(vc *cmdutils.VerbCmd) {
+    desc := pulsar.LongDescription{}
+    desc.CommandUsedFor = "This command is used for creating a new Pulsar Function in cluster mode."
+    desc.CommandPermission = "This command requires super-user permissions."
+
+    var examples []pulsar.Example
+    create := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode",
+        Command: "pulsarctl functions create \n" +
+            "\t--tenant public \n" +
+            "\t--namespace default \n" +
+            "\t--name <the name of Pulsar Functions> \n" +
+            "\t--inputs test-input-topic  \n" +
+            "\t--output persistent://public/default/test-output-topic \n" +
+            "\t--classname org.apache.pulsar.functions.api.examples.ExclamationFunction \n" +
+            "\t--jar examples/api-examples.jar\n",
+    }
+    examples = append(examples, create)
+
+    createWithConf := pulsar.Example{
+        Desc: "Create a Pulsar Function use function config yaml file",
+        Command: "pulsarctl functions create \n" +
+            "\t--function-config-file <the path of function config yaml file> \n" +
+            "\t--jar <the path of user code jar>",
+    }
+    examples = append(examples, createWithConf)
+    desc.CommandExamples = examples
+
+    var out []pulsar.Output
+    successOut := pulsar.Output{
+        Desc: "normal output",
+        Out: "Created successfully",
+    }
+
+    out = append(out, successOut)
+    desc.CommandOutput = out
+
     vc.SetDescription(
         "create",
         "",
-        "Create a Pulsar Function in cluster mode (deploy it on a Pulsar cluster)",
+        desc.ToString(),
+        "create",
         )
 
     functionData := &pulsar.FunctionData{}
