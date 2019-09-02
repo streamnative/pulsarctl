@@ -31,7 +31,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 
     var examples []pulsar.Example
     create := pulsar.Example{
-        Desc:    "Create a Pulsar Function in cluster mode",
+        Desc:    "Create a Pulsar Function in cluster mode with jar file",
         Command: "pulsarctl functions create \n" +
             "\t--tenant public \n" +
             "\t--namespace default \n" +
@@ -39,7 +39,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             "\t--inputs test-input-topic  \n" +
             "\t--output persistent://public/default/test-output-topic \n" +
             "\t--classname org.apache.pulsar.functions.api.examples.ExclamationFunction \n" +
-            "\t--jar examples/api-examples.jar\n",
+            "\t--jar /examples/api-examples.jar",
     }
     examples = append(examples, create)
 
@@ -50,6 +50,123 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             "\t--jar <the path of user code jar>",
     }
     examples = append(examples, createWithConf)
+
+    createWithPkgURL := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with pkg URL",
+        Command: "pulsarctl functions create \n" +
+                "\t--tenant public \n" +
+                "\t--namespace default \n" +
+                "\t--name <the name of Pulsar Functions> \n" +
+                "\t--inputs test-input-topic  \n" +
+                "\t--output persistent://public/default/test-output-topic \n" +
+                "\t--classname org.apache.pulsar.functions.api.examples.ExclamationFunction \n" +
+                "\t--jar file:/http: + /examples/api-examples.jar",
+    }
+    examples = append(examples, createWithPkgURL)
+
+    createWithLogTopic := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with log topic",
+        Command: "pulsarctl functions create \n" +
+                "\t--log-topic persistent://public/default/test-log-topic\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithLogTopic)
+
+    createWithDeadLetterTopic := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with dead letter topic",
+        Command: "pulsarctl functions create \n" +
+                "\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
+                "\t--max-message-retries 10\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithDeadLetterTopic)
+
+    createWithAutoAck := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with auto ack",
+        Command: "pulsarctl functions create \n" +
+                "\t--auto-ack \n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithAutoAck)
+
+    createWithFQFN := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with FQFN",
+        Command: "pulsarctl functions create \n" +
+                "\t--fqfn tenant/namespace/name eg:public/default/test-fqfn-function\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithFQFN)
+
+
+    createWithTopicsPattern := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with topics pattern",
+        Command: "pulsarctl functions create \n" +
+                "\t--topics-pattern persistent://tenant/ns/topicPattern*\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithTopicsPattern)
+
+    createWithUserConfig := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with user config",
+        Command: "pulsarctl functions create \n" +
+                "\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithUserConfig)
+
+    createWithRetainOrdering := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with retain ordering",
+        Command: "pulsarctl functions create \n" +
+                "\t--retain-ordering \n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithRetainOrdering)
+
+    createWithCustomSchemasInputs := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with custom schema for inputs topic",
+        Command: "pulsarctl functions create \n" +
+                "\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithCustomSchemasInputs)
+
+    createWithSchema := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with schema type for output topic",
+        Command: "pulsarctl functions create \n" +
+                "\t--schema-type schema.STRING\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithSchema)
+
+    createWithParallelism := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with parallelism",
+        Command: "pulsarctl functions create \n" +
+                "\t--parallelism 1\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithParallelism)
+
+    createWithResource := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with resource",
+        Command: "pulsarctl functions create \n" +
+                "\t--ram 5656565656\n" +
+                "\t--disk 8080808080808080\n" +
+                "\t--cpu 5.0\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithResource)
+
+    createWithWindowFunctions := pulsar.Example{
+        Desc:    "Create a Pulsar Function in cluster mode with window functions",
+        Command: "pulsarctl functions create \n" +
+                "\t--window-length-count 10\n" +
+                "\t--window-length-duration-ms 1000\n" +
+                "\t--sliding-interval-count 3\n" +
+                "\t--sliding-interval-duration-ms 1000\n" +
+                "\t# Other function parameters ",
+    }
+    examples = append(examples, createWithWindowFunctions)
+
     desc.CommandExamples = examples
 
     var out []pulsar.Output
@@ -111,35 +228,38 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             &functionData.Jar,
             "jar",
             "",
-            "Path to the JAR file for the function (if the function is written in Java). " +
-                "It also supports URL path [http/https/file (file protocol assumes that file " +
+            "Path to the JAR file for the function (if the function is written in Java). \n" +
+                "It also supports URL path [http/https/file (file protocol assumes that file \n" +
                 "already exists on worker host)] from which worker can download the package.")
 
         flagSet.StringVar(
             &functionData.Py,
             "py",
             "",
-            "Path to the main Python file/Python Wheel file for the function (if the function is written in Python)")
+            "Path to the main Python file/Python Wheel file for the function\n" +
+                " (if the function is written in Python)")
 
         flagSet.StringVar(
             &functionData.Go,
             "go",
             "",
-            "Path to the main Go executable binary for the function (if the function is written in Go)")
+            "Path to the main Go executable binary for the function \n" +
+                "(if the function is written in Go)")
 
         flagSet.StringVarP(
             &functionData.Inputs,
             "inputs",
             "i",
             "",
-            "The input topic or topics (multiple topics can be specified as a comma-separated list) of a Pulsar Function")
+            "The input topic or topics (multiple topics can be specified as a comma-separated list) \n" +
+                "of a Pulsar Function")
 
         flagSet.StringVar(
             &functionData.TopicsPattern,
             "topics-pattern",
             "",
-            "The topic pattern to consume from list of topics under a namespace that match the pattern. " +
-                "[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in " +
+            "The topic pattern to consume from list of topics under a namespace that match the pattern. \n" +
+                "[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in \n" +
                 "--custom-serde-inputs (supported for java fun only)")
 
         flagSet.StringVarP(
@@ -160,7 +280,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             "schema-type",
             "t",
             "",
-            "The builtin schema type or custom schema class name to be used for messages output by the function")
+            "The builtin schema type or custom schema class name to be used for \n" +
+                "messages output by the function")
 
         flagSet.StringVar(
             &functionData.CustomSerDeInputs,
@@ -184,7 +305,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             &functionData.FunctionConfigFile,
             "function-config-file",
             "",
-            "The path to a YAML config file that specifies the configuration of a Pulsar Function")
+            "The path to a YAML config file that specifies the configuration \n" +
+                "of a Pulsar Function")
 
         flagSet.StringVar(
             &functionData.ProcessingGuarantees,
@@ -208,7 +330,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
             &functionData.SubsName,
             "subs-name",
             "",
-            "Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
+            "Pulsar source subscription name if user wants a specific subscription-name \n" +
+                "for input-topic consumer")
 
         flagSet.IntVar(
             &functionData.Parallelism,
@@ -287,6 +410,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
     err := processArgs(funcData)
     if err != nil {
+        vc.Command.Help()
         return err
     }
 
