@@ -33,7 +33,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, failOut)
 
 	clusterNotExist := pulsar.Output{
-		Desc: "the cluster is not exist in the broker",
+		Desc: "the specified cluster does not exist in the broker",
 		Out:  "[✖]  code: 404 reason: Cluster does not exist",
 	}
 	out = append(out, clusterNotExist)
