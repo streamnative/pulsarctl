@@ -33,6 +33,8 @@ func TestCreateFunctions(t *testing.T) {
     jarName := "dummyExample.jar"
     _, err = os.Create(jarName)
     assert.Nil(t, err)
+
+    defer os.Remove(jarName)
     // $ ./pulsarctl functions create
     // --tenant public
     // --namespace default
@@ -74,13 +76,10 @@ func TestCreateFunctions(t *testing.T) {
         "--inputs", "test-input-topic",
         "--output", "persistent://public/default/test-output-topic",
         "--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-        "--jar", "file:" + basePath + "/" + jarName,
+        "--jar", "file:" + "/pulsar_test/" + jarName,
         "--processing-guarantees", "EFFECTIVELY_ONCE",
     }
 
     _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileUrl)
-    assert.Nil(t, err)
-
-    err = os.Remove(jarName)
     assert.Nil(t, err)
 }

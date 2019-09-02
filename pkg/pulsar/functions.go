@@ -23,7 +23,6 @@ import (
     `fmt`
     `io`
     `mime/multipart`
-    `net/http`
     `net/textproto`
     `os`
     `path/filepath`
@@ -123,7 +122,7 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
     }
 
     contentType := multiPartWriter.FormDataContentType()
-    err = f.client.post(endpoint, nil, nil, bodyBuf, contentType)
+    err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
     if err != nil {
         return err
     }
@@ -167,19 +166,10 @@ func (f *functions) CreateFuncWithUrl(funcConf *FunctionConfig, pkgUrl string) e
         return err
     }
 
-    url := fmt.Sprintf("http://localhost:8080%s", endpoint)
-    req, err := http.NewRequest(http.MethodPost, url, bodyBuf)
+    contentType := multiPartWriter.FormDataContentType()
+    err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
     if err != nil {
         return err
-    }
-    req.Header.Set("Content-Type", multiPartWriter.FormDataContentType())
-    client := new(http.Client)
-    response, err := client.Do(req)
-    if err != nil {
-        return err
-    }
-    if response.StatusCode < 200 || response.StatusCode >= 300 {
-        return fmt.Errorf("response status:%s, response status code:%d", response.Status, response.StatusCode)
     }
 
     return nil
