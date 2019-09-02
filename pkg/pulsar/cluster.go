@@ -47,5 +47,5 @@ func (c *clusters) Delete(name string) error {
 
 func (c *clusters) Update(cdata ClusterData) error {
 	endpoint := c.client.endpoint(c.basePath, cdata.Name)
-	return c.client.post(endpoint, &cdata, nil)
+	return c.client.post(endpoint, &cdata, nil, nil, "")
 }
