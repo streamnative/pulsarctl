@@ -22,6 +22,8 @@ import (
     `errors`
     `fmt`
     `github.com/streamnative/pulsarctl/pkg/pulsar`
+    `gopkg.in/yaml.v2`
+    `io/ioutil`
     `os`
     `strings`
 )
@@ -116,6 +118,18 @@ func processArgs(funcData *pulsar.FunctionData) error {
         // no-op
     } else {
         funcData.FuncConf = new(pulsar.FunctionConfig)
+    }
+
+    if funcData.FunctionConfigFile != "" {
+        yamlFile, err := ioutil.ReadFile(funcData.FunctionConfigFile)
+        if err == nil {
+            err = yaml.Unmarshal(yamlFile, funcData.FuncConf)
+            if err != nil {
+                return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
+            }
+        } else if err != nil && !os.IsNotExist(err) {
+            return fmt.Errorf("load conf file failed, err:%s", err.Error())
+        }
     }
 
     if funcData.FQFN != "" {

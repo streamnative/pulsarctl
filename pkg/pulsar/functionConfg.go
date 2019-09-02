@@ -36,31 +36,31 @@ const (
 type FunctionConfig struct {
     // Any flags that you want to pass to the runtime.
     // note that in thread mode, these flags will have no impact
-    RuntimeFlags string `json:"runtimeFlags"`
+    RuntimeFlags string `json:"runtimeFlags" yaml:"runtimeFlags"`
 
-    Tenant    string `json:"tenant"`
-    Namespace string `json:"namespace"`
-    Name      string `json:"name"`
-    ClassName string `json:"className"`
+    Tenant    string `json:"tenant" yaml:"tenant"`
+    Namespace string `json:"namespace" yaml:"namespace"`
+    Name      string `json:"name" yaml:"name"`
+    ClassName string `json:"className" yaml:"className"`
 
-    Inputs             []string          `json:"inputs"`
-    CustomSerdeInputs  map[string]string `json:"customSerdeInputs"`
-    TopicsPattern      *string           `json:"topicsPattern"`
-    CustomSchemaInputs map[string]string `json:"customSchemaInputs"`
+    Inputs             []string          `json:"inputs" yaml:"inputs"`
+    CustomSerdeInputs  map[string]string `json:"customSerdeInputs" yaml:"customSerdeInputs"`
+    TopicsPattern      *string           `json:"topicsPattern" yaml:"topicsPattern"`
+    CustomSchemaInputs map[string]string `json:"customSchemaInputs" yaml:"customSchemaInputs"`
 
     // A generalized way of specifying inputs
-    InputSpecs map[string]ConsumerConfig `json:"inputSpecs"`
+    InputSpecs map[string]ConsumerConfig `json:"inputSpecs" yaml:"inputSpecs"`
 
-    Output string `json:"output"`
+    Output string `json:"output" yaml:"output"`
 
     // Represents either a builtin schema type (eg: 'avro', 'json', ect) or the class name for a Schema implementation
-    OutputSchemaType string `json:"outputSchemaType"`
+    OutputSchemaType string `json:"outputSchemaType" yaml:"outputSchemaType"`
 
-    OutputSerdeClassName string                 `json:"outputSerdeClassName"`
-    LogTopic             string                 `json:"logTopic"`
-    ProcessingGuarantees ProcessingGuarantees   `json:"processingGuarantees"`
-    RetainOrdering       bool                   `json:"retainOrdering"`
-    UserConfig           map[string]interface{} `json:"userConfig"`
+    OutputSerdeClassName string                 `json:"outputSerdeClassName" yaml:"outputSerdeClassName"`
+    LogTopic             string                 `json:"logTopic" yaml:"logTopic"`
+    ProcessingGuarantees ProcessingGuarantees   `json:"processingGuarantees" yaml:"processingGuarantees"`
+    RetainOrdering       bool                   `json:"retainOrdering" yaml:"retainOrdering"`
+    UserConfig           map[string]interface{} `json:"userConfig" yaml:"userConfig"`
 
     // This is a map of secretName(aka how the secret is going to be
     // accessed in the function via context) to an object that
