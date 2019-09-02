@@ -19,7 +19,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create)
 
 	createWithBrokers := pulsar.Example{
-		Desc:    "creteing the failure domain with brokers",
+		Desc:    "creating the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain --domain-name <domain-name> --broker-list <cluster-A>,<cluster-B> <cluster-name>",
 	}
 	examples = append(examples, createWithBrokers)
@@ -27,7 +27,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
-		Desc: "normao output",
+		Desc: "normal output",
 		Out:  "Create failure domain <domain-name> for cluster <cluster-name> succeed",
 	}
 	out = append(out, successOut)
