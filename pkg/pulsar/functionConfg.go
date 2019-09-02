@@ -67,21 +67,21 @@ type FunctionConfig struct {
     // encapsulates how the secret is fetched by the underlying
     // secrets provider. The type of an value here can be found by the
     // SecretProviderConfigurator.getSecretObjectType() method.
-    Secrets map[string]interface{} `json:"secrets"`
+    Secrets map[string]interface{} `json:"secrets" yaml:"secrets"`
 
-    Runtime           Runtime       `json:"runtime"`
-    AutoAck           bool          `json:"autoAck"`
-    MaxMessageRetries int           `json:"maxMessageRetries"`
-    DeadLetterTopic   string        `json:"deadLetterTopic"`
-    SubName           string        `json:"subName"`
-    Parallelism       int           `json:"parallelism"`
-    Resources         *Resources    `json:"resources"`
-    FQFN              string        `json:"fqfn"`
-    WindowConfig      *WindowConfig `json:"windowConfig"`
-    TimeoutMs         *int64         `json:"timeoutMs"`
-    Jar               string        `json:"jar"`
-    Py                string        `json:"py"`
-    Go                string        `json:"go"`
+    Runtime           Runtime       `json:"runtime" yaml:"runtime"`
+    AutoAck           bool          `json:"autoAck" yaml:"autoAck"`
+    MaxMessageRetries int           `json:"maxMessageRetries" yaml:"maxMessageRetries"`
+    DeadLetterTopic   string        `json:"deadLetterTopic" yaml:"deadLetterTopic"`
+    SubName           string        `json:"subName" yaml:"subName"`
+    Parallelism       int           `json:"parallelism" yaml:"parallelism"`
+    Resources         *Resources    `json:"resources" yaml:"resources"`
+    FQFN              string        `json:"fqfn" yaml:"fqfn"`
+    WindowConfig      *WindowConfig `json:"windowConfig" yaml:"windowConfig"`
+    TimeoutMs         *int64         `json:"timeoutMs" yaml:"timeoutMs"`
+    Jar               string        `json:"jar" yaml:"jar"`
+    Py                string        `json:"py" yaml:"py"`
+    Go                string        `json:"go" yaml:"go"`
     // Whether the subscriptions the functions created/used should be deleted when the functions is deleted
-    CleanupSubscription bool `json:"cleanupSubscription"`
+    CleanupSubscription bool `json:"cleanupSubscription" yaml:"cleanupSubscription"`
 }
