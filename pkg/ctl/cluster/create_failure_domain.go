@@ -57,7 +57,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("FailureDomainData", func(set *pflag.FlagSet) {
 		set.StringSliceVarP(
 			&failureDomainData.BrokerList,
-			"broker-list",
+			"brokers",
 			"b",
 			nil,
 			"Set the failure domain clusters")
