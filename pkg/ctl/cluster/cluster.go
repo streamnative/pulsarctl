@@ -46,6 +46,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFailureDomainCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getFailureDomainCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listFailureDomainCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteFailureDomainCmd)
 
 	return resourceCmd
 }
