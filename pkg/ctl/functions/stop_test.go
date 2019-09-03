@@ -71,3 +71,47 @@ func TestStopFunctions(t *testing.T) {
     _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
     assert.Nil(t, err)
 }
+
+func TestStopFunctionsWithFailure(t *testing.T) {
+	jarName := "dummyExample.jar"
+	_, err := os.Create(jarName)
+	assert.Nil(t, err)
+
+	defer os.Remove(jarName)
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-stop-failure",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--jar", jarName,
+	}
+
+	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	assert.Nil(t, err)
+
+	failureDeleteArgs := []string{"stop",
+		"--name", "not-exist",
+	}
+
+	_, err = TestFunctionsCommands(createFunctionsCmd, failureDeleteArgs)
+	assert.NotNil(t, err)
+
+	notExistNameOrFqfnArgs := []string{"stop",
+		"--tenant", "public",
+		"--namespace", "default",
+	}
+	_, err = TestFunctionsCommands(createFunctionsCmd, notExistNameOrFqfnArgs)
+	assert.NotNil(t, err)
+
+	notExistInstanceIDArgs := []string{"stop",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-stop-failure",
+		"--instance-id", "12345678",
+	}
+
+	_, err = TestFunctionsCommands(createFunctionsCmd, notExistInstanceIDArgs)
+	assert.NotNil(t, err)
+}

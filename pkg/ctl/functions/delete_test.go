@@ -71,3 +71,37 @@ func TestDeleteFunctions(t *testing.T) {
 	_, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
 	assert.Nil(t, err)
 }
+
+func TestDeleteFunctionsWithFailure(t *testing.T)  {
+	jarName := "dummyExample.jar"
+	_, err := os.Create(jarName)
+	assert.Nil(t, err)
+
+	defer os.Remove(jarName)
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-delete-failure",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--jar", jarName,
+	}
+
+	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	assert.Nil(t, err)
+
+	failureDeleteArgs := []string{"delete",
+		"--name", "not-exist",
+	}
+
+	_, err = TestFunctionsCommands(createFunctionsCmd, failureDeleteArgs)
+	assert.NotNil(t, err)
+
+	notExistNameOrFqfnArgs := []string{"delete",
+		"--tenant", "public",
+		"--namespace", "default",
+	}
+	_, err = TestFunctionsCommands(createFunctionsCmd, notExistNameOrFqfnArgs)
+	assert.NotNil(t, err)
+}
