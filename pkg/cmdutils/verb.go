@@ -8,15 +8,16 @@ import (
 
 // VerbCmd holds attributes that most of the commands use
 type VerbCmd struct {
-	Command			*cobra.Command
-	FlagSetGroup	*NamedFlagSetGroup
-	NameArg 		string
+	Command      *cobra.Command
+	FlagSetGroup *NamedFlagSetGroup
+	NameArg      string
+	NameArgs     []string
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
 func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd func(*VerbCmd)) {
-	verb := &VerbCmd {
-		Command:	&cobra.Command{},
+	verb := &VerbCmd{
+		Command: &cobra.Command{},
 	}
 	verb.FlagSetGroup = flagGrouping.New(verb.Command)
 	newVerbCmd(verb)
@@ -28,7 +29,7 @@ func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, ne
 func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
 	vc.Command.Use = use
 	vc.Command.Short = short
-	vc.Command.Long	= long
+	vc.Command.Long = long
 	vc.Command.Aliases = aliases
 }
 
@@ -47,7 +48,14 @@ func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	}
 }
 
-var ExecErrorHandler  = defaultExecErrorHandler
+func (vc *VerbCmd) SetRunFuncWithNameArgs(cmd func() error, checkArgs func(args []string) error) {
+	vc.Command.Run = func(_ *cobra.Command, args []string) {
+		vc.NameArgs = GetNameArgs(args, checkArgs)
+		run(cmd)
+	}
+}
+
+var ExecErrorHandler = defaultExecErrorHandler
 
 var defaultExecErrorHandler = func(err error) {
 	logger.Critical("%s\n", err.Error())

@@ -1,6 +1,7 @@
 package cluster
 
 import (
+	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -13,14 +14,15 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc:    "creating the failure domain",
-		Command: "pulsarctl clusters create-failure-domain --domain-name <domain-name> <cluster-name>",
+		Desc:    "create the failure domain",
+		Command: "pulsarctl clusters create-failure-domain <cluster-name> <domain-name>",
 	}
 	examples = append(examples, create)
 
 	createWithBrokers := pulsar.Example{
-		Desc:    "creating the failure domain with brokers",
-		Command: "pulsarctl clusters create-failure-domain --domain-name <domain-name> --broker-list <cluster-A>,<cluster-B> <cluster-name>",
+		Desc:    "create the failure domain with brokers",
+		Command: "pulsarctl clusters create-failure-domain" +
+			" --broker-list <cluster-A> --broker-list <cluster-B> <cluster-name> <domain-name>",
 	}
 	examples = append(examples, createWithBrokers)
 	desc.CommandExamples = examples
@@ -31,7 +33,12 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		Out:  "Create failure domain <domain-name> for cluster <cluster-name> succeed",
 	}
 	out = append(out, successOut)
-	out = append(out, argsError)
+
+	argsErrorOut := pulsar.Output{
+		Desc:"the args need to be specified as <cluster-name> <domain-name>",
+		Out: "[✖]  need specified two names for cluster and failure domain",
+	}
+	out =append(out, argsErrorOut)
 	out = append(out, clusterNonExist)
 	desc.CommandOutput = out
 
@@ -47,13 +54,19 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		return doCreateFailureDomain(vc, &failureDomainData)
 	})
 
+	checkArgs := func(args []string) error {
+		if len(args) != 2 {
+			return errors.New("need to specified two names for cluster and failure domain")
+		}
+		return nil
+	}
+
+	vc.SetRunFuncWithNameArgs(func() error {
+		return doCreateFailureDomain(vc, &failureDomainData)
+	}, checkArgs)
+
 	vc.FlagSetGroup.InFlagSet("FailureDomainData", func(set *pflag.FlagSet) {
-		set.StringVar(
-			&failureDomainData.DomainName,
-			"domain-name",
-			"",
-			"The failure domain name")
-		set.StringArrayVarP(
+		set.StringSliceVarP(
 			&failureDomainData.BrokerList,
 			"broker-list",
 			"b",
@@ -63,7 +76,9 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *pulsar.FailureDomainData) error {
-	failureDomain.ClusterName = vc.NameArg
+	failureDomain.ClusterName = vc.NameArgs[0]
+	failureDomain.DomainName = vc.NameArgs[1]
+
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().CreateFailureDomain(*failureDomain)
 	if err == nil {

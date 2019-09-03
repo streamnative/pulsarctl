@@ -18,10 +18,10 @@ const IncompatibleFlags = "cannot be used at the same time"
 // NewVerbCmd defines a standard resource command
 func NewResourceCmd(use, short, long string, aliases ...string) *cobra.Command {
 	return &cobra.Command{
-		Use:		use,
-		Short: 		short,
-		Long:		long,
-		Aliases:	aliases,
+		Use:     use,
+		Short:   short,
+		Long:    long,
+		Aliases: aliases,
 		Run: func(cmd *cobra.Command, _ []string) {
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())
@@ -48,6 +48,15 @@ func GetNameArg(args []string) string {
 	return ""
 }
 
+func GetNameArgs(args []string, check func(args []string) error) []string {
+	err := check(args)
+	if err != nil {
+		logger.Critical(err.Error())
+		CheckNameArgError(err)
+	}
+	return args
+}
+
 func NewPulsarClient() pulsar.Client {
 	return PulsarCtlConfig.Client(pulsar.V2)
 }
@@ -64,7 +73,6 @@ func PrintJson(w io.Writer, obj interface{}) {
 	}
 	fmt.Fprintln(w, string(b))
 }
-
 
 func PrintError(w io.Writer, err error) {
 	msg := err.Error()
