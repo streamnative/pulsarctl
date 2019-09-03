@@ -20,7 +20,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create)
 
 	createWithBrokers := pulsar.Example{
-		Desc:    "create the failure domain with brokers",
+		Desc: "create the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain" +
 			" --broker-list <cluster-A> --broker-list <cluster-B> <cluster-name> <domain-name>",
 	}
@@ -35,10 +35,10 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut)
 
 	argsErrorOut := pulsar.Output{
-		Desc:"the args need to be specified as <cluster-name> <domain-name>",
-		Out: "[✖]  need specified two names for cluster and failure domain",
+		Desc: "the args need to be specified as <cluster-name> <domain-name>",
+		Out:  "[✖]  need specified two names for cluster and failure domain",
 	}
-	out =append(out, argsErrorOut)
+	out = append(out, argsErrorOut)
 	out = append(out, clusterNonExist)
 	desc.CommandOutput = out
 
