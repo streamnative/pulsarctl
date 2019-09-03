@@ -60,24 +60,22 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
-		Desc: " normal output",
+		Desc: "normal output",
 		Out:  "Stopped successfully",
 	}
 
 	failOut := pulsar.Output{
-		Desc: " You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
-		Out: "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
+		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
+		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
 	failOutWithNameNotExist := pulsar.Output{
-		Desc: " The name of Pulsar Functions doesn't exist, please check the --name args",
+		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	//[✖]  code: 400 reason: Operation not permitted
-
 	failOutWithWrongInstanceID := pulsar.Output{
-		Desc: " Used an instanceID that does not exist or other impermissible actions",
+		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
 
@@ -86,7 +84,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"stop",
-		"",
+		"Stops function instance",
 		desc.ToString(),
 		"stop",
 	)

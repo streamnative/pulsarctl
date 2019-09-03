@@ -59,26 +59,26 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
-		Desc: " normal output",
+		Desc: "normal output",
 		Out:  "Deleted successfully",
 	}
 
-    failOut := pulsar.Output{
-        Desc: " You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
-        Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
-    }
+	failOut := pulsar.Output{
+		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
+		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
+	}
 
-    failOutWithNameNotExist := pulsar.Output{
-        Desc: " The name of Pulsar Functions doesn't exist, please check the --name args",
-        Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
-    }
+	failOutWithNameNotExist := pulsar.Output{
+		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
+		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"delete",
-		"",
+		"Delete a Pulsar Function that is running on a Pulsar cluster",
 		desc.ToString(),
 		"delete",
 	)

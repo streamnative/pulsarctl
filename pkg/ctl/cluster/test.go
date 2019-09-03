@@ -8,8 +8,7 @@ import (
 	"os"
 )
 
-func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error)  {
-
+func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error) {
 	var execError error
 	cmdutils.ExecErrorHandler = func(err error) {
 		execError = err
@@ -20,9 +19,9 @@ func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 		nameError = err
 	}
 
-	var rootCmd = &cobra.Command {
-		Use:	"pulsarctl [command]",
-		Short: 	"a CLI for Apache Pulsar",
+	var rootCmd = &cobra.Command{
+		Use:   "pulsarctl [command]",
+		Short: "a CLI for Apache Pulsar",
 		Run: func(cmd *cobra.Command, _ []string) {
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())
@@ -33,7 +32,6 @@ func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
 	rootCmd.SetArgs(append([]string{"clusters"}, args...))
-
 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"clusters",
@@ -53,10 +51,10 @@ var (
 	basePath string
 )
 
-func TestTlsHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string)(out *bytes.Buffer, err error) {
-	var rootCmd = &cobra.Command {
-		Use:	"pulsarctl [command]",
-		Short: 	"a CLI for Apache Pulsar",
+func TestTlsHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error) {
+	var rootCmd = &cobra.Command{
+		Use:   "pulsarctl [command]",
+		Short: "a CLI for Apache Pulsar",
 		Run: func(cmd *cobra.Command, _ []string) {
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())
@@ -84,9 +82,9 @@ func TestTlsHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string)(out *bytes.
 
 	baseArgs := []string{
 		"--auth-params",
-		"{\"tlsCertFile\":\""+basePath+"/test/auth/certs/client-cert.pem\""+
-		",\"tlsKeyFile\":\""+basePath+"/test/auth/certs/client-key.pem\"}",
-		"--tls-trust-cert-pat", basePath+"/test/auth/certs/cacert.pem",
+		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
+			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
+		"--tls-trust-cert-pat", basePath + "/test/auth/certs/cacert.pem",
 		"--admin-service-url", "https://localhost:8443",
 		"--tls-allow-insecure"}
 

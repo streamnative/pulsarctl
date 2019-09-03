@@ -20,6 +20,7 @@ package functions
 import (
 	"github.com/stretchr/testify/assert"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -39,7 +40,7 @@ func TestStopFunctions(t *testing.T) {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 
 	stopArgs := []string{"stop",
@@ -48,28 +49,28 @@ func TestStopFunctions(t *testing.T) {
 		"--name", "test-functions-stop",
 	}
 
-	_, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
+	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
 	assert.Nil(t, err)
 
-    argsFqfn := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-functions-stop-fqfn",
-        "--inputs", "test-input-topic",
-        "--output", "persistent://public/default/test-output-topic",
-        "--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-        "--jar", jarName,
-    }
+	argsFqfn := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-stop-fqfn",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--jar", jarName,
+	}
 
-    _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
-    assert.Nil(t, err)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	assert.Nil(t, err)
 
-    stopArgsFqfn := []string{"stop",
-        "--fqfn", "public/default/test-functions-stop-fqfn",
-    }
+	stopArgsFqfn := []string{"stop",
+		"--fqfn", "public/default/test-functions-stop-fqfn",
+	}
 
-    _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
-    assert.Nil(t, err)
+	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
+	assert.Nil(t, err)
 }
 
 func TestStopFunctionsWithFailure(t *testing.T) {
@@ -88,30 +89,37 @@ func TestStopFunctionsWithFailure(t *testing.T) {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 
+	// test the function name not exist
 	failureDeleteArgs := []string{"stop",
 		"--name", "not-exist",
 	}
-
-	_, err = TestFunctionsCommands(createFunctionsCmd, failureDeleteArgs)
+	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, failureDeleteArgs)
 	assert.NotNil(t, err)
+	failMsg := "Function not-exist doesn't exist"
+	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
 
+	// test the --name args not exist
 	notExistNameOrFqfnArgs := []string{"stop",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
-	_, err = TestFunctionsCommands(createFunctionsCmd, notExistNameOrFqfnArgs)
+	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, notExistNameOrFqfnArgs)
 	assert.NotNil(t, err)
+	failNameMsg := "you must specify a name for the function or a Fully Qualified Function Name (FQFN)"
+	assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
 
+	// test the instance id not exist
 	notExistInstanceIDArgs := []string{"stop",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-functions-stop-failure",
 		"--instance-id", "12345678",
 	}
-
-	_, err = TestFunctionsCommands(createFunctionsCmd, notExistInstanceIDArgs)
+	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, notExistInstanceIDArgs)
 	assert.NotNil(t, err)
+	failInstanceIDMsg := "Operation not permitted"
+	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
 }

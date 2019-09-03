@@ -20,6 +20,7 @@ package functions
 import (
 	"github.com/stretchr/testify/assert"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -39,7 +40,7 @@ func TestDeleteFunctions(t *testing.T) {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 
 	deleteArgs := []string{"delete",
@@ -48,7 +49,7 @@ func TestDeleteFunctions(t *testing.T) {
 		"--name", "test-functions-delete",
 	}
 
-	_, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
+	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
 	assert.Nil(t, err)
 
 	argsFqfn := []string{"create",
@@ -61,18 +62,18 @@ func TestDeleteFunctions(t *testing.T) {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
 	assert.Nil(t, err)
 
 	deleteArgsFqfn := []string{"delete",
 		"--fqfn", "public/default/test-functions-delete-fqfn",
 	}
 
-	_, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
+	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
 	assert.Nil(t, err)
 }
 
-func TestDeleteFunctionsWithFailure(t *testing.T)  {
+func TestDeleteFunctionsWithFailure(t *testing.T) {
 	jarName := "dummyExample.jar"
 	_, err := os.Create(jarName)
 	assert.Nil(t, err)
@@ -88,20 +89,25 @@ func TestDeleteFunctionsWithFailure(t *testing.T)  {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
+
 	assert.Nil(t, err)
 
 	failureDeleteArgs := []string{"delete",
 		"--name", "not-exist",
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, failureDeleteArgs)
-	assert.NotNil(t, err)
+	_, execErrMsg, _ := TestFunctionsCommands(deleteFunctionsCmd, failureDeleteArgs)
+	assert.NotNil(t, execErrMsg)
+	exceptMsg := "Function not-exist doesn't exist"
+	assert.True(t, strings.ContainsAny(execErrMsg.Error(), exceptMsg))
 
 	notExistNameOrFqfnArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
-	_, err = TestFunctionsCommands(createFunctionsCmd, notExistNameOrFqfnArgs)
-	assert.NotNil(t, err)
+	_, execErrMsg, _ = TestFunctionsCommands(deleteFunctionsCmd, notExistNameOrFqfnArgs)
+	failMsg := "you must specify a name for the function or a Fully Qualified Function Name (FQFN)"
+	assert.NotNil(t, execErrMsg)
+	assert.True(t, strings.ContainsAny(execErrMsg.Error(), failMsg))
 }
