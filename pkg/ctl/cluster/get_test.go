@@ -11,7 +11,7 @@ import (
 
 func TestGetClusterData(t *testing.T) {
 	args := []string{"get", "standalone"}
-	out, err := TestClusterCommands(getClusterDataCmd, args)
+	out, _, _, err := TestClusterCommands(getClusterDataCmd, args)
 	if err != nil {
 		t.Error(err)
 	}

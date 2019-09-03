@@ -47,9 +47,15 @@ func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	}
 }
 
+var ExecErrorHandler  = defaultExecErrorHandler
+
+var defaultExecErrorHandler = func(err error) {
+	logger.Critical("%s\n", err.Error())
+	os.Exit(1)
+}
+
 func run(cmd func() error) {
 	if err := cmd(); err != nil {
-		logger.Critical("%s\n", err.Error())
-		os.Exit(1)
+		ExecErrorHandler(err)
 	}
 }

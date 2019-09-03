@@ -19,13 +19,13 @@ func TestUpdateCluster(t *testing.T) {
 		"standalone",
 	}
 
-	_, err := TestClusterCommands(updateClusterCmd, args)
+	_, _, _, err := TestClusterCommands(updateClusterCmd, args)
 	if err != nil {
 		t.Error(err)
 	}
 
 	args = []string{"get", "standalone"}
-	out, err := TestClusterCommands(getClusterDataCmd, args)
+	out, _, _, err := TestClusterCommands(getClusterDataCmd, args)
 
 	var data pulsar.ClusterData
 	err = json.Unmarshal(out.Bytes(), &data)

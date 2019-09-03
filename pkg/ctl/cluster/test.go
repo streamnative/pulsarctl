@@ -8,7 +8,18 @@ import (
 	"os"
 )
 
-func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error)  {
+func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error)  {
+
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
+	}
+
+	var nameError error
+	cmdutils.CheckNameArgError = func(err error) {
+		nameError = err
+	}
+
 	var rootCmd = &cobra.Command {
 		Use:	"pulsarctl [command]",
 		Short: 	"a CLI for Apache Pulsar",
@@ -34,7 +45,7 @@ func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	rootCmd.AddCommand(resourceCmd)
 	err = rootCmd.Execute()
 
-	return buf, err
+	return buf, execError, nameError, err
 }
 
 var (
