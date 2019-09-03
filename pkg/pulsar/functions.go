@@ -18,159 +18,159 @@
 package pulsar
 
 import (
-    `bytes`
-    `encoding/json`
-    `fmt`
-    `io`
-    `mime/multipart`
-    `net/textproto`
-    `os`
-    `path/filepath`
-    `strings`
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/textproto"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type Functions interface {
-    // Create a new function.
-    CreateFunc(data *FunctionConfig, fileName string) error
+	// Create a new function.
+	CreateFunc(data *FunctionConfig, fileName string) error
 
-    // Create a new function by providing url from which fun-pkg can be downloaded. supported url: http/file
-    // eg:
-    //  File: file:/dir/fileName.jar
-    //  Http: http://www.repo.com/fileName.jar
-    //
-    // @param functionConfig
-    //      the function configuration object
-    // @param pkgUrl
-    //      url from which pkg can be downloaded
-    CreateFuncWithUrl(data *FunctionConfig, pkgUrl string) error
+	// Create a new function by providing url from which fun-pkg can be downloaded. supported url: http/file
+	// eg:
+	//  File: file:/dir/fileName.jar
+	//  Http: http://www.repo.com/fileName.jar
+	//
+	// @param functionConfig
+	//      the function configuration object
+	// @param pkgUrl
+	//      url from which pkg can be downloaded
+	CreateFuncWithUrl(data *FunctionConfig, pkgUrl string) error
 }
 
 type functions struct {
-    client   *client
-    basePath string
+	client   *client
+	basePath string
 }
 
 func (c *client) Functions() Functions {
-    return &functions{
-        client:   c,
-        basePath: "/functions",
-    }
+	return &functions{
+		client:   c,
+		basePath: "/functions",
+	}
 }
 
 func (f *functions) createStringFromField(w *multipart.Writer, value string) (io.Writer, error) {
-    h := make(textproto.MIMEHeader)
-    h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "functionConfig"))
-    h.Set("Content-Type", "application/json")
-    return w.CreatePart(h)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "functionConfig"))
+	h.Set("Content-Type", "application/json")
+	return w.CreatePart(h)
 }
 
 func (f *functions) createTextFromFiled(w *multipart.Writer, value string) (io.Writer, error) {
-    h := make(textproto.MIMEHeader)
-    h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "url"))
-    h.Set("Content-Type", "text/plain")
-    return w.CreatePart(h)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s" `, "url"))
+	h.Set("Content-Type", "text/plain")
+	return w.CreatePart(h)
 }
 
 func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error {
-    endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
+	endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
 
-    // buffer to store our request as bytes
-    bodyBuf := bytes.NewBufferString("")
+	// buffer to store our request as bytes
+	bodyBuf := bytes.NewBufferString("")
 
-    multiPartWriter := multipart.NewWriter(bodyBuf)
+	multiPartWriter := multipart.NewWriter(bodyBuf)
 
-    jsonData, err := json.Marshal(funcConf)
-    if err != nil {
-        return err
-    }
+	jsonData, err := json.Marshal(funcConf)
+	if err != nil {
+		return err
+	}
 
-    stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
-    if err != nil {
-        return err
-    }
+	stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
+	if err != nil {
+		return err
+	}
 
-    _, err = stringWriter.Write(jsonData)
-    if err != nil {
-        return err
-    }
+	_, err = stringWriter.Write(jsonData)
+	if err != nil {
+		return err
+	}
 
-    if fileName != "" && !strings.HasPrefix(fileName, "builtin://") {
-        // If the function code is built in, we don't need to submit here
-        file, err := os.Open(fileName)
-        if err != nil {
-            return err
-        }
-        defer file.Close()
+	if fileName != "" && !strings.HasPrefix(fileName, "builtin://") {
+		// If the function code is built in, we don't need to submit here
+		file, err := os.Open(fileName)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
 
-        part, err := multiPartWriter.CreateFormFile("data", filepath.Base(file.Name()))
+		part, err := multiPartWriter.CreateFormFile("data", filepath.Base(file.Name()))
 
-        if err != nil {
-            return err
-        }
+		if err != nil {
+			return err
+		}
 
-        // copy the actual file content to the filed's writer
-        _, err = io.Copy(part, file)
-        if err != nil {
-            return err
-        }
-    }
+		// copy the actual file content to the filed's writer
+		_, err = io.Copy(part, file)
+		if err != nil {
+			return err
+		}
+	}
 
-    // In here, we completed adding the file and the fields, let's close the multipart writer
-    // So it writes the ending boundary
-    if err = multiPartWriter.Close(); err != nil {
-        return err
-    }
+	// In here, we completed adding the file and the fields, let's close the multipart writer
+	// So it writes the ending boundary
+	if err = multiPartWriter.Close(); err != nil {
+		return err
+	}
 
-    contentType := multiPartWriter.FormDataContentType()
-    err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
-    if err != nil {
-        return err
-    }
+	contentType := multiPartWriter.FormDataContentType()
+	err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
 
 func (f *functions) CreateFuncWithUrl(funcConf *FunctionConfig, pkgUrl string) error {
-    endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
-    // buffer to store our request as bytes
-    bodyBuf := bytes.NewBufferString("")
+	endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
+	// buffer to store our request as bytes
+	bodyBuf := bytes.NewBufferString("")
 
-    multiPartWriter := multipart.NewWriter(bodyBuf)
+	multiPartWriter := multipart.NewWriter(bodyBuf)
 
-    textWriter, err := f.createTextFromFiled(multiPartWriter, "url")
-    if err != nil {
-        return err
-    }
+	textWriter, err := f.createTextFromFiled(multiPartWriter, "url")
+	if err != nil {
+		return err
+	}
 
-    _, err = textWriter.Write([]byte(pkgUrl))
-    if err != nil {
-        return err
-    }
+	_, err = textWriter.Write([]byte(pkgUrl))
+	if err != nil {
+		return err
+	}
 
-    jsonData, err := json.Marshal(funcConf)
-    if err != nil {
-        return err
-    }
+	jsonData, err := json.Marshal(funcConf)
+	if err != nil {
+		return err
+	}
 
-    stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
-    if err != nil {
-        return err
-    }
+	stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
+	if err != nil {
+		return err
+	}
 
-    _, err = stringWriter.Write(jsonData)
-    if err != nil {
-        return err
-    }
+	_, err = stringWriter.Write(jsonData)
+	if err != nil {
+		return err
+	}
 
-    if err = multiPartWriter.Close(); err != nil {
-        return err
-    }
+	if err = multiPartWriter.Close(); err != nil {
+		return err
+	}
 
-    contentType := multiPartWriter.FormDataContentType()
-    err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
-    if err != nil {
-        return err
-    }
+	contentType := multiPartWriter.FormDataContentType()
+	err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
