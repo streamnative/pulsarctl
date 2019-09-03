@@ -58,6 +58,12 @@ type Functions interface {
 
 	// Start function instance
 	StartFunctionWithID(tenant, namespace, name string, instanceID int) error
+
+	// Restart all function instances
+	RestartFunction(tenant, namespace, name string) error
+
+	// Restart function instance
+	RestartFunctionWithID(tenant, namespace, name string, instanceID int) error
 }
 
 type functions struct {
@@ -217,5 +223,17 @@ func (f *functions) StartFunctionWithID(tenant, namespace, name string, instance
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
 
 	return f.client.post(endpoint+"/start", "", nil)
+}
+
+func (f *functions) RestartFunction(tenant, namespace, name string) error {
+	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
+	return f.client.post(endpoint+"/restart", "", nil)
+}
+
+func (f *functions) RestartFunctionWithID(tenant, namespace, name string, instanceID int) error  {
+	id := fmt.Sprintf("%d", instanceID)
+	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
+
+	return f.client.post(endpoint+"/restart", "", nil)
 }
 
