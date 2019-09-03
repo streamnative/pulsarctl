@@ -63,7 +63,7 @@ func (c *clusters) UpdatePeerClusters(cluster string, peerClusters []string) err
 	endpoint := c.client.endpoint(c.basePath, cluster, "peers")
 	return c.client.post(endpoint, peerClusters, nil)
 }
- 
+
 func (c *clusters) CreateFailureDomain(data FailureDomainData) error {
 	endpoint := c.client.endpoint(c.basePath, data.ClusterName, "failureDomains", data.DomainName)
 	return c.client.post(endpoint, &data, nil)
