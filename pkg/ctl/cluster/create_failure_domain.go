@@ -1,7 +1,7 @@
 package cluster
 
 import (
-	"github.com/pkg/errors"
+	"errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -70,7 +70,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 			&failureDomainData.BrokerList,
 			"broker-list",
 			"b",
-			[]string{""},
+			nil,
 			"Set the failure domain clusters")
 	})
 }
@@ -78,6 +78,10 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *pulsar.FailureDomainData) error {
 	failureDomain.ClusterName = vc.NameArgs[0]
 	failureDomain.DomainName = vc.NameArgs[1]
+
+	if len(failureDomain.BrokerList) == 0 || failureDomain.BrokerList == nil {
+		return errors.New("broker list must be specified")
+	}
 
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().CreateFailureDomain(*failureDomain)
