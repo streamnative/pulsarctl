@@ -7,12 +7,12 @@ import (
 )
 
 var argsError = pulsar.Output{
-	Desc: "output of doesn't specified a cluster name",
+	Desc: "the cluster name is not specified or the cluster name is specified more than one",
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
 var clusterNonExist = pulsar.Output{
-	Desc: "output of cluster doesn't exist",
+	Desc: "the specified cluster does not exist in the broker",
 	Out:  "[✖]  code: 404 reason: Cluster does not exist",
 }
 

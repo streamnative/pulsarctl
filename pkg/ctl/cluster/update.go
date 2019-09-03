@@ -51,19 +51,8 @@ func updateClusterCmd(vc *cmdutils.VerbCmd) {
 		Out:  "Cluster <cluster-name> updated",
 	}
 	out = append(out, successOut)
-
-	failOut := pulsar.Output{
-		Desc: "output of doesn't specified  a cluster name",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
-	}
-	out = append(out, failOut)
-
-	clusterNonExist := pulsar.Output{
-		Desc: "Output of cluster doesn't exist",
-		Out:  "[✖]  code: 404 reason: Cluster does not exist",
-	}
+	out = append(out, argsError)
 	out = append(out, clusterNonExist)
-
 	desc.CommandOutput = out
 
 	vc.SetDescription(
