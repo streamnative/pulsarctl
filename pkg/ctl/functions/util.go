@@ -382,3 +382,37 @@ func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
 
 	return nil
 }
+
+func processBaseArguments(funcData *pulsar.FunctionData) error {
+	usesSetters := funcData.Tenant != "" || funcData.Namespace != "" || funcData.FuncName != ""
+	usesFqfn := funcData.FQFN != ""
+
+	// return error if --fqfn is set alongside any combination of --tenant, --namespace, and --name
+	if usesFqfn && usesSetters {
+		return errors.New("you must specify either a Fully Qualified Function Name (FQFN) or tenant, namespace, and function name")
+	} else if usesFqfn {
+		// If the --fqfn flag is used, parse tenant, namespace, and name using that flag
+		fqfnParts := strings.Split(funcData.FQFN, "/")
+		if len(fqfnParts) != 3 {
+			return errors.New("fully qualified function names (FQFNs) must be of the form tenant/namespace/name")
+		}
+
+		funcData.Tenant = fqfnParts[0]
+		funcData.Namespace = fqfnParts[1]
+		funcData.FuncName = fqfnParts[2]
+	} else {
+		if funcData.Tenant == "" {
+			funcData.Tenant = PublicTenant
+		}
+
+		if funcData.Namespace == "" {
+			funcData.Namespace = DefaultNamespace
+		}
+
+		if funcData.FuncName == "" {
+			return errors.New("you must specify a name for the function or a Fully Qualified Function Name (FQFN)")
+		}
+	}
+
+	return nil
+}
