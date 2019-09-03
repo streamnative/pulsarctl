@@ -41,6 +41,15 @@ func GetNameArg(args []string) string {
 	return ""
 }
 
+func GetNameArgs(args []string, check func(args []string) error) []string {
+	err := check(args)
+	if err != nil {
+		logger.Critical(err.Error())
+		os.Exit(1)
+	}
+	return args
+}
+
 func NewPulsarClient() pulsar.Client {
 	return PulsarCtlConfig.Client(pulsar.V2)
 }
