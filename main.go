@@ -7,13 +7,14 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
-	`github.com/streamnative/pulsarctl/pkg/ctl/functions`
+	"github.com/streamnative/pulsarctl/pkg/ctl/functions"
+	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"os"
 )
 
-var rootCmd = &cobra.Command {
-	Use:	"pulsarctl [command]",
-	Short: 	"a CLI for Apache Pulsar",
+var rootCmd = &cobra.Command{
+	Use:   "pulsarctl [command]",
+	Short: "a CLI for Apache Pulsar",
 	Run: func(cmd *cobra.Command, _ []string) {
 		if err := cmd.Help(); err != nil {
 			logger.Debug("ignoring error %q", err.Error())
@@ -61,6 +62,7 @@ func init() {
 
 func addCommands(flagGrouping *cmdutils.FlagGrouping) {
 	rootCmd.AddCommand(cluster.Command(flagGrouping))
+	rootCmd.AddCommand(tenant.Command(flagGrouping))
 	rootCmd.AddCommand(completion.Command(rootCmd))
 	rootCmd.AddCommand(functions.Command(flagGrouping))
 }
