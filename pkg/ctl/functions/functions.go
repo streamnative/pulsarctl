@@ -18,20 +18,20 @@
 package functions
 
 import (
-    `github.com/spf13/cobra`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-    resourceCmd := cmdutils.NewResourceCmd(
-        "functions",
-        "Interface for managing Pulsar Functions " +
-            "(lightweight, Lambda-style compute processes that work with Pulsar)",
-        "",
-        "functions",
-        )
+	resourceCmd := cmdutils.NewResourceCmd(
+		"functions",
+		"Interface for managing Pulsar Functions "+
+			"(lightweight, Lambda-style compute processes that work with Pulsar)",
+		"",
+		"functions",
+	)
 
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFunctionsCmd)
 
-    return resourceCmd
+	return resourceCmd
 }
