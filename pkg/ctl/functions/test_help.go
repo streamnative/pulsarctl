@@ -25,7 +25,7 @@ import (
 	"os"
 )
 
-func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error) {
+func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, err error) {
 	var rootCmd = &cobra.Command{
 		Use:   "pulsarctl [command]",
 		Short: "a CLI for Apache Pulsar",
@@ -34,6 +34,11 @@ func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 				logger.Debug("ignoring error %q", err.Error())
 			}
 		},
+	}
+
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
 	}
 
 	buf := new(bytes.Buffer)
@@ -50,7 +55,7 @@ func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 	rootCmd.AddCommand(resourceCmd)
 	err = rootCmd.Execute()
 
-	return buf, err
+	return buf, execError, err
 }
 
 var (

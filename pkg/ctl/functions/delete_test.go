@@ -24,7 +24,7 @@ import (
 	"testing"
 )
 
-func TestStopFunctions(t *testing.T) {
+func TestDeleteFunctions(t *testing.T) {
 	jarName := "dummyExample.jar"
 	_, err := os.Create(jarName)
 	assert.Nil(t, err)
@@ -33,7 +33,7 @@ func TestStopFunctions(t *testing.T) {
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop",
+		"--name", "test-functions-delete",
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
@@ -43,19 +43,19 @@ func TestStopFunctions(t *testing.T) {
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 
-	stopArgs := []string{"stop",
+	deleteArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop",
+		"--name", "test-functions-delete",
 	}
 
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
+	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
 	assert.Nil(t, err)
 
 	argsFqfn := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop-fqfn",
+		"--name", "test-functions-delete-fqfn",
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
@@ -65,15 +65,15 @@ func TestStopFunctions(t *testing.T) {
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
 	assert.Nil(t, err)
 
-	stopArgsFqfn := []string{"stop",
-		"--fqfn", "public/default/test-functions-stop-fqfn",
+	deleteArgsFqfn := []string{"delete",
+		"--fqfn", "public/default/test-functions-delete-fqfn",
 	}
 
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
+	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
 	assert.Nil(t, err)
 }
 
-func TestStopFunctionsWithFailure(t *testing.T) {
+func TestDeleteFunctionsWithFailure(t *testing.T) {
 	jarName := "dummyExample.jar"
 	_, err := os.Create(jarName)
 	assert.Nil(t, err)
@@ -82,7 +82,7 @@ func TestStopFunctionsWithFailure(t *testing.T) {
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop-failure",
+		"--name", "test-functions-delete-failure",
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
@@ -90,36 +90,24 @@ func TestStopFunctionsWithFailure(t *testing.T) {
 	}
 
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
+
 	assert.Nil(t, err)
 
-	// test the function name not exist
-	failureDeleteArgs := []string{"stop",
+	failureDeleteArgs := []string{"delete",
 		"--name", "not-exist",
 	}
-	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, failureDeleteArgs)
-	assert.NotNil(t, err)
-	failMsg := "Function not-exist doesn't exist"
-	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
 
-	// test the --name args not exist
-	notExistNameOrFqfnArgs := []string{"stop",
+	_, execErrMsg, _ := TestFunctionsCommands(deleteFunctionsCmd, failureDeleteArgs)
+	assert.NotNil(t, execErrMsg)
+	exceptMsg := "Function not-exist doesn't exist"
+	assert.True(t, strings.ContainsAny(execErrMsg.Error(), exceptMsg))
+
+	notExistNameOrFqfnArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
-	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, notExistNameOrFqfnArgs)
-	assert.NotNil(t, err)
-	failNameMsg := "you must specify a name for the function or a Fully Qualified Function Name (FQFN)"
-	assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
-
-	// test the instance id not exist
-	notExistInstanceIDArgs := []string{"stop",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-functions-stop-failure",
-		"--instance-id", "12345678",
-	}
-	_, err, _ = TestFunctionsCommands(stopFunctionsCmd, notExistInstanceIDArgs)
-	assert.NotNil(t, err)
-	failInstanceIDMsg := "Operation not permitted"
-	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	_, execErrMsg, _ = TestFunctionsCommands(deleteFunctionsCmd, notExistNameOrFqfnArgs)
+	failMsg := "you must specify a name for the function or a Fully Qualified Function Name (FQFN)"
+	assert.NotNil(t, execErrMsg)
+	assert.True(t, strings.ContainsAny(execErrMsg.Error(), failMsg))
 }

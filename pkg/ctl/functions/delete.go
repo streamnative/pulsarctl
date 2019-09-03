@@ -21,47 +21,46 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
 )
 
-func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
+func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "This command is used for stopping function instance."
+	desc.CommandUsedFor = "This command is used for delete a Pulsar Function that is running on a Pulsar cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 
-	stop := pulsar.Example{
-		Desc: "Stops function instance",
-		Command: "pulsarctl functions stop \n" +
+	del := pulsar.Example{
+		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster",
+		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name <the name of Pulsar Functions>",
 	}
-	examples = append(examples, stop)
+	examples = append(examples, del)
 
-	stopWithInstanceID := pulsar.Example{
-		Desc: "Stops function instance with instance ID",
-		Command: "pulsarctl functions stop \n" +
+	delWithInstanceID := pulsar.Example{
+		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with instance ID",
+		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>\n" +
+			"\t--name <the name of Pulsar Functions> \n" +
 			"\t--instance-id 1",
 	}
-	examples = append(examples, stopWithInstanceID)
+	examples = append(examples, delWithInstanceID)
 
-	stopWithFQFN := pulsar.Example{
-		Desc: "Stops function instance with FQFN",
-		Command: "pulsarctl functions stop \n" +
+	delWithFqfn := pulsar.Example{
+		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with FQFN",
+		Command: "pulsarctl functions delete \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
 	}
-	examples = append(examples, stopWithFQFN)
+	examples = append(examples, delWithFqfn)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Stopped successfully",
+		Out:  "Deleted successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -74,26 +73,21 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := pulsar.Output{
-		Desc: "Used an instanceID that does not exist or other impermissible actions",
-		Out:  "[✖]  code: 400 reason: Operation not permitted",
-	}
-
-	out = append(out, successOut, failOut, failOutWithNameNotExist, failOutWithWrongInstanceID)
+	out = append(out, successOut, failOut, failOutWithNameNotExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"stop",
-		"Stops function instance",
+		"delete",
+		"Delete a Pulsar Function that is running on a Pulsar cluster",
 		desc.ToString(),
-		"stop",
+		"delete",
 	)
 
 	functionData := &pulsar.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
-		return doStopFunctions(vc, functionData)
+		return doDeleteFunctions(vc, functionData)
 	})
 
 	// register the params
@@ -121,40 +115,21 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"name",
 			"",
 			"The name of a Pulsar Function")
-
-		flagSet.StringVar(
-			&functionData.InstanceID,
-			"instance-id",
-			"",
-			"The function instanceId (stop all instances if instance-id is not provided)")
 	})
 }
 
-func doStopFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-	if funcData.InstanceID != "" {
-		instanceID, err := strconv.Atoi(funcData.InstanceID)
-		if err != nil {
-			return err
-		}
-		err = admin.Functions().StopFunctionWithID(funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
-		if err != nil {
-			return err
-		}
-		vc.Command.Printf("Stopped %s successfully", funcData.FuncName)
-	} else {
-		err = admin.Functions().StopFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
-		if err != nil {
-			return err
-		}
-
-		vc.Command.Printf("Stopped %s successfully", funcData.FuncName)
+	err = admin.Functions().DeleteFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
+	if err != nil {
+		return err
 	}
 
+	vc.Command.Printf("Deleted successfully")
 	return nil
 }

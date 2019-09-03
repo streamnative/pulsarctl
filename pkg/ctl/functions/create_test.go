@@ -55,7 +55,7 @@ func TestCreateFunctions(t *testing.T) {
 		"--processing-guarantees", "EFFECTIVELY_ONCE",
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, args)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 
 	// $ bin/pulsar-admin functions create
@@ -66,7 +66,7 @@ func TestCreateFunctions(t *testing.T) {
 		"--jar", jarName,
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
 	assert.Nil(t, err)
 
 	argsWithFileUrl := []string{"create",
@@ -80,6 +80,6 @@ func TestCreateFunctions(t *testing.T) {
 		"--processing-guarantees", "EFFECTIVELY_ONCE",
 	}
 
-	_, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileUrl)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileUrl)
 	assert.Nil(t, err)
 }
