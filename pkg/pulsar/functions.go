@@ -64,6 +64,9 @@ type Functions interface {
 
 	// Restart function instance
 	RestartFunctionWithID(tenant, namespace, name string, instanceID int) error
+
+	// Get the list of functions
+	GetFunctions(tenant, namespace string) ([]string, error)
 }
 
 type functions struct {
@@ -237,3 +240,9 @@ func (f *functions) RestartFunctionWithID(tenant, namespace, name string, instan
 	return f.client.post(endpoint+"/restart", "", nil)
 }
 
+func (f *functions) GetFunctions(tenant, namespace string) ([]string, error) {
+	var functions []string
+	endpoint := f.client.endpoint(f.basePath, tenant, namespace)
+	err := f.client.get(endpoint, &functions)
+	return functions, err
+}
