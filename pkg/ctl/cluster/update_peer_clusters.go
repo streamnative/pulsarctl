@@ -25,19 +25,8 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 		Out:  "<cluster-name> peer clusters updated",
 	}
 	out = append(out, successOut)
-
-	failOut := pulsar.Output{
-		Desc: "the cluster name is not specified or the cluster name is specified more than one",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
-	}
-	out = append(out, failOut)
-
-	clusterNotExist := pulsar.Output{
-		Desc: "the specified cluster does not exist in the broker",
-		Out:  "[✖]  code: 404 reason: Cluster does not exist",
-	}
-	out = append(out, clusterNotExist)
-
+	out = append(out, argsError)
+	out = append(out, clusterNonExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
