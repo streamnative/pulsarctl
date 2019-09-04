@@ -147,7 +147,7 @@ func doStartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Started %s successfully", funcData.FuncName)
+		vc.Command.Printf("Started instanceID[%s] of Pulsar Functions[%s] successfully ", funcData.InstanceID, funcData.FuncName)
 	} else {
 		err = admin.Functions().StartFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
