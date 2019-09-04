@@ -8,7 +8,7 @@ import (
 )
 
 func TestUpdateTenantCmd(t *testing.T) {
-	args := []string{"create", "--admin-roles", "update-role", "update-tenant-test"}
+	args := []string{"create", "--admin-roles", "update-role", "--allowed-clusters", "standalone", "update-tenant-test"}
 	_, execErr, _, _ := TestTenantCommands(createTenantCmd, args)
 	assert.Nil(t, execErr)
 
@@ -26,9 +26,9 @@ func TestUpdateTenantCmd(t *testing.T) {
 	assert.Equal(t, 1, len(tenantData.AdminRoles))
 	assert.Equal(t, "update-role", tenantData.AdminRoles[0])
 	assert.Equal(t, 1, len(tenantData.AllowedClusters))
-	assert.Equal(t, "", tenantData.AllowedClusters[0])
+	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
 
-	args = []string{"update", "--allowed-clusters", "standalone", "update-tenant-test"}
+	args = []string{"update", "--admin-roles", "new-role", "--allowed-clusters", "standalone", "update-tenant-test"}
 	_, execErr, _, _ = TestTenantCommands(updateTenantCmd, args)
 	assert.Nil(t, execErr)
 
@@ -40,7 +40,8 @@ func TestUpdateTenantCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, 0, len(tenantData.AdminRoles))
+	assert.Equal(t, 1, len(tenantData.AdminRoles))
+	assert.Equal(t, "new-role", tenantData.AdminRoles[0])
 	assert.Equal(t, 1, len(tenantData.AllowedClusters))
 	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
 }
