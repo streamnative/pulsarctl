@@ -7,7 +7,7 @@ import (
 )
 
 func TestDeleteClusterCmd(t *testing.T) {
-	args := []string{"add", "test"}
+	args := []string{"add", "delete-test"}
 	_, _, _, err := TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
@@ -15,9 +15,9 @@ func TestDeleteClusterCmd(t *testing.T) {
 	out, _, _, err := TestClusterCommands(listClustersCmd, args)
 	assert.Nil(t, err)
 	clusters := out.String()
-	assert.True(t, strings.Contains(clusters, "test"))
+	assert.True(t, strings.Contains(clusters, "delete-test"))
 
-	args = []string{"delete", "test"}
+	args = []string{"delete", "delete-test"}
 	_, _, _, err = TestClusterCommands(deleteClusterCmd, args)
 	assert.Nil(t, err)
 
@@ -25,5 +25,5 @@ func TestDeleteClusterCmd(t *testing.T) {
 	out, _, _, err = TestClusterCommands(listClustersCmd, args)
 	assert.Nil(t, err)
 	clusters = out.String()
-	assert.False(t, strings.Contains(clusters, "test"))
+	assert.False(t, strings.Contains(clusters, "delete-test"))
 }

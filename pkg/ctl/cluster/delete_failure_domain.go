@@ -1,7 +1,6 @@
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
@@ -13,8 +12,8 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	delete := pulsar.Example{
-		Desc:    "deleting the failure domain",
-		Command: "pulsarctl clusters delete-failure-domain --domain-name <domain-name> <cluster-name>",
+		Desc:    "delete the failure domain",
+		Command: "pulsarctl clusters delete-failure-domain <cluster-name> <domain-name>",
 	}
 	examples = append(examples, delete)
 	desc.CommandExamples = examples
@@ -24,9 +23,7 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		Desc: "output example",
 		Out:  "Delete failure domain [<domain-name>] for cluster [<cluster-name>] succeed",
 	}
-	out = append(out, successOut)
-	out = append(out, argsError)
-	out = append(out, clusterNonExist)
+	out = append(out, successOut, failureDomainArgsError, clusterNonExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -35,29 +32,26 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"dfd")
 
-	var failureDomainData pulsar.FailureDomainData
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doDeleteFailureDomain(vc, &failureDomainData)
-	})
-
-	vc.FlagSetGroup.InFlagSet("FailureDomainData", func(set *pflag.FlagSet) {
-		set.StringVarP(
-			&failureDomainData.DomainName,
-			"domain-name",
-			"n",
-			"",
-			"The failure domain name")
-	})
+	vc.SetRunFuncWithNameArgs(func() error {
+		return doDeleteFailureDomain(vc)
+	}, checkFailureDomainArgs)
 }
 
-func doDeleteFailureDomain(vc *cmdutils.VerbCmd, data *pulsar.FailureDomainData) error {
-	data.ClusterName = vc.NameArg
+func doDeleteFailureDomain(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
+	var failureDomain pulsar.FailureDomainData
+	failureDomain.ClusterName = vc.NameArgs[0]
+	failureDomain.DomainName = vc.NameArgs[1]
 
 	admin := cmdutils.NewPulsarClient()
-	err := admin.Clusters().DeleteFailureDomain(*data)
+	err := admin.Clusters().DeleteFailureDomain(failureDomain)
 	if err == nil {
-		vc.Command.Printf("Delete failure domain [%s] for cluster [%s] succeed\n", data.DomainName, data.ClusterName)
+		vc.Command.Printf("Delete failure domain [%s] for cluster [%s] succeed\n", failureDomain.DomainName, failureDomain.ClusterName)
 	}
 
 	return err
