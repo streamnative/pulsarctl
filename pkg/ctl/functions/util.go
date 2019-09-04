@@ -416,3 +416,10 @@ func processBaseArguments(funcData *pulsar.FunctionData) error {
 
 	return nil
 }
+
+func processNamespaceCmd(funcData *pulsar.FunctionData) {
+	if funcData.Tenant == "" || funcData.Namespace == "" {
+		funcData.Tenant = PublicTenant
+		funcData.Namespace = DefaultNamespace
+	}
+}
