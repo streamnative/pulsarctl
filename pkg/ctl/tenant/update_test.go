@@ -9,11 +9,14 @@ import (
 
 func TestUpdateTenantCmd(t *testing.T) {
 	args := []string{"create", "--admin-roles", "update-role", "update-tenant-test"}
-	_, _, _, _ = TestTenantCommands(createTenantCmd, args)
+	_, execErr, _, _ := TestTenantCommands(createTenantCmd, args)
+	assert.Nil(t, execErr)
 
 	args = []string{"get", "update-tenant-test"}
-	out, _, _, _ := TestTenantCommands(getTenantCmd, args)
+	out, execErr, _, _ := TestTenantCommands(getTenantCmd, args)
+	assert.Nil(t, execErr)
 
+	t.Log(out.String())
 	var tenantData pulsar.TenantData
 	err := json.Unmarshal(out.Bytes(), &tenantData)
 	if err != nil {
@@ -26,7 +29,7 @@ func TestUpdateTenantCmd(t *testing.T) {
 	assert.Equal(t, "", tenantData.AllowedClusters[0])
 
 	args = []string{"update", "--allowed-clusters", "standalone", "update-tenant-test"}
-	_, execErr, _, _ := TestTenantCommands(updateTenantCmd, args)
+	_, execErr, _, _ = TestTenantCommands(updateTenantCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get", "update-tenant-test"}
