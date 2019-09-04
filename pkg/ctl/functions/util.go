@@ -196,20 +196,6 @@ func processArgs(funcData *pulsar.FunctionData) error {
 		funcData.FuncConf.OutputSchemaType = funcData.SchemaType
 	}
 
-	// processingGuarantees default value is 0, means AtLeastOnce.
-	if funcData.ProcessingGuarantees != "" {
-		switch funcData.ProcessingGuarantees {
-		case "ATMOST_ONCE":
-			funcData.FuncConf.ProcessingGuarantees = pulsar.AtMostOnce
-		case "EFFECTIVELY_ONCE":
-			funcData.FuncConf.ProcessingGuarantees = pulsar.EffectivelyOnce
-		case "ATLEAST_ONCE":
-			funcData.FuncConf.ProcessingGuarantees = pulsar.AtLeasetOnce
-		default:
-			funcData.FuncConf.ProcessingGuarantees = pulsar.AtLeasetOnce
-		}
-	}
-
 	if funcData.RetainOrdering {
 		funcData.FuncConf.RetainOrdering = funcData.RetainOrdering
 	}
@@ -336,13 +322,6 @@ func processArgs(funcData *pulsar.FunctionData) error {
 }
 
 func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
-	// go doesn't need className
-	if functionConfig.Runtime == pulsar.Python || functionConfig.Runtime == pulsar.Java {
-		if functionConfig.ClassName == "" {
-			return errors.New("no Function Classname specified")
-		}
-	}
-
 	if functionConfig.Name == "" {
 		inferMissingFunctionName(functionConfig)
 	}
@@ -380,6 +359,21 @@ func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
 		return errors.New("the specified go file does not exist")
 	}
 
+	if functionConfig.Jar != "" {
+		functionConfig.Runtime = pulsar.JavaRuntime
+	} else if functionConfig.Py != "" {
+		functionConfig.Runtime = pulsar.PythonRuntime
+	} else if functionConfig.Go != "" {
+		functionConfig.Runtime = pulsar.GoRuntime
+	}
+
+	// go doesn't need className
+	if functionConfig.Runtime == pulsar.JavaRuntime || functionConfig.Runtime == pulsar.PythonRuntime  {
+		if functionConfig.ClassName == "" {
+			return errors.New("no Function Classname specified")
+		}
+	}
+
 	return nil
 }
 
@@ -415,4 +409,11 @@ func processBaseArguments(funcData *pulsar.FunctionData) error {
 	}
 
 	return nil
+}
+
+func processNamespaceCmd(funcData *pulsar.FunctionData) {
+	if funcData.Tenant == "" || funcData.Namespace == "" {
+		funcData.Tenant = PublicTenant
+		funcData.Namespace = DefaultNamespace
+	}
 }

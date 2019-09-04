@@ -17,7 +17,6 @@ func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	var nameError error
 	cmdutils.CheckNameArgError = func(err error) {
 		nameError = err
-
 	}
 
 	var rootCmd = &cobra.Command{
