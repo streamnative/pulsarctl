@@ -7,21 +7,21 @@ import (
 	"testing"
 )
 
-func TestGetFailureDomainCmd(t *testing.T)  {
+func TestGetFailureDomainSuccess(t *testing.T) {
 	args := []string{"create", "failure-broker-A"}
-	_, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "failure-broker-B"}
-	_, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create-failure-domain", "--domain-name", "failure-domain", "--brokers", "failure-broker-A", "--brokers", "failure-broker-B", "standalone"}
-	_, err = TestClusterCommands(createFailureDomainCmd, args)
+	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"get-failure-domain", "--domain-name", "failure-domain", "standalone",}
-	out, err := TestClusterCommands(getFailureDomainCmd, args)
+	args = []string{"get-failure-domain", "--domain-name", "failure-domain", "standalone"}
+	out, _, _, err := TestClusterCommands(getFailureDomainCmd, args)
 	assert.Nil(t, err)
 
 	var brokers pulsar.FailureDomainData
@@ -32,4 +32,16 @@ func TestGetFailureDomainCmd(t *testing.T)  {
 
 	assert.Equal(t, "failure-broker-A", brokers.BrokerList[0])
 	assert.Equal(t, "failure-broker-B", brokers.BrokerList[1])
+}
+
+func TestGetFailureDomainArgsError(t *testing.T) {
+	args := []string{"get-failure-domain", "standalone"}
+	_, _, nameErr, _ := TestClusterCommands(getFailureDomainCmd, args)
+	assert.Equal(t, "need to specified two names for cluster and failure domain", nameErr.Error())
+}
+
+func TestGetNonExistFailureDomain(t *testing.T) {
+	args := []string{"get-failure-domain", "standalone", "non-exist"}
+	_, execErr, _, _ := TestClusterCommands(getFailureDomainCmd, args)
+	assert.NotNil(t, execErr)
 }

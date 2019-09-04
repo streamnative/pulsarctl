@@ -1,7 +1,6 @@
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
@@ -14,7 +13,7 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	get := pulsar.Example{
 		Desc:    "getting the broker list in the <cluster-name> cluster failure domain <domain-name>",
-		Command: "pulsarctl clusters get-failure-domain -n <domain-name> <cluster-name>",
+		Command: "pulsarctl clusters get-failure-domain <cluster-name> <domain-name>",
 	}
 	examples = append(examples, get)
 
@@ -30,12 +29,8 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 			"  ]\n" +
 			"}",
 	}
-	out = append(out, successOut)
-	out = append(out, argsError)
-	out = append(out, clusterNonExist)
+	out = append(out, successOut, argsError, clusterNonExist)
 	desc.CommandOutput = out
-
-	var failureDomainData pulsar.FailureDomainData
 
 	vc.SetDescription(
 		"get-failure-domain",
@@ -43,26 +38,22 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"gfd")
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doGetFailureDomain(vc, &failureDomainData)
-	})
-
-	vc.FlagSetGroup.InFlagSet("FailureDomain", func(set *pflag.FlagSet) {
-		set.StringVarP(
-			&failureDomainData.DomainName,
-			"domain-name",
-			"n",
-			"",
-			"The failure domain name")
-	})
-
+	vc.SetRunFuncWithNameArgs(func() error {
+		return doGetFailureDomain(vc)
+	}, checkFailureDomainArgs)
 }
 
-func doGetFailureDomain(vc *cmdutils.VerbCmd, data *pulsar.FailureDomainData) error {
-	data.ClusterName = vc.NameArg
+func doGetFailureDomain(vc *cmdutils.VerbCmd) error {
+	// fot testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
+	clusterName := vc.NameArgs[0]
+	domainName := vc.NameArgs[1]
 
 	admin := cmdutils.NewPulsarClient()
-	resFailureDomain, err := admin.Clusters().GetFailureDomain(data.ClusterName, data.DomainName)
+	resFailureDomain, err := admin.Clusters().GetFailureDomain(clusterName, domainName)
 	if err == nil {
 		cmdutils.PrintJson(vc.Command.OutOrStdout(), resFailureDomain)
 	}

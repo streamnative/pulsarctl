@@ -1,6 +1,7 @@
 package cluster
 
 import (
+	"errors"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -14,6 +15,13 @@ var argsError = pulsar.Output{
 var clusterNonExist = pulsar.Output{
 	Desc: "the specified cluster does not exist in the broker",
 	Out:  "[✖]  code: 404 reason: Cluster does not exist",
+}
+
+var checkFailureDomainArgs = func(args []string) error {
+	if len(args) != 2 {
+		return errors.New("need to specified two names for cluster and failure domain")
+	}
+	return nil
 }
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
