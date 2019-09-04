@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreateTenantCmd(t *testing.T) {
-	args := []string{"create", "--admin-roles", "super-user", "create-tenant-test"}
+	args := []string{"create", "--admin-roles", "super-user", "--allowed-clusters", "standalone", "create-tenant-test"}
 	_, _, _, err := TestTenantCommands(createTenantCmd, args)
 	assert.Nil(t, err)
 

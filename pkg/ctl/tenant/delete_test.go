@@ -7,7 +7,7 @@ import (
 )
 
 func TestDeleteTenantCmd(t *testing.T) {
-	args := []string{"create", "--admin-roles", "super-user", "delete-tenant-test"}
+	args := []string{"create", "--admin-roles", "super-user", "--allowed-clusters", "standalone", "delete-tenant-test"}
 	_, _, _, _ = TestTenantCommands(createTenantCmd, args)
 
 	args = []string{"list"}
