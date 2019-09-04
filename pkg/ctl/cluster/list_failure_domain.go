@@ -47,6 +47,11 @@ func listFailureDomainCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doListFailureDomain(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	clusterName := vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()

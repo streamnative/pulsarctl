@@ -9,27 +9,27 @@ import (
 
 func TestListFailureDomainsCmd(t *testing.T)  {
 	args := []string{"create", "list-failure-test"}
-	_, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "list-failure-broker-A"}
-	_, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "list-failure-broker-B"}
-	_, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "--domain-name", "list-failure-A", "--brokers", "list-failure-broker-A", "list-failure-test"}
-	_, err = TestClusterCommands(createFailureDomainCmd, args)
+	args = []string{"create-failure-domain", "--broker-list", "list-failure-broker-A", "list-failure-test", "list-failure-A"}
+	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "--domain-name", "list-failure-B", "--brokers", "list-failure-broker-B", "list-failure-test"}
-	_, err = TestClusterCommands(createFailureDomainCmd, args)
+	args = []string{"create-failure-domain", "--broker-list", "list-failure-broker-B", "list-failure-test", "list-failure-B"}
+	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"list-failure-domains", "list-failure-test"}
-	out, err := TestClusterCommands(listFailureDomainCmd, args)
+	out, _, _, err := TestClusterCommands(listFailureDomainCmd, args)
 	assert.Nil(t, err)
 
 	var brokerMap pulsar.FailureDomainMap
@@ -42,4 +42,11 @@ func TestListFailureDomainsCmd(t *testing.T)  {
 	assert.Equal(t, "list-failure-broker-A", brokerMap["list-failure-A"].BrokerList[0])
 	assert.NotNil(t, brokerMap["list-failure-B"])
 	assert.Equal(t, "list-failure-broker-B", brokerMap["list-failure-B"].BrokerList[0])
+}
+
+func TestListFailureArgsError(t *testing.T)  {
+	args := []string{"list-failure-domains"}
+	_, _, nameErr, _ := TestClusterCommands(listFailureDomainCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
