@@ -25,7 +25,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 		Out: "Create tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError, tenantNotExist)
+	out = append(out, tenantNameArgsError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
