@@ -67,6 +67,9 @@ type Functions interface {
 
 	// Get the list of functions
 	GetFunctions(tenant, namespace string) ([]string, error)
+
+	// Get the configuration for the specified function
+	GetFunction(tenant, namespace, name string) (FunctionConfig, error)
 }
 
 type functions struct {
@@ -245,4 +248,11 @@ func (f *functions) GetFunctions(tenant, namespace string) ([]string, error) {
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace)
 	err := f.client.get(endpoint, &functions)
 	return functions, err
+}
+
+func (f *functions) GetFunction(tenant, namespace, name string) (FunctionConfig, error)  {
+	var functionConfig FunctionConfig
+	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
+	err := f.client.get(endpoint, &functionConfig)
+	return functionConfig, err
 }
