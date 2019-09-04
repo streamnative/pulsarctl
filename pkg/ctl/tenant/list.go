@@ -45,6 +45,11 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doListTenant(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	admin := cmdutils.NewPulsarClient()
 	tenants, err := admin.Tenants().List()
 	if err == nil {

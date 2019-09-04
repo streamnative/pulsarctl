@@ -11,6 +11,11 @@ var tenantNameArgsError = pulsar.Output{
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
+var tenantNotExist = pulsar.Output{
+	Desc: "the specified tenant does not exist in the broker",
+	Out: "[✖]  code: 404 reason: Tenant does not exist",
+}
+
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"tenants",

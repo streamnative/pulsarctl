@@ -25,7 +25,7 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 		Out:  "Delete tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
+	out = append(out, tenantNameArgsError, tenantNotExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -40,6 +40,11 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doDeleteTenant(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Tenants().Delete(vc.NameArg)
 	if err == nil {

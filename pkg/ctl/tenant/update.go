@@ -1,6 +1,7 @@
 package tenant
 
 import (
+	"errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -31,7 +32,13 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 		Out:  "Update tenant [%s] successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
+	out = append(out, tenantNameArgsError, tenantNotExist)
+
+	flagErrorOut := pulsar.Output{
+		Desc: "the flag --admin-roles and --allowed-clusters are not specified",
+		Out: "[✖]  the admin roles or the allowed clusters is not specified",
+	}
+	out = append(out, flagErrorOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -51,18 +58,27 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 			&data.AdminRoles,
 			"admin-roles",
 			"r",
-			[]string{""},
+			nil,
 			"Allowed admins to access the tenant")
 		set.StringSliceVarP(
 			&data.AllowedClusters,
 			"allowed-clusters",
 			"c",
-			[]string{""},
+			nil,
 			"Allowed clusters")
 	})
 }
 
 func doUpdateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
+	if data.AllowedClusters ==  nil && data.AdminRoles == nil {
+		return errors.New("the admin roles or the allowed clusters is not specified")
+	}
+
 	data.Name = vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Tenants().Update(*data)

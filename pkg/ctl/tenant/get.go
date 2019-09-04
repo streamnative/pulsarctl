@@ -29,7 +29,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd)  {
 			"}",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
+	out = append(out, tenantNameArgsError, tenantNotExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -44,6 +44,11 @@ func getTenantCmd(vc *cmdutils.VerbCmd)  {
 }
 
 func doGetTenant(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Tenants().Get(vc.NameArg)
 	if err == nil {

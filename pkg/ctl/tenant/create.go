@@ -25,7 +25,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 		Out: "Create tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
+	out = append(out, tenantNameArgsError, tenantNotExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -57,6 +57,11 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 }
 
 func doCreateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	data.Name = vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()
