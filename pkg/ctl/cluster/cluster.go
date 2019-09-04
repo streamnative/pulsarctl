@@ -17,9 +17,14 @@ var clusterNonExist = pulsar.Output{
 	Out:  "[✖]  code: 404 reason: Cluster does not exist",
 }
 
+var failureDomainArgsError = pulsar.Output{
+	Desc: "the cluster name and(or) failure domain name is not specified or the name is specified more than one",
+	Out: "[✖]  need to specified the cluster name and the failure domain name",
+}
+
 var checkFailureDomainArgs = func(args []string) error {
 	if len(args) != 2 {
-		return errors.New("need to specified two names for cluster and failure domain")
+		return errors.New("need to specified the cluster name and the failure domain name")
 	}
 	return nil
 }

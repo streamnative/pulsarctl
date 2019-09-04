@@ -16,11 +16,11 @@ func TestGetFailureDomainSuccess(t *testing.T) {
 	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "--domain-name", "failure-domain", "--brokers", "failure-broker-A", "--brokers", "failure-broker-B", "standalone"}
+	args = []string{"create-failure-domain", "--broker-list", "failure-broker-A", "--broker-list", "failure-broker-B", "standalone", "failure-domain"}
 	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"get-failure-domain", "--domain-name", "failure-domain", "standalone"}
+	args = []string{"get-failure-domain", "standalone", "failure-domain"}
 	out, _, _, err := TestClusterCommands(getFailureDomainCmd, args)
 	assert.Nil(t, err)
 
@@ -37,7 +37,7 @@ func TestGetFailureDomainSuccess(t *testing.T) {
 func TestGetFailureDomainArgsError(t *testing.T) {
 	args := []string{"get-failure-domain", "standalone"}
 	_, _, nameErr, _ := TestClusterCommands(getFailureDomainCmd, args)
-	assert.Equal(t, "need to specified two names for cluster and failure domain", nameErr.Error())
+	assert.Equal(t, "need to specified the cluster name and the failure domain name", nameErr.Error())
 }
 
 func TestGetNonExistFailureDomain(t *testing.T) {

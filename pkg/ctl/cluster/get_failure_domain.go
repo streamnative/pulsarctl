@@ -29,7 +29,7 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 			"  ]\n" +
 			"}",
 	}
-	out = append(out, successOut, argsError, clusterNonExist)
+	out = append(out, successOut, failureDomainArgsError, clusterNonExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
