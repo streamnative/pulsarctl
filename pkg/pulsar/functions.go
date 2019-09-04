@@ -236,4 +236,3 @@ func (f *functions) RestartFunctionWithID(tenant, namespace, name string, instan
 
 	return f.client.post(endpoint+"/restart", "", nil)
 }
-
