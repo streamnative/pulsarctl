@@ -50,20 +50,9 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var failureDomainData pulsar.FailureDomainData
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doCreateFailureDomain(vc, &failureDomainData)
-	})
-
-	checkArgs := func(args []string) error {
-		if len(args) != 2 {
-			return errors.New("need to specified two names for cluster and failure domain")
-		}
-		return nil
-	}
-
 	vc.SetRunFuncWithNameArgs(func() error {
 		return doCreateFailureDomain(vc, &failureDomainData)
-	}, checkArgs)
+	}, checkFailureDomainArgs)
 
 	vc.FlagSetGroup.InFlagSet("FailureDomainData", func(set *pflag.FlagSet) {
 		set.StringSliceVarP(
@@ -76,6 +65,11 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *pulsar.FailureDomainData) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
 	failureDomain.ClusterName = vc.NameArgs[0]
 	failureDomain.DomainName = vc.NameArgs[1]
 

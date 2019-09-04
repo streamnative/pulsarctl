@@ -12,6 +12,9 @@ type VerbCmd struct {
 	FlagSetGroup *NamedFlagSetGroup
 	NameArg      string
 	NameArgs     []string
+
+	// for testing
+	NameError 	error
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
@@ -43,14 +46,14 @@ func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 // SetRunFuncWithNameArg registers a command function with an optional name argument
 func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
-		vc.NameArg = GetNameArg(args)
+		vc.NameArg, vc.NameError = GetNameArg(args)
 		run(cmd)
 	}
 }
 
 func (vc *VerbCmd) SetRunFuncWithNameArgs(cmd func() error, checkArgs func(args []string) error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
-		vc.NameArgs = GetNameArgs(args, checkArgs)
+		vc.NameArgs, vc.NameError = GetNameArgs(args, checkArgs)
 		run(cmd)
 	}
 }

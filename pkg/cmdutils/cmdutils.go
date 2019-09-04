@@ -37,24 +37,28 @@ var defaultNameArgsError = func(err error) {
 }
 
 // GetNameArg tests to ensure there is only 1 name argument
-func GetNameArg(args []string) string {
+func GetNameArg(args []string) (string, error) {
 	if len(args) > 1 || len(args) == 0 {
 		logger.Critical("only one argument is allowed to be used as a name")
-		CheckNameArgError(errors.New("only one argument is allowed to be used as a name"))
+		err := errors.New("only one argument is allowed to be used as a name")
+		CheckNameArgError(err)
+		return "", err
 	}
 	if len(args) == 1 {
-		return strings.TrimSpace(args[0])
+		return strings.TrimSpace(args[0]), nil
 	}
-	return ""
+	return "", nil
 }
 
-func GetNameArgs(args []string, check func(args []string) error) []string {
+func GetNameArgs(args []string, check func(args []string) error) ([]string, error) {
 	err := check(args)
 	if err != nil {
 		logger.Critical(err.Error())
 		CheckNameArgError(err)
+		//for testing
+		return nil, err
 	}
-	return args
+	return args, nil
 }
 
 func NewPulsarClient() pulsar.Client {
