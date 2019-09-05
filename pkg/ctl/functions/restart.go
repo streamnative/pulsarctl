@@ -61,7 +61,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Restarted successfully",
+		Out:  "Restarted <the name of a Pulsar Function> successfully",
 	}
 
 	failOut := pulsar.Output{

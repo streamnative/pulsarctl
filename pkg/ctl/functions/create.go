@@ -170,7 +170,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created successfully",
+		Out:  "Created <the name of a Pulsar Function> successfully",
 	}
 
 	out = append(out, successOut)

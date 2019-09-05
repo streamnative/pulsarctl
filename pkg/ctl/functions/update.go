@@ -31,7 +31,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 
 	update := pulsar.Example{
-		Desc: "Update output topic of Pulsar Function",
+		Desc: "Change the output topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
@@ -41,7 +41,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, update)
 
 	updateWithConf := pulsar.Example{
-		Desc: "Update function config yaml file of Pulsar Function",
+		Desc: "Update a Pulsar Function using a function config yaml file",
 		Command: "pulsarctl functions update \n" +
 			"\t--function-config-file <the path of function config yaml file> \n" +
 			"\t--jar <the path of user code jar>",
@@ -49,7 +49,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithConf)
 
 	updateWithLogTopic := pulsar.Example{
-		Desc: "Update log topic of Pulsar Function",
+		Desc: "Change the log topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
 			"\t# Other function parameters ",
@@ -57,7 +57,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithLogTopic)
 
 	updateWithDeadLetterTopic := pulsar.Example{
-		Desc: "Update dead letter topic of Pulsar Function",
+		Desc: "Change the dead letter topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
 			"\t--max-message-retries 10\n" +
@@ -66,7 +66,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithDeadLetterTopic)
 
 	updateWithUserConfig := pulsar.Example{
-		Desc: "Update user config of Pulsar Function",
+		Desc: "Update the user configs of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
 			"\t# Other function parameters ",
@@ -74,7 +74,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithUserConfig)
 
 	updateWithCustomSchemasInputs := pulsar.Example{
-		Desc: "Update custom schema of inputs topic for Pulsar Function",
+		Desc: "Change the schemas of the input topics for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
 			"\t# Other function parameters ",
@@ -82,7 +82,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithCustomSchemasInputs)
 
 	updateWithSchema := pulsar.Example{
-		Desc: "Update schema type of output topic for Pulsar Function",
+		Desc: "Change the schema type of the input topic for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t# Other function parameters ",
@@ -90,7 +90,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithSchema)
 
 	updateWithParallelism := pulsar.Example{
-		Desc: "Update parallelism of Pulsar Function",
+		Desc: "Change the parallelism of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--parallelism 1\n" +
 			"\t# Other function parameters ",
@@ -98,7 +98,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithParallelism)
 
 	updateWithResource := pulsar.Example{
-		Desc: "Update resource of Pulsar Function",
+		Desc: "Change the resource usage for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
@@ -108,7 +108,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithResource)
 
 	updateWithWindowFunctions := pulsar.Example{
-		Desc: "Update window functions config of Pulsar Function",
+		Desc: "Update the window configurations for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--window-length-count 10\n" +
 			"\t--window-length-duration-ms 1000\n" +
@@ -122,7 +122,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Updated successfully",
+		Out:  "Updated <the name of a Pulsar Function> successfully",
 	}
 
 	failOut := pulsar.Output{
