@@ -1,4 +1,4 @@
-package pulsar
+package common
 
 type ApiVersion int
 const (

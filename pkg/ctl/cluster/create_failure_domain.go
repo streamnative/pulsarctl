@@ -4,22 +4,23 @@ import (
 	"errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for creating a failure domain of the <cluster-name>."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []Example
+	create := Example{
 		Desc:    "create the failure domain",
 		Command: "pulsarctl clusters create-failure-domain <cluster-name> <domain-name>",
 	}
 	examples = append(examples, create)
 
-	createWithBrokers := pulsar.Example{
+	createWithBrokers := Example{
 		Desc: "create the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain" +
 			" -b <broker-ip>:<broker-port> -b <broker-ip>:<broker-port> <cluster-name> <domain-name>",
@@ -27,14 +28,14 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, createWithBrokers)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []Output
+	successOut := Output{
 		Desc: "normal output",
 		Out:  "Create failure domain <domain-name> for cluster <cluster-name> succeed",
 	}
 	out = append(out, successOut)
 
-	argsErrorOut := pulsar.Output{
+	argsErrorOut := Output{
 		Desc: "the args need to be specified as <cluster-name> <domain-name>",
 		Out:  "[✖]  need specified two names for cluster and failure domain",
 	}
@@ -48,7 +49,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"cfd")
 
-	var failureDomainData pulsar.FailureDomainData
+	var failureDomainData FailureDomainData
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doCreateFailureDomain(vc, &failureDomainData)
@@ -64,7 +65,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *pulsar.FailureDomainData) error {
+func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *FailureDomainData) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
