@@ -14,12 +14,12 @@ var argsError = pulsar.Output{
 
 var clusterNonExist = pulsar.Output{
 	Desc: "the specified cluster does not exist in the broker",
-	Out:  "[✖]  code: 404 reason: Cluster does not exist",
+	Out:  "[✖]  code: 412 reason: Cluster <cluster-name> does not exist.",
 }
 
 var failureDomainArgsError = pulsar.Output{
 	Desc: "the cluster name and(or) failure domain name is not specified or the name is specified more than one",
-	Out: "[✖]  need to specified the cluster name and the failure domain name",
+	Out:  "[✖]  need to specified the cluster name and the failure domain name",
 }
 
 var checkFailureDomainArgs = func(args []string) error {
@@ -47,6 +47,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getFailureDomainCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listFailureDomainCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteFailureDomainCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateFailureDomainCmd)
 
 	return resourceCmd
 }
