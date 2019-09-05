@@ -45,7 +45,7 @@ func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
 // SetRunFunc registers a command function
 func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 	vc.Command.Run = func(_ *cobra.Command, _ []string) {
-		vc.run(cmd)
+		run(cmd)
 	}
 }
 
@@ -53,14 +53,14 @@ func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
 		vc.NameArg, vc.NameError = GetNameArg(args)
-		vc.run(cmd)
+		run(cmd)
 	}
 }
 
 func (vc *VerbCmd) SetRunFuncWithMultiNameArgs(cmd func() error, checkArgs func(args []string) error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
 		vc.NameArgs, vc.NameError = GetNameArgs(args, checkArgs)
-		vc.run(cmd)
+		run(cmd)
 	}
 }
 
@@ -71,7 +71,7 @@ var defaultExecErrorHandler = func(err error) {
 	os.Exit(1)
 }
 
-func (vc *VerbCmd) run(cmd func() error) {
+func run(cmd func() error) {
 	if err := cmd(); err != nil {
 		ExecErrorHandler(err)
 	}
