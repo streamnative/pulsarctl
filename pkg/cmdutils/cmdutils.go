@@ -10,7 +10,8 @@ import (
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 const IncompatibleFlags = "cannot be used at the same time"
@@ -61,11 +62,11 @@ func GetNameArgs(args []string, check func(args []string) error) ([]string, erro
 	return args, nil
 }
 
-func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client(pulsar.V2)
+func NewPulsarClient() Client {
+	return PulsarCtlConfig.Client(V2)
 }
 
-func NewPulsarClientWithApiVersion(version pulsar.ApiVersion) pulsar.Client {
+func NewPulsarClientWithApiVersion(version ApiVersion) Client {
 	return PulsarCtlConfig.Client(version)
 }
 
@@ -80,8 +81,8 @@ func PrintJson(w io.Writer, obj interface{}) {
 
 func PrintError(w io.Writer, err error) {
 	msg := err.Error()
-	if pulsar.IsAdminError(err) {
-		ae, _ := err.(pulsar.Error)
+	if IsAdminError(err) {
+		ae, _ := err.(Error)
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)

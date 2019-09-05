@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"regexp"
 	"testing"
@@ -15,7 +15,7 @@ func TestGetClusterData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	c := pulsar.ClusterData{}
+	c := ClusterData{}
 	err = json.Unmarshal(out.Bytes(), &c)
 	if err != nil {
 		t.Error(err)
