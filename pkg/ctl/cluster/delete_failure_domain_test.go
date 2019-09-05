@@ -10,11 +10,11 @@ func TestDeleteFailureDomainCmd(t *testing.T) {
 	_, _, _, err := TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create", "delete-failure-domain-A"}
+	args = []string{"create", "cluster-A"}
 	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain","-b", "delete-failure-domain-A", "delete-failure-test", "delete-failure-domain"}
+	args = []string{"create-failure-domain", "-b", "cluster-A", "delete-failure-test", "delete-failure-domain"}
 	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
@@ -23,9 +23,26 @@ func TestDeleteFailureDomainCmd(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestDeleteFilureDomainArgsError(t *testing.T)  {
+func TestDeleteFailureDomainArgsError(t *testing.T) {
 	args := []string{"delete-failure-domain", "standalone"}
 	_, _, nameErr, _ := TestClusterCommands(deleteFailureDomainCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified the cluster name and the failure domain name", nameErr.Error())
+}
+
+// delete a non-existent failure domain in an existing cluster
+func TestDeleteNonExistentFailureDomain(t *testing.T) {
+	args := []string{"delete-failure-domain", "standalone", "non-existent-failure-domain"}
+	_, execErr, _, _ := TestClusterCommands(deleteFailureDomainCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 404 reason: Domain-name non-existent-failure-domain"+
+		" or cluster standalone does not exist", execErr.Error())
+}
+
+// delete a non-existent failure domain in a non-existent cluster
+func TestDeleteNonExistentFailureDomainInNonExistentCluster(t *testing.T) {
+	args := []string{"delete-failure-domain", "non-existent-cluster", "non-existent-failure-domain"}
+	_, execErr, _, _ := TestClusterCommands(deleteFailureDomainCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 412 reason: Cluster non-existent-cluster does not exist.", execErr.Error())
 }

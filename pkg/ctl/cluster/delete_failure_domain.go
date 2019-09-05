@@ -23,7 +23,21 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		Desc: "output example",
 		Out:  "Delete failure domain [<domain-name>] for cluster [<cluster-name>] succeed",
 	}
-	out = append(out, successOut, failureDomainArgsError, clusterNonExist)
+	out = append(out, successOut, failureDomainArgsError)
+
+	failureDomainNonExist := pulsar.Output{
+		Desc: "the specified failure domain is not exist",
+		Out: "code: 404 reason: Domain-name non-existent-failure-domain" +
+			" or cluster standalone does not exist",
+	}
+	out = append(out, failureDomainNonExist)
+
+	clusterNotExist := pulsar.Output{
+		Desc: "the specified cluster is not exist",
+		Out:  "code: 412 reason: Cluster non-existent-cluster does not exist.",
+	}
+	out = append(out, clusterNotExist)
+
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -31,7 +45,6 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		"Delete a failure domain",
 		desc.ToString(),
 		"dfd")
-
 
 	vc.SetRunFuncWithNameArgs(func() error {
 		return doDeleteFailureDomain(vc)
