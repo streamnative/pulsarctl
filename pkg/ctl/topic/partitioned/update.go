@@ -25,7 +25,12 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Update topic [<topic-name>] with [<partition-num>] partitions successfully",
 	}
-	out = append(out, successOut, ArgsError, TopicNotExistError)
+
+	topicNotExist := Output{
+		Desc: "the topic is not exist",
+		Out:  "[✖]  code: 409 reason: Topic is not partitioned topic",
+	}
+	out = append(out, successOut, ArgsError, topicNotExist)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out

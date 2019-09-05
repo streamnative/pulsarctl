@@ -24,7 +24,12 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Delete topic [<topic-name>] successfully",
 	}
-	out = append(out, successOut, ArgError, TopicNotExistError)
+
+	topicNotExistError := Output{
+		Desc: "the topic is not exist",
+		Out:  "[✖]  code: 404 reason: Partitioned topic does not exist",
+	}
+	out = append(out, successOut, ArgError, topicNotExistError)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
