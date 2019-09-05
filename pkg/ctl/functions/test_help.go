@@ -60,9 +60,11 @@ func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 
 var (
 	flag bool
+	basePath string
 )
 
-func getDirHelp() (basePath string, err error) {
+func getDirHelp() (string, error) {
+	var err error
 	if !flag {
 		basePath, err = os.Getwd()
 		if err != nil {
