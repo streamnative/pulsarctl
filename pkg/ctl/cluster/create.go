@@ -3,7 +3,7 @@ package cluster
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func CreateClusterCmd(vc *cmdutils.VerbCmd) {
@@ -19,7 +19,7 @@ func CreateClusterCmd(vc *cmdutils.VerbCmd) {
 			"This operation requires Pulsar super-user privileges.",
 		"create")
 
-	clusterData := &pulsar.ClusterData{}
+	clusterData := &ClusterData{}
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
@@ -57,7 +57,7 @@ func CreateClusterCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *pulsar.ClusterData) error {
+func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *ClusterData) error {
 	clusterData.Name = vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()
