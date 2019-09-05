@@ -1,4 +1,4 @@
-package topic
+package test
 
 import (
 	"bytes"
@@ -34,9 +34,9 @@ func TestTopicCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out 
 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"topics",
-		"Operations about cluster(s)",
+		"Operations about topics(s)",
 		"",
-		"cluster")
+		"topic")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)

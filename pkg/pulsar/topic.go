@@ -40,7 +40,7 @@ func (t *topics) DeletePartitionedTopic(topic TopicName, force bool) error {
 
 func (t *topics) UpdatePartitionedTopic(topic TopicName, partitions int) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
-	return t.client.post(endpoint, &PartitionedTopicMetadata{partitions}, nil)
+	return t.client.post(endpoint, partitions, nil)
 }
 
 func (t *topics) GetPartitionedTopicMeta(topic TopicName) (PartitionedTopicMetadata, error) {

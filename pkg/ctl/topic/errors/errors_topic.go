@@ -17,11 +17,6 @@ var TopicAlreadyExist = Output{
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
 }
 
-var TopicNotExistError = Output{
-	Desc: "the topic is not exist",
-	Out:  "[✖]  code: 404 reason: Partitioned topic does not exist",
-}
-
 var TenantNotExistError = Output{
 	Desc: "the tenant of the namespace is not exist",
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",

@@ -21,7 +21,9 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "",
+		Out:  "{\n" +
+			"  \"partitions\": \"<partitions>\"\n" +
+			"}",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
