@@ -38,6 +38,11 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statsFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, querystateFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, putstateFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, triggerFunctionsCmd)
 
 	return resourceCmd
 }

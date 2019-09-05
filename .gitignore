@@ -5,6 +5,7 @@
 *.so
 *.dylib
 pulsarctl
+api-examples.jar
 
 # Test binary, build with `go test -c`
 *.test
