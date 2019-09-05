@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestListFailureDomainsCmd(t *testing.T)  {
+func TestListFailureDomainsCmd(t *testing.T) {
 	args := []string{"create", "list-failure-test"}
 	_, _, _, err := TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
@@ -20,11 +20,11 @@ func TestListFailureDomainsCmd(t *testing.T)  {
 	_, _, _, err = TestClusterCommands(createClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "--broker-list", "list-failure-broker-A", "list-failure-test", "list-failure-A"}
+	args = []string{"create-failure-domain", "--brokers", "list-failure-broker-A", "list-failure-test", "list-failure-A"}
 	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "--broker-list", "list-failure-broker-B", "list-failure-test", "list-failure-B"}
+	args = []string{"create-failure-domain", "--brokers", "list-failure-broker-B", "list-failure-test", "list-failure-B"}
 	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 

@@ -22,7 +22,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	createWithBrokers := pulsar.Example{
 		Desc: "create the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain" +
-			" --broker-list <cluster-A> --broker-list <cluster-B> <cluster-name> <domain-name>",
+			" -b <broker-ip>:<broker-port> -b <broker-ip>:<broker-port> <cluster-name> <domain-name>",
 	}
 	examples = append(examples, createWithBrokers)
 	desc.CommandExamples = examples
@@ -57,7 +57,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("FailureDomainData", func(set *pflag.FlagSet) {
 		set.StringSliceVarP(
 			&failureDomainData.BrokerList,
-			"broker-list",
+			"brokers",
 			"b",
 			nil,
 			"Set the failure domain clusters")
