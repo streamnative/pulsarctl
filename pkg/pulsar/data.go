@@ -71,6 +71,8 @@ type FunctionData struct {
 	TriggerFile  string `json:"triggerFile"`
 	Topic        string `json:"topic"`
 
+	UpdateAuthData bool `json:"updateAuthData"`
+
 	FuncConf     *FunctionConfig `json:"-"`
 	UserCodeFile string          `json:"-"`
 }

@@ -94,6 +94,17 @@ type Functions interface {
 
 	// Triggers the function by writing to the input topic
 	TriggerFunction(tenant, namespace, name, topic, triggerValue, triggerFile string) (string, error)
+
+	// Update the configuration for a function.
+	UpdateFunction(functionConfig *FunctionConfig, fileName string, updateOptions *UpdateOptions) error
+
+	// Update the configuration for a function.
+	//
+	// Update a function by providing url from which fun-pkg can be downloaded. supported url: http/file
+	// eg:
+	// File: file:/dir/fileName.jar
+	// Http: http://www.repo.com/fileName.jar
+	UpdateFunctionWithUrl(functionConfig *FunctionConfig, pkgUrl string, updateOptions *UpdateOptions) error
 }
 
 type functions struct {
@@ -281,6 +292,145 @@ func (f *functions) GetFunction(tenant, namespace, name string) (FunctionConfig,
 	return functionConfig, err
 }
 
+func (f *functions) UpdateFunction(functionConfig *FunctionConfig, fileName string, updateOptions *UpdateOptions) error {
+	endpoint := f.client.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
+	// buffer to store our request as bytes
+	bodyBuf := bytes.NewBufferString("")
+
+	multiPartWriter := multipart.NewWriter(bodyBuf)
+
+	jsonData, err := json.Marshal(functionConfig)
+	if err != nil {
+		return err
+	}
+
+	stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
+	if err != nil {
+		return err
+	}
+
+	_, err = stringWriter.Write(jsonData)
+	if err != nil {
+		return err
+	}
+
+	if updateOptions != nil {
+		updateData, err := json.Marshal(updateOptions)
+		if err != nil {
+			return err
+		}
+
+		updateStrWriter, err := f.createStringFromField(multiPartWriter, "updateOptions")
+		if err != nil {
+			return err
+		}
+
+		_, err = updateStrWriter.Write(updateData)
+		if err != nil {
+			return err
+		}
+	}
+
+	if fileName != "" && !strings.HasPrefix(fileName, "builtin://") {
+		// If the function code is built in, we don't need to submit here
+		file, err := os.Open(fileName)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		part, err := multiPartWriter.CreateFormFile("data", filepath.Base(file.Name()))
+
+		if err != nil {
+			return err
+		}
+
+		// copy the actual file content to the filed's writer
+		_, err = io.Copy(part, file)
+		if err != nil {
+			return err
+		}
+	}
+
+	// In here, we completed adding the file and the fields, let's close the multipart writer
+	// So it writes the ending boundary
+	if err = multiPartWriter.Close(); err != nil {
+		return err
+	}
+
+	contentType := multiPartWriter.FormDataContentType()
+	err = f.client.putWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (f *functions) UpdateFunctionWithUrl(functionConfig *FunctionConfig, pkgUrl string, updateOptions *UpdateOptions) error {
+	endpoint := f.client.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
+	// buffer to store our request as bytes
+	bodyBuf := bytes.NewBufferString("")
+
+	multiPartWriter := multipart.NewWriter(bodyBuf)
+
+	textWriter, err := f.createTextFromFiled(multiPartWriter, "url")
+	if err != nil {
+		return err
+	}
+
+	_, err = textWriter.Write([]byte(pkgUrl))
+	if err != nil {
+		return err
+	}
+
+	jsonData, err := json.Marshal(functionConfig)
+	if err != nil {
+		return err
+	}
+
+	stringWriter, err := f.createStringFromField(multiPartWriter, "functionConfig")
+	if err != nil {
+		return err
+	}
+
+	_, err = stringWriter.Write(jsonData)
+	if err != nil {
+		return err
+	}
+
+	if updateOptions != nil {
+		updateData, err := json.Marshal(updateOptions)
+		if err != nil {
+			return err
+		}
+
+		updateStrWriter, err := f.createStringFromField(multiPartWriter, "updateOptions")
+		if err != nil {
+			return err
+		}
+
+		_, err = updateStrWriter.Write(updateData)
+		if err != nil {
+			return err
+		}
+	}
+
+	// In here, we completed adding the file and the fields, let's close the multipart writer
+	// So it writes the ending boundary
+	if err = multiPartWriter.Close(); err != nil {
+		return err
+	}
+
+	contentType := multiPartWriter.FormDataContentType()
+	err = f.client.putWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (f *functions) GetFunctionStatus(tenant, namespace, name string) (FunctionStatus, error) {
 	var functionStatus FunctionStatus
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
@@ -327,6 +477,7 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state Funct
 	multiPartWriter := multipart.NewWriter(bodyBuf)
 
 	stateData, err := json.Marshal(state)
+
 	if err != nil {
 		return err
 	}
@@ -337,6 +488,7 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state Funct
 	}
 
 	_, err = stateWriter.Write(stateData)
+
 	if err != nil {
 		return err
 	}
@@ -348,7 +500,9 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state Funct
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
+
 	err = f.client.postWithMultiPart(endpoint, nil, nil, bodyBuf, contentType)
+
 	if err != nil {
 		return err
 	}

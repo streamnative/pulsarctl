@@ -60,7 +60,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted successfully",
+		Out:  "Deleted <the name of a Pulsar Function> successfully",
 	}
 
 	failOut := pulsar.Output{

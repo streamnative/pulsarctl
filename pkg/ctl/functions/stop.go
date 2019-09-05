@@ -61,7 +61,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Stopped successfully",
+		Out:  "Stopped <the name of a Pulsar Function> successfully",
 	}
 
 	failOut := pulsar.Output{
