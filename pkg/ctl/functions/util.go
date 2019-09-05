@@ -163,6 +163,10 @@ func processArgs(funcData *pulsar.FunctionData) error {
 		funcData.FuncConf.CustomSerdeInputs = customSerdeInputMap
 	}
 
+	if funcData.ProcessingGuarantees != "" {
+		funcData.FuncConf.ProcessingGuarantees = funcData.ProcessingGuarantees
+	}
+
 	if funcData.CustomSchemaInput != "" {
 		customSchemaInputMap := make(map[string]string)
 		err := json.Unmarshal([]byte(funcData.CustomSchemaInput), &customSchemaInputMap)
@@ -287,6 +291,8 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.AutoAck {
 		funcData.FuncConf.AutoAck = funcData.AutoAck
+	} else {
+		funcData.FuncConf.AutoAck = true
 	}
 
 	if funcData.MaxMessageRetries != 0 {
@@ -317,8 +323,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 		funcData.UserCodeFile = funcData.FuncConf.Go
 	}
 
-	// check if configs are valid
-	return validateFunctionConfigs(funcData.FuncConf)
+	return nil
 }
 
 func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
@@ -416,4 +421,24 @@ func processNamespaceCmd(funcData *pulsar.FunctionData) {
 		funcData.Tenant = PublicTenant
 		funcData.Namespace = DefaultNamespace
 	}
+}
+
+func checkArgsForUpdate(functionConfig *pulsar.FunctionConfig) error {
+	if functionConfig.ClassName == "" {
+		if functionConfig.Name == "" {
+			return errors.New("function Name not provided")
+		}
+	} else if functionConfig.Name == "" {
+		inferMissingFunctionName(functionConfig)
+	}
+
+	if functionConfig.Tenant == "" {
+		inferMissingTenant(functionConfig)
+	}
+
+	if functionConfig.Namespace == "" {
+		inferMissingNamespace(functionConfig)
+	}
+
+	return nil
 }
