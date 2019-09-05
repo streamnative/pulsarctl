@@ -7,10 +7,10 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"github.com/streamnative/pulsarctl/pkg/ctl/functions"
-    "github.com/streamnative/pulsarctl/pkg/ctl/sources"
-    "github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+	"github.com/streamnative/pulsarctl/pkg/ctl/sources"
+	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"os"
 )
 
