@@ -23,7 +23,11 @@ jobs:
         docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}:/pulsar_test --name pulsarctl apachepulsar/pulsar bin/pulsar standalone
         echo ${PWD}
         ls -al
-        docker cp pulsarctl:/pulsar/examples/api-examples.jar ${PWD}/test/functions
+        ls -al test/
+        ls -al test/functions/
+        docker cp pulsarctl:/pulsar/examples/api-examples.jar ${PWD}/test/functions/
+        ls -al test/
+        ls -al test/functions/
         sleep 10
 
     - name: Build
