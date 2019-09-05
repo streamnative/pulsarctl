@@ -19,7 +19,10 @@ jobs:
     - name: Get dependencies
       run: |
         docker pull apachepulsar/pulsar
+        echo ${PWD}
         docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}:/pulsar_test --name pulsarctl apachepulsar/pulsar bin/pulsar standalone
+        echo ${PWD}
+        ls -al
         docker cp pulsarctl:/pulsar/examples/api-examples.jar ${PWD}/test/functions
         sleep 10
 
