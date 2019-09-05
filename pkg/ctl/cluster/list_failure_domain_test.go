@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -32,7 +32,7 @@ func TestListFailureDomainsCmd(t *testing.T) {
 	out, _, _, err := TestClusterCommands(listFailureDomainCmd, args)
 	assert.Nil(t, err)
 
-	var brokerMap pulsar.FailureDomainMap
+	var brokerMap FailureDomainMap
 	err = json.Unmarshal(out.Bytes(), &brokerMap)
 	if err != nil {
 		t.Fatal(err)
@@ -44,7 +44,7 @@ func TestListFailureDomainsCmd(t *testing.T) {
 	assert.Equal(t, "list-failure-broker-B", brokerMap["list-failure-B"].BrokerList[0])
 }
 
-func TestListFailureArgsError(t *testing.T)  {
+func TestListFailureArgsError(t *testing.T) {
 	args := []string{"list-failure-domains"}
 	_, _, nameErr, _ := TestClusterCommands(listFailureDomainCmd, args)
 	assert.NotNil(t, nameErr)

@@ -20,17 +20,18 @@ package functions
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar Function that has been deployed to a Pulsar cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
+	var examples []Example
 
-	update := pulsar.Example{
+	update := Example{
 		Desc: "Change the output topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--tenant public \n" +
@@ -40,7 +41,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, update)
 
-	updateWithConf := pulsar.Example{
+	updateWithConf := Example{
 		Desc: "Update a Pulsar Function using a function config yaml file",
 		Command: "pulsarctl functions update \n" +
 			"\t--function-config-file <the path of function config yaml file> \n" +
@@ -48,7 +49,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithConf)
 
-	updateWithLogTopic := pulsar.Example{
+	updateWithLogTopic := Example{
 		Desc: "Change the log topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
@@ -56,7 +57,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithLogTopic)
 
-	updateWithDeadLetterTopic := pulsar.Example{
+	updateWithDeadLetterTopic := Example{
 		Desc: "Change the dead letter topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
@@ -65,7 +66,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithDeadLetterTopic)
 
-	updateWithUserConfig := pulsar.Example{
+	updateWithUserConfig := Example{
 		Desc: "Update the user configs of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -73,7 +74,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithUserConfig)
 
-	updateWithCustomSchemasInputs := pulsar.Example{
+	updateWithCustomSchemasInputs := Example{
 		Desc: "Change the schemas of the input topics for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
@@ -81,7 +82,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithCustomSchemasInputs)
 
-	updateWithSchema := pulsar.Example{
+	updateWithSchema := Example{
 		Desc: "Change the schema type of the input topic for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--schema-type schema.STRING\n" +
@@ -89,7 +90,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithSchema)
 
-	updateWithParallelism := pulsar.Example{
+	updateWithParallelism := Example{
 		Desc: "Change the parallelism of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--parallelism 1\n" +
@@ -97,7 +98,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithParallelism)
 
-	updateWithResource := pulsar.Example{
+	updateWithResource := Example{
 		Desc: "Change the resource usage for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--ram 5656565656\n" +
@@ -107,7 +108,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithResource)
 
-	updateWithWindowFunctions := pulsar.Example{
+	updateWithWindowFunctions := Example{
 		Desc: "Update the window configurations for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--window-length-count 10\n" +
@@ -119,18 +120,18 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithWindowFunctions)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []Output
+	successOut := Output{
 		Desc: "normal output",
 		Out:  "Updated <the name of a Pulsar Function> successfully",
 	}
 
-	failOut := pulsar.Output{
+	failOut := Output{
 		Desc: "Update contains no change",
 		Out:  "[✖]  code: 400 reason: Update contains no change",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
@@ -145,7 +146,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"update",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -347,7 +348,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *FunctionData) error {
 	err := processArgs(funcData)
 	if err != nil {
 		vc.Command.Help()
@@ -360,9 +361,9 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithApiVersion(V3)
 
-	updateOptions := pulsar.NewUpdateOptions()
+	updateOptions := NewUpdateOptions()
 	updateOptions.UpdateAuthData = funcData.UpdateAuthData
 
 	if isFunctionPackageUrlSupported(funcData.Jar) {

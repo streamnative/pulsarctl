@@ -3,7 +3,7 @@ package cluster
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func createClusterCmd(vc *cmdutils.VerbCmd) {
@@ -11,15 +11,15 @@ func createClusterCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"add",
 		"Add a pulsar cluster",
-		"This command is used for adding the configuration data for a cluster.\n" +
-			"The configuration data is mainly used for geo-replication between clusters,\n" +
-			"so please make sure the service urls provided in this command are reachable\n" +
-			"between clusters.\n" +
-			"\n" +
+		"This command is used for adding the configuration data for a cluster.\n"+
+			"The configuration data is mainly used for geo-replication between clusters,\n"+
+			"so please make sure the service urls provided in this command are reachable\n"+
+			"between clusters.\n"+
+			"\n"+
 			"This operation requires Pulsar super-user privileges.",
 		"create")
 
-	clusterData := &pulsar.ClusterData{}
+	clusterData := &ClusterData{}
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
@@ -57,7 +57,7 @@ func createClusterCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *pulsar.ClusterData) error {
+func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *ClusterData) error {
 	clusterData.Name = vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()

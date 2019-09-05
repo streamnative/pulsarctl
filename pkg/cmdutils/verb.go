@@ -28,6 +28,12 @@ func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, ne
 	parentResourceCmd.AddCommand(verb.Command)
 }
 
+func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd ...func(cmd *VerbCmd))  {
+	for _, cmd := range newVerbCmd {
+		AddVerbCmd(flagGrouping, parentResourceCmd, cmd)
+	}
+}
+
 // SetDescription sets usage along with short and long descriptions as well as aliases
 func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
 	vc.Command.Use = use
@@ -39,7 +45,7 @@ func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
 // SetRunFunc registers a command function
 func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 	vc.Command.Run = func(_ *cobra.Command, _ []string) {
-		run(cmd)
+		vc.run(cmd)
 	}
 }
 
@@ -47,14 +53,14 @@ func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
 		vc.NameArg, vc.NameError = GetNameArg(args)
-		run(cmd)
+		vc.run(cmd)
 	}
 }
 
 func (vc *VerbCmd) SetRunFuncWithNameArgs(cmd func() error, checkArgs func(args []string) error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
 		vc.NameArgs, vc.NameError = GetNameArgs(args, checkArgs)
-		run(cmd)
+		vc.run(cmd)
 	}
 }
 
@@ -65,7 +71,7 @@ var defaultExecErrorHandler = func(err error) {
 	os.Exit(1)
 }
 
-func run(cmd func() error) {
+func (vc *VerbCmd) run(cmd func() error) {
 	if err := cmd(); err != nil {
 		ExecErrorHandler(err)
 	}

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -25,7 +26,7 @@ const (
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
-	ApiVersion    ApiVersion
+	ApiVersion    common.ApiVersion
 
 	Auth          *auth.TlsAuthProvider
 	AuthParams    string
@@ -54,6 +55,7 @@ func DefaultConfig() *Config {
 type Client interface {
 	Clusters() Clusters
 	Functions() Functions
+	Topics() Topics
 }
 
 type client struct {
@@ -184,9 +186,20 @@ func (c *client) put(endpoint string, in, obj interface{}) error {
 }
 
 func (c *client) delete(endpoint string, obj interface{}) error {
+	return c.deleteWithQueryParams(endpoint, obj, nil)
+}
+
+func (c *client) deleteWithQueryParams(endpoint string, obj interface{}, params map[string]string) error {
 	req, err := c.newRequest(http.MethodDelete, endpoint)
 	if err != nil {
 		return err
+	}
+
+	if params != nil {
+		query := req.url.Query()
+		for k, v := range params {
+			query.Add(k, v)
+		}
 	}
 
 	resp, err := checkSuccessful(c.doRequest(req))

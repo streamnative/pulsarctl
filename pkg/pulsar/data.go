@@ -16,7 +16,7 @@ type FunctionData struct {
 	Tenant                    string  `json:"tenant"`
 	Namespace                 string  `json:"namespace"`
 	FuncName                  string  `json:"functionName"`
-	InstanceID				  string  `json:"instance_id"`
+	InstanceID                string  `json:"instance_id"`
 	ClassName                 string  `json:"className"`
 	Jar                       string  `json:"jarFile"`
 	Py                        string  `json:"pyFile"`
@@ -61,3 +61,8 @@ type FailureDomainData struct {
 }
 
 type FailureDomainMap map[string]FailureDomainData
+
+// Topic data
+type PartitionedTopicMetadata struct {
+	Partitions int `json:"partitions"`
+}

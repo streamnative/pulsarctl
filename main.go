@@ -8,6 +8,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
 	`github.com/streamnative/pulsarctl/pkg/ctl/functions`
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"os"
 )
 
@@ -63,6 +64,7 @@ func addCommands(flagGrouping *cmdutils.FlagGrouping) {
 	rootCmd.AddCommand(cluster.Command(flagGrouping))
 	rootCmd.AddCommand(completion.Command(rootCmd))
 	rootCmd.AddCommand(functions.Command(flagGrouping))
+	rootCmd.AddCommand(topic.Command(flagGrouping))
 }
 
 func main() {

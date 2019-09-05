@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -42,7 +42,7 @@ func isFunctionPackageUrlSupported(functionPkgUrl string) bool {
 		strings.HasPrefix(functionPkgUrl, FILE)
 }
 
-func inferMissingFunctionName(funcConf *pulsar.FunctionConfig) {
+func inferMissingFunctionName(funcConf *FunctionConfig) {
 	className := funcConf.ClassName
 	domains := strings.Split(className, "\\.")
 
@@ -53,15 +53,15 @@ func inferMissingFunctionName(funcConf *pulsar.FunctionConfig) {
 	}
 }
 
-func inferMissingTenant(funcConf *pulsar.FunctionConfig) {
+func inferMissingTenant(funcConf *FunctionConfig) {
 	funcConf.Tenant = PublicTenant
 }
 
-func inferMissingNamespace(funcConf *pulsar.FunctionConfig) {
+func inferMissingNamespace(funcConf *FunctionConfig) {
 	funcConf.Namespace = DefaultNamespace
 }
 
-func inferMissingSourceArguments(sourceConf *pulsar.SourceConfig) {
+func inferMissingSourceArguments(sourceConf *SourceConfig) {
 	if sourceConf.Tenant == "" {
 		sourceConf.Tenant = PublicTenant
 	}
@@ -75,7 +75,7 @@ func inferMissingSourceArguments(sourceConf *pulsar.SourceConfig) {
 	}
 }
 
-func inferMissingSinkeArguments(sinkConf *pulsar.SinkConfig) {
+func inferMissingSinkeArguments(sinkConf *SinkConfig) {
 	if sinkConf.Tenant == "" {
 		sinkConf.Tenant = PublicTenant
 	}
@@ -89,7 +89,7 @@ func inferMissingSinkeArguments(sinkConf *pulsar.SinkConfig) {
 	}
 }
 
-func parseFullyQualifiedFunctionName(fqfn string, functionConfig *pulsar.FunctionConfig) error {
+func parseFullyQualifiedFunctionName(fqfn string, functionConfig *FunctionConfig) error {
 	args := strings.Split(fqfn, "/")
 	if len(args) != 3 {
 		return errors.New("fully qualified function names (FQFNs) must be of the form tenant/namespace/name")
@@ -112,12 +112,12 @@ func isFileExist(filename string) bool {
 	return true
 }
 
-func processArgs(funcData *pulsar.FunctionData) error {
+func processArgs(funcData *FunctionData) error {
 	// Initialize config builder either from a supplied YAML config file or from scratch
 	if funcData.FuncConf != nil {
 		// no-op
 	} else {
-		funcData.FuncConf = new(pulsar.FunctionConfig)
+		funcData.FuncConf = new(FunctionConfig)
 	}
 
 	if funcData.FunctionConfigFile != "" {
@@ -230,7 +230,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.CPU != 0 {
 		if funcData.FuncConf.Resources == nil {
-			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+			funcData.FuncConf.Resources = NewDefaultResources()
 		}
 
 		funcData.FuncConf.Resources.CPU = funcData.CPU
@@ -238,7 +238,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.Disk != 0 {
 		if funcData.FuncConf.Resources == nil {
-			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+			funcData.FuncConf.Resources = NewDefaultResources()
 		}
 
 		funcData.FuncConf.Resources.Disk = funcData.Disk
@@ -246,7 +246,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.RAM != 0 {
 		if funcData.FuncConf.Resources == nil {
-			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+			funcData.FuncConf.Resources = NewDefaultResources()
 		}
 
 		funcData.FuncConf.Resources.Ram = funcData.RAM
@@ -259,7 +259,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 	// window configs
 	if funcData.WindowLengthCount != 0 {
 		if funcData.FuncConf.WindowConfig == nil {
-			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+			funcData.FuncConf.WindowConfig = NewDefaultWindowConfing()
 		}
 
 		funcData.FuncConf.WindowConfig.WindowLengthCount = funcData.WindowLengthCount
@@ -267,7 +267,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.WindowLengthDurationMs != 0 {
 		if funcData.FuncConf.WindowConfig == nil {
-			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+			funcData.FuncConf.WindowConfig = NewDefaultWindowConfing()
 		}
 
 		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = funcData.WindowLengthDurationMs
@@ -275,7 +275,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.SlidingIntervalCount != 0 {
 		if funcData.FuncConf.WindowConfig == nil {
-			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+			funcData.FuncConf.WindowConfig = NewDefaultWindowConfing()
 		}
 
 		funcData.FuncConf.WindowConfig.SlidingIntervalCount = funcData.SlidingIntervalCount
@@ -283,7 +283,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 
 	if funcData.SlidingIntervalDurationMs != 0 {
 		if funcData.FuncConf.WindowConfig == nil {
-			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+			funcData.FuncConf.WindowConfig = NewDefaultWindowConfing()
 		}
 
 		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = funcData.SlidingIntervalDurationMs
@@ -326,7 +326,7 @@ func processArgs(funcData *pulsar.FunctionData) error {
 	return nil
 }
 
-func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
+func validateFunctionConfigs(functionConfig *FunctionConfig) error {
 	if functionConfig.Name == "" {
 		inferMissingFunctionName(functionConfig)
 	}
@@ -365,15 +365,15 @@ func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
 	}
 
 	if functionConfig.Jar != "" {
-		functionConfig.Runtime = pulsar.JavaRuntime
+		functionConfig.Runtime = JavaRuntime
 	} else if functionConfig.Py != "" {
-		functionConfig.Runtime = pulsar.PythonRuntime
+		functionConfig.Runtime = PythonRuntime
 	} else if functionConfig.Go != "" {
-		functionConfig.Runtime = pulsar.GoRuntime
+		functionConfig.Runtime = GoRuntime
 	}
 
 	// go doesn't need className
-	if functionConfig.Runtime == pulsar.JavaRuntime || functionConfig.Runtime == pulsar.PythonRuntime  {
+	if functionConfig.Runtime == JavaRuntime || functionConfig.Runtime == PythonRuntime  {
 		if functionConfig.ClassName == "" {
 			return errors.New("no Function Classname specified")
 		}
@@ -382,7 +382,7 @@ func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
 	return nil
 }
 
-func processBaseArguments(funcData *pulsar.FunctionData) error {
+func processBaseArguments(funcData *FunctionData) error {
 	usesSetters := funcData.Tenant != "" || funcData.Namespace != "" || funcData.FuncName != ""
 	usesFqfn := funcData.FQFN != ""
 
@@ -416,14 +416,14 @@ func processBaseArguments(funcData *pulsar.FunctionData) error {
 	return nil
 }
 
-func processNamespaceCmd(funcData *pulsar.FunctionData) {
+func processNamespaceCmd(funcData *FunctionData) {
 	if funcData.Tenant == "" || funcData.Namespace == "" {
 		funcData.Tenant = PublicTenant
 		funcData.Namespace = DefaultNamespace
 	}
 }
 
-func checkArgsForUpdate(functionConfig *pulsar.FunctionConfig) error {
+func checkArgsForUpdate(functionConfig *FunctionConfig) error {
 	if functionConfig.ClassName == "" {
 		if functionConfig.Name == "" {
 			return errors.New("function Name not provided")
