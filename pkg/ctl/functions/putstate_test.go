@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 	"time"
 )
@@ -46,7 +47,7 @@ func TestStateFunctions(t *testing.T) {
 	assert.Equal(t, out.String(), "Created test-functions-putstate successfully")
 
 	// wait the function create successfully
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 5)
 
 	putstateArgs := []string{"putstate",
 		"--name", "test-functions-putstate",
@@ -55,6 +56,7 @@ func TestStateFunctions(t *testing.T) {
 
 	outPutState, _, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 	assert.Nil(t, err)
+	t.Logf("outPutState:%s", outPutState.String())
 	assert.Equal(t, outPutState.String(), "PutState successfully")
 
 	// test failure case for put state
@@ -65,8 +67,8 @@ func TestStateFunctions(t *testing.T) {
 
 	_, execErrMsg, _ := TestFunctionsCommands(putstateFunctionsCmd, failureStateArgs)
 	assert.NotNil(t, execErrMsg)
-	exceptMsg := "code: 404 reason: Stream 'not-exist' is not found"
-	assert.Equal(t, execErrMsg.Error(), exceptMsg)
+	exceptMsg := "'not-exist' is not found"
+	assert.True(t, strings.Contains(execErrMsg.Error(), exceptMsg))
 
 	// query state
 	queryStateArgs := []string{"querystate",
@@ -76,6 +78,7 @@ func TestStateFunctions(t *testing.T) {
 
 	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
 	assert.Nil(t, err)
+	t.Logf("outQueryState:%s", outQueryState.String())
 
 	var state pulsar.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
