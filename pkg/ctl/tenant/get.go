@@ -5,15 +5,15 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTenantCmd(vc *cmdutils.VerbCmd)  {
+func getTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting a tenant info."
+	desc.CommandUsedFor = "This command is used for getting the configuration of a tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	getSuccess := pulsar.Example{
-		Desc: "get the tenant named <tenant-name>",
-		Command:"pulsarctl tenants get <tenant-name>",
+		Desc:    "get the tenant configuration of <tenant-name>",
+		Command: "pulsarctl tenants get <tenant-name>",
 	}
 	examples = append(examples, getSuccess)
 	desc.CommandExamples = examples
@@ -21,7 +21,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd)  {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out :  "{\n" +
+		Out: "{\n" +
 			"  \"adminRoles\": [],\n" +
 			"  \"allowedClusters\": [\n" +
 			"    \"standalone\"\n" +
@@ -29,7 +29,11 @@ func getTenantCmd(vc *cmdutils.VerbCmd)  {
 			"}",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError, tenantNotExist)
+	notExist := pulsar.Output{
+		Desc: "the specified tenant does not exist in the broker",
+		Out:  "[✖]  code: 404 reason: Tenant does not exist",
+	}
+	out = append(out, tenantNameArgsError, notExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(

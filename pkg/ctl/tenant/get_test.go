@@ -31,3 +31,10 @@ func TestGetTenantArgsError(t *testing.T) {
 	_, _, nameErr, _ := TestTenantCommands(getTenantCmd, args)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
+
+func TestGetNonExistTenant(t *testing.T)  {
+	args := []string{"get", "non-existent-tenant"}
+	_, execErr, _, _ := TestTenantCommands(getTenantCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
+}

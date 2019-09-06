@@ -13,7 +13,7 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	deleteExample := pulsar.Example{
-		Desc:    "delete the tenant named <tenant-name>",
+		Desc:    "delete a tenant named <tenant-name>",
 		Command: "pulsarctl tenants delete <tenant-name>",
 	}
 	examples = append(examples, deleteExample)
@@ -48,7 +48,7 @@ func doDeleteTenant(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Tenants().Delete(vc.NameArg)
 	if err == nil {
-		vc.Command.Printf("Delete tenant [%s] successfully\n", vc.NameArg)
+		vc.Command.Printf("Delete tenant %s successfully\n", vc.NameArg)
 	}
 	return err
 }

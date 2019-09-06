@@ -8,12 +8,12 @@ import (
 
 func createTenantCmd(vc *cmdutils.VerbCmd)  {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for creating a tenant."
+	desc.CommandUsedFor = "This command is used for creating a new tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc: "creating the tenant named <tenant-name> allowed ",
+		Desc: "create a tenant named <tenant-name>",
 		Command: "pulsarctl tenants create <tenant-name>",
 	}
 	examples = append(examples, create)
@@ -25,7 +25,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 		Out: "Create tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
+	out = append(out, tenantNameArgsError, tenantAlreadyExist)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -67,7 +67,7 @@ func doCreateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Tenants().Create(*data)
 	if err == nil {
-		vc.Command.Printf("Create tenant [%s] successfully\n", data.Name)
+		vc.Command.Printf("Create tenant %s successfully\n", data.Name)
 	}
 
 	return err

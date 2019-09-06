@@ -13,7 +13,12 @@ var tenantNameArgsError = pulsar.Output{
 
 var tenantNotExist = pulsar.Output{
 	Desc: "the specified tenant does not exist in the broker",
-	Out: "[✖]  code: 404 reason: Tenant does not exist",
+	Out:  "[✖]  code: 404 reason: The tenant does not exist",
+}
+
+var tenantAlreadyExist = pulsar.Output{
+	Desc: "the specified tenant has been created",
+	Out:  "[✖]  code: 409 reason: Tenant already exists",
 }
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {

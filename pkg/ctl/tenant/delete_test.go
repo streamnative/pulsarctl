@@ -29,3 +29,10 @@ func TestDeleteTenantArgsError(t *testing.T) {
 	_, _, nameErr, _ := TestTenantCommands(deleteTenantCmd, args)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
+
+func TestDeleteNonExistTenant(t *testing.T) {
+	args := []string{"delete", "non-existent-tenant"}
+	_, execErr, _, _ := TestTenantCommands(deleteTenantCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 404 reason: The tenant does not exist", execErr.Error())
+}

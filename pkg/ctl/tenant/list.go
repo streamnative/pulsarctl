@@ -8,12 +8,12 @@ import (
 
 func listTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for listing all exist tenants."
+	desc.CommandUsedFor = "This command is used for listing all the existing tenants."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	listSuccess := pulsar.Example{
-		Desc:    "list all exist tenants",
+		Desc:    "list all the existing tenants",
 		Command: "pulsarctl tenants list",
 	}
 	examples = append(examples, listSuccess)
