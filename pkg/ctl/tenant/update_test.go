@@ -54,7 +54,7 @@ func TestUpdateArgsError(t *testing.T) {
 }
 
 func TestUpdateNonExistTenantError(t *testing.T) {
-	args := []string{"update", "non-existent-tenant"}
+	args := []string{"update", "--admin-roles", "update-role", "--allowed-clusters", "standalone", "non-existent-topic"}
 	_, execErr, _, _ := TestTenantCommands(updateTenantCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
