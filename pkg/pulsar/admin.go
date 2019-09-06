@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -26,7 +25,7 @@ const (
 type Config struct {
 	WebServiceUrl string
 	HttpClient    *http.Client
-	ApiVersion    common.ApiVersion
+	ApiVersion    ApiVersion
 
 	Auth          *auth.TlsAuthProvider
 	AuthParams    string

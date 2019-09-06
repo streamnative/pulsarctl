@@ -3,7 +3,7 @@ package cluster
 import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {

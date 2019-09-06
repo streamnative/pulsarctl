@@ -21,7 +21,6 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/pulsar"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getFunctionsCmd(vc *cmdutils.VerbCmd) {

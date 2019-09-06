@@ -1,7 +1,6 @@
 package pulsar
 
 import (
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"strconv"
 )
 

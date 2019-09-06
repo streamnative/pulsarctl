@@ -4,7 +4,6 @@ import (
 	`log`
 	"github.com/spf13/pflag"
 	. "github.com/streamnative/pulsarctl/pkg/pulsar"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 var PulsarCtlConfig = ClusterConfig{}

@@ -1,6 +1,6 @@
 package errors
 
-import . "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+import . "github.com/streamnative/pulsarctl/pkg/pulsar"
 
 var ArgError = Output{
 	Desc: "the topic name is not specified",
