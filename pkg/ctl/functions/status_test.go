@@ -50,6 +50,8 @@ func TestStatusFunctions(t *testing.T) {
 	time.Sleep(time.Second * 3)
 
 	statusArgs := []string{"status",
+		"--tenant", "public",
+		"--namespace", "default",
 		"--name", "test-functions-status",
 	}
 

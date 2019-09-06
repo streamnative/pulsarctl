@@ -49,6 +49,8 @@ func TestTriggerFunctions(t *testing.T) {
 	time.Sleep(time.Second * 5)
 
 	triggerArgs := []string{"trigger",
+		"--tenant", "public",
+		"--namespace", "default",
 		"--name", "test-functions-trigger",
 		"--topic", "test-input-topic",
 		"--trigger-value", "hello pulsar",
@@ -60,6 +62,8 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 
 	statsArgs := []string{"stats",
+		"--tenant", "public",
+		"--namespace", "default",
 		"--name", "test-functions-trigger",
 	}
 

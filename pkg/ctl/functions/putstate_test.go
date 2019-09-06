@@ -50,6 +50,8 @@ func TestStateFunctions(t *testing.T) {
 	time.Sleep(time.Second * 5)
 
 	putstateArgs := []string{"putstate",
+		"--tenant", "public",
+		"--namespace", "default",
 		"--name", "test-functions-putstate",
 		"--state", "{\"key\":\"pulsar\", \"stringValue\":\"hello\"}",
 	}
@@ -72,6 +74,8 @@ func TestStateFunctions(t *testing.T) {
 
 	// query state
 	queryStateArgs := []string{"querystate",
+		"--tenant", "public",
+		"--namespace", "default",
 		"--name", "test-functions-putstate",
 		"--key", "pulsar",
 	}
