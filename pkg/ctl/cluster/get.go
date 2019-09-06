@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {
