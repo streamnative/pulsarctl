@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 var argsError = Output{
