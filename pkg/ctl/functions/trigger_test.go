@@ -41,8 +41,11 @@ func TestTriggerFunctions(t *testing.T) {
 		"--jar", basePath + "/test/functions/api-examples.jar",
 	}
 
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
+	if execErr != nil {
+		t.Errorf("create fucntions error value: %s", execErr.Error())
+	}
 	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
 
 	// wait the function create successfully
@@ -57,8 +60,11 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 
 	for i := 0; i < 5; i++ {
-		_, _, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+		_, execE, err := TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
 		assert.Nil(t, err)
+		if execE != nil {
+			t.Errorf("trigger functions error value: %s", execE.Error())
+		}
 	}
 
 	statsArgs := []string{"stats",
@@ -67,7 +73,10 @@ func TestTriggerFunctions(t *testing.T) {
 		"--name", "test-functions-trigger",
 	}
 
-	outStats, _, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	outStats, statsErr, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	if statsErr != nil {
+		t.Errorf("stats functions error value: %s", statsErr.Error())
+	}
 	assert.Nil(t, err)
 
 	var stats pulsar.FunctionStats

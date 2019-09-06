@@ -42,8 +42,11 @@ func TestStateFunctions(t *testing.T) {
 		"--jar", basePath + "/test/functions/api-examples.jar",
 	}
 
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
+	if execErr != nil {
+		t.Errorf("create functions error value: %s", execErr.Error())
+	}
 	assert.Equal(t, out.String(), "Created test-functions-putstate successfully")
 
 	// wait the function create successfully
@@ -56,8 +59,11 @@ func TestStateFunctions(t *testing.T) {
 		"--state", "{\"key\":\"pulsar\", \"stringValue\":\"hello\"}",
 	}
 
-	outPutState, _, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
+	outPutState, execE, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 	assert.Nil(t, err)
+	if execE != nil {
+		t.Errorf("put state functions error value: %s ", execE.Error())
+	}
 	t.Logf("outPutState:%s", outPutState.String())
 	assert.Equal(t, outPutState.String(), "PutState successfully")
 
