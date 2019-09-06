@@ -18,9 +18,11 @@
 package functions
 
 import (
+	`bytes`
 	"encoding/json"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
+	`strings`
 	"testing"
 	"time"
 )
@@ -48,9 +50,6 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
 
-	// wait the function create successfully
-	time.Sleep(time.Second * 50)
-
 	triggerArgs := []string{"trigger",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -59,11 +58,12 @@ func TestTriggerFunctions(t *testing.T) {
 		"--trigger-value", "hello pulsar",
 	}
 
-	for i := 0; i < 5; i++ {
-		_, execE, err := TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
-		assert.Nil(t, err)
-		if execE != nil {
-			t.Errorf("trigger functions error value: %s", execE.Error())
+	triggerOut := new(bytes.Buffer)
+	errStr := "Function in trigger function is not ready"
+	for {
+		triggerOut, execErr, _ = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+		if !strings.Contains(triggerOut.String(), errStr) {
+			break
 		}
 	}
 
@@ -83,8 +83,8 @@ func TestTriggerFunctions(t *testing.T) {
 	err = json.Unmarshal(outStats.Bytes(), &stats)
 	assert.Nil(t, err)
 
-	assert.Equal(t, int64(5), stats.ReceivedTotal)
-	assert.Equal(t, int64(5), stats.ProcessedSuccessfullyTotal)
+	assert.Equal(t, int64(1), stats.ReceivedTotal)
+	assert.Equal(t, int64(1), stats.ProcessedSuccessfullyTotal)
 }
 
 func TestTriggerFunctionsFailure(t *testing.T) {

@@ -27,7 +27,7 @@ import (
 func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Check the current status of a Pulsar Function."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires user permissions."
 
 	var examples []pulsar.Example
 	status := pulsar.Example{
@@ -163,7 +163,7 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-
+		vc.Command.Printf("Get status successfully")
 		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionStatus)
 	}
 

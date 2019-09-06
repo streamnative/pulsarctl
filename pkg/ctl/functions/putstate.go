@@ -26,12 +26,12 @@ import (
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Put the state associated with a Pulsar Function."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandUsedFor = "Put a key/value pair to the state associated with a Pulsar Function."
+	desc.CommandPermission = "This command requires user permissions."
 
 	var examples []pulsar.Example
 	putstate := pulsar.Example{
-		Desc: "Put the state associated with a Pulsar Function",
+		Desc: "Put a key/value pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
@@ -41,7 +41,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, putstate)
 
 	putstateWithFQFN := pulsar.Example{
-		Desc: "Put the state associated with a Pulsar Function with FQFN",
+		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
 			"\t--state \"{\"key\":\"pulsar\", \"stringValue\":\"hello\"}\"",
@@ -52,7 +52,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "PutState successfully",
+		Out:  "Put state <the function state> successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -61,16 +61,21 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	failOutWithNameNotExist := pulsar.Output{
-		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
+		Desc: "The name of Pulsar Functions doesn't exist, please check the `--name` arg",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	out = append(out, successOut, failOut, failOutWithNameNotExist)
+	failOutWithWrongJson := pulsar.Output{
+		Desc: "unexpected end of JSON input, please check the `--state` arg",
+		Out:  "[✖]  unexpected end of JSON input",
+	}
+
+	out = append(out, successOut, failOut, failOutWithNameNotExist, failOutWithWrongJson)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"putstate",
-		"Put the state associated with a Pulsar Function",
+		"Put a key/value pair to the state associated with a Pulsar Function",
 		desc.ToString(),
 		"putstate",
 	)
@@ -135,7 +140,7 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		vc.Command.Printf("PutState successfully")
+		vc.Command.Printf("Put state %+v successfully", state)
 	}
 
 	return err

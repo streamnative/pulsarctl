@@ -18,12 +18,12 @@
 package functions
 
 import (
+	`bytes`
 	"encoding/json"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-	`time`
 )
 
 func TestStateFunctions(t *testing.T) {
@@ -49,9 +49,6 @@ func TestStateFunctions(t *testing.T) {
 	}
 	assert.Equal(t, out.String(), "Created test-functions-putstate successfully")
 
-	// wait the function create successfully
-	time.Sleep(time.Second * 20)
-
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -59,13 +56,17 @@ func TestStateFunctions(t *testing.T) {
 		"--state", "{\"key\":\"pulsar\", \"stringValue\":\"hello\"}",
 	}
 
-	outPutState, execE, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
-	assert.Nil(t, err)
-	if execE != nil {
-		t.Errorf("put state functions error value: %s ", execE.Error())
+	outPutState := new(bytes.Buffer)
+
+	for {
+		outPutState, _, _ = TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
+
+		if strings.Contains(outPutState.String(), "successfully") {
+			break
+		}
 	}
-	t.Logf("outPutState:%s", outPutState.String())
-	assert.Equal(t, outPutState.String(), "PutState successfully")
+
+	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
 
 	// test failure case for put state
 	failureStateArgs := []string{"putstate",
@@ -100,7 +101,7 @@ func TestStateFunctions(t *testing.T) {
 	// put state again
 	outPutStateAgain, _, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 	assert.Nil(t, err)
-	assert.Equal(t, outPutStateAgain.String(), "PutState successfully")
+	assert.True(t, strings.Contains(outPutStateAgain.String(), "successfully"))
 
 	// query state again
 	outQueryStateAgain, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)

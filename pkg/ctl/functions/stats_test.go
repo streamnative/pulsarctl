@@ -23,7 +23,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestStatsFunctions(t *testing.T) {
@@ -45,9 +44,6 @@ func TestStatsFunctions(t *testing.T) {
 	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 	assert.Equal(t, out.String(), "Created test-functions-stats successfully")
-
-	// wait the function create successfully
-	time.Sleep(time.Second * 3)
 
 	statsArgs := []string{"stats",
 		"--name", "test-functions-stats",

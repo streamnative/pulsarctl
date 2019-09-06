@@ -18,12 +18,12 @@
 package functions
 
 import (
-	"encoding/json"
+	`bytes`
+	`encoding/json`
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestStatusFunctions(t *testing.T) {
@@ -46,8 +46,22 @@ func TestStatusFunctions(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, out.String(), "Created test-functions-status successfully")
 
-	// wait the function create successfully
-	time.Sleep(time.Second * 30)
+	getArgs := []string{"get",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-get",
+	}
+
+	out, _, _ = TestFunctionsCommands(getFunctionsCmd, getArgs)
+	assert.Nil(t, err)
+
+	var functionConfig pulsar.FunctionConfig
+	err = json.Unmarshal(out.Bytes(), &functionConfig)
+	assert.Nil(t, err)
+
+	assert.Equal(t, functionConfig.Tenant, "public")
+	assert.Equal(t, functionConfig.Namespace, "default")
+	assert.Equal(t, functionConfig.Name, "test-functions-status")
 
 	statusArgs := []string{"status",
 		"--tenant", "public",
@@ -55,10 +69,16 @@ func TestStatusFunctions(t *testing.T) {
 		"--name", "test-functions-status",
 	}
 
-	outStatus, _, err := TestFunctionsCommands(statusFunctionsCmd, statusArgs)
-	assert.Nil(t, err)
-
+	outStatus := new(bytes.Buffer)
 	var status pulsar.FunctionStatus
+
+	for {
+		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
+		if strings.Contains(outStatus.String(), "successfully") {
+			break
+		}
+	}
+
 	err = json.Unmarshal(outStatus.Bytes(), &status)
 	assert.Nil(t, err)
 

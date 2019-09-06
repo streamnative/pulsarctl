@@ -27,7 +27,7 @@ import (
 func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Get the current stats of a Pulsar Function."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires user permissions."
 
 	var examples []pulsar.Example
 	stats := pulsar.Example{

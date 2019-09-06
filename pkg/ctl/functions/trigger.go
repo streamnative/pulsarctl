@@ -19,7 +19,6 @@ package functions
 
 import (
 	"errors"
-	"fmt"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -28,7 +27,7 @@ import (
 func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Trigger the specified Pulsar Function with a supplied value."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires user permissions."
 
 	var examples []pulsar.Example
 	trigger := pulsar.Example{
@@ -165,11 +164,15 @@ func doTriggerFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		return errors.New("either a trigger value or a trigger filepath needs to be specified")
 	}
 
+	if funcData.TriggerValue != "" && funcData.TriggerFile != "" {
+		return errors.New("either a triggerValue or a triggerFile needs to specified for the function, cannot specify both")
+	}
+
 	retval, err := admin.Functions().TriggerFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName, funcData.Topic, funcData.TriggerValue, funcData.TriggerFile)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		fmt.Println(retval)
+		vc.Command.Printf(retval)
 	}
 	return err
 }
