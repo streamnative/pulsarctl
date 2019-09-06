@@ -51,15 +51,10 @@ func TestUpdateArgsError(t *testing.T) {
 	_, _, nameErr, _ := TestTenantCommands(updateTenantCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
-
-	args = []string{"update", "tenant-name"}
-	_, execErr, _, _ := TestTenantCommands(updateTenantCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "the admin roles or the allowed clusters is not specified", execErr.Error())
 }
 
 func TestUpdateNonExistTenantError(t *testing.T) {
-	args := []string{"update", "--admin-roles", "admin-A", "non-existent-tenant"}
+	args := []string{"update", "non-existent-tenant"}
 	_, execErr, _, _ := TestTenantCommands(updateTenantCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())

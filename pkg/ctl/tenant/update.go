@@ -1,7 +1,6 @@
 package tenant
 
 import (
-	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -13,6 +12,12 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
+	empty := pulsar.Example{
+		Desc:    "clear the tenant configuration of a tenant",
+		Command: "pulsarctl tenant update <tenant-name>",
+	}
+	examples = append(examples, empty)
+
 	updateAdminRole := pulsar.Example{
 		Desc:    "update the admin roles for tenant <tenant-name>",
 		Command: "pulsarctl tenants update --admin-roles <admin-A> --admin-roles <admin-B> <tenant-name>",
@@ -78,10 +83,6 @@ func doUpdateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
-	}
-
-	if data.AllowedClusters ==  nil && data.AdminRoles == nil {
-		return errors.New("the admin roles or the allowed clusters is not specified")
 	}
 
 	data.Name = vc.NameArg
