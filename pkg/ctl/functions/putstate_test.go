@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-	"time"
+	`time`
 )
 
 func TestStateFunctions(t *testing.T) {
@@ -50,7 +50,7 @@ func TestStateFunctions(t *testing.T) {
 	assert.Equal(t, out.String(), "Created test-functions-putstate successfully")
 
 	// wait the function create successfully
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 20)
 
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",

@@ -47,7 +47,7 @@ func TestStatusFunctions(t *testing.T) {
 	assert.Equal(t, out.String(), "Created test-functions-status successfully")
 
 	// wait the function create successfully
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 30)
 
 	statusArgs := []string{"status",
 		"--tenant", "public",

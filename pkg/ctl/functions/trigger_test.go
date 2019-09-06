@@ -49,7 +49,7 @@ func TestTriggerFunctions(t *testing.T) {
 	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
 
 	// wait the function create successfully
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 50)
 
 	triggerArgs := []string{"trigger",
 		"--tenant", "public",
