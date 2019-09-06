@@ -4,7 +4,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 	"strconv"
 )
 

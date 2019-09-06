@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func deleteClusterCmd(vc *cmdutils.VerbCmd) {
