@@ -19,10 +19,9 @@ package functions
 
 import (
 	`bytes`
-	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	`encoding/json`
+	`github.com/streamnative/pulsarctl/pkg/pulsar`
 	"github.com/stretchr/testify/assert"
-	`strings`
 	"testing"
 	"time"
 )
@@ -39,7 +38,7 @@ func TestTriggerFunctions(t *testing.T) {
 		"--name", "test-functions-trigger",
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
-		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--classname", "org.apache.pulsar.functions.api.examples.WordCountFunction",
 		"--jar", basePath + "/test/functions/api-examples.jar",
 	}
 
@@ -50,22 +49,21 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
 
-	statusArgs := []string{"status",
+	statsArgs := []string{"stats",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
+		"--name", "test-functions-trigger",
 	}
+	outStats := new(bytes.Buffer)
 
-	outStatus := new(bytes.Buffer)
+	outStats, _, _ = TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	var stats pulsar.FunctionStats
+	err = json.Unmarshal(outStats.Bytes(), &stats)
+	assert.Nil(t, err)
+	assert.Equal(t, int64(0), stats.ReceivedTotal)
+	assert.Equal(t, int64(0), stats.ProcessedSuccessfullyTotal)
 
-	for {
-		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
-		t.Log(outStatus.String())
-		if strings.Contains(outStatus.String(), "true") {
-			break
-		}
-	}
-
+	// send trigger cmd to broker
 	triggerArgs := []string{"trigger",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -75,28 +73,14 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 
 	triggerOut := new(bytes.Buffer)
-	//errStr := "Function in trigger function is not ready"
-	triggerOut, execErr, _ = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
-	t.Log(triggerOut.String())
-
-	statsArgs := []string{"stats",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-functions-trigger",
+	for i := 0; i < 2; i++ {
+		triggerOut, execErr, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+		assert.Nil(t, err)
+		if execErr != nil {
+			t.Error(execErr.Error())
+		}
+		t.Log(triggerOut.String())
 	}
-
-	outStats, statsErr, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
-	if statsErr != nil {
-		t.Errorf("stats functions error value: %s", statsErr.Error())
-	}
-	assert.Nil(t, err)
-
-	var stats pulsar.FunctionStats
-	err = json.Unmarshal(outStats.Bytes(), &stats)
-	assert.Nil(t, err)
-
-	assert.Equal(t, int64(1), stats.ReceivedTotal)
-	assert.Equal(t, int64(1), stats.ProcessedSuccessfullyTotal)
 }
 
 func TestTriggerFunctionsFailure(t *testing.T) {
