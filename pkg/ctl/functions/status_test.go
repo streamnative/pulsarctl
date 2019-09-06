@@ -49,14 +49,14 @@ func TestStatusFunctions(t *testing.T) {
 	getArgs := []string{"get",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-get",
+		"--name", "test-functions-status",
 	}
 
-	out, _, _ = TestFunctionsCommands(getFunctionsCmd, getArgs)
+	outGet, _, _ := TestFunctionsCommands(getFunctionsCmd, getArgs)
 	assert.Nil(t, err)
 
 	var functionConfig pulsar.FunctionConfig
-	err = json.Unmarshal(out.Bytes(), &functionConfig)
+	err = json.Unmarshal(outGet.Bytes(), &functionConfig)
 	assert.Nil(t, err)
 
 	assert.Equal(t, functionConfig.Tenant, "public")
@@ -74,11 +74,12 @@ func TestStatusFunctions(t *testing.T) {
 
 	for {
 		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
-		if strings.Contains(outStatus.String(), "successfully") {
+		if strings.Contains(outStatus.String(), "true") {
 			break
 		}
 	}
 
+	t.Log(outStatus.String())
 	err = json.Unmarshal(outStatus.Bytes(), &status)
 	assert.Nil(t, err)
 

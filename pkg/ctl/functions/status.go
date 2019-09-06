@@ -163,7 +163,6 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		vc.Command.Printf("Get status successfully")
 		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionStatus)
 	}
 

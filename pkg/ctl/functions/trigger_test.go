@@ -50,6 +50,22 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
 
+	statusArgs := []string{"status",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-status",
+	}
+
+	outStatus := new(bytes.Buffer)
+
+	for {
+		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
+		t.Log(outStatus.String())
+		if strings.Contains(outStatus.String(), "true") {
+			break
+		}
+	}
+
 	triggerArgs := []string{"trigger",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -59,13 +75,9 @@ func TestTriggerFunctions(t *testing.T) {
 	}
 
 	triggerOut := new(bytes.Buffer)
-	errStr := "Function in trigger function is not ready"
-	for {
-		triggerOut, execErr, _ = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
-		if !strings.Contains(triggerOut.String(), errStr) {
-			break
-		}
-	}
+	//errStr := "Function in trigger function is not ready"
+	triggerOut, execErr, _ = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+	t.Log(triggerOut.String())
 
 	statsArgs := []string{"stats",
 		"--tenant", "public",
