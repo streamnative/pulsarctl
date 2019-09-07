@@ -1,7 +1,6 @@
 package topic
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
@@ -14,7 +13,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"",
 		"topic")
 
-	commands := []func(*cmdutils.VerbCmd) {
+	commands := []func(*cmdutils.VerbCmd){
 		CreateTopicCmd,
 		DeleteTopicCmd,
 		GetTopicCmd,
@@ -25,8 +24,4 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
 
 	return resourceCmd
-}
-
-func Hello()  {
-	fmt.Print("hello")
 }
