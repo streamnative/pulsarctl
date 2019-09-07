@@ -9,7 +9,7 @@ import (
 func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for getting the last message id in a specified existing persistent topic."
-	desc.CommandUsedFor = "This command requires admin permissions."
+	desc.CommandPermission= "This command requires admin permissions."
 
 	var examples []Example
 	get := Example{
@@ -42,6 +42,7 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, notAllowedError)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
+	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"last-message-id",
