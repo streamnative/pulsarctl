@@ -27,7 +27,7 @@ import (
 func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Fetch a key/value pair from the state associated with a Pulsar Function."
-	desc.CommandPermission = "This command requires user permissions."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 	querystate := pulsar.Example{

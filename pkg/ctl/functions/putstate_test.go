@@ -53,7 +53,7 @@ func TestStateFunctions(t *testing.T) {
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-functions-putstate",
-		"--state", "{\"key\":\"pulsar\", \"stringValue\":\"hello\"}",
+		"pulsar", "hello",
 	}
 
 	outPutState := new(bytes.Buffer)
@@ -71,7 +71,7 @@ func TestStateFunctions(t *testing.T) {
 	// test failure case for put state
 	failureStateArgs := []string{"putstate",
 		"--name", "not-exist",
-		"--state", "{\"key\":\"pulsar\", \"stringValue\":\"hello\"}",
+		"pulsar", "hello",
 	}
 
 	_, execErrMsg, _ := TestFunctionsCommands(putstateFunctionsCmd, failureStateArgs)

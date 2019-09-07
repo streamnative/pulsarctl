@@ -18,33 +18,44 @@
 package functions
 
 import (
-	"encoding/json"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	`io/ioutil`
+	`strings`
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Put a key/value pair to the state associated with a Pulsar Function."
-	desc.CommandPermission = "This command requires user permissions."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 	putstate := pulsar.Example{
-		Desc: "Put a key/value pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/<string value> pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
 			"\t--name <the name of Pulsar Function> \n" +
-			"\t--state \"{\"key\":\"pulsar\", \"stringValue\":\"hello\"}\" ",
+			"\t<key name> <string value> ",
 	}
 	examples = append(examples, putstate)
+
+	putstateWithByte := pulsar.Example{
+		Desc: "Put a key/<byte value> pair to the state associated with a Pulsar Function",
+		Command: "pulsarctl functions putstate \n" +
+				"\t--tenant public\n" +
+				"\t--namespace default\n" +
+				"\t--name <the name of Pulsar Function> \n" +
+				"\t<key name> - <byte value> ",
+	}
+	examples = append(examples, putstateWithByte)
 
 	putstateWithFQFN := pulsar.Example{
 		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
-			"\t--state \"{\"key\":\"pulsar\", \"stringValue\":\"hello\"}\"",
+			"\t<key name> - <string value> ",
 	}
 	examples = append(examples, putstateWithFQFN)
 	desc.CommandExamples = examples
@@ -83,9 +94,9 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	functionData := &pulsar.FunctionData{}
 
 	// set the run function
-	vc.SetRunFunc(func() error {
+	vc.SetRunFuncWithNameArgs(func() error {
 		return doPutStateFunction(vc, functionData)
-	})
+	}, checkPutStateArgs)
 
 	// register the params
 	vc.FlagSetGroup.InFlagSet("FunctionsConfig", func(flagSet *pflag.FlagSet) {
@@ -112,13 +123,6 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"name",
 			"",
 			"The name of a Pulsar Function")
-
-		flagSet.StringVarP(
-			&functionData.State,
-			"state",
-			"t",
-			"",
-			"The FunctionState that needs to be put")
 	})
 }
 
@@ -131,9 +135,18 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
 
 	var state pulsar.FunctionState
-	err = json.Unmarshal([]byte(funcData.State), &state)
-	if err != nil {
-		return err
+
+	state.Key = vc.NameArgs[0]
+	value := vc.NameArgs[1]
+
+	if value == "-" {
+		contents, err := ioutil.ReadFile(vc.NameArgs[2])
+		if err != nil {
+			return err
+		}
+		state.ByteValue = contents
+	} else {
+		state.StringValue = strings.Join(vc.NameArgs[1:], " ")
 	}
 
 	err = admin.Functions().PutFunctionState(funcData.Tenant, funcData.Namespace, funcData.FuncName, state)
