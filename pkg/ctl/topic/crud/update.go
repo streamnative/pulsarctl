@@ -12,7 +12,7 @@ import (
 func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for updating an exist topic with new partition number."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires admin permissions."
 
 	var examples []Example
 	updateTopic := Example{

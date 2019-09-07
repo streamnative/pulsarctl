@@ -12,7 +12,7 @@ import (
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating topic."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires admin permissions."
 
 	var examples []pulsar.Example
 	createNonPartitions := pulsar.Example{

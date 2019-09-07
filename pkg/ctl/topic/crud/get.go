@@ -9,7 +9,7 @@ import (
 func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for getting an exist topic."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires admin permissions."
 
 	var examples []Example
 	getTopic := Example{
