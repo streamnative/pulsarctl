@@ -2,24 +2,24 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func listFailureDomainCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting all failure domain under the cluster <cluster-name>."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
-	list := Example{
+	var examples []pulsar.Example
+	list := pulsar.Example{
 		Desc:    "listing all the failure domains under the specified cluster",
 		Command: "pulsarctl clusters list-failure-domains <cluster-name>",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "output example",
 		Out:  "{\n" +
 			"  \"failure-domain\": {\n" +
