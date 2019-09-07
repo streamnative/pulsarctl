@@ -33,7 +33,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Create topic <topic-name> with <partition-num> partitions successfully",
 	}
-	out = append(out, successOut, ArgsError, TopicAlreadyExist)
+	out = append(out, successOut, ArgsError, TopicAlreadyExistError)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
@@ -62,7 +62,7 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 
 	partitions, err := strconv.Atoi(vc.NameArgs[1])
 	if err != nil {
-		return errors.Errorf("Invalid partition number '%s'", vc.NameArgs[1])
+		return errors.Errorf("invalid partition number '%s'", vc.NameArgs[1])
 	}
 
 	admin := cmdutils.NewPulsarClient()
