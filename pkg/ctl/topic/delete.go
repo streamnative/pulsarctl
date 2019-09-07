@@ -31,7 +31,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	partitionedTopicNotExistError := pulsar.Output{
-		Desc: "the partitioned topic doex not exist",
+		Desc: "the partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Partitioned topic does not exist",
 	}
 
