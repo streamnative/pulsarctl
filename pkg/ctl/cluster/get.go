@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {
-	desc := LongDescription{}
+	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "This command is used for getting the cluster data of the specified cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
-	get := Example{
+	var examples []pulsar.Example
+	get := pulsar.Example{
 		Desc:    "getting the <cluster-name> data",
 		Command: "pulsarctl clusters get <cluster-name>",
 	}
@@ -21,8 +21,8 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out: "{\n  " +
 			"\"serviceUrl\": \"http://localhost:8080\",\n  " +

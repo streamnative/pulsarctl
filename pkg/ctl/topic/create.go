@@ -68,7 +68,7 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().Create(*topic, partitions)
 	if err == nil {
-		vc.Command.Printf("Create topic [%s] with [%d] partitions successfully\n", topic.String(), partitions)
+		vc.Command.Printf("Create topic %s with %d partitions successfully\n", topic.String(), partitions)
 	}
 
 	return err

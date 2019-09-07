@@ -21,17 +21,17 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := LongDescription{}
+	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "List all Pulsar Functions running under a specific tenant and namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
+	var examples []pulsar.Example
 
-	list := Example{
+	list := pulsar.Example{
 		Desc: "List all Pulsar Functions running under a specific tenant and namespace",
 		Command: "pulsarctl functions list \n" +
 			"\t--tenant public\n" +
@@ -40,8 +40,8 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Function Name    |\n" +
@@ -60,7 +60,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"list",
 	)
 
-	functionData := &FunctionData{}
+	functionData := &pulsar.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -83,10 +83,10 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doListFunctions(vc *cmdutils.VerbCmd, funcData *FunctionData) error {
+func doListFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 	processNamespaceCmd(funcData)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(V3)
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
 	functions, err := admin.Functions().GetFunctions(funcData.Tenant, funcData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
