@@ -10,6 +10,7 @@ type Topics interface {
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
 	List(NameSpaceName) ([]string, []string, error)
+	GetLastMessageId(TopicName) (MessageId, error)
 }
 
 type topics struct {
@@ -61,7 +62,7 @@ func (t *topics) GetMetadata(topic TopicName) (PartitionedTopicMetadata, error) 
 
 func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	var partitionedTopics, nonPartitionedTopics []string
-	partitionedTopicsChan  := make(chan []string)
+	partitionedTopicsChan := make(chan []string)
 	nonPartitionedTopicsChan := make(chan []string)
 	errChan := make(chan error)
 
@@ -78,15 +79,15 @@ func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	requestCount := 4
 	for {
 		select {
-		case err :=<-errChan:
+		case err := <-errChan:
 			if err != nil {
 				return nil, nil, err
 			}
 			continue
-		case pTopic :=<- partitionedTopicsChan:
+		case pTopic := <-partitionedTopicsChan:
 			requestCount--
 			partitionedTopics = append(partitionedTopics, pTopic...)
-		case npTopic :=<- nonPartitionedTopicsChan:
+		case npTopic := <-nonPartitionedTopicsChan:
 			requestCount--
 			nonPartitionedTopics = append(nonPartitionedTopics, npTopic...)
 		}
@@ -101,4 +102,11 @@ func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- erro
 	var topics []string
 	err <- t.client.get(endpoint, &topics)
 	out <- topics
+}
+
+func (t *topics) GetLastMessageId(topic TopicName) (MessageId, error) {
+	var messageId MessageId
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "lastMessageId")
+	err := t.client.get(endpoint, &messageId)
+	return messageId, err
 }
