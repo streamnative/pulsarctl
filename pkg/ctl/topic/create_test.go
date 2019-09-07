@@ -1,13 +1,12 @@
-package partitioned
+package topic
 
 import (
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestCreateTopicCmd(t *testing.T) {
-	args := []string{"create-partitioned-topic", "test-create-topic", "2"}
+	args := []string{"create-topic", "test-create-topic", "2"}
 	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Nil(t, argsErr)
@@ -15,7 +14,7 @@ func TestCreateTopicCmd(t *testing.T) {
 }
 
 func TestCreateNonPersistentTopic(t *testing.T) {
-	args := []string{"create-partitioned-topic", "non-persistent://public/default/test-create-topic", "2"}
+	args := []string{"create-topic", "non-persistent://public/default/test-create-topic", "2"}
 	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Nil(t, argsErr)
@@ -23,7 +22,7 @@ func TestCreateNonPersistentTopic(t *testing.T) {
 }
 
 func TestCreateTopicDuplicate(t *testing.T) {
-	args := []string{"create-partitioned-topic", "test-duplicate-topic", "2"}
+	args := []string{"create-topic", "test-duplicate-topic", "2"}
 	_, _, _, err := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, err)
 
@@ -33,8 +32,24 @@ func TestCreateTopicDuplicate(t *testing.T) {
 }
 
 func TestCreateTopicArgsError(t *testing.T) {
-	args := []string{"create-partitioned-topic", "topic"}
+	args := []string{"create-topic", "topic"}
 	_, _, nameErr, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified the topic name and the partitions", nameErr.Error())
+}
+
+func TestCreateNonPartitionedTopic(t *testing.T) {
+	args := []string{"create", "test-create-non-partitioned-topic", "0"}
+	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+	assert.Nil(t, argsErr)
+	assert.Nil(t, err)
+}
+
+func TestCreateNonPersistentNonPartitionedTopic(t *testing.T) {
+	args := []string{"create-topic", "non-persistent://public/default/test-create-non-partitioned-topic", "0"}
+	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+	assert.Nil(t, argsErr)
+	assert.Nil(t, err)
 }
