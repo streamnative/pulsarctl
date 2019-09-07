@@ -30,7 +30,6 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 			"+-------------+",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(

@@ -30,7 +30,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut)
 	notExist := pulsar.Output{
-		Desc: "the specified tenant does not exist in the broker",
+		Desc: "the specified tenant does not exist in the cluster",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 	out = append(out, tenantNameArgsError, notExist)

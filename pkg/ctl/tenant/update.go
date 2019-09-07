@@ -25,7 +25,7 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateAdminRole)
 
 	updateClusters := pulsar.Example{
-		Desc:    "update the allowed cluster access list for tenant <tenant-name>",
+		Desc:    "update the allowed cluster list for tenant <tenant-name>",
 		Command: "pulsarctl tenants update --allowed-clusters <cluster-A> --allowed-clusters <cluster-B> <tenant-name>",
 	}
 	examples = append(examples, updateClusters)
@@ -45,7 +45,7 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, tenantNameArgsError, notExist)
 
 	flagErrorOut := pulsar.Output{
-		Desc: "the flag --admin-roles and --allowed-clusters are not specified",
+		Desc: "the flag --admin-roles or --allowed-clusters are not specified",
 		Out:  "[✖]  the admin roles or the allowed clusters is not specified",
 	}
 	out = append(out, flagErrorOut)
@@ -53,7 +53,7 @@ func updateTenantCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"update",
-		"update the tenant admin roles and cluster access list",
+		"update the configuration for a tenant",
 		desc.ToString(),
 		"u")
 

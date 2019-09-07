@@ -11,12 +11,12 @@ var tenantNameArgsError = pulsar.Output{
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
-var tenantNotExist = pulsar.Output{
+var tenantNotExistError = pulsar.Output{
 	Desc: "the specified tenant does not exist in the broker",
 	Out:  "[✖]  code: 404 reason: The tenant does not exist",
 }
 
-var tenantAlreadyExist = pulsar.Output{
+var tenantAlreadyExistError = pulsar.Output{
 	Desc: "the specified tenant has been created",
 	Out:  "[✖]  code: 409 reason: Tenant already exists",
 }
