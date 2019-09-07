@@ -3,7 +3,7 @@ package cmdutils
 import (
 	`log`
 	"github.com/spf13/pflag"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 var PulsarCtlConfig = ClusterConfig{}
@@ -29,7 +29,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		&c.WebServiceUrl,
 		"admin-service-url",
 		"s",
-		DefaultWebServiceURL,
+		pulsar.DefaultWebServiceURL,
 		"The admin web service url that pulsarctl connects to.")
 
 	flags.StringVar(
@@ -54,8 +54,8 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 	return flags
 }
 
-func (c *ClusterConfig) Client(version ApiVersion) Client {
-	config := DefaultConfig()
+func (c *ClusterConfig) Client(version pulsar.ApiVersion) pulsar.Client {
+	config := pulsar.DefaultConfig()
 
 	if len(c.WebServiceUrl) > 0 && c.WebServiceUrl != config.WebServiceUrl {
 		config.WebServiceUrl = c.WebServiceUrl
@@ -75,7 +75,7 @@ func (c *ClusterConfig) Client(version ApiVersion) Client {
 
 	config.ApiVersion = version
 
-	client, err := New(config)
+	client, err := pulsar.New(config)
 	if err != nil {
 		log.Fatalf("create pulsar client error: %s", err.Error())
 	}

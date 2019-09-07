@@ -5,64 +5,100 @@ import (
 )
 
 type Topics interface {
-	CreatePartitionedTopic(TopicName, int) error
-	DeletePartitionedTopic(TopicName, bool) error
-	UpdatePartitionedTopic(TopicName, int) error
-	GetPartitionedTopicMeta(TopicName) (PartitionedTopicMetadata, error)
-	ListPartitionedTopic(NameSpaceName) ([]string, error)
+	Create(TopicName, int) error
+	Delete(TopicName, bool, bool) error
+	Update(TopicName, int) error
+	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
+	List(NameSpaceName) ([]string, []string, error)
 }
 
 type topics struct {
-	client   *client
-	basePath string
+	client            *client
+	basePath          string
+	persistentPath    string
+	nonPersistentPath string
 }
 
 func (c *client) Topics() Topics {
 	return &topics{
-		client:   c,
-		basePath: "",
+		client:            c,
+		basePath:          "",
+		persistentPath:    "/persistent",
+		nonPersistentPath: "/non-persistent",
 	}
 }
 
-func (t *topics) CreatePartitionedTopic(topic TopicName, partitions int) error {
+func (t *topics) Create(topic TopicName, partitions int) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
+	if partitions == 0 {
+		endpoint = t.client.endpoint(t.basePath, topic.GetRestPath())
+	}
 	return t.client.put(endpoint, partitions, nil)
 }
 
-func (t *topics) DeletePartitionedTopic(topic TopicName, force bool) error {
+func (t *topics) Delete(topic TopicName, force bool, nonPartitioned bool) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
+	if nonPartitioned {
+		endpoint = t.client.endpoint(t.basePath, topic.GetRestPath())
+	}
 	params := map[string]string{
 		"force": strconv.FormatBool(force),
 	}
 	return t.client.deleteWithQueryParams(endpoint, nil, params)
 }
 
-func (t *topics) UpdatePartitionedTopic(topic TopicName, partitions int) error {
+func (t *topics) Update(topic TopicName, partitions int) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
 	return t.client.post(endpoint, partitions, nil)
 }
 
-func (t *topics) GetPartitionedTopicMeta(topic TopicName) (PartitionedTopicMetadata, error) {
+func (t *topics) GetMetadata(topic TopicName) (PartitionedTopicMetadata, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
 	var partitionedMeta PartitionedTopicMetadata
 	err := t.client.get(endpoint, &partitionedMeta)
 	return partitionedMeta, err
 }
 
-func (t *topics) ListPartitionedTopic(namespace NameSpaceName) ([]string, error) {
-	var persistentTopics []string
-	persistent := t.client.endpoint(t.basePath, "persistent", namespace.String(), "partitioned")
-	err := t.client.get(persistent, &persistentTopics)
-	if err != nil {
-		return nil, err
-	}
+func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
+	var partitionedTopics, nonPartitionedTopics []string
+	partitionedTopicsChan  := make(chan []string)
+	nonPartitionedTopicsChan := make(chan []string)
+	errChan := make(chan error)
 
-	var nonPersistentTopics []string
-	nonPersistent := t.client.endpoint(t.basePath, "non-persistent", namespace.String(), "partitioned")
-	err = t.client.get(nonPersistent, &nonPersistentTopics)
-	if err != nil {
-		return nil, err
-	}
+	pp := t.client.endpoint(t.persistentPath, namespace.String(), "partitioned")
+	np := t.client.endpoint(t.nonPersistentPath, namespace.String(), "partitioned")
+	p := t.client.endpoint(t.persistentPath, namespace.String())
+	n := t.client.endpoint(t.nonPersistentPath, namespace.String())
 
-	return append(persistentTopics, nonPersistentTopics...), nil
+	go t.getTopics(pp, partitionedTopicsChan, errChan)
+	go t.getTopics(np, partitionedTopicsChan, errChan)
+	go t.getTopics(p, nonPartitionedTopicsChan, errChan)
+	go t.getTopics(n, nonPartitionedTopicsChan, errChan)
+
+	requestCount := 4
+	for {
+		select {
+		case err :=<-errChan:
+			if err != nil {
+				return nil, nil, err
+			}
+			continue
+		case pTopic :=<- partitionedTopicsChan:
+			requestCount--
+			partitionedTopics = append(partitionedTopics, pTopic...)
+		case npTopic :=<- nonPartitionedTopicsChan:
+			requestCount--
+			nonPartitionedTopics = append(nonPartitionedTopics, npTopic...)
+		}
+		if requestCount == 0 {
+			break
+		}
+	}
+	return partitionedTopics, nonPartitionedTopics, nil
+}
+
+func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- error) {
+	var topics []string
+	err <- t.client.get(endpoint, &topics)
+	out <- topics
 }

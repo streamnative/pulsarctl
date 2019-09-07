@@ -22,6 +22,11 @@ var TenantNotExistError = Output{
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",
 }
 
+var NamespaceNotExistError = Output{
+	Desc: "the namespace is not exist",
+	Out: "[✖]  code: 404 reason: Namespace does not exist",
+}
+
 var TopicNameErrors = []Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
