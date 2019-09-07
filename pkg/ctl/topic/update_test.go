@@ -43,6 +43,18 @@ func TestUpdateTopicArgsError(t *testing.T) {
 	assert.Equal(t, "need to specified the topic name and the partitions", nameErr.Error())
 }
 
+func TestUpdateTopicWithInvalidPartitions(t *testing.T) {
+	args := []string{"update", "test-topic", "0"}
+	_, execErr, _, _ := TestTopicCommands(UpdateTopicCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid partition number '0'", execErr.Error())
+
+	args = []string{"update", "test-topic", "a"}
+	_, execErr, _, _ = TestTopicCommands(UpdateTopicCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid partition number 'a'", execErr.Error())
+}
+
 func TestUpdateTopicNotExist(t *testing.T) {
 	args := []string{"update", "non-exist-topic", "2"}
 	_, execErr, _, _ := TestTopicCommands(UpdateTopicCmd, args)
