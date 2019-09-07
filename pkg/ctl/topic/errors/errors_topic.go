@@ -12,7 +12,7 @@ var ArgsError = Output{
 	Out:  "[✖]  need to specified the topic name and the partitions",
 }
 
-var TopicAlreadyExist = Output{
+var TopicAlreadyExistError = Output{
 	Desc: "the topic has been created",
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
 }
@@ -25,6 +25,11 @@ var TenantNotExistError = Output{
 var NamespaceNotExistError = Output{
 	Desc: "the namespace is not exist",
 	Out: "[✖]  code: 404 reason: Namespace does not exist",
+}
+
+var InvalidPartitionsNumberError = Output{
+	Desc: "the partitions number is invalid",
+	Out: "[✖]  invalid partition number '<number>'",
 }
 
 var TopicNameErrors = []Output{
