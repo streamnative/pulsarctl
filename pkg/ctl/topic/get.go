@@ -1,4 +1,4 @@
-package partitioned
+package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -14,7 +14,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	getTopic := Example{
 		Desc:    "Get an exist topic <topic-name> metadata",
-		Command: "pulsarctl topics get-partitioned-topic-metadata <topic-name>",
+		Command: "pulsarctl topics get-metadata <topic-name>",
 	}
 	desc.CommandExamples = append(examples, getTopic)
 
@@ -31,10 +31,10 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-partitioned-topic-metadata",
-		"Get partitioned topic metadata",
+		"get-metadata",
+		"Get topic metadata",
 		desc.ToString(),
-		"gp")
+		"gm")
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTopic(vc)
@@ -53,7 +53,7 @@ func doGetTopic(vc *cmdutils.VerbCmd) error {
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	meta, err := admin.Topics().GetPartitionedTopicMeta(*topic)
+	meta, err := admin.Topics().GetMetadata(*topic)
 	if err == nil {
 		cmdutils.PrintJson(vc.Command.OutOrStdout(), meta)
 	}
