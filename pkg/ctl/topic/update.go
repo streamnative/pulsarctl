@@ -1,4 +1,4 @@
-package partitioned
+package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -8,41 +8,45 @@ import (
 	"strconv"
 )
 
-func CreateTopicCmd(vc *cmdutils.VerbCmd) {
+func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for creating partitioned topic."
+	desc.CommandUsedFor = "This command is used for updating an exist topic with new partition number."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
-	create := Example{
-		Desc:    "Create topic <topic-name> with <partitions-num> partitions",
-		Command: "pulsarctl topics create-partitioned-topic <topic-name> <partition-num>",
+	updateTopic := Example{
+		Desc:    "",
+		Command: "pulsarctl topics update <topic-name> <partition-num>",
 	}
-	examples = append(examples, create)
-	desc.CommandExamples = examples
+	desc.CommandExamples = append(examples, updateTopic)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Create topic <topic-name> with <partition-num> partitions successfully",
+		Out:  "Update topic <topic-name> with <partition-num> partitions successfully",
 	}
-	out = append(out, successOut, ArgsError, TopicAlreadyExist)
+
+	topicNotExist := Output{
+		Desc: "the topic is not exist",
+		Out:  "[✖]  code: 409 reason: Topic is not partitioned topic",
+	}
+	out = append(out, successOut, ArgsError, topicNotExist)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"create-partitioned-topic",
-		"Create partitioned topic",
+		"update",
+		"Update partitioned topic partitions",
 		desc.ToString(),
-		"cp")
+		"up")
 
 	vc.SetRunFuncWithNameArgs(func() error {
-		return doCreateTopic(vc)
+		return doUpdateTopic(vc)
 	}, CheckArgs)
 }
 
-func doCreateTopic(vc *cmdutils.VerbCmd) error {
+func doUpdateTopic(vc *cmdutils.VerbCmd) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -56,9 +60,9 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 	partitions, err := strconv.Atoi(vc.NameArgs[1])
 
 	admin := cmdutils.NewPulsarClient()
-	err = admin.Topics().CreatePartitionedTopic(*topic, partitions)
+	err = admin.Topics().Update(*topic, partitions)
 	if err == nil {
-		vc.Command.Printf("Create topic [%s] with [%d] partitions successfully\n", topic.String(), partitions)
+		vc.Command.Printf("Update topic %s with %d partitions successfully\n", topic.String(), partitions)
 	}
 
 	return err
