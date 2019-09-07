@@ -20,18 +20,18 @@ package functions
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"strconv"
 )
 
 func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := LongDescription{}
+	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "This command is used for restarting function instance."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
+	var examples []pulsar.Example
 
-	restart := Example{
+	restart := pulsar.Example{
 		Desc: "Restart function instance",
 		Command: "pulsarctl functions restart \n" +
 			"\t--tenant public\n" +
@@ -40,7 +40,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, restart)
 
-	restartWithInstanceID := Example{
+	restartWithInstanceID := pulsar.Example{
 		Desc: "Restart function instance with instance ID",
 		Command: "pulsarctl functions restart \n" +
 			"\t--tenant public\n" +
@@ -50,7 +50,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, restartWithInstanceID)
 
-	restartWithFQFN := Example{
+	restartWithFQFN := pulsar.Example{
 		Desc: "Restart function instance with FQFN",
 		Command: "pulsarctl functions restart \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -58,23 +58,23 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, restartWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Restarted <the name of a Pulsar Function> successfully",
 	}
 
-	failOut := Output{
+	failOut := pulsar.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := Output{
+	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := Output{
+	failOutWithWrongInstanceID := pulsar.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
@@ -89,7 +89,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 	)
 
-	functionData := &FunctionData{}
+	functionData := &pulsar.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -130,13 +130,13 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doRestartFunctions(vc *cmdutils.VerbCmd, funcData *FunctionData) error {
+func doRestartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(V3)
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {
