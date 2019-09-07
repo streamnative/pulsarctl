@@ -1,4 +1,4 @@
-package topic
+package crud
 
 import (
 	"github.com/stretchr/testify/assert"

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {

@@ -1,4 +1,4 @@
-package topic
+package crud
 
 import (
 	"fmt"
