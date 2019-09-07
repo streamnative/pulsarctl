@@ -1,6 +1,7 @@
 package topic
 
 import (
+	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
@@ -30,7 +31,7 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "the topic is not exist",
 		Out:  "[✖]  code: 409 reason: Topic is not partitioned topic",
 	}
-	out = append(out, successOut, ArgsError, topicNotExist)
+	out = append(out, successOut, ArgsError, InvalidPartitionsNumberError, topicNotExist)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
@@ -58,6 +59,9 @@ func doUpdateTopic(vc *cmdutils.VerbCmd) error {
 	}
 
 	partitions, err := strconv.Atoi(vc.NameArgs[1])
+	if err != nil || partitions == 0 {
+		return errors.Errorf("invalid partition number '%s'", vc.NameArgs[1])
+	}
 
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().Update(*topic, partitions)

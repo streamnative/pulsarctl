@@ -38,6 +38,13 @@ func TestCreateTopicArgsError(t *testing.T) {
 	assert.Equal(t, "need to specified the topic name and the partitions", nameErr.Error())
 }
 
+func TestCreateTopicWithInvalidPartitions(t *testing.T) {
+	args := []string{"create", "topic", "a"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid partition number 'a'", execErr.Error())
+}
+
 func TestCreateNonPartitionedTopic(t *testing.T) {
 	args := []string{"create", "test-create-non-partitioned-topic", "0"}
 	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
