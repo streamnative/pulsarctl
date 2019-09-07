@@ -15,19 +15,19 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	deleteTopic := pulsar.Example{
 		Desc:    "Delete a partitioned topic <topic-name>",
-		Command: "pulsarctl topics delete-topic <topic-name>",
+		Command: "pulsarctl topics delete <topic-name>",
 	}
 
 	deleteNonPartitionedTopic := pulsar.Example{
 		Desc:    "Delete a non-partitioned topic <topic-name>",
-		Command: "pulsarctl topics delete-topic --non-partitioned <topic-name>",
+		Command: "pulsarctl topics delete --non-partitioned <topic-name>",
 	}
 
 	desc.CommandExamples = append(examples, deleteTopic, deleteNonPartitionedTopic)
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Delete topic [<topic-name>] successfully",
+		Out:  "Delete topic <topic-name> successfully",
 	}
 
 	partitionedTopicNotExistError := pulsar.Output{
@@ -37,7 +37,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 
 	nonPartitionedTopicNotExistError := pulsar.Output{
 		Desc: "the non-partitioned topic does not exist",
-		Out: "[✖]  code: 404 reason: Topic not found",
+		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
 	out = append(out, successOut, ArgError,
 		partitionedTopicNotExistError, nonPartitionedTopicNotExistError)

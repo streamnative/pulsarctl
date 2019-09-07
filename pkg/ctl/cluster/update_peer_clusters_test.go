@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"encoding/json"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestUpdatePeerClusters(t *testing.T) {
 	args = []string{"get", "standalone"}
 	out, _, _, err := TestClusterCommands(getClusterDataCmd, args)
 
-	var clusterData ClusterData
+	var clusterData pulsar.ClusterData
 	err = json.Unmarshal(out.Bytes(), &clusterData)
 	if err != nil {
 		t.Fatal(err)
