@@ -1,7 +1,6 @@
 package topic
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -34,7 +33,6 @@ func TestDeleteNonPartitionedTopic(t *testing.T) {
 
 	args = []string{"list", "public/default"}
 	out, execErr, _, _ := TestTopicCommands(ListTopicsCmd, args)
-	fmt.Println(out.String())
 	assert.Nil(t, execErr)
 	assert.True(t, strings.Contains(out.String(), "test-delete-non-partitioned-topic"))
 
@@ -49,7 +47,7 @@ func TestDeleteNonPartitionedTopic(t *testing.T) {
 }
 
 func TestDeleteTopicArgError(t *testing.T) {
-	args := []string{"delete-partitioned-topic"}
+	args := []string{"delete"}
 	_, _, nameErr, _ := TestTopicCommands(DeleteTopicCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
