@@ -30,13 +30,13 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 |                                |                                |
 +--------------------------------+--------------------------------+`,
 	}
-	out =append(out, successOut, ArgError, TenantNotExistError, NamespaceNotExistError)
+	out =append(out, successOut, TenantNotExistError, NamespaceNotExistError)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"list",
-		"List all exist partitioned topics under the specified namespace",
+		"List all exist topics under the specified namespace",
 		desc.ToString(),
 		"lp")
 
