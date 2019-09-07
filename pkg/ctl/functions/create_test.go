@@ -41,7 +41,7 @@ func TestCreateFunctions(t *testing.T) {
 	// --name test-functions-create
 	// --inputs test-input-topic
 	// --output persistent://public/default/test-output-topic
-	// --classname org.apache.functions.api.examples.ExclamationFunction
+	// --classname org.apache.pulsar.functions.api.examples.ExclamationFunction
 	// --jar apache-pulsar-2.4.0/examples/api-examples.jar
 	// --processing-guarantees EFFECTIVELY_ONCE
 	args := []string{"create",
