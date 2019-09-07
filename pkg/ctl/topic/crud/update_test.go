@@ -2,9 +2,11 @@ package crud
 
 import (
 	"encoding/json"
+	"testing"
+
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestUpdateTopicCmd(t *testing.T) {
