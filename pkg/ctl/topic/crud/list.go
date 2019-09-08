@@ -14,7 +14,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires admin permissions."
 
 	listTopics := Example{
-		Desc: "List all exist topics under the namespace <tenant/namespace>",
+		Desc:    "List all exist topics under the namespace <tenant/namespace>",
 		Command: "pulsarctl topics list <tenant/namespace>",
 	}
 	desc.CommandExamples = []Example{listTopics}
@@ -22,15 +22,19 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:
-`+--------------------------------+--------------------------------+
+		Out: `+--------------------------------+--------------------------------+
 |   PUBLIC/DEFAULT PARTITIONED   | PUBLIC/DEFAULT NON-PARTITIONED |
 |             TOPICS             |             TOPICS             |
 +--------------------------------+--------------------------------+
 |                                |                                |
 +--------------------------------+--------------------------------+`,
 	}
-	out =append(out, successOut, TenantNotExistError, NamespaceNotExistError)
+
+	argError := Output{
+		Desc: "the namespace is not specified",
+		Out:  "[✖]  only one argument is allowed to be used as a name",
+	}
+	out = append(out, successOut, argError, TenantNotExistError, NamespaceNotExistError)
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
 
