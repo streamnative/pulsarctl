@@ -8,8 +8,7 @@ import (
 func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 
-	desc.CommandUsedFor = "This command is used for deleting an exist tenant and " +
-		"all namespaces and topics under it will be deleted."
+	desc.CommandUsedFor = "This command is used for deleting an exist tenant"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
@@ -26,7 +25,12 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 		Out:  "Delete tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
-	out = append(out, tenantNameArgsError, tenantNotExistError)
+
+	NonEmptyError := pulsar.Output{
+		Desc: "there has namespace(s) under the tenant <tenant-name>",
+		Out: "code: 409 reason: The tenant still has active namespaces",
+	}
+	out = append(out, tenantNameArgsError, tenantNotExistError, NonEmptyError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(

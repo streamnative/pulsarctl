@@ -36,3 +36,10 @@ func TestDeleteNonExistTenant(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: The tenant does not exist", execErr.Error())
 }
+
+func TestDeleteNonEmptyTenant(t *testing.T) {
+	args :=  []string{"delete", "public"}
+	_, execErr, _, _ := TestTenantCommands(deleteTenantCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 409 reason: The tenant still has active namespaces", execErr.Error())
+}
