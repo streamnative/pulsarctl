@@ -66,3 +66,10 @@ type FailureDomainMap map[string]FailureDomainData
 type PartitionedTopicMetadata struct {
 	Partitions int `json:"partitions"`
 }
+
+type LookupData struct {
+	BrokerUrl string `json:"brokerUrl"`
+	BrokerUrlTls string `json:"brokerUrlTls"`
+	HttpUrl string `json:"httpUrl"`
+	HttpUrlTls string `json:"httpUrlTls"`
+}
