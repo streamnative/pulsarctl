@@ -7,6 +7,7 @@
 pulsarctl
 api-examples.jar
 dummyExample.jar
+pulsar-io-kafka-2.4.0.nar
 
 # Test binary, build with `go test -c`
 *.test

@@ -20,6 +20,7 @@ package functions
 import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
@@ -420,7 +421,7 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 
 	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
 
-	if isFunctionPackageUrlSupported(funcData.Jar) {
+	if utils.IsPackageUrlSupported(funcData.Jar) {
 		err = admin.Functions().CreateFuncWithUrl(funcData.FuncConf, funcData.Jar)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
