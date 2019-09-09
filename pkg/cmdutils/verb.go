@@ -57,7 +57,7 @@ func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
 	}
 }
 
-func (vc *VerbCmd) SetRunFuncWithNameArgs(cmd func() error, checkArgs func(args []string) error) {
+func (vc *VerbCmd) SetRunFuncWithMultiNameArgs(cmd func() error, checkArgs func(args []string) error) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
 		vc.NameArgs, vc.NameError = GetNameArgs(args, checkArgs)
 		run(cmd)

@@ -1,7 +1,6 @@
 package crud
 
 import (
-	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
@@ -22,12 +21,10 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out: `+--------------------------------+--------------------------------+
-|   PUBLIC/DEFAULT PARTITIONED   | PUBLIC/DEFAULT NON-PARTITIONED |
-|             TOPICS             |             TOPICS             |
-+--------------------------------+--------------------------------+
-|                                |                                |
-+--------------------------------+--------------------------------+`,
+		Out: `+----------------------------------------------------------+---------------+
+|                        TOPIC NAME                        | PARTITIONED ? |
++----------------------------------------------------------+---------------+
++----------------------------------------------------------+---------------+`,
 	}
 
 	argError := Output{
@@ -64,31 +61,17 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 	partitionedTopics, nonPartitionedTopics, err := admin.Topics().List(*namespace)
 	if err == nil {
 		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{
-			fmt.Sprintf("%s partitioned topics", namespace),
-			fmt.Sprintf("%s non-partitioned topics", namespace),
-		})
+		table.SetHeader([]string{"topic name", "partitioned ?"})
 
-		var row int
-		if len(partitionedTopics) >= len(nonPartitionedTopics) {
-			row = len(partitionedTopics)
-		} else {
-			row = len(nonPartitionedTopics)
+		for _, v := range partitionedTopics {
+			table.Append([]string{v, "Y"})
 		}
 
-		for i := 0; i < row; i++ {
-			table.Append([]string{getValue(partitionedTopics, i), getValue(nonPartitionedTopics, i)})
+		for _, v := range nonPartitionedTopics {
+			table.Append([]string{v, "N"})
 		}
-
 		table.Render()
 	}
 
 	return err
-}
-
-func getValue(array []string, index int) string {
-	if index >= len(array) {
-		return ""
-	}
-	return array[index]
 }

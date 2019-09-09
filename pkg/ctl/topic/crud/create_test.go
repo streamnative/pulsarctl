@@ -22,7 +22,7 @@ func TestCreateNonPersistentTopic(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestCreateTopicDuplicate(t *testing.T) {
+func TestCreateTopicAlreadExists(t *testing.T) {
 	args := []string{"create", "test-duplicate-topic", "2"}
 	_, _, _, err := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, err)
@@ -44,6 +44,11 @@ func TestCreateTopicWithInvalidPartitions(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "invalid partition number 'a'", execErr.Error())
+
+	args = []string{"create", "topic", "--", "-1"}
+	_, execErr, _, _ = TestTopicCommands(CreateTopicCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid partition number '-1'", execErr.Error())
 }
 
 func TestCreateNonPartitionedTopic(t *testing.T) {

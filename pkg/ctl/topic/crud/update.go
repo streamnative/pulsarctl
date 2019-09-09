@@ -11,8 +11,8 @@ import (
 
 func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for updating an exist topic with new partition number."
-	desc.CommandPermission = "This command requires admin permissions."
+	desc.CommandUsedFor = "This command is used for updating the partition number of an exist topic."
+	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
 	updateTopic := Example{
@@ -42,9 +42,9 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"up")
 
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doUpdateTopic(vc)
-	}, CheckArgs)
+	}, CheckTopicNameArgs)
 }
 
 func doUpdateTopic(vc *cmdutils.VerbCmd) error {
@@ -59,7 +59,7 @@ func doUpdateTopic(vc *cmdutils.VerbCmd) error {
 	}
 
 	partitions, err := strconv.Atoi(vc.NameArgs[1])
-	if err != nil || partitions == 0 {
+	if err != nil || partitions <= 0 {
 		return errors.Errorf("invalid partition number '%s'", vc.NameArgs[1])
 	}
 

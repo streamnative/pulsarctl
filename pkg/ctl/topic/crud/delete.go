@@ -9,8 +9,8 @@ import (
 
 func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for deleting an exist topic."
-	desc.CommandPermission = "This command requires admin permissions."
+	desc.CommandUsedFor = "This command is used for deleting an existing topic."
+	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []pulsar.Example
 	deleteTopic := pulsar.Example{

@@ -8,12 +8,12 @@ import (
 
 func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting an exist topic."
-	desc.CommandPermission = "This command requires admin permissions."
+	desc.CommandUsedFor = "This command is used for getting the metadata of an exist topic."
+	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
 	getTopic := Example{
-		Desc:    "Get an exist topic <topic-name> metadata",
+		Desc:    "Get hte metadata of an exist topic <topic-name> metadata",
 		Command: "pulsarctl topics get-metadata <topic-name>",
 	}
 	desc.CommandExamples = append(examples, getTopic)
@@ -32,9 +32,9 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get-metadata",
-		"Get topic metadata",
+		"Get the specified topic metadata",
 		desc.ToString(),
-		"gm")
+		"get")
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTopic(vc)

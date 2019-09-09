@@ -12,17 +12,17 @@ import (
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating topic."
-	desc.CommandPermission = "This command requires admin permissions."
+	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []pulsar.Example
 	createNonPartitions := pulsar.Example{
-		Desc: "Create non-partitioned topic <topic-name>",
+		Desc:    "Create a non-partitioned topic <topic-name>",
 		Command: "pulsarctl topics create <topic-name> 0",
 	}
 	examples = append(examples, createNonPartitions)
 
 	create := pulsar.Example{
-		Desc:    "Create topic <topic-name> with <partitions-num> partitions",
+		Desc:    "Create a partitioned topic <topic-name> with <partitions-num> partitions",
 		Command: "pulsarctl topics create <topic-name> <partition-num>",
 	}
 	examples = append(examples, create)
@@ -40,13 +40,13 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"create",
-		"Create topic with n partitions",
+		"Create a topic with n partitions",
 		desc.ToString(),
 		"c")
 
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doCreateTopic(vc)
-	}, CheckArgs)
+	}, CheckTopicNameArgs)
 }
 
 func doCreateTopic(vc *cmdutils.VerbCmd) error {
@@ -61,7 +61,7 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 	}
 
 	partitions, err := strconv.Atoi(vc.NameArgs[1])
-	if err != nil {
+	if err != nil || partitions < 0 {
 		return errors.Errorf("invalid partition number '%s'", vc.NameArgs[1])
 	}
 

@@ -46,7 +46,7 @@ func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"dfd")
 
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doDeleteFailureDomain(vc)
 	}, checkFailureDomainArgs)
 }
