@@ -24,12 +24,12 @@ var TenantNotExistError = Output{
 
 var NamespaceNotExistError = Output{
 	Desc: "the namespace is not exist",
-	Out: "[✖]  code: 404 reason: Namespace does not exist",
+	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
 var InvalidPartitionsNumberError = Output{
 	Desc: "the partitions number is invalid",
-	Out: "[✖]  invalid partition number '<number>'",
+	Out:  "[✖]  invalid partition number '<number>'",
 }
 
 var TopicNameErrors = []Output{
