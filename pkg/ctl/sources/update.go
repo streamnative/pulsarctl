@@ -98,7 +98,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd)  {
     )
 
     sourceData := &pulsar.SourceData{}
-    // set the run function
+    // set the run source
     vc.SetRunFunc(func() error {
         return doUpdateSource(vc, sourceData)
     })

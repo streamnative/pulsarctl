@@ -74,13 +74,13 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd)  {
 
     sourceData := &pulsar.SourceData{}
 
-    // set the run function
+    // set the run source
     vc.SetRunFunc(func() error {
         return doRestartSource(vc, sourceData)
     })
 
     // register the params
-    vc.FlagSetGroup.InFlagSet("FunctionsConfig", func(flagSet *pflag.FlagSet) {
+    vc.FlagSetGroup.InFlagSet("SourceConfig", func(flagSet *pflag.FlagSet) {
         flagSet.StringVar(
             &sourceData.Tenant,
             "tenant",
@@ -123,7 +123,7 @@ func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
         if err != nil {
             return err
         }
-        vc.Command.Printf("Restarted instanceID[%s] of Pulsar Functions[%s] successfully", sourceData.InstanceID, sourceData.Name)
+        vc.Command.Printf("Restarted instanceID[%s] of Pulsar Sources[%s] successfully", sourceData.InstanceID, sourceData.Name)
     } else {
         err = admin.Sources().RestartSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
         if err != nil {

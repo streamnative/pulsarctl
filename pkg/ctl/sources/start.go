@@ -72,13 +72,13 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 
     sourceData := &pulsar.SourceData{}
 
-    // set the run function
+    // set the run source
     vc.SetRunFunc(func() error {
         return doStartSource(vc, sourceData)
     })
 
     // register the params
-    vc.FlagSetGroup.InFlagSet("FunctionsConfig", func(flagSet *pflag.FlagSet) {
+    vc.FlagSetGroup.InFlagSet("SourceConfig", func(flagSet *pflag.FlagSet) {
         flagSet.StringVar(
             &sourceData.Tenant,
             "tenant",

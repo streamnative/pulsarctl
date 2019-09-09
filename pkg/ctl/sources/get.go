@@ -77,7 +77,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd)  {
     )
 
     sourceData := &pulsar.SourceData{}
-    // set the run function
+    // set the run source
     vc.SetRunFunc(func() error {
         return doGetSources(vc, sourceData)
     })

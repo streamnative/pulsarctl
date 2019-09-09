@@ -21,6 +21,7 @@ import (
     `encoding/json`
     `fmt`
     `github.com/pkg/errors`
+    `github.com/streamnative/pulsarctl/pkg/cmdutils`
     `github.com/streamnative/pulsarctl/pkg/ctl/utils`
     `github.com/streamnative/pulsarctl/pkg/pulsar`
     `gopkg.in/yaml.v2`
@@ -131,8 +132,26 @@ func processArguments(sourceData *pulsar.SourceData) error {
 }
 
 func validateSourceType(sourceType string) string {
+    availableSources := make([]string, 0, 10)
+    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+    connectorDefinition, err := admin.Sources().GetBuiltInSources()
+    if err != nil {
+        fmt.Errorf("get builtin sources error: %s", err.Error())
+        return ""
+    }
 
-    return ""
+    for _, value := range connectorDefinition {
+        availableSources = append(availableSources, value.Name)
+    }
+
+    availableSourcesString := strings.Join(availableSources," ")
+    if !strings.Contains(availableSourcesString, sourceType) {
+        fmt.Errorf("invalid source type [%s] -- Available sources are: %s", sourceType, availableSources)
+        return ""
+    }
+
+    // Source type is a valid built-in connector type
+    return "builtin://" + sourceType
 }
 
 func parseConfigs(str string) map[string]interface{} {

@@ -256,7 +256,7 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
         if err != nil {
             cmdutils.PrintError(vc.Command.OutOrStderr(), err)
         } else {
-            vc.Command.Printf("Created instanceID[%s] of Pulsar Functions[%s] successfully", sourceData.InstanceID, sourceData.Name)
+            vc.Command.Printf("Created instanceID[%s] of Pulsar Sources[%s] successfully", sourceData.InstanceID, sourceData.Name)
         }
     } else {
         err = admin.Sources().CreateSource(sourceData.SourceConf, sourceData.Archive)
