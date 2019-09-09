@@ -86,14 +86,14 @@ import (
 //}
 
 func TestGetPartitionedStatsArgError(t *testing.T) {
-	args := []string{"partitioned-stats"}
+	args := []string{"partition-stats"}
 	_, _, nameErr, _ := TestTopicCommands(GetPartitionedStatsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestGetNonExistingTopicStatsError(t *testing.T) {
-	args := []string{"partitioned-stats", "non-existing-topic"}
+	args := []string{"partition-stats", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetPartitionedStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
@@ -104,7 +104,7 @@ func TestGetNonPartitionedTopicStatsError(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"partitioned-stats", "test-non-partitioned-topic-partitioned-stats"}
+	args = []string{"partition-stats", "test-non-partitioned-topic-partitioned-stats"}
 	_, execErr, _, _ = TestTopicCommands(GetPartitionedStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())

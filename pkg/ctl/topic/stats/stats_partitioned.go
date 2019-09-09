@@ -17,12 +17,12 @@ func GetPartitionedStatsCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	get := Example{
 		Desc:    "Get the partitioned topic <topic-name> stats",
-		Command: "pulsarctl topic partitioned-stats <topic-name>",
+		Command: "pulsarctl topic partition-stats <topic-name>",
 	}
 
 	getPerPartition := Example{
 		Desc:    "Get the partitioned topic <topic-name> stats and per partition stats",
-		Command: "pulsarctl topic partitioned-stats --per-partition <topic-name>",
+		Command: "pulsarctl topic partition-stats --per-partition <topic-name>",
 	}
 	desc.CommandExamples = append(examples, get, getPerPartition)
 
@@ -93,14 +93,14 @@ func GetPartitionedStatsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"partitioned-stats",
+		"partition-stats",
 		"Get the partitioned topic stats",
 		desc.ToString(),
 		"ps")
 
 	var perPartition bool
 
-	vc.FlagSetGroup.InFlagSet("PartitionedStats", func(set *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("PartitionStats", func(set *pflag.FlagSet) {
 		set.BoolVarP(&perPartition, "per-partition", "p", false,
 			"Get the per partition topic stats")
 	})
