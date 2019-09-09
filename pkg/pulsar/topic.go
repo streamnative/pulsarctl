@@ -10,6 +10,9 @@ type Topics interface {
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
 	List(NameSpaceName) ([]string, []string, error)
+	GetStats(TopicName) (TopicStats, error)
+	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
+	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 }
 
 type topics struct {
@@ -61,7 +64,7 @@ func (t *topics) GetMetadata(topic TopicName) (PartitionedTopicMetadata, error) 
 
 func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	var partitionedTopics, nonPartitionedTopics []string
-	partitionedTopicsChan  := make(chan []string)
+	partitionedTopicsChan := make(chan []string)
 	nonPartitionedTopicsChan := make(chan []string)
 	errChan := make(chan error)
 
@@ -78,15 +81,15 @@ func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	requestCount := 4
 	for {
 		select {
-		case err :=<-errChan:
+		case err := <-errChan:
 			if err != nil {
 				return nil, nil, err
 			}
 			continue
-		case pTopic :=<- partitionedTopicsChan:
+		case pTopic := <-partitionedTopicsChan:
 			requestCount--
 			partitionedTopics = append(partitionedTopics, pTopic...)
-		case npTopic :=<- nonPartitionedTopicsChan:
+		case npTopic := <-nonPartitionedTopicsChan:
 			requestCount--
 			nonPartitionedTopics = append(nonPartitionedTopics, npTopic...)
 		}
@@ -101,4 +104,28 @@ func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- erro
 	var topics []string
 	err <- t.client.get(endpoint, &topics)
 	out <- topics
+}
+
+func (t *topics) GetStats(topic TopicName) (TopicStats, error) {
+	var stats TopicStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "stats")
+	err := t.client.get(endpoint, &stats)
+	return stats, err
+}
+
+func (t *topics) GetInternalStats(topic TopicName) (PersistentTopicInternalStats, error) {
+	var stats PersistentTopicInternalStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internalStats")
+	err := t.client.get(endpoint, &stats)
+	return stats, err
+}
+
+func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (PartitionedTopicStats, error) {
+	var stats PartitionedTopicStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitioned-stats")
+	params := map[string]string{
+		"perPartition": strconv.FormatBool(perPartition),
+	}
+	err := t.client.getWithQueryParams(endpoint, &stats, params)
+	return stats, err
 }

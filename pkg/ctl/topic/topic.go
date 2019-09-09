@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -19,6 +20,10 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetTopicCmd,
 		ListTopicsCmd,
 		UpdateTopicCmd,
+
+		GetStatsCmd,
+		GetInternalStatsCmd,
+		GetPartitionedStatsCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
