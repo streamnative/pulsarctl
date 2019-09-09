@@ -12,7 +12,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	getSuccess := pulsar.Example{
-		Desc:    "get the tenant configuration of <tenant-name>",
+		Desc:    "get the configuration of tenant <tenant-name>",
 		Command: "pulsarctl tenants get <tenant-name>",
 	}
 	examples = append(examples, getSuccess)
@@ -38,7 +38,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get",
-		"get the tenant info for the specified tenant",
+		"get the configuration of a tenant",
 		desc.ToString(),
 		"g")
 

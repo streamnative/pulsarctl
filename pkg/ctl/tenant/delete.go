@@ -8,7 +8,7 @@ import (
 func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 
-	desc.CommandUsedFor = "This command is used for deleting an exist tenant"
+	desc.CommandUsedFor = "This command is used for deleting an existing tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
