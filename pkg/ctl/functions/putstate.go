@@ -18,11 +18,13 @@
 package functions
 
 import (
+	"fmt"
+	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	`io/ioutil`
-	`strings`
+	"io/ioutil"
+	"strings"
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -37,17 +39,17 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
 			"\t--name <the name of Pulsar Function> \n" +
-			"\t<key name> <string value> ",
+			"\t<key name> - <string value> ",
 	}
 	examples = append(examples, putstate)
 
 	putstateWithByte := pulsar.Example{
-		Desc: "Put a key/<byte value> pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/<file path> pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
-				"\t--tenant public\n" +
-				"\t--namespace default\n" +
-				"\t--name <the name of Pulsar Function> \n" +
-				"\t<key name> - <byte value> ",
+			"\t--tenant public\n" +
+			"\t--namespace default\n" +
+			"\t--name <the name of Pulsar Function> \n" +
+			"\t<key name> = <file path> ",
 	}
 	examples = append(examples, putstateWithByte)
 
@@ -76,12 +78,17 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	failOutWithWrongJson := pulsar.Output{
-		Desc: "unexpected end of JSON input, please check the `--state` arg",
-		Out:  "[✖]  unexpected end of JSON input",
+	failOutWithKeyOrValueNotExist := pulsar.Output{
+		Desc: "The state key and state value not specified, please check your input format",
+		Out:  "[✖]  need to specified the state key and state value",
 	}
 
-	out = append(out, successOut, failOut, failOutWithNameNotExist, failOutWithWrongJson)
+	fileOutErrInputFormat := pulsar.Output{
+		Desc: "The format of the input is incorrect, please check.",
+		Out:  "[✖]  error input format",
+	}
+
+	out = append(out, successOut, failOut, failOutWithNameNotExist, failOutWithKeyOrValueNotExist, fileOutErrInputFormat)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -139,14 +146,18 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 	state.Key = vc.NameArgs[0]
 	value := vc.NameArgs[1]
 
+	fmt.Println("value:", value)
+
 	if value == "-" {
+		state.StringValue = strings.Join(vc.NameArgs[2:], " ")
+	} else if value == "=" {
 		contents, err := ioutil.ReadFile(vc.NameArgs[2])
 		if err != nil {
 			return err
 		}
 		state.ByteValue = contents
 	} else {
-		state.StringValue = strings.Join(vc.NameArgs[1:], " ")
+		return errors.New("error input format")
 	}
 
 	err = admin.Functions().PutFunctionState(funcData.Tenant, funcData.Namespace, funcData.FuncName, state)
