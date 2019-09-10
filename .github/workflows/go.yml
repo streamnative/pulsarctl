@@ -26,7 +26,7 @@ jobs:
         docker pull wurstmeister/kafka:2.11-1.0.2
         docker run -d -it --network kafka-pulsar -p 6667:6667 -p 9092:9092 -e KAFKA_ADVERTISED_HOST_NAME=pulsar-kafka -e KAFKA_ZOOKEEPER_CONNECT=pulsar-kafka-zookeeper:2181 --name pulsar-kafka wurstmeister/kafka:2.11-1.0.2
         docker pull apachepulsar/pulsar:2.4.0
-        docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}:/pulsar_test ${PWD}/data:/pulsar/data --name pulsarctl apachepulsar/pulsar:2.4.0 bin/pulsar standalone
+        docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}:/pulsar_test -v ${PWD}/data:/pulsar/data --name pulsarctl apachepulsar/pulsar:2.4.0 bin/pulsar standalone
         docker cp pulsar-io-kafka-2.4.0.nar pulsarctl:/pulsar
         docker cp ${PWD}/test/sources/kafkaSourceConfig.yaml pulsar-kafka-standalone:/pulsar/conf
         docker cp kafka-clients-0.10.2.1.jar pulsarctl:/pulsar/lib
