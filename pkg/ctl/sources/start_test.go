@@ -18,77 +18,77 @@
 package sources
 
 import (
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestStartAndStopSource(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-    t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-    "--tenant", "public",
-    "--namespace", "default",
-    "--name", "test-source-start",
-    "--destination-topic-name", "my-topic",
-    "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-    "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-    "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-start",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-source-start successfully")
+	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-source-start successfully")
 
-    stopArgs := []string{"stop",
-    "--tenant", "public",
-    "--namespace", "default",
-    "--name", "test-source-start",
-    }
+	stopArgs := []string{"stop",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-start",
+	}
 
-    _, _, err = TestSourcesCommands(stopSourcesCmd, stopArgs)
-    assert.Nil(t, err)
+	_, _, err = TestSourcesCommands(stopSourcesCmd, stopArgs)
+	assert.Nil(t, err)
 
-    startArgs := []string{"start",
-     "--tenant", "public",
-     "--namespace", "default",
-     "--name", "test-source-start",
-    }
-    _, _, err = TestSourcesCommands(startSourcesCmd, startArgs)
-    assert.Nil(t, err)
+	startArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-start",
+	}
+	_, _, err = TestSourcesCommands(startSourcesCmd, startArgs)
+	assert.Nil(t, err)
 
-    // test failure case
-    failureStartArgs := []string{"start",
-       "--name", "not-exist",
-    }
-    _, err, _ = TestSourcesCommands(startSourcesCmd, failureStartArgs)
-    assert.NotNil(t, err)
-    failMsg := "Source not-exist doesn't exist"
-    assert.True(t, strings.ContainsAny(err.Error(), failMsg))
+	// test failure case
+	failureStartArgs := []string{"start",
+		"--name", "not-exist",
+	}
+	_, err, _ = TestSourcesCommands(startSourcesCmd, failureStartArgs)
+	assert.NotNil(t, err)
+	failMsg := "Source not-exist doesn't exist"
+	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
 
-    // test the --name args not exist
-    notExistNameOrFqfnArgs := []string{"start",
-       "--tenant", "public",
-       "--namespace", "default",
-    }
-    _, err, _ = TestSourcesCommands(startSourcesCmd, notExistNameOrFqfnArgs)
-    assert.NotNil(t, err)
-    failNameMsg := "You must specify a name for the source"
-    assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
+	// test the --name args not exist
+	notExistNameOrFqfnArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+	}
+	_, err, _ = TestSourcesCommands(startSourcesCmd, notExistNameOrFqfnArgs)
+	assert.NotNil(t, err)
+	failNameMsg := "You must specify a name for the source"
+	assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
 
-    // test the instance id not exist
-    notExistInstanceIDArgs := []string{"start",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-source-start",
-       "--instance-id", "12345678",
-    }
-    _, err, _ = TestSourcesCommands(startSourcesCmd, notExistInstanceIDArgs)
-    assert.NotNil(t, err)
-    failInstanceIDMsg := "Operation not permitted"
-    assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	// test the instance id not exist
+	notExistInstanceIDArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-start",
+		"--instance-id", "12345678",
+	}
+	_, err, _ = TestSourcesCommands(startSourcesCmd, notExistInstanceIDArgs)
+	assert.NotNil(t, err)
+	failInstanceIDMsg := "Operation not permitted"
+	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
 }

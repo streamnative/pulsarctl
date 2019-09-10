@@ -18,54 +18,54 @@
 package sources
 
 import (
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestRestartSource(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-       t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-source-restart",
-       "--destination-topic-name", "my-topic",
-       "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-       "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-       "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-restart",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-source-restart successfully")
+	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-source-restart successfully")
 
-    restartArgs := []string{"restart",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-source-restart",
-    }
+	restartArgs := []string{"restart",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-restart",
+	}
 
-    _, _, err = TestSourcesCommands(restartSourcesCmd, restartArgs)
-    assert.Nil(t, err)
+	_, _, err = TestSourcesCommands(restartSourcesCmd, restartArgs)
+	assert.Nil(t, err)
 
-    // test failure case
-    failureArgs := []string{"restart",
-       "--name", "not-exist",
-    }
-    _, execErr, _ := TestSourcesCommands(restartSourcesCmd, failureArgs)
-    assert.Equal(t, execErr.Error(), "code: 404 reason: Source not-exist doesn't exist")
+	// test failure case
+	failureArgs := []string{"restart",
+		"--name", "not-exist",
+	}
+	_, execErr, _ := TestSourcesCommands(restartSourcesCmd, failureArgs)
+	assert.Equal(t, execErr.Error(), "code: 404 reason: Source not-exist doesn't exist")
 
-    notExistInstanceIDArgs := []string{"restart",
-       "--name", "test-source-restart",
-       "--instance-id", "12345678",
-    }
-    _, err, _ = TestSourcesCommands(restartSourcesCmd, notExistInstanceIDArgs)
-    assert.NotNil(t, err)
-    failInstanceIDMsg := "Operation not permitted"
-    assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	notExistInstanceIDArgs := []string{"restart",
+		"--name", "test-source-restart",
+		"--instance-id", "12345678",
+	}
+	_, err, _ = TestSourcesCommands(restartSourcesCmd, notExistInstanceIDArgs)
+	assert.NotNil(t, err)
+	failInstanceIDMsg := "Operation not permitted"
+	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
 }

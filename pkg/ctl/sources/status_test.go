@@ -18,68 +18,68 @@
 package sources
 
 import (
-    `bytes`
-    `encoding/json`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"bytes"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestStatusSource(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-source-status",
-        "--destination-topic-name", "my-topic",
-        "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-        "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-        "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-status",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-source-status successfully")
+	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-source-status successfully")
 
-    statusArgs := []string{"status",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-source-status",
-    }
+	statusArgs := []string{"status",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-status",
+	}
 
-    outStatus := new(bytes.Buffer)
-    var status pulsar.SourceStatus
+	outStatus := new(bytes.Buffer)
+	var status pulsar.SourceStatus
 
-    for {
-        outStatus, _, _ = TestSourcesCommands(statusSourcesCmd, statusArgs)
-        if strings.Contains(outStatus.String(), "true") {
-            break
-        }
-    }
+	for {
+		outStatus, _, _ = TestSourcesCommands(statusSourcesCmd, statusArgs)
+		if strings.Contains(outStatus.String(), "true") {
+			break
+		}
+	}
 
-    t.Log(outStatus.String())
-    err = json.Unmarshal(outStatus.Bytes(), &status)
-    assert.Nil(t, err)
+	t.Log(outStatus.String())
+	err = json.Unmarshal(outStatus.Bytes(), &status)
+	assert.Nil(t, err)
 
-    assert.Equal(t, 1, status.NumRunning)
-    assert.Equal(t, 1, status.NumInstances)
+	assert.Equal(t, 1, status.NumRunning)
+	assert.Equal(t, 1, status.NumInstances)
 }
 
 func TestFailureStatus(t *testing.T) {
-    statusArgs := []string{"status",
-        "--name", "not-exist",
-    }
+	statusArgs := []string{"status",
+		"--name", "not-exist",
+	}
 
-    out, _, err := TestSourcesCommands(statusSourcesCmd, statusArgs)
-    assert.Nil(t, err)
+	out, _, err := TestSourcesCommands(statusSourcesCmd, statusArgs)
+	assert.Nil(t, err)
 
-    errMsg := "Source not-exist doesn't exist"
-    t.Logf(out.String())
-    assert.True(t, strings.Contains(out.String(), errMsg))
+	errMsg := "Source not-exist doesn't exist"
+	t.Logf(out.String())
+	assert.True(t, strings.Contains(out.String(), errMsg))
 }

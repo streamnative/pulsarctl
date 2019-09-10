@@ -18,50 +18,50 @@
 package sources
 
 import (
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestListSources(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-     t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-     "--tenant", "public",
-     "--namespace", "default",
-     "--name", "test-source-list",
-     "--destination-topic-name", "my-topic",
-     "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-     "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-     "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-list",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-source-list successfully")
+	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-source-list successfully")
 
-    listArgs := []string{"list",
-      "--tenant", "public",
-      "--namespace", "default",
-    }
-    listOut, _, _ := TestSourcesCommands(listSourcesCmd, listArgs)
-    t.Logf("pulsar source name:%s", listOut.String())
-    assert.True(t, strings.Contains(listOut.String(), "test-source-list"))
+	listArgs := []string{"list",
+		"--tenant", "public",
+		"--namespace", "default",
+	}
+	listOut, _, _ := TestSourcesCommands(listSourcesCmd, listArgs)
+	t.Logf("pulsar source name:%s", listOut.String())
+	assert.True(t, strings.Contains(listOut.String(), "test-source-list"))
 
-    deleteArgs := []string{"delete",
-      "--tenant", "public",
-      "--namespace", "default",
-      "--name", "test-source-list",
-    }
+	deleteArgs := []string{"delete",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-list",
+	}
 
-    deleteOut, _, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-    assert.Equal(t, deleteOut.String(), "Deleted test-source-list successfully")
+	deleteOut, _, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
+	assert.Equal(t, deleteOut.String(), "Deleted test-source-list successfully")
 
-    listArgsAgain := []string{"list"}
-    sources, _, _ := TestSourcesCommands(listSourcesCmd, listArgsAgain)
-    assert.False(t, strings.Contains(sources.String(), "test-source-list"))
+	listArgsAgain := []string{"list"}
+	sources, _, _ := TestSourcesCommands(listSourcesCmd, listArgsAgain)
+	assert.False(t, strings.Contains(sources.String(), "test-source-list"))
 }

@@ -18,87 +18,87 @@
 package sources
 
 import (
-    `github.com/olekukonko/tablewriter`
-    `github.com/spf13/pflag`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
-    desc := pulsar.LongDescription{}
-    desc.CommandUsedFor = "List all running Pulsar IO source connectors"
-    desc.CommandPermission = "This command requires super-user permissions."
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "List all running Pulsar IO source connectors"
+	desc.CommandPermission = "This command requires super-user permissions."
 
-    var examples []pulsar.Example
+	var examples []pulsar.Example
 
-    list := pulsar.Example{
-        Desc: "List all running Pulsar IO source connectors",
-        Command: "pulsarctl source list \n" +
-                "\t--tenant public\n" +
-                "\t--namespace default",
-    }
-    examples = append(examples, list)
-    desc.CommandExamples = examples
+	list := pulsar.Example{
+		Desc: "List all running Pulsar IO source connectors",
+		Command: "pulsarctl source list \n" +
+			"\t--tenant public\n" +
+			"\t--namespace default",
+	}
+	examples = append(examples, list)
+	desc.CommandExamples = examples
 
-    var out []pulsar.Output
-    successOut := pulsar.Output{
-        Desc: "normal output",
-        Out: "+--------------------+\n" +
-                "|   Source Name    |\n" +
-                "+--------------------+\n" +
-                "| test_source_name |\n" +
-                "+--------------------+",
-    }
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out: "+--------------------+\n" +
+			"|   Source Name    |\n" +
+			"+--------------------+\n" +
+			"| test_source_name |\n" +
+			"+--------------------+",
+	}
 
-    out = append(out, successOut)
-    desc.CommandOutput = out
+	out = append(out, successOut)
+	desc.CommandOutput = out
 
-    vc.SetDescription(
-        "list",
-        "List all running Pulsar IO source connectors",
-        desc.ToString(),
-        "list",
-    )
+	vc.SetDescription(
+		"list",
+		"List all running Pulsar IO source connectors",
+		desc.ToString(),
+		"list",
+	)
 
-    sourceData := &pulsar.SourceData{}
+	sourceData := &pulsar.SourceData{}
 
-    // set the run source
-    vc.SetRunFunc(func() error {
-        return doListSources(vc, sourceData)
-    })
+	// set the run source
+	vc.SetRunFunc(func() error {
+		return doListSources(vc, sourceData)
+	})
 
-    // register the params
-    vc.FlagSetGroup.InFlagSet("SourcesConfig", func(flagSet *pflag.FlagSet) {
-        flagSet.StringVar(
-            &sourceData.Tenant,
-            "tenant",
-            "",
-            "The source's tenant")
+	// register the params
+	vc.FlagSetGroup.InFlagSet("SourcesConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVar(
+			&sourceData.Tenant,
+			"tenant",
+			"",
+			"The source's tenant")
 
-        flagSet.StringVar(
-            &sourceData.Namespace,
-            "namespace",
-            "",
-            "The source's namespace")
-    })
+		flagSet.StringVar(
+			&sourceData.Namespace,
+			"namespace",
+			"",
+			"The source's namespace")
+	})
 }
 
-func doListSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error  {
-    processNamespaceCmd(sourceData)
+func doListSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+	processNamespaceCmd(sourceData)
 
-    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-    sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
-    if err != nil {
-        cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-    } else {
-        table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-        table.SetHeader([]string{"Pulsar Sources Name"})
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+	} else {
+		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+		table.SetHeader([]string{"Pulsar Sources Name"})
 
-        for _, f := range sources {
-            table.Append([]string{f})
-        }
+		for _, f := range sources {
+			table.Append([]string{f})
+		}
 
-        table.Render()
-    }
-    return err
+		table.Render()
+	}
+	return err
 }
