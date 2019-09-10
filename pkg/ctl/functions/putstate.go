@@ -101,7 +101,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	functionData := &pulsar.FunctionData{}
 
 	// set the run function
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doPutStateFunction(vc, functionData)
 	}, checkPutStateArgs)
 
