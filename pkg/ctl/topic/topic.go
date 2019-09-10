@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -19,6 +20,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetTopicCmd,
 		ListTopicsCmd,
 		UpdateTopicCmd,
+		GrantPermissionCmd,
+		RevokePermissions,
+		GetPermissionsCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
