@@ -18,9 +18,17 @@
 package functions
 
 import (
+	`errors`
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
+
+var checkPutStateArgs = func(args []string) error {
+	if len(args) < 2 {
+		return errors.New("need to specified the state key and state value")
+	}
+	return nil
+}
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
@@ -39,6 +47,11 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statsFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, querystateFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, putstateFunctionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, triggerFunctionsCmd)
 
 	return resourceCmd
 }
