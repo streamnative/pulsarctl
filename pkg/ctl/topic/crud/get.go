@@ -14,7 +14,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	getTopic := Example{
 		Desc:    "Get hte metadata of an exist topic <topic-name> metadata",
-		Command: "pulsarctl topics get-metadata <topic-name>",
+		Command: "pulsarctl topics get <topic-name>",
 	}
 	desc.CommandExamples = append(examples, getTopic)
 
@@ -31,7 +31,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-metadata",
+		"get",
 		"Get the specified topic metadata",
 		desc.ToString(),
 		"get")

@@ -14,7 +14,7 @@ func TestGetTopicCmd(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-metadata", "test-get-topic"}
+	args = []string{"get", "test-get-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	var partitions pulsar.PartitionedTopicMetadata
 	err := json.Unmarshal(out.Bytes(), &partitions)
@@ -31,7 +31,7 @@ func TestBetNonPartitionedTopic(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-metadata", "test-get-non-partitioned-topic"}
+	args = []string{"get", "test-get-non-partitioned-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 	var partitions pulsar.PartitionedTopicMetadata
@@ -43,14 +43,14 @@ func TestBetNonPartitionedTopic(t *testing.T) {
 }
 
 func TestGetTopicArgsError(t *testing.T) {
-	args := []string{"get-metadata"}
+	args := []string{"get"}
 	_, _, nameErr, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestGetNonExistTopic(t *testing.T) {
-	args := []string{"get-metadata", "non-exist-topic"}
+	args := []string{"get", "non-exist-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 

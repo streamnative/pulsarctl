@@ -14,7 +14,7 @@ func TestUpdateTopicCmd(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-metadata", "test-update-topic"}
+	args = []string{"get", "test-update-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 	var partitions pulsar.PartitionedTopicMetadata
@@ -28,7 +28,7 @@ func TestUpdateTopicCmd(t *testing.T) {
 	_, execErr, _, _ = TestTopicCommands(UpdateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-metadata", "test-update-topic"}
+	args = []string{"get", "test-update-topic"}
 	out, execErr, _, _ = TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 	err = json.Unmarshal(out.Bytes(), &partitions)

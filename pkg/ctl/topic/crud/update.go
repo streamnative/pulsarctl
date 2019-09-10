@@ -44,7 +44,7 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doUpdateTopic(vc)
-	}, CheckTopicNameArgs)
+	}, CheckTopicNameTwoArgs)
 }
 
 func doUpdateTopic(vc *cmdutils.VerbCmd) error {
