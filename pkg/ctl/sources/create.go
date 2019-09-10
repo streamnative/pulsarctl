@@ -27,7 +27,7 @@ import (
 func createSourcesCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Submit a Pulsar IO source connector to run in a Pulsar cluster."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
@@ -51,7 +51,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--name <the name of Pulsar Source> \n" +
 			"\t--destination-topic-name kafka-topic  \n" +
 			"\t--classname org.apache.pulsar.io.kafka.KafkaBytesSource \n" +
-			"\t--archive file:/http: + /examples/api-examples.nar",
+			"\t--archive file://(or http://) + /examples/api-examples.nar",
 	}
 
 	createWithSchema := pulsar.Example{

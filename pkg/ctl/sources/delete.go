@@ -25,8 +25,8 @@ import (
 
 func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "This command is used for delete a Pulsar IO source connector."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO source connector."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 

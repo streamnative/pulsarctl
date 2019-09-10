@@ -27,7 +27,7 @@ import (
 func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar IO source connector."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 

@@ -27,7 +27,7 @@ import (
 func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "This command is used for stopping source instance."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 
