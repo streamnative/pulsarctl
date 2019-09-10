@@ -54,6 +54,7 @@ func DefaultConfig() *Config {
 type Client interface {
 	Clusters() Clusters
 	Functions() Functions
+	Tenants() Tenants
 	Topics() Topics
 }
 
