@@ -8,12 +8,12 @@ import (
 
 func LookupTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for looking up a topic."
+	desc.CommandUsedFor = "This command is used for looking up the owner broker of a topic."
 	desc.CommandPermission = "This command does not require permissions. "
 
 	var examples []Example
 	lookup := Example{
-		Desc:    "Look up a topic <topic-name>",
+		Desc:    "Lookup the owner broker of the topic <topic-name>",
 		Command: "pulsarctl topic lookup <topic-name>",
 	}
 	desc.CommandExamples = append(examples, lookup)
@@ -31,6 +31,7 @@ func LookupTopicCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
 	out  = append(out, NamespaceErrors...)
+	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"lookup",

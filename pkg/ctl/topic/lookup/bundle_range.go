@@ -8,7 +8,7 @@ import (
 
 func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting namespace bundle range of a topic."
+	desc.CommandUsedFor = "This command is used for getting namespace bundle range of a topic (partition)."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
@@ -30,7 +30,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"bundle-range",
-		"Get the topic bundle range",
+		"Get the namespace bundle range of a topic",
 		desc.ToString(),
 		"")
 
