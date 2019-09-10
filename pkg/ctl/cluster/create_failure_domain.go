@@ -50,7 +50,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var failureDomainData pulsar.FailureDomainData
 
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doCreateFailureDomain(vc, &failureDomainData)
 	}, checkFailureDomainArgs)
 

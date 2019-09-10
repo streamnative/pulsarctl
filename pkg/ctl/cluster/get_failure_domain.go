@@ -38,7 +38,7 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"gfd")
 
-	vc.SetRunFuncWithNameArgs(func() error {
+	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doGetFailureDomain(vc)
 	}, checkFailureDomainArgs)
 }
