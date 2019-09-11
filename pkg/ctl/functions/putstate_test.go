@@ -23,13 +23,13 @@ package functions
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
-	"time"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStateFunctions(t *testing.T) {
@@ -70,7 +70,6 @@ func TestStateFunctions(t *testing.T) {
 		if strings.Contains(outPutState.String(), "successfully") {
 			break
 		}
-		time.Sleep(1 * time.Second)
 	}
 
 	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
@@ -177,14 +176,12 @@ func TestByteValue(t *testing.T) {
 
 	outPutState := new(bytes.Buffer)
 
-	time.NewTimer()
 	for {
 		outPutState, _, _ = TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 
 		if strings.Contains(outPutState.String(), "successfully") {
 			break
 		}
-		time.Sleep(1 * time.Second)
 	}
 
 	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
