@@ -121,3 +121,39 @@ type SourceData struct {
 type PartitionedTopicMetadata struct {
 	Partitions int `json:"partitions"`
 }
+
+type ManagedLedgerInfo struct {
+	Version            int                   `json:"version"`
+	CreationDate       string                `json:"creationDate"`
+	ModificationData   string                `json:"modificationData"`
+	Ledgers            []LedgerInfo          `json:"ledgers"`
+	TerminatedPosition PositionInfo          `json:"terminatedPosition"`
+	Cursors            map[string]CursorInfo `json:"cursors"`
+}
+
+type LedgerInfo struct {
+	LedgerId  int64 `json:"ledgerId"`
+	Entries   int64 `json:"entries"`
+	Size      int64 `json:"size"`
+	Timestamp int64 `json:"timestamp"`
+}
+
+type CursorInfo struct {
+	Version                   int                `json:"version"`
+	CreationDate              string             `json:"creationDate"`
+	ModificationDate          string             `json:"modificationDate"`
+	CursorsLedgerId           int64              `json:"cursorsLedgerId"`
+	MarkDelete                PositionInfo       `json:"markDelete"`
+	IndividualDeletedMessages []MessageRangeInfo `json:"individualDeletedMessages"`
+	Properties                map[string]int64
+}
+
+type PositionInfo struct {
+	LedgerId int64 `json:"ledgerId"`
+	EntryId  int64 `json:"entryId"`
+}
+
+type MessageRangeInfo struct {
+	From PositionInfo `json:"from"`
+	To   PositionInfo `json:"to"`
+}

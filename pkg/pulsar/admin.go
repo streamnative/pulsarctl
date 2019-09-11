@@ -27,9 +27,9 @@ type Config struct {
 	HttpClient    *http.Client
 	ApiVersion    ApiVersion
 
-	Auth          *auth.TlsAuthProvider
-	AuthParams    string
-	TlsOptions    *TLSOptions
+	Auth       *auth.TlsAuthProvider
+	AuthParams string
+	TlsOptions *TLSOptions
 }
 
 type TLSOptions struct {
@@ -405,16 +405,12 @@ func responseError(resp *http.Response) error {
 		return e
 	}
 
-	jsonErr := json.Unmarshal(body, &e)
+	_ = json.Unmarshal(body, &e)
 
-	if jsonErr != nil {
-		e.Code = http.StatusPartialContent
-	} else {
-		e.Code = resp.StatusCode
+	e.Code = resp.StatusCode
 
-		if e.Reason == "" {
-			e.Reason = unknownErrorReason
-		}
+	if e.Reason == "" {
+		e.Reason = unknownErrorReason
 	}
 
 	return e
