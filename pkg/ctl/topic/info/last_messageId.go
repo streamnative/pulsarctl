@@ -1,6 +1,7 @@
 package info
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
 	. "github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -44,6 +45,8 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, NamespaceErrors...)
 	desc.CommandOutput = out
 
+	var partition int
+
 	vc.SetDescription(
 		"last-message-id",
 		"Get the last message id of a topic",
@@ -51,11 +54,16 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 		"lmi")
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetLastMessageId(vc)
+		return doGetLastMessageId(vc, partition)
+	})
+
+	vc.FlagSetGroup.InFlagSet("LastMessageId", func(set *pflag.FlagSet) {
+		set.IntVarP(&partition, "partition-index", "i", -1,
+			"The partitioned topic index value")
 	})
 }
 
-func doGetLastMessageId(vc *cmdutils.VerbCmd) error {
+func doGetLastMessageId(vc *cmdutils.VerbCmd, partition int) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -64,6 +72,13 @@ func doGetLastMessageId(vc *cmdutils.VerbCmd) error {
 	topic, err := GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
+	}
+
+	if partition >= 0 {
+		topic, err = topic.GetPartition(partition)
+		if err != nil {
+			return err
+		}
 	}
 
 	admin := cmdutils.NewPulsarClient()
