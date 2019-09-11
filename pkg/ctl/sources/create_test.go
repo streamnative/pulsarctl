@@ -18,81 +18,80 @@
 package sources
 
 import (
-    `github.com/stretchr/testify/assert`
-    `os`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"os"
+	"strings"
+	"testing"
 )
 
 func TestCreateSources(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    // $ ./pulsarctl source create
-    // --archive ./pulsar-io-kafka-2.4.0.nar
-    // --classname org.apache.pulsar.io.kafka.KafkaBytesSource
-    // --tenant public
-    // --namespace default
-    // --name kafka
-    // --destination-topic-name my-topic
-    // --source-config-file ./conf/kafkaSourceConfig.yaml
-    // --parallelism 1
-    args := []string{"create",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-source-create",
-       "--destination-topic-name", "my-topic",
-       "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-       "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-       "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	// $ ./pulsarctl source create
+	// --archive ./pulsar-io-kafka-2.4.0.nar
+	// --classname org.apache.pulsar.io.kafka.KafkaBytesSource
+	// --tenant public
+	// --namespace default
+	// --name kafka
+	// --destination-topic-name my-topic
+	// --source-config-file ./conf/kafkaSourceConfig.yaml
+	// --parallelism 1
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-create",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    _, _, err = TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
+	_, _, err = TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
 }
 
 func TestFailureCreateSources(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    narName := "dummy-pulsar-io-kafka.nar"
-    _, err = os.Create(narName)
-    assert.Nil(t, err)
+	narName := "dummy-pulsar-io-kafka.nar"
+	_, err = os.Create(narName)
+	assert.Nil(t, err)
 
-    defer os.Remove(narName)
+	defer os.Remove(narName)
 
-    failArgs := []string{"create",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-source-create",
-       "--destination-topic-name", "my-topic",
-       "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-       "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-    }
+	failArgs := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-create",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+	}
 
-    exceptedErr := "Source test-source-create already exists"
-    out, execErr, _ := TestSourcesCommands(createSourcesCmd, failArgs)
-    assert.True(t, strings.Contains(out.String(), exceptedErr))
-    assert.NotNil(t, execErr)
+	exceptedErr := "Source test-source-create already exists"
+	out, execErr, _ := TestSourcesCommands(createSourcesCmd, failArgs)
+	assert.True(t, strings.Contains(out.String(), exceptedErr))
+	assert.NotNil(t, execErr)
 
-    narFailArgs := []string{"create",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-source-create-nar-fail",
-       "--destination-topic-name", "my-topic",
-       "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-       "--archive", narName,
-    }
+	narFailArgs := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-create-nar-fail",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", narName,
+	}
 
-    narErrInfo := "Source class org.apache.pulsar.io.kafka.KafkaBytesSource must be in class path"
-    narOut, execErr, _ := TestSourcesCommands(createSourcesCmd, narFailArgs)
-    assert.True(t, strings.Contains(narOut.String(), narErrInfo))
-    assert.NotNil(t, execErr)
+	narErrInfo := "Source class org.apache.pulsar.io.kafka.KafkaBytesSource must be in class path"
+	narOut, execErr, _ := TestSourcesCommands(createSourcesCmd, narFailArgs)
+	assert.True(t, strings.Contains(narOut.String(), narErrInfo))
+	assert.NotNil(t, execErr)
 }
-

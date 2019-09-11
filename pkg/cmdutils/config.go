@@ -1,9 +1,9 @@
 package cmdutils
 
 import (
+	`log`
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	`log`
 )
 
 var PulsarCtlConfig = ClusterConfig{}

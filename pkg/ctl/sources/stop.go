@@ -18,119 +18,119 @@
 package sources
 
 import (
-    `github.com/spf13/pflag`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
-    `strconv`
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"strconv"
 )
 
 func stopSourcesCmd(vc *cmdutils.VerbCmd) {
-    desc := pulsar.LongDescription{}
-    desc.CommandUsedFor = "This command is used for stopping source instance."
-    desc.CommandPermission = "This command requires super-user permissions."
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "This command is used for stopping source instance."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
-    var examples []pulsar.Example
+	var examples []pulsar.Example
 
-    stop := pulsar.Example{
-        Desc: "Stops function instance",
-        Command: "pulsarctl source stop \n" +
-                "\t--tenant public\n" +
-                "\t--namespace default\n" +
-                "\t--name <the name of Pulsar Source>",
-    }
-    examples = append(examples, stop)
+	stop := pulsar.Example{
+		Desc: "Stops source instance",
+		Command: "pulsarctl source stop \n" +
+			"\t--tenant public\n" +
+			"\t--namespace default\n" +
+			"\t--name <the name of Pulsar Source>",
+	}
+	examples = append(examples, stop)
 
-    stopWithInstanceID := pulsar.Example{
-        Desc: "Stops function instance with instance ID",
-        Command: "pulsarctl source stop \n" +
-                "\t--tenant public\n" +
-                "\t--namespace default\n" +
-                "\t--name <the name of Pulsar Source>\n" +
-                "\t--instance-id 1",
-    }
-    examples = append(examples, stopWithInstanceID)
-    desc.CommandExamples = examples
+	stopWithInstanceID := pulsar.Example{
+		Desc: "Stops source instance with instance ID",
+		Command: "pulsarctl source stop \n" +
+			"\t--tenant public\n" +
+			"\t--namespace default\n" +
+			"\t--name <the name of Pulsar Source>\n" +
+			"\t--instance-id 1",
+	}
+	examples = append(examples, stopWithInstanceID)
+	desc.CommandExamples = examples
 
-    var out []pulsar.Output
-    successOut := pulsar.Output{
-        Desc: "normal output",
-        Out:  "Stopped <the name of a Pulsar Source> successfully",
-    }
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Stopped <the name of a Pulsar Source> successfully",
+	}
 
-    nameNotExistOut := pulsar.Output{
-        Desc: "source doesn't exist",
-        Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
-    }
+	nameNotExistOut := pulsar.Output{
+		Desc: "source doesn't exist",
+		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+	}
 
-    out = append(out, successOut, nameNotExistOut)
-    desc.CommandOutput = out
+	out = append(out, successOut, nameNotExistOut)
+	desc.CommandOutput = out
 
-    vc.SetDescription(
-        "stop",
-        "Stops source instance",
-        desc.ToString(),
-        "stop",
-    )
+	vc.SetDescription(
+		"stop",
+		"Stops source instance",
+		desc.ToString(),
+		"stop",
+	)
 
-    sourceData := &pulsar.SourceData{}
-    // set the run function
-    vc.SetRunFunc(func() error {
-        return doStopSources(vc, sourceData)
-    })
+	sourceData := &pulsar.SourceData{}
+	// set the run source
+	vc.SetRunFunc(func() error {
+		return doStopSources(vc, sourceData)
+	})
 
-    // register the params
-    vc.FlagSetGroup.InFlagSet("FunctionsConfig", func(flagSet *pflag.FlagSet) {
-        flagSet.StringVar(
-            &sourceData.Tenant,
-            "tenant",
-            "",
-            "The source's tenant")
+	// register the params
+	vc.FlagSetGroup.InFlagSet("SourceConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVar(
+			&sourceData.Tenant,
+			"tenant",
+			"",
+			"The source's tenant")
 
-        flagSet.StringVar(
-            &sourceData.Namespace,
-            "namespace",
-            "",
-            "The source's namespace")
+		flagSet.StringVar(
+			&sourceData.Namespace,
+			"namespace",
+			"",
+			"The source's namespace")
 
-        flagSet.StringVar(
-            &sourceData.Name,
-            "name",
-            "",
-            "The source's name")
+		flagSet.StringVar(
+			&sourceData.Name,
+			"name",
+			"",
+			"The source's name")
 
-        flagSet.StringVar(
-            &sourceData.InstanceID,
-            "instance-id",
-            "",
-            "The source instanceId (stop all instances if instance-id is not provided)")
-    })
+		flagSet.StringVar(
+			&sourceData.InstanceID,
+			"instance-id",
+			"",
+			"The source instanceId (stop all instances if instance-id is not provided)")
+	})
 }
 
-func doStopSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error  {
-    err := processBaseArguments(sourceData)
-    if err != nil {
-        vc.Command.Help()
-        return err
-    }
-    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-    if sourceData.InstanceID != "" {
-        instanceID, err := strconv.Atoi(sourceData.InstanceID)
-        if err != nil {
-            return err
-        }
-        err = admin.Sources().StopSourceWithID(sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
-        if err != nil {
-            return err
-        }
-        vc.Command.Printf("Stopped instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
-    } else {
-        err = admin.Sources().StopSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
-        if err != nil {
-            return err
-        }
+func doStopSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+	err := processBaseArguments(sourceData)
+	if err != nil {
+		vc.Command.Help()
+		return err
+	}
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	if sourceData.InstanceID != "" {
+		instanceID, err := strconv.Atoi(sourceData.InstanceID)
+		if err != nil {
+			return err
+		}
+		err = admin.Sources().StopSourceWithID(sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
+		if err != nil {
+			return err
+		}
+		vc.Command.Printf("Stopped instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
+	} else {
+		err = admin.Sources().StopSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
+		if err != nil {
+			return err
+		}
 
-        vc.Command.Printf("Stopped %s successfully", sourceData.Name)
-    }
+		vc.Command.Printf("Stopped %s successfully", sourceData.Name)
+	}
 
-    return nil
+	return nil
 }

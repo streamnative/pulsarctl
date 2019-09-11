@@ -44,7 +44,7 @@ func TestListFailureDomainsCmd(t *testing.T) {
 	assert.Equal(t, "list-failure-broker-B", brokerMap["list-failure-B"].BrokerList[0])
 }
 
-func TestListFailureArgsError(t *testing.T)  {
+func TestListFailureArgsError(t *testing.T) {
 	args := []string{"list-failure-domains"}
 	_, _, nameErr, _ := TestClusterCommands(listFailureDomainCmd, args)
 	assert.NotNil(t, nameErr)

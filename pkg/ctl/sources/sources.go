@@ -18,28 +18,27 @@
 package sources
 
 import (
-    `github.com/spf13/cobra`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-    resourceCmd := cmdutils.NewResourceCmd(
-        "sources",
-        "Interface for managing Pulsar IO Sources (ingress data into Pulsar)",
-        "",
-        "sources",
-    )
+	resourceCmd := cmdutils.NewResourceCmd(
+		"sources",
+		"Interface for managing Pulsar IO Sources (ingress data into Pulsar)",
+		"",
+		"sources",
+	)
 
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, stopSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, startSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSourcesCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, stopSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, startSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSourcesCmd)
 
-    return resourceCmd
+	return resourceCmd
 }
-

@@ -18,91 +18,90 @@
 package sources
 
 import (
-    `github.com/spf13/pflag`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func deleteSourcesCmd(vc *cmdutils.VerbCmd)  {
-    desc := pulsar.LongDescription{}
-    desc.CommandUsedFor = "This command is used for delete a Pulsar IO source connector."
-    desc.CommandPermission = "This command requires super-user permissions."
+func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO source connector."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
-    var examples []pulsar.Example
+	var examples []pulsar.Example
 
-    del := pulsar.Example{
-        Desc: "Delete a Pulsar IO source connector",
-        Command: "pulsarctl source delete \n" +
-                "\t--tenant public\n" +
-                "\t--namespace default\n" +
-                "\t--name <the name of Pulsar Source>",
-    }
-    examples = append(examples, del)
-    desc.CommandExamples = examples
+	del := pulsar.Example{
+		Desc: "Delete a Pulsar IO source connector",
+		Command: "pulsarctl source delete \n" +
+			"\t--tenant public\n" +
+			"\t--namespace default\n" +
+			"\t--name <the name of Pulsar Source>",
+	}
+	examples = append(examples, del)
+	desc.CommandExamples = examples
 
-    var out []pulsar.Output
-    successOut := pulsar.Output{
-        Desc: "normal output",
-        Out:  "Deleted <the name of a Pulsar Source> successfully",
-    }
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Deleted <the name of a Pulsar Source> successfully",
+	}
 
-    nameNotExistOut := pulsar.Output{
-        Desc: "source doesn't exist",
-        Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
-    }
+	nameNotExistOut := pulsar.Output{
+		Desc: "source doesn't exist",
+		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+	}
 
-    out = append(out, successOut, nameNotExistOut)
-    desc.CommandOutput = out
+	out = append(out, successOut, nameNotExistOut)
+	desc.CommandOutput = out
 
-    vc.SetDescription(
-        "delete",
-        "Delete a Pulsar IO source connector",
-        desc.ToString(),
-        "delete",
-    )
+	vc.SetDescription(
+		"delete",
+		"Delete a Pulsar IO source connector",
+		desc.ToString(),
+		"delete",
+	)
 
-    sourceData := &pulsar.SourceData{}
+	sourceData := &pulsar.SourceData{}
 
-    // set the run source
-    vc.SetRunFunc(func() error {
-        return doDeleteSource(vc, sourceData)
-    })
+	// set the run source
+	vc.SetRunFunc(func() error {
+		return doDeleteSource(vc, sourceData)
+	})
 
-    // register the params
-    vc.FlagSetGroup.InFlagSet("SourcesConfig", func(flagSet *pflag.FlagSet) {
-        flagSet.StringVar(
-            &sourceData.Tenant,
-            "tenant",
-            "",
-            "The source's tenant")
+	// register the params
+	vc.FlagSetGroup.InFlagSet("SourcesConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVar(
+			&sourceData.Tenant,
+			"tenant",
+			"",
+			"The source's tenant")
 
-        flagSet.StringVar(
-            &sourceData.Namespace,
-            "namespace",
-            "",
-            "The source's namespace")
+		flagSet.StringVar(
+			&sourceData.Namespace,
+			"namespace",
+			"",
+			"The source's namespace")
 
-        flagSet.StringVar(
-            &sourceData.Name,
-            "name",
-            "",
-            "The source's name")
-    })
+		flagSet.StringVar(
+			&sourceData.Name,
+			"name",
+			"",
+			"The source's name")
+	})
 }
 
 func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
-    err := processBaseArguments(sourceData)
-    if err != nil {
-        vc.Command.Help()
-        return err
-    }
-    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-    err = admin.Sources().DeleteSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
-    if err != nil {
-        return err
-    }
+	err := processBaseArguments(sourceData)
+	if err != nil {
+		vc.Command.Help()
+		return err
+	}
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	err = admin.Sources().DeleteSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
+	if err != nil {
+		return err
+	}
 
-    vc.Command.Printf("Deleted %s successfully", sourceData.Name)
-    return nil
+	vc.Command.Printf("Deleted %s successfully", sourceData.Name)
+	return nil
 }
-

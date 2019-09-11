@@ -18,59 +18,59 @@
 package sources
 
 import (
-    `fmt`
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestDeleteSources(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-source-delete",
-        "--destination-topic-name", "my-topic",
-        "--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-        "--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-        "--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-delete",
+		"--destination-topic-name", "my-topic",
+		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
+		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
+		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
+	}
 
-    _, _, err = TestSourcesCommands(createSourcesCmd, args)
-    assert.Nil(t, err)
+	_, _, err = TestSourcesCommands(createSourcesCmd, args)
+	assert.Nil(t, err)
 
-    deleteArgs := []string{"delete",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-source-delete",
-    }
+	deleteArgs := []string{"delete",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-source-delete",
+	}
 
-    deleteOut, execErr, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-    delErr := "Deleted test-source-delete successfully"
-    assert.True(t, strings.Contains(deleteOut.String(), delErr))
-    assert.Nil(t, execErr)
+	deleteOut, execErr, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
+	delErr := "Deleted test-source-delete successfully"
+	assert.True(t, strings.Contains(deleteOut.String(), delErr))
+	assert.Nil(t, execErr)
 }
 
 func TestFailureDeleteSource(t *testing.T) {
-    failureDeleteArgs := []string{"delete",
-        "--name", "test-source-delete",
-    }
+	failureDeleteArgs := []string{"delete",
+		"--name", "test-source-delete",
+	}
 
-    exceptedErr := "Source test-source-delete doesn't exist"
-    _, execErrMsg, _ := TestSourcesCommands(deleteSourcesCmd, failureDeleteArgs)
-    fmt.Println(execErrMsg.Error())
-    assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
-    assert.NotNil(t, execErrMsg)
+	exceptedErr := "Source test-source-delete doesn't exist"
+	_, execErrMsg, _ := TestSourcesCommands(deleteSourcesCmd, failureDeleteArgs)
+	fmt.Println(execErrMsg.Error())
+	assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
+	assert.NotNil(t, execErrMsg)
 
-    nameNotExist := []string{"delete",
-        "--name", "not-exist",
-    }
-    _, execErrMsg, _ = TestSourcesCommands(deleteSourcesCmd, nameNotExist)
-    nameErr := "Source not-exist doesn't exist"
-    assert.True(t, strings.Contains(execErrMsg.Error(), nameErr))
+	nameNotExist := []string{"delete",
+		"--name", "not-exist",
+	}
+	_, execErrMsg, _ = TestSourcesCommands(deleteSourcesCmd, nameNotExist)
+	nameErr := "Source not-exist doesn't exist"
+	assert.True(t, strings.Contains(execErrMsg.Error(), nameErr))
 }
