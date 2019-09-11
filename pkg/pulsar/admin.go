@@ -405,10 +405,7 @@ func responseError(resp *http.Response) error {
 		return e
 	}
 
-	err = json.Unmarshal(body, &e)
-    if err != nil {
-        return err
-    }
+	json.Unmarshal(body, &e)
 
     e.Code = resp.StatusCode
     if e.Reason == "" {
