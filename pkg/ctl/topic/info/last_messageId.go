@@ -8,12 +8,12 @@ import (
 
 func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting the last message id in a specified existing persistent topic."
-	desc.CommandPermission= "This command requires admin permissions."
+	desc.CommandUsedFor = "This command is used for getting the last message id of a topic (partition)."
+	desc.CommandPermission= "This command requires tenant admin permissions."
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the last message id in the topic <persistent-topic-name>",
+		Desc:    "Get the last message id of a topic <persistent-topic-name>",
 		Command: "pulsarctl topic last-message-id <persistent-topic-name>",
 	}
 	desc.CommandExamples = append(examples, get)
@@ -46,7 +46,7 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"last-message-id",
-		"Get the last message id",
+		"Get the last message id of a topic",
 		desc.ToString(),
 		"lmi")
 
