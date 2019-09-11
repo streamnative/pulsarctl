@@ -27,7 +27,7 @@ import (
 func statusSinksCmd(vc *cmdutils.VerbCmd) {
     desc := pulsar.LongDescription{}
     desc.CommandUsedFor = "Check the current status of a Pulsar Sink."
-    desc.CommandPermission = "This command requires user permissions."
+    desc.CommandPermission = "This command requires namespace function permissions."
 
     var examples []pulsar.Example
     status := pulsar.Example{

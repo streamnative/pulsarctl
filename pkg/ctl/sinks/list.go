@@ -27,7 +27,7 @@ import (
 func listSinksCmd(vc *cmdutils.VerbCmd) {
     desc := pulsar.LongDescription{}
     desc.CommandUsedFor = "List all running Pulsar IO sink connectors"
-    desc.CommandPermission = "This command requires super-user permissions."
+    desc.CommandPermission = "This command requires namespace function permissions."
 
     var examples []pulsar.Example
 
