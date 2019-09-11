@@ -9,14 +9,14 @@ import (
 
 func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting the stats for an existing non-partitioned topic and its " +
+	desc.CommandUsedFor = "This command is used for getting the stats for an existing topic and its " +
 		"connected producers and consumers. (All the rates are computed over a 1 minute window " +
 		"and are relative the last completed 1 minute period)"
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the stats of the specified topic <topic-name>",
+		Desc:    "Get the non-partitioned topic <topic-name> stats",
 		Command: "pulsarctl topic stats <topic-name>",
 	}
 
@@ -104,8 +104,10 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, partitionOutput, perPartitionOutput, ArgError)
 
 	topicNotFoundError := Output{
-		Desc: "the specified topic is not exist or the specified topic is a partitioned-topic",
-		Out:  "code: 404 reason: Topic not found",
+		Desc: "the specified topic is not exist " +
+			"or the specified topic is a partitioned-topic and you don't specified --partition " +
+			"or the specified topic is a non-partitioned topic and you specified --partition",
+		Out: "code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
 	out = append(out, TopicNameErrors...)
@@ -114,7 +116,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"stats",
-		"Get the stats of an existing non-partitioned topic",
+		"Get the stats of an existing topic",
 		desc.ToString())
 
 	var partition bool
