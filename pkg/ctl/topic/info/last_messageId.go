@@ -17,7 +17,12 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Get the last message id of a topic <persistent-topic-name>",
 		Command: "pulsarctl topic last-message-id <persistent-topic-name>",
 	}
-	desc.CommandExamples = append(examples, get)
+
+	getPartitionedTopic := Example{
+		Desc: "Get the last message id of a partitioned topic <topic-name>",
+		Command: "pulsarctl topic last-message-id --partition-index <partition> <topic-name>",
+	}
+	desc.CommandExamples = append(examples, get, getPartitionedTopic)
 
 	var out []Output
 	successOut := Output{
