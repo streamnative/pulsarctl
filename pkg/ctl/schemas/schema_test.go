@@ -18,10 +18,9 @@
 package schemas
 
 import (
-	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -46,12 +45,10 @@ func TestSchema(t *testing.T) {
 	getArgs := []string{"get", "test-schema"}
 	getOut, _, err := TestSchemasCommands(getSchema, getArgs)
 
-	var info pulsar.SchemaInfoWithVersion
-	err = json.Unmarshal(getOut.Bytes(), &info)
+	t.Log(getOut.String())
 	assert.Nil(t, err)
-	assert.Equal(t, int64(0), info.Version)
-	assert.Equal(t, "AVRO", info.SchemaInfo.Type)
-	assert.Equal(t, "test-schema", info.SchemaInfo.Name)
+	assert.True(t, strings.Contains(getOut.String(), "AVRO"))
+	assert.True(t, strings.Contains(getOut.String(), "test-schema"))
 
 	delArgs := []string{"delete", "test-schema"}
 	delOut, _, err := TestSchemasCommands(deleteSchema, delArgs)
