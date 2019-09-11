@@ -66,6 +66,7 @@ func GetInternalInfoCmd(vc *cmdutils.VerbCmd)  {
 	out = append(out, successOut, ArgError, failOut)
 	out = append(out, TopicNameErrors...)
 	out = append(out, NamespaceErrors...)
+	desc.CommandOutput = out
 	
 	vc.SetDescription("internal-info",
 		"Get the topic internal info",
