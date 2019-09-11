@@ -26,6 +26,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestStateFunctions(t *testing.T) {
@@ -66,6 +67,7 @@ func TestStateFunctions(t *testing.T) {
 		if strings.Contains(outPutState.String(), "successfully") {
 			break
 		}
+		time.Sleep(1 * time.Second)
 	}
 
 	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
@@ -172,12 +174,14 @@ func TestByteValue(t *testing.T) {
 
 	outPutState := new(bytes.Buffer)
 
+	time.NewTimer()
 	for {
 		outPutState, _, _ = TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 
 		if strings.Contains(outPutState.String(), "successfully") {
 			break
 		}
+		time.Sleep(1 * time.Second)
 	}
 
 	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
