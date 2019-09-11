@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
 	. "github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -18,11 +19,22 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Get the stats of the specified topic <topic-name>",
 		Command: "pulsarctl topic stats <topic-name>",
 	}
-	desc.CommandExamples = append(examples, get)
+
+	getPartition := Example{
+		Desc:    "Get the partitioned topic <topic-name> stats",
+		Command: "pulsarctl topic stats --partition <topic-name>",
+	}
+
+	getPerPartition := Example{
+		Desc:    "Get the partitioned topic <topic-name> stats and per partition stats",
+		Command: "pulsarctl topic stats --partition --per-partition <topic-name>",
+	}
+
+	desc.CommandExamples = append(examples, get, getPartition, getPerPartition)
 
 	var out []Output
 	successOut := Output{
-		Desc: "normal output",
+		Desc: "Get the non-partitioned topic stats",
 		Out: `{
   "msgRateIn": 0,
   "msgRateOut": 0,
@@ -36,7 +48,60 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
   "deduplicationStatus": "Disabled"
 }`,
 	}
-	out = append(out, successOut, ArgError)
+
+	partitionOutput := Output{
+		Desc: "Get the partitioned topic stats",
+		Out: `{
+  "msgRateIn": 0,
+  "msgRateOut": 0,
+  "msgThroughputIn": 0,
+  "msgThroughputOut": 0,
+  "averageMsgSize": 0,
+  "storageSize": 0,
+  "publishers": [],
+  "subscriptions": {},
+  "replication": {},
+  "deduplicationStatus": "",
+  "metadata": {
+    "partitions": 1
+  },
+  "partitions": {}
+}`,
+	}
+
+	perPartitionOutput := Output{
+		Desc: "Get the partitioned topic stats and per partition topic stats",
+		Out: `{
+  "msgRateIn": 0,
+  "msgRateOut": 0,
+  "msgThroughputIn": 0,
+  "msgThroughputOut": 0,
+  "averageMsgSize": 0,
+  "storageSize": 0,
+  "publishers": [],
+  "subscriptions": {},
+  "replication": {},
+  "deduplicationStatus": "",
+  "metadata": {
+    "partitions": 1
+  },
+  "partitions": {
+    "<topic-name>": {
+      "msgRateIn": 0,
+      "msgRateOut": 0,
+      "msgThroughputIn": 0,
+      "msgThroughputOut": 0,
+      "averageMsgSize": 0,
+      "storageSize": 0,
+      "publishers": [],
+      "subscriptions": {},
+      "replication": {},
+      "deduplicationStatus": ""
+    }
+  }
+}`,
+	}
+	out = append(out, successOut, partitionOutput, perPartitionOutput, ArgError)
 
 	topicNotFoundError := Output{
 		Desc: "the specified topic is not exist or the specified topic is a partitioned-topic",
@@ -50,15 +115,23 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"stats",
 		"Get the stats of an existing non-partitioned topic",
-		desc.ToString(),
-		"")
+		desc.ToString())
 
+	var partition bool
+	var perPartition bool
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetStats(vc)
+		return doGetStats(vc, partition, perPartition)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Stats", func(set *pflag.FlagSet) {
+		set.BoolVarP(&partition, "partition", "p", false,
+			"Get the partitioned topic stats")
+		set.BoolVarP(&perPartition, "per-partition", "", false,
+			"Get the per partition topic stats")
 	})
 }
 
-func doGetStats(vc *cmdutils.VerbCmd) error {
+func doGetStats(vc *cmdutils.VerbCmd, partition, perPartition bool) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -70,10 +143,18 @@ func doGetStats(vc *cmdutils.VerbCmd) error {
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	topicStats, err := admin.Topics().GetStats(*topic)
-	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), topicStats)
-	}
 
-	return err
+	if partition {
+		stats, err := admin.Topics().GetPartitionedStats(*topic, perPartition)
+		if err == nil {
+			cmdutils.PrintJson(vc.Command.OutOrStdout(), stats)
+		}
+		return err
+	} else {
+		topicStats, err := admin.Topics().GetStats(*topic)
+		if err == nil {
+			cmdutils.PrintJson(vc.Command.OutOrStdout(), topicStats)
+		}
+		return err
+	}
 }
