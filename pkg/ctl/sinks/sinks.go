@@ -18,28 +18,27 @@
 package sinks
 
 import (
-    `github.com/spf13/cobra`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-    resourceCmd := cmdutils.NewResourceCmd(
-        "sinks",
-        "Interface for managing Pulsar IO sinks (egress data from Pulsar)",
-        "",
-        "sinks",
-    )
+	resourceCmd := cmdutils.NewResourceCmd(
+		"sinks",
+		"Interface for managing Pulsar IO sinks (egress data from Pulsar)",
+		"",
+		"sinks",
+	)
 
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, stopSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, startSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSinksCmd)
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, stopSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, startSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSinksCmd)
 
-    return resourceCmd
+	return resourceCmd
 }
-

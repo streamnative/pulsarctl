@@ -18,54 +18,53 @@
 package sinks
 
 import (
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestRestartSink(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-       t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-restart",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-restart",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
+	createOut, _, err := TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully")
 
-    createOut, _, err := TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-sink-restart successfully")
+	restartArgs := []string{"restart",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-restart",
+	}
 
-    restartArgs := []string{"restart",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-restart",
-    }
+	_, _, err = TestSinksCommands(restartSinksCmd, restartArgs)
+	assert.Nil(t, err)
 
-    _, _, err = TestSinksCommands(restartSinksCmd, restartArgs)
-    assert.Nil(t, err)
+	// test failure case
+	failureArgs := []string{"restart",
+		"--name", "not-exist",
+	}
+	_, execErr, _ := TestSinksCommands(restartSinksCmd, failureArgs)
+	assert.Equal(t, execErr.Error(), "code: 404 reason: Sink not-exist doesn't exist")
 
-    // test failure case
-    failureArgs := []string{"restart",
-       "--name", "not-exist",
-    }
-    _, execErr, _ := TestSinksCommands(restartSinksCmd, failureArgs)
-    assert.Equal(t, execErr.Error(), "code: 404 reason: Sink not-exist doesn't exist")
-
-    notExistInstanceIDArgs := []string{"restart",
-       "--name", "test-sink-restart",
-       "--instance-id", "12345678",
-    }
-    _, err, _ = TestSinksCommands(restartSinksCmd, notExistInstanceIDArgs)
-    assert.NotNil(t, err)
-    failInstanceIDMsg := "Operation not permitted"
-    assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	notExistInstanceIDArgs := []string{"restart",
+		"--name", "test-sink-restart",
+		"--instance-id", "12345678",
+	}
+	_, err, _ = TestSinksCommands(restartSinksCmd, notExistInstanceIDArgs)
+	assert.NotNil(t, err)
+	failInstanceIDMsg := "Operation not permitted"
+	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
 }

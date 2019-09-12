@@ -18,283 +18,282 @@
 package sinks
 
 import (
-    `github.com/spf13/pflag`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `github.com/streamnative/pulsarctl/pkg/ctl/utils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func createSinksCmd(vc *cmdutils.VerbCmd)  {
-    desc := pulsar.LongDescription{}
-    desc.CommandUsedFor = "Submit a Pulsar IO sink connector to run in a Pulsar cluster."
-    desc.CommandPermission = "This command requires namespace function permissions."
+func createSinksCmd(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "Submit a Pulsar IO sink connector to run in a Pulsar cluster."
+	desc.CommandPermission = "This command requires namespace function permissions."
 
-    var examples []pulsar.Example
-    create := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode",
-        Command: "pulsarctl sink create \n" +
-                "\t--tenant public \n" +
-                "\t--namespace default \n" +
-                "\t--name <the name of Pulsar Sink> \n" +
-                "\t--inputs test-jdbc  \n" +
-                "\t--archive connectors/pulsar-io-jdbc-2.4.0.nar \n" +
-                "\t--sink-config-file connectors/mysql-jdbc-sink.yaml \n" +
-                "\t--parallelism 1",
-    }
+	var examples []pulsar.Example
+	create := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode",
+		Command: "pulsarctl sink create \n" +
+			"\t--tenant public \n" +
+			"\t--namespace default \n" +
+			"\t--name <the name of Pulsar Sink> \n" +
+			"\t--inputs test-jdbc  \n" +
+			"\t--archive connectors/pulsar-io-jdbc-2.4.0.nar \n" +
+			"\t--sink-config-file connectors/mysql-jdbc-sink.yaml \n" +
+			"\t--parallelism 1",
+	}
 
-    createWithPkgURL := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with pkg URL",
-        Command: "pulsarctl sink create \n" +
-                "\t--tenant public \n" +
-                "\t--namespace default \n" +
-                "\t--name <the name of Pulsar Sink> \n" +
-                "\t--inputs test-jdbc  \n" +
-                "\t--archive file:/http: + connectors/pulsar-io-jdbc-2.4.0.nar",
-    }
+	createWithPkgURL := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with pkg URL",
+		Command: "pulsarctl sink create \n" +
+			"\t--tenant public \n" +
+			"\t--namespace default \n" +
+			"\t--name <the name of Pulsar Sink> \n" +
+			"\t--inputs test-jdbc  \n" +
+			"\t--archive file:/http: + connectors/pulsar-io-jdbc-2.4.0.nar",
+	}
 
-    createWithSchema := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with schema type",
-        Command: "pulsarctl sink create \n" +
-                "\t--schema-type schema.STRING\n" +
-                "\t# Other sink parameters ",
-    }
+	createWithSchema := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with schema type",
+		Command: "pulsarctl sink create \n" +
+			"\t--schema-type schema.STRING\n" +
+			"\t# Other sink parameters ",
+	}
 
-    createWithParallelism := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with parallelism",
-        Command: "pulsarctl sink create \n" +
-                "\t--parallelism 1\n" +
-                "\t# Other sink parameters ",
-    }
+	createWithParallelism := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with parallelism",
+		Command: "pulsarctl sink create \n" +
+			"\t--parallelism 1\n" +
+			"\t# Other sink parameters ",
+	}
 
-    createWithResource := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with resource",
-        Command: "pulsarctl sink create \n" +
-                "\t--ram 5656565656\n" +
-                "\t--disk 8080808080808080\n" +
-                "\t--cpu 5.0\n" +
-                "\t# Other sink parameters ",
-    }
+	createWithResource := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with resource",
+		Command: "pulsarctl sink create \n" +
+			"\t--ram 5656565656\n" +
+			"\t--disk 8080808080808080\n" +
+			"\t--cpu 5.0\n" +
+			"\t# Other sink parameters ",
+	}
 
-    createWithSinkConfig := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with sink config",
-        Command: "pulsarctl sink create \n" +
-                "\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-                "\t# Other sink parameters ",
-    }
+	createWithSinkConfig := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with sink config",
+		Command: "pulsarctl sink create \n" +
+			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
+			"\t# Other sink parameters ",
+	}
 
-    createWithProcessingGuarantees := pulsar.Example{
-        Desc: "Create a Pulsar Sink in cluster mode with processing guarantees",
-        Command: "pulsarctl sink create \n" +
-                "\t--processing-guarantees EFFECTIVELY_ONCE\n" +
-                "\t# Other sink parameters ",
-    }
+	createWithProcessingGuarantees := pulsar.Example{
+		Desc: "Create a Pulsar Sink in cluster mode with processing guarantees",
+		Command: "pulsarctl sink create \n" +
+			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
+			"\t# Other sink parameters ",
+	}
 
-    examples = append(examples, create, createWithPkgURL, createWithSchema, createWithParallelism,
-        createWithResource, createWithSinkConfig, createWithProcessingGuarantees)
-    desc.CommandExamples = examples
+	examples = append(examples, create, createWithPkgURL, createWithSchema, createWithParallelism,
+		createWithResource, createWithSinkConfig, createWithProcessingGuarantees)
+	desc.CommandExamples = examples
 
-    var out []pulsar.Output
-    successOut := pulsar.Output{
-        Desc: "normal output",
-        Out:  "Created <the name of a Pulsar Sinks> successfully",
-    }
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Created <the name of a Pulsar Sinks> successfully",
+	}
 
-    failureOut := pulsar.Output{
-        Desc: "sink archive not specified, please check --archive arg",
-        Out:  "[✖]  Sink archive not specified",
-    }
+	failureOut := pulsar.Output{
+		Desc: "sink archive not specified, please check --archive arg",
+		Out:  "[✖]  Sink archive not specified",
+	}
 
-    sinkTypeOut := pulsar.Output{
-        Desc: "Cannot specify both archive and sink-type, please check --archive and --sink-type args",
-        Out:  "[✖]  Cannot specify both archive and sink-type",
-    }
+	sinkTypeOut := pulsar.Output{
+		Desc: "Cannot specify both archive and sink-type, please check --archive and --sink-type args",
+		Out:  "[✖]  Cannot specify both archive and sink-type",
+	}
 
-    out = append(out, successOut, failureOut, sinkTypeOut)
-    desc.CommandOutput = out
+	out = append(out, successOut, failureOut, sinkTypeOut)
+	desc.CommandOutput = out
 
-    vc.SetDescription(
-        "create",
-        "Submit a Pulsar IO sink connector to run in a Pulsar cluster",
-        desc.ToString(),
-        "create",
-    )
+	vc.SetDescription(
+		"create",
+		"Submit a Pulsar IO sink connector to run in a Pulsar cluster",
+		desc.ToString(),
+		"create",
+	)
 
-    sinkData := &pulsar.SinkData{}
+	sinkData := &pulsar.SinkData{}
 
-    // set the run sink
-    vc.SetRunFunc(func() error {
-        return doCreateSinks(vc, sinkData)
-    })
+	// set the run sink
+	vc.SetRunFunc(func() error {
+		return doCreateSinks(vc, sinkData)
+	})
 
-    // register the params
-    vc.FlagSetGroup.InFlagSet("SinksConfig", func(flagSet *pflag.FlagSet) {
-        flagSet.StringVar(
-            &sinkData.Tenant,
-            "tenant",
-            "",
-            "The sink's tenant")
+	// register the params
+	vc.FlagSetGroup.InFlagSet("SinksConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVar(
+			&sinkData.Tenant,
+			"tenant",
+			"",
+			"The sink's tenant")
 
-        flagSet.StringVar(
-            &sinkData.Namespace,
-            "namespace",
-            "",
-            "The sink's namespace")
+		flagSet.StringVar(
+			&sinkData.Namespace,
+			"namespace",
+			"",
+			"The sink's namespace")
 
-        flagSet.StringVar(
-            &sinkData.Name,
-            "name",
-            "",
-            "The sink's name")
+		flagSet.StringVar(
+			&sinkData.Name,
+			"name",
+			"",
+			"The sink's name")
 
-        flagSet.StringVarP(
-            &sinkData.SinkType,
-            "sink-type",
-            "t",
-            "",
-            "The sink's connector provider")
+		flagSet.StringVarP(
+			&sinkData.SinkType,
+			"sink-type",
+			"t",
+			"",
+			"The sink's connector provider")
 
-        flagSet.StringVarP(
-            &sinkData.Inputs,
-            "inputs",
-            "i",
-            "",
-            "The sink's input topic or topics (multiple topics can be specified as a comma-separated list)")
+		flagSet.StringVarP(
+			&sinkData.Inputs,
+			"inputs",
+			"i",
+			"",
+			"The sink's input topic or topics (multiple topics can be specified as a comma-separated list)")
 
-        flagSet.StringVar(
-            &sinkData.TopicsPattern,
-            "topics-pattern",
-            "",
-            "TopicsPattern to consume from list of topics under a namespace that match the pattern.\n" +
-                " [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern \n" +
-                "in --customSerdeInputs  (supported for java fun only)")
+		flagSet.StringVar(
+			&sinkData.TopicsPattern,
+			"topics-pattern",
+			"",
+			"TopicsPattern to consume from list of topics under a namespace that match the pattern.\n"+
+				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern \n"+
+				"in --customSerdeInputs  (supported for java fun only)")
 
-        flagSet.StringVar(
-            &sinkData.SubsName,
-            "subs-name",
-            "",
-            "Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
+		flagSet.StringVar(
+			&sinkData.SubsName,
+			"subs-name",
+			"",
+			"Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
 
-        flagSet.StringVar(
-            &sinkData.CustomSerdeInputString,
-            "custom-serde-inputs",
-            "",
-            "The map of input topics to SerDe class names (as a JSON string)")
+		flagSet.StringVar(
+			&sinkData.CustomSerdeInputString,
+			"custom-serde-inputs",
+			"",
+			"The map of input topics to SerDe class names (as a JSON string)")
 
-        flagSet.StringVar(
-            &sinkData.CustomSchemaInputString,
-            "custom-schema-inputs",
-            "",
-            "The map of input topics to Schema types or class names (as a JSON string)")
+		flagSet.StringVar(
+			&sinkData.CustomSchemaInputString,
+			"custom-schema-inputs",
+			"",
+			"The map of input topics to Schema types or class names (as a JSON string)")
 
-        flagSet.StringVar(
-            &sinkData.ProcessingGuarantees,
-            "processing-guarantees",
-            "",
-            "The processing guarantees (aka delivery semantics) applied to the sink")
+		flagSet.StringVar(
+			&sinkData.ProcessingGuarantees,
+			"processing-guarantees",
+			"",
+			"The processing guarantees (aka delivery semantics) applied to the sink")
 
-        flagSet.BoolVar(
-            &sinkData.RetainOrdering,
-            "retain-ordering",
-            false,
-            "Sink consumes and sinks messages in order")
+		flagSet.BoolVar(
+			&sinkData.RetainOrdering,
+			"retain-ordering",
+			false,
+			"Sink consumes and sinks messages in order")
 
-        flagSet.IntVar(
-            &sinkData.Parallelism,
-            "parallelism",
-            0,
-            "The sink's parallelism factor (i.e. the number of sink instances to run)")
+		flagSet.IntVar(
+			&sinkData.Parallelism,
+			"parallelism",
+			0,
+			"The sink's parallelism factor (i.e. the number of sink instances to run)")
 
-        flagSet.StringVar(
-            &sinkData.Archive,
-            "archive",
-            "",
-            "Path to the archive file for the sink. It also supports url-path \n" +
-                "[http/https/file (file protocol assumes that file already exists on worker host)] \n" +
-                "from which worker can download the package.")
+		flagSet.StringVar(
+			&sinkData.Archive,
+			"archive",
+			"",
+			"Path to the archive file for the sink. It also supports url-path \n"+
+				"[http/https/file (file protocol assumes that file already exists on worker host)] \n"+
+				"from which worker can download the package.")
 
-        flagSet.StringVar(
-            &sinkData.ClassName,
-            "classname",
-            "",
-            "The sink's class name if archive is file-url-path (file://)")
+		flagSet.StringVar(
+			&sinkData.ClassName,
+			"classname",
+			"",
+			"The sink's class name if archive is file-url-path (file://)")
 
+		flagSet.StringVar(
+			&sinkData.SinkConfigFile,
+			"sink-config-file",
+			"",
+			"The path to a YAML config file specifying the sink's configuration")
 
-        flagSet.StringVar(
-            &sinkData.SinkConfigFile,
-            "sink-config-file",
-            "",
-            "The path to a YAML config file specifying the sink's configuration")
+		flagSet.Float64Var(
+			&sinkData.CPU,
+			"cpu",
+			0.0,
+			"The CPU (in cores) that needs to be allocated per sink instance\n"+
+				" (applicable only to Docker runtime)")
 
-        flagSet.Float64Var(
-            &sinkData.CPU,
-            "cpu",
-            0.0,
-            "The CPU (in cores) that needs to be allocated per sink instance\n" +
-                " (applicable only to Docker runtime)")
+		flagSet.Int64Var(
+			&sinkData.Disk,
+			"disk",
+			0,
+			"The disk (in bytes) that need to be allocated per sink instance\n"+
+				" (applicable only to Docker runtime)")
 
-        flagSet.Int64Var(
-            &sinkData.Disk,
-            "disk",
-            0,
-            "The disk (in bytes) that need to be allocated per sink instance\n" +
-                " (applicable only to Docker runtime)")
+		flagSet.Int64Var(
+			&sinkData.RAM,
+			"ram",
+			0,
+			"The RAM (in bytes) that need to be allocated per sink instance\n"+
+				" (applicable only to the process and Docker runtimes)")
 
-        flagSet.Int64Var(
-            &sinkData.RAM,
-            "ram",
-            0,
-            "The RAM (in bytes) that need to be allocated per sink instance\n" +
-                " (applicable only to the process and Docker runtimes)")
+		flagSet.StringVar(
+			&sinkData.SinkConfigString,
+			"sink-config",
+			"",
+			"User defined configs key/values")
 
-        flagSet.StringVar(
-            &sinkData.SinkConfigString,
-            "sink-config",
-            "",
-            "User defined configs key/values")
+		flagSet.BoolVar(
+			&sinkData.AutoAck,
+			"auto-ack",
+			false,
+			"Whether or not the framework will automatically acknowledge messages")
 
-        flagSet.BoolVar(
-            &sinkData.AutoAck,
-            "auto-ack",
-            false,
-            "Whether or not the framework will automatically acknowledge messages")
-
-        flagSet.Int64Var(
-            &sinkData.TimeoutMs,
-            "timeout-ms",
-            0,
-            "The message timeout in milliseconds")
-    })
+		flagSet.Int64Var(
+			&sinkData.TimeoutMs,
+			"timeout-ms",
+			0,
+			"The message timeout in milliseconds")
+	})
 }
 
 func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
-    err := processArguments(sinkData)
-    if err != nil {
-        vc.Command.Help()
-        return err
-    }
+	err := processArguments(sinkData)
+	if err != nil {
+		vc.Command.Help()
+		return err
+	}
 
-    err = validateSinkConfigs(sinkData.SinkConf)
-    if err != nil {
-        vc.Command.Help()
-        return err
-    }
+	err = validateSinkConfigs(sinkData.SinkConf)
+	if err != nil {
+		vc.Command.Help()
+		return err
+	}
 
-    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-    if utils.IsPackageUrlSupported(sinkData.Archive) {
-        err = admin.Sinks().CreateSinkWithURL(sinkData.SinkConf, sinkData.Archive)
-        if err != nil {
-            cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-        } else {
-            vc.Command.Printf("Created instanceID[%s] of Pulsar Sink[%s] successfully", sinkData.InstanceID, sinkData.Name)
-        }
-    } else {
-        err = admin.Sinks().CreateSink(sinkData.SinkConf, sinkData.Archive)
-        if err != nil {
-            cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-        } else {
-            vc.Command.Printf("Created %s successfully", sinkData.Name)
-        }
-    }
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	if utils.IsPackageUrlSupported(sinkData.Archive) {
+		err = admin.Sinks().CreateSinkWithURL(sinkData.SinkConf, sinkData.Archive)
+		if err != nil {
+			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		} else {
+			vc.Command.Printf("Created instanceID[%s] of Pulsar Sink[%s] successfully", sinkData.InstanceID, sinkData.Name)
+		}
+	} else {
+		err = admin.Sinks().CreateSink(sinkData.SinkConf, sinkData.Archive)
+		if err != nil {
+			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		} else {
+			vc.Command.Printf("Created %s successfully", sinkData.Name)
+		}
+	}
 
-    return err
+	return err
 }

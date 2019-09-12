@@ -18,58 +18,58 @@
 package sinks
 
 import (
-    `fmt`
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestDeleteSinks(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-delete",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-delete",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
-    _, _, err = TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
+	_, _, err = TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
 
-    deleteArgs := []string{"delete",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-delete",
-    }
+	deleteArgs := []string{"delete",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-delete",
+	}
 
-    deleteOut, execErr, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-    delErr := "Deleted test-sink-delete successfully"
-    assert.True(t, strings.Contains(deleteOut.String(), delErr))
-    assert.Nil(t, execErr)
+	deleteOut, execErr, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
+	delErr := "Deleted test-sink-delete successfully"
+	assert.True(t, strings.Contains(deleteOut.String(), delErr))
+	assert.Nil(t, execErr)
 }
 
 func TestFailureDeleteSink(t *testing.T) {
-    failureDeleteArgs := []string{"delete",
-        "--name", "test-sink-delete",
-    }
+	failureDeleteArgs := []string{"delete",
+		"--name", "test-sink-delete",
+	}
 
-    exceptedErr := "Sink test-sink-delete doesn't exist"
-    _, execErrMsg, _ := TestSinksCommands(deleteSinksCmd, failureDeleteArgs)
-    fmt.Println(execErrMsg.Error())
-    assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
-    assert.NotNil(t, execErrMsg)
+	exceptedErr := "Sink test-sink-delete doesn't exist"
+	_, execErrMsg, _ := TestSinksCommands(deleteSinksCmd, failureDeleteArgs)
+	fmt.Println(execErrMsg.Error())
+	assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
+	assert.NotNil(t, execErrMsg)
 
-    nameNotExist := []string{"delete",
-        "--name", "not-exist",
-    }
-    _, execErrMsg, _ = TestSinksCommands(deleteSinksCmd, nameNotExist)
-    nameErr := "Sink not-exist doesn't exist"
-    assert.True(t, strings.Contains(execErrMsg.Error(), nameErr))
+	nameNotExist := []string{"delete",
+		"--name", "not-exist",
+	}
+	_, execErrMsg, _ = TestSinksCommands(deleteSinksCmd, nameNotExist)
+	nameErr := "Sink not-exist doesn't exist"
+	assert.True(t, strings.Contains(execErrMsg.Error(), nameErr))
 }

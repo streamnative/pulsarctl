@@ -134,7 +134,7 @@ func (s *sinks) CreateSink(config *SinkConfig, fileName string) error {
         return err
     }
 
-    stringWriter, err := s.createStringFromField(multiPartWriter, "SinkConfig")
+    stringWriter, err := s.createStringFromField(multiPartWriter, "sinkConfig")
     if err != nil {
         return err
     }
@@ -202,7 +202,7 @@ func (s *sinks) CreateSinkWithURL(config *SinkConfig, pkgUrl string) error {
         return err
     }
 
-    stringWriter, err := s.createStringFromField(multiPartWriter, "SinkConfig")
+    stringWriter, err := s.createStringFromField(multiPartWriter, "sinkConfig")
     if err != nil {
         return err
     }
@@ -237,7 +237,7 @@ func (s *sinks) UpdateSink(config *SinkConfig, fileName string, updateOptions *U
         return err
     }
 
-    stringWriter, err := s.createStringFromField(multiPartWriter, "SinkConfig")
+    stringWriter, err := s.createStringFromField(multiPartWriter, "sinkConfig")
     if err != nil {
         return err
     }
@@ -322,7 +322,7 @@ func (s *sinks) UpdateSinkWithUrl(config *SinkConfig, pkgUrl string, updateOptio
         return err
     }
 
-    stringWriter, err := s.createStringFromField(multiPartWriter, "SinkConfig")
+    stringWriter, err := s.createStringFromField(multiPartWriter, "sinkConfig")
     if err != nil {
         return err
     }

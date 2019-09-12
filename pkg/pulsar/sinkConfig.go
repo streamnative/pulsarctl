@@ -26,7 +26,7 @@ type SinkConfig struct {
     SourceSubscriptionName string `json:"sourceSubscriptionName" yaml:"sourceSubscriptionName"`
     Inputs                 []string `json:"inputs" yaml:"inputs"`
     TopicToSerdeClassName  map[string]string `json:"topicToSerdeClassName" yaml:"topicToSerdeClassName"`
-    TopicsPattern          string `json:"topicsPattern" yaml:"topicsPattern"`
+    TopicsPattern          *string `json:"topicsPattern" yaml:"topicsPattern"`
     TopicToSchemaType      map[string]string `json:"topicToSchemaType" yaml:"topicToSchemaType"`
     InputSpecs             map[string]ConsumerConfig `json:"inputSpecs" yaml:"inputSpecs"`
     Configs                map[string]interface{} `json:"configs" yaml:"configs"`
@@ -42,7 +42,7 @@ type SinkConfig struct {
     RetainOrdering       bool `json:"retainOrdering" yaml:"retainOrdering"`
     Resources            *Resources `json:"resources" yaml:"resources"`
     AutoAck              bool `json:"autoAck" yaml:"autoAck"`
-    TimeoutMs            int64 `json:"timeoutMs" yaml:"timeoutMs"`
+    TimeoutMs            *int64 `json:"timeoutMs" yaml:"timeoutMs"`
     Archive              string `json:"archive" yaml:"archive"`
 
     // Whether the subscriptions the functions created/used should be deleted when the functions is deleted

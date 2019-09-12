@@ -18,70 +18,73 @@
 package sinks
 
 import (
-    `github.com/stretchr/testify/assert`
-    `os`
-    `strings`
-    `testing`
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"os"
+	"strings"
+	"testing"
 )
 
 func TestCreateSinks(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-delete",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-        "--parallelism", "1",
-    }
-    _, _, err = TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-create",
+		"--inputs", "persistent://public/default/my-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+		"--parallelism", "1",
+	}
+	out, _, err := TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
+	fmt.Println(out.String())
+	assert.Equal(t, out.String(), "Created test-sink-create successfully")
 }
 
 func TestFailureCreateSinks(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    narName := "dummy-pulsar-io-mysql.nar"
-    _, err = os.Create(narName)
-    assert.Nil(t, err)
+	narName := "dummy-pulsar-io-mysql.nar"
+	_, err = os.Create(narName)
+	assert.Nil(t, err)
 
-    defer os.Remove(narName)
+	defer os.Remove(narName)
 
-    failArgs := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-delete",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	failArgs := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-create",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
-    exceptedErr := "Sink test-sink-create already exists"
-    out, execErr, _ := TestSinksCommands(createSinksCmd, failArgs)
-    assert.True(t, strings.Contains(out.String(), exceptedErr))
-    assert.NotNil(t, execErr)
+	exceptedErr := "Sink test-sink-create already exists"
+	out, execErr, _ := TestSinksCommands(createSinksCmd, failArgs)
+	assert.True(t, strings.Contains(out.String(), exceptedErr))
+	assert.NotNil(t, execErr)
 
-    narFailArgs := []string{"create",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-sink-create-nar-fail",
-       "--inputs", "my-topic",
-       "--archive", narName,
-    }
+	narFailArgs := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-create-nar-fail",
+		"--inputs", "my-topic",
+		"--archive", narName,
+	}
 
-    narErrInfo := "Sink class org.apache.pulsar.io.jdbc.JdbcAutoSchemaSink must be in class path"
-    narOut, execErr, _ := TestSinksCommands(createSinksCmd, narFailArgs)
-    assert.True(t, strings.Contains(narOut.String(), narErrInfo))
-    assert.NotNil(t, execErr)
+	narErrInfo := "Sink package does not have the correct format"
+	narOut, execErr, _ := TestSinksCommands(createSinksCmd, narFailArgs)
+	fmt.Println(narOut.String())
+	assert.True(t, strings.Contains(narOut.String(), narErrInfo))
+	assert.NotNil(t, execErr)
 }
-

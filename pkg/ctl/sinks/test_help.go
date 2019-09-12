@@ -18,73 +18,70 @@
 package sinks
 
 import (
-    `bytes`
-    `github.com/kris-nova/logger`
-    `github.com/spf13/cobra`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `os`
+	"bytes"
+	"github.com/kris-nova/logger"
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"os"
 )
 
 func TestSinksCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, err error) {
-    var rootCmd = &cobra.Command{
-        Use:   "pulsarctl [command]",
-        Short: "a CLI for Apache Pulsar",
-        Run: func(cmd *cobra.Command, _ []string) {
-            if err := cmd.Help(); err != nil {
-                logger.Debug("ignoring error %q", err.Error())
-            }
-        },
-    }
+	var rootCmd = &cobra.Command{
+		Use:   "pulsarctl [command]",
+		Short: "a CLI for Apache Pulsar",
+		Run: func(cmd *cobra.Command, _ []string) {
+			if err := cmd.Help(); err != nil {
+				logger.Debug("ignoring error %q", err.Error())
+			}
+		},
+	}
 
-    var execError error
-    cmdutils.ExecErrorHandler = func(err error) {
-        execError = err
-    }
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
+	}
 
-    buf := new(bytes.Buffer)
-    rootCmd.SetOut(buf)
-    rootCmd.SetArgs(append([]string{"sinks"}, args...))
+	buf := new(bytes.Buffer)
+	rootCmd.SetOut(buf)
+	rootCmd.SetArgs(append([]string{"sinks"}, args...))
 
-    resourceCmd := cmdutils.NewResourceCmd(
-        "sinks",
-        "Operations about Pulsar Sinks",
-        "",
-        "sinks")
-    flagGrouping := cmdutils.NewGrouping()
-    cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
-    rootCmd.AddCommand(resourceCmd)
-    err = rootCmd.Execute()
+	resourceCmd := cmdutils.NewResourceCmd(
+		"sinks",
+		"Operations about Pulsar Sinks",
+		"",
+		"sinks")
+	flagGrouping := cmdutils.NewGrouping()
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
+	rootCmd.AddCommand(resourceCmd)
+	err = rootCmd.Execute()
 
-    return buf, execError, err
+	return buf, execError, err
 }
 
 var (
-    flag bool
-    basePath string
+	flag     bool
+	basePath string
 )
 
 func getDirHelp() (string, error) {
-    var err error
-    if !flag {
-        basePath, err = os.Getwd()
-        if err != nil {
-            return "", err
-        }
+	var err error
+	if !flag {
+		basePath, err = os.Getwd()
+		if err != nil {
+			return "", err
+		}
 
-        err = os.Chdir("../../../")
-        if err != nil {
-            return "", err
-        }
+		err = os.Chdir("../../../")
+		if err != nil {
+			return "", err
+		}
 
-        basePath, err = os.Getwd()
-        if err != nil {
-            return "", err
-        }
-        flag = true
-    }
+		basePath, err = os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		flag = true
+	}
 
-    return basePath, nil
+	return basePath, nil
 }
-
-
-

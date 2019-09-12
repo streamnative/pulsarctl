@@ -18,61 +18,63 @@
 package sinks
 
 import (
-    `encoding/json`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"encoding/json"
+	"fmt"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
-func TestUpdateSink(t *testing.T)  {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+func TestUpdateSink(t *testing.T) {
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-update",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sinks-update",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
-    createOut, _, err := TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-sink-update successfully")
+	createOut, _, err := TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-sinks-update successfully")
 
-    updateArgs := []string{"update",
-        "--name", "test-sink-update",
-        "--cpu", "5.0",
-    }
+	updateArgs := []string{"update",
+		"--name", "test-sinks-update",
+		"--parallelism", "3",
+	}
 
-    _, _, err = TestSinksCommands(updateSinksCmd, updateArgs)
-    assert.Nil(t, err)
-    getArgs := []string{"get",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-update",
-    }
+	updateOut, _, err := TestSinksCommands(updateSinksCmd, updateArgs)
+	fmt.Println(updateOut.String())
+	assert.Nil(t, err)
+	getArgs := []string{"get",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sinks-update",
+	}
 
-    out, _, err := TestSinksCommands(updateSinksCmd, getArgs)
-    assert.Nil(t, err)
+	out, _, err := TestSinksCommands(getSinksCmd, getArgs)
+	assert.Nil(t, err)
 
-    var sinkConf pulsar.SinkConfig
-    err = json.Unmarshal(out.Bytes(), &sinkConf)
-    assert.Nil(t, err)
+	var sinkConf pulsar.SinkConfig
+	err = json.Unmarshal(out.Bytes(), &sinkConf)
+	assert.Nil(t, err)
+	t.Log(sinkConf)
+	assert.Equal(t, sinkConf.Parallelism, 3)
 
-    assert.Equal(t, sinkConf.Resources.CPU, 5.0)
-
-    // test the sink name not exist
-    failureUpdateArgs := []string{"update",
-        "--name", "not-exist",
-    }
-    _, err, _ = TestSinksCommands(updateSinksCmd, failureUpdateArgs)
-    assert.NotNil(t, err)
-    failMsg := "Sink not-exist doesn't exist"
-    assert.True(t, strings.Contains(err.Error(), failMsg))
+	// test the sink name not exist
+	failureUpdateArgs := []string{"update",
+		"--name", "not-exist",
+	}
+	_, err, _ = TestSinksCommands(updateSinksCmd, failureUpdateArgs)
+	assert.NotNil(t, err)
+	failMsg := "Sink not-exist doesn't exist"
+	assert.True(t, strings.Contains(err.Error(), failMsg))
 }

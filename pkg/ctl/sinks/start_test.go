@@ -18,77 +18,76 @@
 package sinks
 
 import (
-    `github.com/stretchr/testify/assert`
-    `strings`
-    `testing`
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestStartAndStopSink(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-    t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-start",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-start",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
+	createOut, _, err := TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created test-sink-start successfully")
 
-    createOut, _, err := TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
-    assert.Equal(t, createOut.String(), "Created test-sink-start successfully")
+	stopArgs := []string{"stop",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-start",
+	}
 
-    stopArgs := []string{"stop",
-    "--tenant", "public",
-    "--namespace", "default",
-    "--name", "test-sink-start",
-    }
+	_, _, err = TestSinksCommands(stopSinksCmd, stopArgs)
+	assert.Nil(t, err)
 
-    _, _, err = TestSinksCommands(stopSinksCmd, stopArgs)
-    assert.Nil(t, err)
+	startArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-start",
+	}
+	_, _, err = TestSinksCommands(startSinksCmd, startArgs)
+	assert.Nil(t, err)
 
-    startArgs := []string{"start",
-     "--tenant", "public",
-     "--namespace", "default",
-     "--name", "test-sink-start",
-    }
-    _, _, err = TestSinksCommands(startSinksCmd, startArgs)
-    assert.Nil(t, err)
+	// test failure case
+	failureStartArgs := []string{"start",
+		"--name", "not-exist",
+	}
+	_, err, _ = TestSinksCommands(startSinksCmd, failureStartArgs)
+	assert.NotNil(t, err)
+	failMsg := "Sink not-exist doesn't exist"
+	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
 
-    // test failure case
-    failureStartArgs := []string{"start",
-       "--name", "not-exist",
-    }
-    _, err, _ = TestSinksCommands(startSinksCmd, failureStartArgs)
-    assert.NotNil(t, err)
-    failMsg := "Sink not-exist doesn't exist"
-    assert.True(t, strings.ContainsAny(err.Error(), failMsg))
+	// test the --name args not exist
+	notExistNameOrFqfnArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+	}
+	_, err, _ = TestSinksCommands(startSinksCmd, notExistNameOrFqfnArgs)
+	assert.NotNil(t, err)
+	failNameMsg := "You must specify a name for the sink"
+	assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
 
-    // test the --name args not exist
-    notExistNameOrFqfnArgs := []string{"start",
-       "--tenant", "public",
-       "--namespace", "default",
-    }
-    _, err, _ = TestSinksCommands(startSinksCmd, notExistNameOrFqfnArgs)
-    assert.NotNil(t, err)
-    failNameMsg := "You must specify a name for the sink"
-    assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
-
-    // test the instance id not exist
-    notExistInstanceIDArgs := []string{"start",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-sink-start",
-       "--instance-id", "12345678",
-    }
-    _, err, _ = TestSinksCommands(startSinksCmd, notExistInstanceIDArgs)
-    assert.NotNil(t, err)
-    failInstanceIDMsg := "Operation not permitted"
-    assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	// test the instance id not exist
+	notExistInstanceIDArgs := []string{"start",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-start",
+		"--instance-id", "12345678",
+	}
+	_, err, _ = TestSinksCommands(startSinksCmd, notExistInstanceIDArgs)
+	assert.NotNil(t, err)
+	failInstanceIDMsg := "Operation not permitted"
+	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
 }

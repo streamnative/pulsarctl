@@ -18,74 +18,74 @@
 package sinks
 
 import (
-    `encoding/json`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
-    `github.com/stretchr/testify/assert`
-    `testing`
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestGetSink(t *testing.T) {
-    basePath, err := getDirHelp()
-    if basePath == "" || err != nil {
-        t.Error(err)
-    }
-    t.Logf("base path: %s", basePath)
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
 
-    args := []string{"create",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-get",
-        "--inputs", "test-topic",
-        "--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-        "--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-    }
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-get",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
+	}
 
+	_, _, err = TestSinksCommands(createSinksCmd, args)
+	assert.Nil(t, err)
 
-    _, _, err = TestSinksCommands(createSinksCmd, args)
-    assert.Nil(t, err)
+	getArgs := []string{"get",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-get",
+	}
 
-    getArgs := []string{"get",
-        "--tenant", "public",
-        "--namespace", "default",
-        "--name", "test-sink-get",
-    }
+	out, _, err := TestSinksCommands(getSinksCmd, getArgs)
 
-    out, _, err := TestSinksCommands(getSinksCmd, getArgs)
+	var sinkConf pulsar.SinkConfig
+	err = json.Unmarshal(out.Bytes(), &sinkConf)
+	assert.Nil(t, err)
 
-    var sinkConf pulsar.SinkConfig
-    err = json.Unmarshal(out.Bytes(), &sinkConf)
-    assert.Nil(t, err)
+	assert.Equal(t, sinkConf.Tenant, "public")
+	assert.Equal(t, sinkConf.Namespace, "default")
+	assert.Equal(t, sinkConf.Name, "test-sink-get")
 
-    assert.Equal(t, sinkConf.Tenant, "public")
-    assert.Equal(t, sinkConf.Namespace, "default")
-    assert.Equal(t, sinkConf.Name, "test-sink-get")
-
-    // check configs
-    sinkConfMap := map[string]interface{}{
-        "userName":  "root",
-        "password":  "jdbc",
-        "jdbcUrl":   "jdbc:mysql://127.0.0.1:3306/test_jdbc",
-        "tableName": "test_jdbc",
-    }
-    assert.Equal(t, sinkConf.Configs, sinkConfMap)
-    t.Logf("get sink value:%s", out.String())
+	// check configs
+	sinkConfMap := map[string]interface{}{
+		"userName":  "root",
+		"password":  "jdbc",
+		"jdbcUrl":   "jdbc:mysql://127.0.0.1:3306/test_jdbc",
+		"tableName": "test_jdbc",
+	}
+	assert.Equal(t, sinkConf.Configs, sinkConfMap)
+	t.Logf("get sink value:%s", out.String())
 }
 
 func TestGetFailureSink(t *testing.T) {
-    deleteArgs := []string{"delete",
-       "--tenant", "public",
-       "--namespace", "default",
-       "--name", "test-sink-get",
-    }
+	deleteArgs := []string{"delete",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-sink-get",
+	}
 
-    deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-    assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully")
+	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
+	assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully")
 
-    failureGetArgs := []string{"get",
-        "--name", "test-sink-get",
-    }
-    getOut, execErr, _ := TestSinksCommands(getSinksCmd, failureGetArgs)
-    assert.NotNil(t, execErr)
-    exceptedErr := "error: Sink test-Sink-get doesn't exist\n"
-    assert.Equal(t, getOut.String(), exceptedErr)
+	failureGetArgs := []string{"get",
+		"--name", "test-sink-get",
+	}
+	getOut, execErr, _ := TestSinksCommands(getSinksCmd, failureGetArgs)
+	assert.NotNil(t, execErr)
+	exceptedErr := "Sink test-sink-get doesn't exist"
+	assert.True(t, strings.Contains(getOut.String(), exceptedErr))
 }

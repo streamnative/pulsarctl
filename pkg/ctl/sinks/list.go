@@ -18,87 +18,87 @@
 package sinks
 
 import (
-    `github.com/olekukonko/tablewriter`
-    `github.com/spf13/pflag`
-    `github.com/streamnative/pulsarctl/pkg/cmdutils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
-    desc := pulsar.LongDescription{}
-    desc.CommandUsedFor = "List all running Pulsar IO sink connectors"
-    desc.CommandPermission = "This command requires namespace function permissions."
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "List all running Pulsar IO sink connectors"
+	desc.CommandPermission = "This command requires namespace function permissions."
 
-    var examples []pulsar.Example
+	var examples []pulsar.Example
 
-    list := pulsar.Example{
-        Desc: "List all running Pulsar IO sink connectors",
-        Command: "pulsarctl sink list \n" +
-                "\t--tenant public\n" +
-                "\t--namespace default",
-    }
-    examples = append(examples, list)
-    desc.CommandExamples = examples
+	list := pulsar.Example{
+		Desc: "List all running Pulsar IO sink connectors",
+		Command: "pulsarctl sink list \n" +
+			"\t--tenant public\n" +
+			"\t--namespace default",
+	}
+	examples = append(examples, list)
+	desc.CommandExamples = examples
 
-    var out []pulsar.Output
-    successOut := pulsar.Output{
-        Desc: "normal output",
-        Out: "+--------------------+\n" +
-                "|   Sink Name    |\n" +
-                "+--------------------+\n" +
-                "| test_sink_name |\n" +
-                "+--------------------+",
-    }
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out: "+--------------------+\n" +
+			"|   Sink Name    |\n" +
+			"+--------------------+\n" +
+			"| test_sink_name |\n" +
+			"+--------------------+",
+	}
 
-    out = append(out, successOut)
-    desc.CommandOutput = out
+	out = append(out, successOut)
+	desc.CommandOutput = out
 
-    vc.SetDescription(
-        "list",
-        "List all running Pulsar IO sink connectors",
-        desc.ToString(),
-        "list",
-    )
+	vc.SetDescription(
+		"list",
+		"List all running Pulsar IO sink connectors",
+		desc.ToString(),
+		"list",
+	)
 
-    sinkData := &pulsar.SinkData{}
+	sinkData := &pulsar.SinkData{}
 
-    // set the run sink
-    vc.SetRunFunc(func() error {
-        return doListSinks(vc, sinkData)
-    })
+	// set the run sink
+	vc.SetRunFunc(func() error {
+		return doListSinks(vc, sinkData)
+	})
 
-    // register the params
-    vc.FlagSetGroup.InFlagSet("SinksConfig", func(flagSet *pflag.FlagSet) {
-        flagSet.StringVar(
-            &sinkData.Tenant,
-            "tenant",
-            "",
-            "The sink's tenant")
+	// register the params
+	vc.FlagSetGroup.InFlagSet("SinksConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVar(
+			&sinkData.Tenant,
+			"tenant",
+			"",
+			"The sink's tenant")
 
-        flagSet.StringVar(
-            &sinkData.Namespace,
-            "namespace",
-            "",
-            "The sink's namespace")
-    })
+		flagSet.StringVar(
+			&sinkData.Namespace,
+			"namespace",
+			"",
+			"The sink's namespace")
+	})
 }
 
-func doListSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error  {
-    processNamespaceCmd(sinkData)
+func doListSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+	processNamespaceCmd(sinkData)
 
-    admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-    sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
-    if err != nil {
-        cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-    } else {
-        table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-        table.SetHeader([]string{"Pulsar Sinks Name"})
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+	} else {
+		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+		table.SetHeader([]string{"Pulsar Sinks Name"})
 
-        for _, f := range sinks {
-            table.Append([]string{f})
-        }
+		for _, f := range sinks {
+			table.Append([]string{f})
+		}
 
-        table.Render()
-    }
-    return err
+		table.Render()
+	}
+	return err
 }
