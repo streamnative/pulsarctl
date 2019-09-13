@@ -3,8 +3,11 @@ package topic
 import (
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/compact"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/unload"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -23,6 +26,12 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 
 		GetStatsCmd,
 		GetInternalStatsCmd,
+
+		UnloadCmd,
+		OffloadCmd,
+		OffloadStatusCmd,
+		CompactCmd,
+		CompactStatusCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

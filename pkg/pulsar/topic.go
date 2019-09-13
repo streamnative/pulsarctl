@@ -13,6 +13,11 @@ type Topics interface {
 	GetStats(TopicName) (TopicStats, error)
 	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
+	Compact(TopicName) error
+	CompactStatus(TopicName) (LongRunningProcessStatus, error)
+	Unload(TopicName) error
+	Offload(TopicName, MessageId) error
+	OffloadStatus(TopicName) (OffloadProcessStatus, error)
 }
 
 type topics struct {
@@ -128,4 +133,33 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	}
 	err := t.client.getWithQueryParams(endpoint, &stats, params)
 	return stats, err
+}
+
+func (t *topics) Compact(topic TopicName) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	return t.client.put(endpoint, "", nil)
+}
+
+func (t *topics) CompactStatus(topic TopicName) (LongRunningProcessStatus, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	var status LongRunningProcessStatus
+	err := t.client.get(endpoint, &status)
+	return status, err
+}
+
+func (t *topics) Unload(topic TopicName) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "unload")
+	return t.client.put(endpoint, "", nil)
+}
+
+func (t *topics) Offload(topic TopicName, messageId MessageId) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
+	return t.client.put(endpoint, messageId, nil)
+}
+
+func (t *topics) OffloadStatus(topic TopicName) (OffloadProcessStatus, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
+	var status OffloadProcessStatus
+	err := t.client.get(endpoint, &status)
+	return status, err
 }

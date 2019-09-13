@@ -9,12 +9,17 @@ var ArgError = Output{
 
 var ArgsError = Output{
 	Desc: "the topic name and(or) the partitions is not specified",
-	Out:  "[✖]  need to specified the topic name and the partitions",
+	Out:  "[✖]  only two argument is allowed to be used as names",
 }
 
 var TopicAlreadyExistError = Output{
 	Desc: "the topic has been created",
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
+}
+
+var TopicNotFoundError = Output{
+	Desc: "the specified topic does not found",
+	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
 var TenantNotExistError = Output{

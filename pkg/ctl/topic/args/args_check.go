@@ -6,7 +6,7 @@ import (
 
 func CheckTopicNameTwoArgs(args []string) error {
 	if len(args) != 2 {
-		return errors.New("need to specified the topic name and the partitions")
+		return errors.New("only two argument is allowed to be used as names")
 	}
 
 	return nil

@@ -45,11 +45,7 @@ func GetTopicName(completeName string) (*TopicName, error) {
 	// The fully qualified topic name can be:
 	// <domain>://<tenant>/<namespace>/<topic>
 
-	parts := strings.Split(completeName, "://")
-	if len(parts) != 2 {
-		return nil, errors.Errorf("Invalid complete topic name '%s', it should be in "+
-			"the format of <domain>://<tenant>/<namespace>/<topic>", completeName)
-	}
+	parts := strings.SplitN(completeName, "://", 2)
 
 	domain, err := ParseTopicDomain(parts[0])
 	if err != nil {
@@ -84,6 +80,14 @@ func (t *TopicName) String() string {
 
 func (t *TopicName) GetDomain() TopicDomain {
 	return t.domain
+}
+
+func (t *TopicName) IsPersistent() bool {
+	return t.domain == persistent
+}
+
+func (t *TopicName) IsNonPersistent() bool {
+	return t.domain == non_persistent
 }
 
 func (t *TopicName) GetRestPath() string {

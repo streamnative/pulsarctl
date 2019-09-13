@@ -42,7 +42,7 @@ func TestUpdateTopicArgsError(t *testing.T) {
 	args := []string{"update", "test-topic"}
 	_, _, nameErr, _ := TestTopicCommands(UpdateTopicCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "need to specified the topic name and the partitions", nameErr.Error())
+	assert.Equal(t, "only two argument is allowed to be used as names", nameErr.Error())
 }
 
 func TestUpdateTopicWithInvalidPartitions(t *testing.T) {
