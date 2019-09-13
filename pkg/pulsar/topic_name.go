@@ -3,6 +3,7 @@ package pulsar
 import (
 	"fmt"
 	"github.com/pkg/errors"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -54,7 +55,7 @@ func GetTopicName(completeName string) (*TopicName, error) {
 	topicname.domain = domain
 
 	rest := parts[1]
-	parts = strings.Split(rest, "/")
+	parts = strings.SplitN(rest, "/", 3)
 	if len(parts) == 3 {
 		topicname.tenant = parts[0]
 		topicname.namespace = parts[1]
@@ -63,6 +64,10 @@ func GetTopicName(completeName string) (*TopicName, error) {
 	} else {
 		return nil, errors.Errorf("Invalid topic name '%s', it should be in the format of "+
 			"<tenant>/<namespace>/<topic>", rest)
+	}
+
+	if topicname.topic == "" {
+		return nil, errors.New("Topic name can not be empty.")
 	}
 
 	n, err := GetNameSpaceName(topicname.tenant, topicname.namespace)
@@ -91,7 +96,11 @@ func (t *TopicName) IsNonPersistent() bool {
 }
 
 func (t *TopicName) GetRestPath() string {
-	return fmt.Sprintf("%s/%s/%s/%s", t.domain, t.tenant, t.namespace, t.topic)
+	return fmt.Sprintf("%s/%s/%s/%s", t.domain, t.tenant, t.namespace, t.GetEncodedTopic())
+}
+
+func (t *TopicName) GetEncodedTopic() string {
+	return url.QueryEscape(t.topic)
 }
 
 func getPartitionIndex(topic string) int {
