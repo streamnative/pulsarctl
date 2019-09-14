@@ -121,3 +121,7 @@ type SourceData struct {
 type PartitionedTopicMetadata struct {
 	Partitions int `json:"partitions"`
 }
+
+type NamespacesData struct {
+	NumBundles int `json:"numBundles"`
+}
