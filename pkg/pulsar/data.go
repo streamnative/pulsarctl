@@ -125,3 +125,10 @@ type PartitionedTopicMetadata struct {
 type NamespacesData struct {
 	NumBundles int `json:"numBundles"`
 }
+
+type LookupData struct {
+	BrokerUrl string `json:"brokerUrl"`
+	BrokerUrlTls string `json:"brokerUrlTls"`
+	HttpUrl string `json:"httpUrl"`
+	HttpUrlTls string `json:"httpUrlTls"`
+}
