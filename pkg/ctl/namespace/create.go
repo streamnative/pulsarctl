@@ -83,6 +83,13 @@ func createNs(vc *cmdutils.VerbCmd) {
 			"b",
 			0,
 			"number of bundles to activate")
+
+		flagSet.StringSliceVarP(
+			&namespaceData.Clusters,
+			"clusters",
+			"c",
+			nil,
+			"List of clusters this namespace will be assigned")
 	})
 }
 
@@ -93,6 +100,7 @@ func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	if data.NumBundles < 0 || data.NumBundles > int(MaxBundles) {
 		return errors.New("Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].")
 	}
+
 	ns, err := pulsar.GetNamespaceName(tenantAndNamespace)
 	if err != nil {
 		return err
@@ -103,6 +111,11 @@ func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	} else {
 		polices.Bundles = nil
 	}
+
+	if data.Clusters != nil {
+		polices.ReplicationClusters = data.Clusters
+	}
+
 	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *polices)
 	if err == nil {
 		vc.Command.Printf("Created %s successfully", ns.String())
