@@ -11,11 +11,11 @@ func createClusterCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"add",
 		"Add a pulsar cluster",
-		"This command is used for adding the configuration data for a cluster.\n" +
-			"The configuration data is mainly used for geo-replication between clusters,\n" +
-			"so please make sure the service urls provided in this command are reachable\n" +
-			"between clusters.\n" +
-			"\n" +
+		"This command is used for adding the configuration data for a cluster.\n"+
+			"The configuration data is mainly used for geo-replication between clusters,\n"+
+			"so please make sure the service urls provided in this command are reachable\n"+
+			"between clusters.\n"+
+			"\n"+
 			"This operation requires Pulsar super-user privileges.",
 		"create")
 
