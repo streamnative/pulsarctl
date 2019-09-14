@@ -18,67 +18,70 @@
 package functions
 
 import (
+	"bytes"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
-//func TestTriggerFunctions(t *testing.T) {
-//	basePath, err := getDirHelp()
-//	if basePath == "" || err != nil {
-//		t.Error(err)
-//	}
-//	t.Logf("base path: %s", basePath)
-//	args := []string{"create",
-//		"--tenant", "public",
-//		"--namespace", "default",
-//		"--name", "test-functions-trigger",
-//		"--inputs", "test-input-topic",
-//		"--output", "persistent://public/default/test-output-topic",
-//		"--classname", "org.apache.pulsar.functions.api.examples.WordCountFunction",
-//		"--jar", basePath + "/test/functions/api-examples.jar",
-//	}
-//
-//	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
-//	assert.Nil(t, err)
-//	if execErr != nil {
-//		t.Errorf("create fucntions error value: %s", execErr.Error())
-//	}
-//	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
-//
-//	statsArgs := []string{"stats",
-//		"--tenant", "public",
-//		"--namespace", "default",
-//		"--name", "test-functions-trigger",
-//	}
-//	outStats := new(bytes.Buffer)
-//
-//	outStats, _, _ = TestFunctionsCommands(statsFunctionsCmd, statsArgs)
-//	var stats pulsar.FunctionStats
-//	err = json.Unmarshal(outStats.Bytes(), &stats)
-//	assert.Nil(t, err)
-//	assert.Equal(t, int64(0), stats.ReceivedTotal)
-//	assert.Equal(t, int64(0), stats.ProcessedSuccessfullyTotal)
-//
-//	// send trigger cmd to broker
-//	triggerArgs := []string{"trigger",
-//		"--tenant", "public",
-//		"--namespace", "default",
-//		"--name", "test-functions-trigger",
-//		"--topic", "test-input-topic",
-//		"--trigger-value", "hello pulsar",
-//	}
-//
-//	triggerOut := new(bytes.Buffer)
-//	for i := 0; i < 2; i++ {
-//		triggerOut, execErr, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
-//		assert.Nil(t, err)
-//		if execErr != nil {
-//			t.Error(execErr.Error())
-//		}
-//		t.Log(triggerOut.String())
-//	}
-//}
+func TestTriggerFunctions(t *testing.T) {
+	basePath, err := getDirHelp()
+	if basePath == "" || err != nil {
+		t.Error(err)
+	}
+	t.Logf("base path: %s", basePath)
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-trigger",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.WordCountFunction",
+		"--jar", basePath + "/test/functions/api-examples.jar",
+	}
+
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	assert.Nil(t, err)
+	if execErr != nil {
+		t.Errorf("create fucntions error value: %s", execErr.Error())
+	}
+	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
+
+	statsArgs := []string{"stats",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-trigger",
+	}
+	outStats := new(bytes.Buffer)
+
+	outStats, _, _ = TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	var stats pulsar.FunctionStats
+	err = json.Unmarshal(outStats.Bytes(), &stats)
+	assert.Nil(t, err)
+	assert.Equal(t, int64(0), stats.ReceivedTotal)
+	assert.Equal(t, int64(0), stats.ProcessedSuccessfullyTotal)
+
+	// send trigger cmd to broker
+	triggerArgs := []string{"trigger",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-trigger",
+		"--topic", "test-input-topic",
+		"--trigger-value", "hello pulsar",
+	}
+
+	triggerOut := new(bytes.Buffer)
+	for i := 0; i < 2; i++ {
+		triggerOut, execErr, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+		assert.Nil(t, err)
+		if execErr != nil {
+			t.Error(execErr.Error())
+		}
+		t.Log(triggerOut.String())
+	}
+}
 
 func TestTriggerFunctionsFailure(t *testing.T) {
 	basePath, err := getDirHelp()
