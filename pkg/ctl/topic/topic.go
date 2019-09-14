@@ -5,8 +5,9 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/compact"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/teminate"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/unload"
 )
 
@@ -32,6 +33,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		OffloadStatusCmd,
 		CompactCmd,
 		CompactStatusCmd,
+		TerminateCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

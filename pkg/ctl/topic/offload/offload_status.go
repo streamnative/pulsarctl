@@ -80,7 +80,7 @@ func doOffloadStatus(vc *cmdutils.VerbCmd, wait bool) error {
 		return err
 	}
 
-	if topic.GetDomain().String() != "persistent" {
+	if !topic.IsPersistent() {
 		return errors.New("Need to provide a persistent topic.")
 	}
 

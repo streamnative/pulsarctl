@@ -18,6 +18,7 @@ type Topics interface {
 	Unload(TopicName) error
 	Offload(TopicName, MessageId) error
 	OffloadStatus(TopicName) (OffloadProcessStatus, error)
+	Terminate(TopicName) (MessageId, error)
 }
 
 type topics struct {
@@ -162,4 +163,11 @@ func (t *topics) OffloadStatus(topic TopicName) (OffloadProcessStatus, error) {
 	var status OffloadProcessStatus
 	err := t.client.get(endpoint, &status)
 	return status, err
+}
+
+func (t *topics) Terminate(topic TopicName) (MessageId, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "terminate")
+	var messageId MessageId
+	err := t.client.post(endpoint, "", &messageId)
+	return messageId, err
 }
