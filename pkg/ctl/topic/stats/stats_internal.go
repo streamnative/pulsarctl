@@ -8,7 +8,8 @@ import (
 
 func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting the internal stats for an existing non-partitioned topic."
+	desc.CommandUsedFor = "This command is used for getting the internal stats for a non-partitioned topic or a " +
+		"partition of a partitioned topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
@@ -16,7 +17,12 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Get internal stats for an existing non-partitioned-topic <topic-name>",
 		Command: "pulsarctl topic internal-stats <topic-name>",
 	}
-	desc.CommandExamples = append(examples, get)
+
+	getPartition := Example{
+		Desc: "Get internal stats for a partition of a partitioned topic",
+		Command: "pulsarctl topic internal-stats <topic-name>-partition-<partition-index>",
+	}
+	desc.CommandExamples = append(examples, get, getPartition)
 
 	var out []Output
 	successOut := Output{
