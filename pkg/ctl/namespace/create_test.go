@@ -107,7 +107,7 @@ func TestCreateNsForCluster(t *testing.T) {
 	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 
-	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "public"}
+	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "--allowed-clusters", "standalone", "public"}
 	_, _, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
 
