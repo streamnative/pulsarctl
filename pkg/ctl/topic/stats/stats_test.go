@@ -2,7 +2,6 @@ package stats
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
@@ -108,7 +107,6 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
-	fmt.Print(out.String())
 	var stats pulsar.PartitionedTopicStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
