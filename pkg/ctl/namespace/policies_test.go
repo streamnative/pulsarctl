@@ -25,11 +25,11 @@ import (
 )
 
 func TestPolicesCommand(t *testing.T) {
-	args := []string{"polices", "public/default"}
+	args := []string{"policies", "public/default"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Polices
+	var police pulsar.Policies
 	err := json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 
@@ -46,20 +46,20 @@ func TestPolicesCommand(t *testing.T) {
 }
 
 func TestPolicesNsArgsError(t *testing.T) {
-	args := []string{"polices"}
+	args := []string{"policies"}
 	_, _, nameErr, _ := TestNamespaceCommands(getPolicies, args)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestPolicesNonExistTenant(t *testing.T) {
-	args := []string{"polices", "non-existent-tenant/default"}
+	args := []string{"policies", "non-existent-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
 }
 
 func TestPolicesNonExistNs(t *testing.T) {
-	args := []string{"polices", "public/test-not-exist-ns"}
+	args := []string{"policies", "public/test-not-exist-ns"}
 	_, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())

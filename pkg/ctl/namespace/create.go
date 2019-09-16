@@ -29,11 +29,11 @@ const MaxBundles = int64(1) << 32
 func createNs(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Creates a new namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc:    "create a namespace named <namespace-name>",
+		Desc:    "creates a namespace named <namespace-name>",
 		Command: "pulsarctl namespaces create <namespace-name>",
 	}
 	examples = append(examples, create)
@@ -60,7 +60,12 @@ func createNs(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, notExistTenantName, notTenantName, notExistNsName)
+	positiveBundleErr := pulsar.Output{
+		Desc: "Invalid number of bundles, please check --bundles value",
+		Out:  "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].",
+	}
+
+	out = append(out, successOut, notExistTenantName, notTenantName, notExistNsName, positiveBundleErr)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -105,18 +110,16 @@ func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	if err != nil {
 		return err
 	}
-	polices := new(pulsar.Polices)
+	policies := pulsar.NewDefaultPolicies()
 	if data.NumBundles > 0 {
-		polices.Bundles = pulsar.NewBundlesDataWithNumBundles(data.NumBundles)
-	} else {
-		polices.Bundles = nil
+		policies.Bundles = pulsar.NewBundlesDataWithNumBundles(data.NumBundles)
 	}
 
 	if data.Clusters != nil {
-		polices.ReplicationClusters = data.Clusters
+		policies.ReplicationClusters = data.Clusters
 	}
 
-	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *polices)
+	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *policies)
 	if err == nil {
 		vc.Command.Printf("Created %s successfully", ns.String())
 	}

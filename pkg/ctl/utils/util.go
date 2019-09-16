@@ -88,7 +88,6 @@ func InferMissingSinkeArguments(sinkConf *pulsar.SinkConfig) {
 func IsFileExist(filename string) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		fmt.Println(info)
 		return false
 	}
 	fmt.Println("exists", info.Name(), info.Size(), info.ModTime())

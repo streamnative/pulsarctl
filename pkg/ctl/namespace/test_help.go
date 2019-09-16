@@ -61,5 +61,4 @@ func TestNamespaceCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 	err = rootCmd.Execute()
 
 	return buf, execError, nameError, err
-
 }

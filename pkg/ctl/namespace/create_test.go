@@ -18,7 +18,10 @@
 package namespace
 
 import (
-	"fmt"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
+	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -31,16 +34,61 @@ func TestCreateNs(t *testing.T) {
 	assert.Equal(t, createOut.String(), "Created public/test-namespace successfully")
 
 	args = []string{"list", "public"}
-	out, _, _, _ := TestNamespaceCommands(getNamespacesPerProperty, args)
-	fmt.Println(out.String())
+	out, _, _, _ := TestNamespaceCommands(getNamespacesFromTenant, args)
 	assert.True(t, strings.Contains(out.String(), "public/test-namespace"))
+
+	policiesArgs := []string{"policies", "public/test-namespace"}
+	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
+	assert.Nil(t, execErr)
+
+	var police pulsar.Policies
+	err = json.Unmarshal(out.Bytes(), &police)
+	assert.Nil(t, err)
+
+	for cluster := range police.ClusterSubscribeRate {
+		assert.Equal(t, cluster, "standalone")
+	}
+
+	assert.Equal(t, police.Bundles.NumBundles, 4)
 }
 
-func TestCreateNsArgsError(t *testing.T) {
-	args := []string{"create"}
-	_, _, nameErr, _ := TestNamespaceCommands(createNs, args)
+func TestCreateNsForBundles(t *testing.T) {
+	args := []string{"create", "public/test-namespace-bundles", "--bundles", "0"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	t.Log(createOut.String())
 
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	policiesArgs := []string{"policies", "public/test-namespace-bundles"}
+	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
+	assert.Nil(t, execErr)
+
+	var police pulsar.Policies
+	err = json.Unmarshal(out.Bytes(), &police)
+	assert.Nil(t, err)
+	assert.Equal(t, 4, police.Bundles.NumBundles)
+}
+
+func TestCreateNsForNegativeBundles(t *testing.T) {
+	args := []string{"create", "public/test-namespace-negative-bundles", "--bundles", "-1"}
+	createOut, execErr, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	exceptedErr := "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]."
+	t.Log(createOut.String())
+	assert.Equal(t, exceptedErr, execErr.Error())
+}
+
+func TestCreateNsForPositiveBundles(t *testing.T) {
+	args := []string{"create", "public/test-namespace-positive-bundles", "--bundles", "12"}
+	_, _, _, err := TestNamespaceCommands(createNs, args)
+
+	policiesArgs := []string{"policies", "public/test-namespace-positive-bundles"}
+	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
+	assert.Nil(t, execErr)
+
+	var police pulsar.Policies
+	err = json.Unmarshal(out.Bytes(), &police)
+	assert.Nil(t, err)
+	assert.Equal(t, 12, police.Bundles.NumBundles)
 }
 
 func TestCreateNsAlreadyExistError(t *testing.T) {
@@ -52,4 +100,34 @@ func TestCreateNsAlreadyExistError(t *testing.T) {
 	_, execErr, _, _ = TestNamespaceCommands(createNs, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 409 reason: Namespace already exists", execErr.Error())
+}
+
+func TestCreateNsForCluster(t *testing.T) {
+	clusterArgs := []string{"create", "test-cluster", "--url", "192.168.12.11"}
+	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
+	assert.Nil(t, err)
+
+	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "public"}
+	_, _, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	assert.Nil(t, err)
+
+	nsArgs := []string{"create", "public/test-namespace-cluster", "--clusters", "test-cluster"}
+	nsOut, _, _, err := TestNamespaceCommands(createNs, nsArgs)
+	assert.Equal(t, "Created public/test-namespace-cluster successfully", nsOut.String())
+
+	policiesArgs := []string{"policies", "public/test-namespace-cluster"}
+	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
+	assert.Nil(t, execErr)
+
+	var police pulsar.Policies
+	err = json.Unmarshal(out.Bytes(), &police)
+	assert.Nil(t, err)
+	assert.Equal(t, "test-cluster", police.ReplicationClusters[0])
+}
+
+func TestCreateNsArgsError(t *testing.T) {
+	args := []string{"create"}
+	_, _, nameErr, _ := TestNamespaceCommands(createNs, args)
+
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }

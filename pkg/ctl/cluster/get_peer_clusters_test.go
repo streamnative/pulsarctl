@@ -8,7 +8,7 @@ import (
 
 func TestGetPeerClustersCmd(t *testing.T) {
 	args := []string{"add", "test_get_peer", "--peer-cluster", "standalone"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,4 +22,3 @@ func TestGetPeerClustersCmd(t *testing.T) {
 	res := out.String()
 	assert.True(t, strings.Contains(res, "standalone"))
 }
-

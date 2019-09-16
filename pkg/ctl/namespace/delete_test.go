@@ -34,7 +34,7 @@ func TestDeleteNsCmd(t *testing.T) {
 	assert.Equal(t, delOut.String(), "Deleted public/test-delete-namespace successfully")
 
 	args = []string{"list", "public"}
-	listOut, _, _, _ := TestNamespaceCommands(getNamespacesPerProperty, args)
+	listOut, _, _, _ := TestNamespaceCommands(getNamespacesFromTenant, args)
 	assert.False(t, strings.Contains(listOut.String(), "public/test-delete-namespace"))
 }
 
@@ -44,9 +44,17 @@ func TestDeleteNsArgsError(t *testing.T) {
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
-func TestDeleteNonExistTenant(t *testing.T) {
-	args := []string{"delete", "non-existent-tenant/test-delete-namespace"}
+func TestDeleteNonExistentTenant(t *testing.T) {
+	args := []string{"delete", "non-existent-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(deleteNs, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
+}
+
+func TestDeleteNonExistentNamespace(t *testing.T) {
+	args := []string{"delete", "public/non-existent-namespace"}
+	_, execErr, _, _ := TestNamespaceCommands(deleteNs, args)
+	assert.NotNil(t, execErr)
+	nonExistentNsErr := "code: 404 reason: Namespace public/non-existent-namespace does not exist."
+	assert.Equal(t, nonExistentNsErr, execErr.Error())
 }

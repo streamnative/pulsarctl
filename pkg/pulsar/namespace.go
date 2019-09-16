@@ -25,7 +25,7 @@ type Namespaces interface {
 	GetTopics(namespace string) ([]string, error)
 
 	// Get the dump all the policies specified for a namespace
-	GetPolicies(namespace string) (*Polices, error)
+	GetPolicies(namespace string) (*Policies, error)
 
 	// Creates a new empty namespace with no policies attached
 	CreateNamespace(namespace string) error
@@ -34,7 +34,7 @@ type Namespaces interface {
 	CreateNsWithNumBundles(namespace string, numBundles int) error
 
 	// Creates a new namespace with the specified policies
-	CreateNsWithPolices(namespace string, polices Polices) error
+	CreateNsWithPolices(namespace string, polices Policies) error
 
 	// Creates a new empty namespace with no policies attached
 	CreateNsWithBundlesData(namespace string, bundleData *BundlesData) error
@@ -76,8 +76,8 @@ func (n *namespaces) GetTopics(namespace string) ([]string, error) {
 	return topics, err
 }
 
-func (n *namespaces) GetPolicies(namespace string) (*Polices, error) {
-	var police Polices
+func (n *namespaces) GetPolicies(namespace string) (*Policies, error) {
+	var police Policies
 	ns, err := GetNamespaceName(namespace)
 	if err != nil {
 		return nil, err
@@ -91,13 +91,13 @@ func (n *namespaces) CreateNsWithNumBundles(namespace string, numBundles int) er
 	return n.CreateNsWithBundlesData(namespace, NewBundlesDataWithNumBundles(numBundles))
 }
 
-func (n *namespaces) CreateNsWithPolices(namespace string, polices Polices) error {
+func (n *namespaces) CreateNsWithPolices(namespace string, policies Policies) error {
 	ns, err := GetNamespaceName(namespace)
 	if err != nil {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	return n.client.put(endpoint, &polices, nil)
+	return n.client.put(endpoint, &policies, nil)
 }
 
 func (n *namespaces) CreateNsWithBundlesData(namespace string, bundleData *BundlesData) error {
@@ -106,7 +106,7 @@ func (n *namespaces) CreateNsWithBundlesData(namespace string, bundleData *Bundl
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	polices := new(Polices)
+	polices := new(Policies)
 	polices.Bundles = bundleData
 
 	return n.client.put(endpoint, &polices, nil)

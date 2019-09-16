@@ -23,15 +23,15 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getNamespacesPerProperty(vc *cmdutils.VerbCmd) {
+func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the namespaces for a tenant"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Get the list of namespaces of a tenant"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 
 	list := pulsar.Example{
-		Desc:    "Get the namespaces for a tenant",
+		Desc:    "Get the list of namespaces of a tenant",
 		Command: "pulsarctl namespaces list <tenant name>",
 	}
 
@@ -64,7 +64,7 @@ func getNamespacesPerProperty(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"list",
-		"Get the namespaces for a tenant",
+		"Get the list of namespaces of a tenant",
 		desc.ToString(),
 		"list",
 	)

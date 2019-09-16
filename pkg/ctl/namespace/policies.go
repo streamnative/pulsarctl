@@ -25,12 +25,12 @@ import (
 func getPolicies(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Get the configuration policies of a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	police := pulsar.Example{
 		Desc:    "Get the configuration policies of a namespace",
-		Command: "pulsarctl namespaces polices <tenant/namespace>",
+		Command: "pulsarctl namespaces policies <tenant/namespace>",
 	}
 	examples = append(examples, police)
 	desc.CommandExamples = examples
@@ -119,23 +119,23 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"polices",
+		"policies",
 		"Get the configuration policies of a namespace",
 		desc.ToString(),
-		"police",
+		"policies",
 	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetPolices(vc)
+		return doGetPolicies(vc)
 	})
 }
 
-func doGetPolices(vc *cmdutils.VerbCmd) error {
+func doGetPolicies(vc *cmdutils.VerbCmd) error {
 	namespace := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	police, err := admin.Namespaces().GetPolicies(namespace)
+	policies, err := admin.Namespaces().GetPolicies(namespace)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), police)
+		cmdutils.PrintJson(vc.Command.OutOrStdout(), policies)
 	}
 	return err
 }

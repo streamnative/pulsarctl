@@ -22,8 +22,8 @@ type BundlesData struct {
 	NumBundles int      `json:"numBundles"`
 }
 
-func NewBundlesData(boundaries []string) *BundlesData {
-	return &BundlesData{
+func NewBundlesData(boundaries []string) BundlesData {
+	return BundlesData{
 		Boundaries: boundaries,
 		NumBundles: len(boundaries) - 1,
 	}
@@ -34,4 +34,10 @@ func NewBundlesDataWithNumBundles(numBundles int) *BundlesData {
 		Boundaries: nil,
 		NumBundles: numBundles,
 	}
+}
+
+func NewDefaultBoundle() *BundlesData {
+	bundleData := NewBundlesDataWithNumBundles(1)
+	bundleData.Boundaries = append(bundleData.Boundaries, FirstBoundary, LastBoundary)
+	return bundleData
 }

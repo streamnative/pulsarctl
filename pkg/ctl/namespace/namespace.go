@@ -30,7 +30,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"namespace",
 	)
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNamespacesPerProperty)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNamespacesFromTenant)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getTopics)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getPolicies)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createNs)

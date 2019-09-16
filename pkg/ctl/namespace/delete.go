@@ -25,7 +25,7 @@ import (
 func deleteNs(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
 	desc.CommandUsedFor = "Deletes a namespace. The namespace needs to be empty"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	del := pulsar.Example{
@@ -38,7 +38,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created <namespace-name> successfully",
+		Out:  "Deleted <namespace-name> successfully",
 	}
 
 	notTenantName := pulsar.Output{
