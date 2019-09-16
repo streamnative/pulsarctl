@@ -2,11 +2,13 @@ package stats
 
 import (
 	"encoding/json"
+	"fmt"
+	"testing"
+
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var defaultStats = pulsar.TopicStats{
@@ -70,8 +72,8 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"partitioned-stats", "test-topic-partitioned-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetPartitionedStatsCmd, args)
+	args = []string{"stats", "--partitioned-topic", "test-topic-partitioned-stats"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
 	var stats pulsar.PartitionedTopicStats
@@ -102,10 +104,11 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"partitioned-stats", "--per-partitioned", "test-topic-per-partitioned-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetPartitionedStatsCmd, args)
+	args = []string{"stats", "--partitioned-topic", "--per-partition", "test-topic-per-partitioned-stats"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
+	fmt.Print(out.String())
 	var stats pulsar.PartitionedTopicStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
@@ -167,4 +170,3 @@ func TestGetNonPartitionedTopicStatsError(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
 }
-
