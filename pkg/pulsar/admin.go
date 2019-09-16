@@ -58,6 +58,7 @@ type Client interface {
 	Sources() Sources
 	Topics() Topics
 	Namespaces() Namespaces
+	Schemas() Schema
 }
 
 type client struct {
