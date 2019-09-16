@@ -19,8 +19,8 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	getPartitionedTopic := Example{
-		Desc: "Get the last message id of a partitioned topic <topic-name>",
-		Command: "pulsarctl topic last-message-id --partition-index <partition> <topic-name>",
+		Desc: "Get the last message id of a partition of a partitioned topic <topic-name>",
+		Command: "pulsarctl topic last-message-id --partition <partition> <topic-name>",
 	}
 	desc.CommandExamples = append(examples, get, getPartitionedTopic)
 
@@ -63,7 +63,7 @@ func GetLastMessageIdCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	vc.FlagSetGroup.InFlagSet("LastMessageId", func(set *pflag.FlagSet) {
-		set.IntVarP(&partition, "partition-index", "i", -1,
+		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
 }

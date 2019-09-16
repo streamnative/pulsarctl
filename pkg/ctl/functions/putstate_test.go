@@ -20,6 +20,17 @@
 
 package functions
 
+import (
+	"bytes"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
+	"strings"
+	"testing"
+)
+
 func TestStateFunctions(t *testing.T) {
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {

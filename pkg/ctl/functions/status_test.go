@@ -21,10 +21,12 @@
 package functions
 
 import (
+	"bytes"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusFunctions(t *testing.T) {
