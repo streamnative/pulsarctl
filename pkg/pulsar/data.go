@@ -123,8 +123,8 @@ type PartitionedTopicMetadata struct {
 }
 
 type LookupData struct {
-	BrokerUrl string `json:"brokerUrl"`
+	BrokerUrl    string `json:"brokerUrl"`
 	BrokerUrlTls string `json:"brokerUrlTls"`
-	HttpUrl string `json:"httpUrl"`
-	HttpUrlTls string `json:"httpUrlTls"`
+	HttpUrl      string `json:"httpUrl"`
+	HttpUrlTls   string `json:"httpUrlTls"`
 }
