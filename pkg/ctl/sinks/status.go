@@ -26,12 +26,12 @@ import (
 
 func statusSinksCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Check the current status of a Pulsar Sink."
+	desc.CommandUsedFor = "Get the current status of a Pulsar Sink."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 	status := pulsar.Example{
-		Desc: "Check the current status of a Pulsar Sink",
+		Desc: "Get the current status of a Pulsar Sink",
 		Command: "pulsarctl sink status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
@@ -80,7 +80,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"status",
-		"Check the current status of a Pulsar Sink",
+		"Get the current status of a Pulsar Sink",
 		desc.ToString(),
 		"getstatus",
 	)

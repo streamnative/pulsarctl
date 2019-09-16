@@ -26,7 +26,7 @@ import (
 
 func createSinksCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Submit a Pulsar IO sink connector to run in a Pulsar cluster."
+	desc.CommandUsedFor = "Create a Pulsar IO sink connector to run in a Pulsar cluster."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
@@ -114,7 +114,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"create",
-		"Submit a Pulsar IO sink connector to run in a Pulsar cluster",
+		"Create a Pulsar IO sink connector to run in a Pulsar cluster",
 		desc.ToString(),
 		"create",
 	)

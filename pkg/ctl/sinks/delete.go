@@ -25,7 +25,7 @@ import (
 
 func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "This command is used for delete a Pulsar IO sink connector."
+	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO sink connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example

@@ -26,13 +26,13 @@ import (
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "List all running Pulsar IO sink connectors"
+	desc.CommandUsedFor = "Get the list of all the running Pulsar IO sink connectors"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
 	var examples []pulsar.Example
 
 	list := pulsar.Example{
-		Desc: "List all running Pulsar IO sink connectors",
+		Desc: "Get the list of all the running Pulsar IO sink connectors",
 		Command: "pulsarctl sink list \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default",
@@ -55,7 +55,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"list",
-		"List all running Pulsar IO sink connectors",
+		"Get the list of all the running Pulsar IO sink connectors",
 		desc.ToString(),
 		"list",
 	)
