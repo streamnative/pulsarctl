@@ -82,7 +82,7 @@ func TestFailureCreateSinks(t *testing.T) {
 		"--archive", narName,
 	}
 
-	narErrInfo := "Sink package does not have the correct format"
+	narErrInfo := "error: zip file is empty"
 	narOut, execErr, _ := TestSinksCommands(createSinksCmd, narFailArgs)
 	fmt.Println(narOut.String())
 	assert.True(t, strings.Contains(narOut.String(), narErrInfo))
