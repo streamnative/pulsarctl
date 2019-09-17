@@ -46,11 +46,6 @@ func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSchemaAutoUpdateStrategy(vc *cmdutils.VerbCmd, strategy string) error {
-	// for testing
-	if vc.NameError != nil {
-		return vc.NameError
-	}
-
 	ns, err := GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err

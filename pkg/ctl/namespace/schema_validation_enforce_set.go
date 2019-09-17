@@ -50,11 +50,6 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSchemaValidationEnforced(vc *cmdutils.VerbCmd, disable bool) error {
-	// for testing
-	if vc.NameError != nil {
-		return vc.NameError
-	}
-
 	ns, err := GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err

@@ -40,11 +40,6 @@ func GetOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetOffloadDeletionLag(vc *cmdutils.VerbCmd) error {
-	// for testing
-	if vc.NameError != nil {
-		return vc.NameError
-	}
-
 	ns, err := GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err

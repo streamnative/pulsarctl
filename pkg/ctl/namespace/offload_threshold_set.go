@@ -50,11 +50,6 @@ func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetOffloadThreshold(vc *cmdutils.VerbCmd, threshold string) error {
-	// for testing
-	if vc.NameError != nil {
-		return vc.NameError
-	}
-
 	ns, err := GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err

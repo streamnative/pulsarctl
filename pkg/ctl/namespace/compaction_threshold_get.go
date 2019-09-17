@@ -37,11 +37,6 @@ func GetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetCompactionThreshold(vc *cmdutils.VerbCmd) error {
-	// for testing
-	if vc.NameError != nil {
-		return vc.NameError
-	}
-
 	ns, err := GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
