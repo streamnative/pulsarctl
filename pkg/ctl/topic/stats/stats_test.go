@@ -81,21 +81,18 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	defaultStats := pulsar.PartitionedTopicStats{
-		MsgRateIn:           0,
-		MsgRateOut:          0,
-		MsgThroughputIn:     0,
-		MsgThroughputOut:    0,
-		AverageMsgSize:      0,
-		StorageSize:         0,
-		Publishers:          []pulsar.PublisherStats{},
-		Subscriptions:       map[string]pulsar.SubscriptionStats{},
-		Replication:         map[string]pulsar.ReplicatorStats{},
-		DeDuplicationStatus: "",
-		Metadata:            pulsar.PartitionedTopicMetadata{Partitions: 2},
-		Partitions:          map[string]pulsar.TopicStats{},
-	}
-	assert.Equal(t, defaultStats, stats)
+	assert.Equal(t, float64(0), stats.MsgRateIn)
+	assert.Equal(t, float64(0), stats.MsgRateOut)
+	assert.Equal(t, float64(0), stats.MsgThroughputIn)
+	assert.Equal(t, float64(0), stats.MsgThroughputOut)
+	assert.Equal(t, float64(0), stats.AverageMsgSize)
+	assert.Equal(t, int64(0), stats.StorageSize)
+	assert.Equal(t, 0, len(stats.Publishers))
+	assert.Equal(t, 0, len(stats.Subscriptions))
+	assert.Equal(t, 0, len(stats.Replication))
+	assert.Equal(t, "", stats.DeDuplicationStatus)
+	assert.Equal(t, 2, stats.Metadata.Partitions)
+	assert.Equal(t, 0, len(stats.Partitions))
 }
 
 func TestGetPerPartitionedStatsCmd(t *testing.T) {
