@@ -42,6 +42,12 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, removeBacklogQuota)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetMaxConsumersPerSubscriptionCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetMaxConsumersPerSubscriptionCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetMaxConsumersPerTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetMaxConsumersPerTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetMaxProducersPerTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetMaxProducersPerTopicCmd)
 
 	return resourceCmd
 }
