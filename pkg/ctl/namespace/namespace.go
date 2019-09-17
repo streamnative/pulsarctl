@@ -35,13 +35,6 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getPolicies)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createNs)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteNs)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setMessageTTL)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getMessageTTL)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getRetention)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setRetention)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBacklogQuota)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setBacklogQuota)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, removeBacklogQuota)
 
 	return resourceCmd
 }
