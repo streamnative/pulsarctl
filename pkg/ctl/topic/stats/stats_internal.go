@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
 	. "github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -19,8 +20,8 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	getPartition := Example{
-		Desc: "Get internal stats for a partition of a partitioned topic",
-		Command: "pulsarctl topic internal-stats <topic-name>-partition-<partition-index>",
+		Desc:    "Get internal stats for a partition of a partitioned topic",
+		Command: "pulsarctl topic internal-stats --partition <partition> <topic-name>",
 	}
 	desc.CommandExamples = append(examples, get, getPartition)
 
@@ -67,12 +68,19 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		"")
 
+	var partition int
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetInternalStats(vc)
+		return doGetInternalStats(vc, partition)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Internal Stats", func(set *pflag.FlagSet) {
+		set.IntVarP(&partition, "partition", "p", -1,
+			"The partitioned topic index value")
 	})
 }
 
-func doGetInternalStats(vc *cmdutils.VerbCmd) error {
+func doGetInternalStats(vc *cmdutils.VerbCmd, partition int) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -81,6 +89,13 @@ func doGetInternalStats(vc *cmdutils.VerbCmd) error {
 	topic, err := GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
+	}
+
+	if partition >= 0 {
+		topic, err = topic.GetPartition(partition)
+		if err != nil {
+			return err
+		}
 	}
 
 	admin := cmdutils.NewPulsarClient()
