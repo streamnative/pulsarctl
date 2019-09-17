@@ -37,7 +37,7 @@ func TestCompactionThresholdCmd(t *testing.T) {
 
 func TestSetCompactionThresholdOnNonExistingNs(t *testing.T) {
 	ns := "public/non-existing-namespace"
-	args := []string{"set-compaction-threshold", ns}
+	args := []string{"set-compaction-threshold", "--size", "10m", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetCompactionThresholdCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())

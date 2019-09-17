@@ -37,7 +37,7 @@ func TestOffloadThresholdCmd(t *testing.T) {
 
 func TestSetOffloadThresholdOnNonExistingNs(t *testing.T) {
 	ns := "public/non-existing-namespace"
-	args := []string{"set-offload-threshold", ns}
+	args := []string{"set-offload-threshold", "--size", "10m", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetOffloadThresholdCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
