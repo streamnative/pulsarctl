@@ -15,10 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
-// +build functions
-
-package functions
+package sinks
 
 import (
 	"bytes"
@@ -29,54 +26,37 @@ import (
 	"testing"
 )
 
-func TestStatusFunctions(t *testing.T) {
+func TestStatusSink(t *testing.T) {
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
 	t.Logf("base path: %s", basePath)
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
-		"--inputs", "test-input-topic",
-		"--output", "persistent://public/default/test-output-topic",
-		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--name", "test-sink-status",
+		"--inputs", "test-topic",
+		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
+		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
 	}
 
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
+	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-status successfully")
-
-	getArgs := []string{"get",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-functions-status",
-	}
-
-	outGet, _, _ := TestFunctionsCommands(getFunctionsCmd, getArgs)
-	assert.Nil(t, err)
-
-	var functionConfig pulsar.FunctionConfig
-	err = json.Unmarshal(outGet.Bytes(), &functionConfig)
-	assert.Nil(t, err)
-
-	assert.Equal(t, functionConfig.Tenant, "public")
-	assert.Equal(t, functionConfig.Namespace, "default")
-	assert.Equal(t, functionConfig.Name, "test-functions-status")
+	assert.Equal(t, createOut.String(), "Created test-sink-status successfully")
 
 	statusArgs := []string{"status",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
+		"--name", "test-sink-status",
 	}
 
 	outStatus := new(bytes.Buffer)
-	var status pulsar.FunctionStatus
+	var status pulsar.SinkStatus
 
 	for {
-		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
+		outStatus, _, _ = TestSinksCommands(statusSinksCmd, statusArgs)
 		if strings.Contains(outStatus.String(), "true") {
 			break
 		}
@@ -92,12 +72,13 @@ func TestStatusFunctions(t *testing.T) {
 
 func TestFailureStatus(t *testing.T) {
 	statusArgs := []string{"status",
-		"--name", "test-functions-status-failure",
+		"--name", "not-exist",
 	}
 
-	out, _, err := TestFunctionsCommands(statusFunctionsCmd, statusArgs)
+	out, _, err := TestSinksCommands(statusSinksCmd, statusArgs)
 	assert.Nil(t, err)
 
-	errMsg := "Function test-functions-status-failure doesn't exist"
+	errMsg := "Sink not-exist doesn't exist"
+	t.Logf(out.String())
 	assert.True(t, strings.Contains(out.String(), errMsg))
 }
