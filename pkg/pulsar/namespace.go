@@ -319,7 +319,7 @@ func (n *namespaces) GetAntiAffinityNamespaces(tenant, cluster, namespaceAntiAff
 	params := map[string]string{
 		"property": tenant,
 	}
-	_, err := n.client.getAndDecode(endpoint, &data, false, params)
+	_, err := n.client.getWithQueryParams(endpoint, &data, params, false)
 	return data, err
 }
 
@@ -329,7 +329,7 @@ func (n *namespaces) GetNamespaceAntiAffinityGroup(namespace string) (string, er
 		return "", err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
-	data, err := n.client.getAndDecode(endpoint, nil, false, nil)
+	data, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	return string(data), err
 }
 
