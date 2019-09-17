@@ -107,9 +107,10 @@ func TestCreateNsForCluster(t *testing.T) {
 	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 
-	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "public"}
-	_, _, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "--allowed-clusters", "standalone", "public"}
+	_, execErr, _, err := tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 
 	nsArgs := []string{"create", "public/test-namespace-cluster", "--clusters", "test-cluster"}
 	nsOut, _, _, err := TestNamespaceCommands(createNs, nsArgs)

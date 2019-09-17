@@ -24,12 +24,12 @@ import (
 
 func deleteNs(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Deletes a namespace. The namespace needs to be empty"
+	desc.CommandUsedFor = "Delete a namespace. The namespace needs to be empty"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	del := pulsar.Example{
-		Desc:    "Deletes a namespace",
+		Desc:    "Delete a namespace",
 		Command: "pulsarctl namespaces delete <namespace-name>",
 	}
 	examples = append(examples, del)
@@ -56,7 +56,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"delete",
-		"Deletes a namespace. The namespace needs to be empty",
+		"Delete a namespace. The namespace needs to be empty",
 		desc.ToString(),
 		"delete",
 	)
