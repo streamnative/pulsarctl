@@ -42,6 +42,17 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, removeBacklogQuota)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSchemaValidationEnforcedCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSchemaValidationEnforcedCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSchemaAutoUpdateStrategyCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSchemaAutoUpdateStrategyCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetOffloadDeletionLagCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetOffloadDeletionLagCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, ClearOffloadDeletionLagCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetOffloadThresholdCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetOffloadThresholdCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetCompactionThresholdCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetCompactionThresholdCmd)
 
 	return resourceCmd
 }

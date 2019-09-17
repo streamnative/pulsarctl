@@ -17,6 +17,8 @@
 
 package pulsar
 
+import "github.com/pkg/errors"
+
 type SchemaAutoUpdateCompatibilityStrategy string
 
 const (
@@ -29,3 +31,30 @@ const (
 	ForwardTransitive  SchemaAutoUpdateCompatibilityStrategy = "ForwardTransitive"
 	FullTransitive     SchemaAutoUpdateCompatibilityStrategy = "FullTransitive"
 )
+
+func ParseSchemaAutoUpdateCompatibilityStrategy(str string) (SchemaAutoUpdateCompatibilityStrategy, error) {
+	switch str {
+	case "AutoUpdateDisabled":
+		return AutoUpdateDisabled, nil
+	case "Backward":
+		return Backward, nil
+	case "Forward":
+		return Forward, nil
+	case "Full":
+		return Full, nil
+	case "AlwaysCompatible":
+		return AlwaysCompatible, nil
+	case "BackwardTransitive":
+		return BackwardTransitive, nil
+	case "ForwardTransitive":
+		return ForwardTransitive, nil
+	case "FullTransitive":
+		return FullTransitive, nil
+	default:
+		return "", errors.Errorf("Invalid auth strategy %s", str)
+	}
+}
+
+func (s SchemaAutoUpdateCompatibilityStrategy) String() string {
+	return string(s)
+}

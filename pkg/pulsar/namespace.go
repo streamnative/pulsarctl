@@ -17,6 +17,11 @@
 
 package pulsar
 
+import (
+	"strconv"
+	"strings"
+)
+
 type Namespaces interface {
 	// Get the list of all the namespaces for a certain tenant
 	GetNamespaces(tenant string) ([]string, error)
@@ -65,6 +70,41 @@ type Namespaces interface {
 
 	// Remove a backlog quota policy from a namespace
 	RemoveBacklogQuota(namespace string) error
+
+	// Set schema validation enforced for namespace
+	SetSchemaValidationEnforced(namespace NameSpaceName, schemaValidationEnforced bool) error
+
+	// Get schema validation enforced for namespace
+	GetSchemaValidationEnforced(namespace NameSpaceName) (bool, error)
+
+	// Set the strategy used to check the a new schema provided by a producer is compatible with the current schema
+	// before it is installed
+	SetSchemaAutoUpdateCompatibilityStrategy(namespace NameSpaceName, strategy SchemaAutoUpdateCompatibilityStrategy) error
+
+	// Get the strategy used to check the a new schema provided by a producer is compatible with the current schema
+	// before it is installed
+	GetSchemaAutoUpdateCompatibilityStrategy(namespace NameSpaceName) (SchemaAutoUpdateCompatibilityStrategy, error)
+
+	// Clear the offload deletion lag for a namespace.
+	ClearOffloadDeleteLag(namespace NameSpaceName) error
+
+	// Set the offload deletion lag for a namespace
+    SetOffloadDeleteLag(namespace NameSpaceName, timeMs int64) error
+
+	// Get the offload deletion lag for a namespace, in milliseconds
+	GetOffloadDeleteLag(namespace NameSpaceName) (int64, error)
+
+	// Set the offloadThreshold for a namespace
+	SetOffloadThreshold(namespace NameSpaceName, threshold int64) error
+
+	// Get the offloadThreshold for a namespace
+	GetOffloadThreshold(namespace NameSpaceName) (int64, error)
+
+	// Set the compactionThreshold for a namespace
+	SetCompactionThreshold(namespace NameSpaceName, threshold int64) error
+
+	// Get the compactionThreshold for a namespace
+	GetCompactionThreshold(namespace NameSpaceName) (int64, error)
 }
 
 type namespaces struct {
@@ -231,4 +271,84 @@ func (n *namespaces) RemoveBacklogQuota(namespace string) error {
 		"backlogQuotaType": string(DestinationStorage),
 	}
 	return n.client.deleteWithQueryParams(endpoint, nil, params)
+}
+
+func (n *namespaces) SetSchemaValidationEnforced(namespace NameSpaceName, schemaValidationEnforced bool) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaValidationEnforced")
+	return n.client.post(endpoint, schemaValidationEnforced, nil)
+}
+
+func (n *namespaces) GetSchemaValidationEnforced(namespace NameSpaceName) (bool, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaValidationEnforced")
+	r, err := n.client.getAndDecode(endpoint, nil, false)
+	if err != nil {
+		return false, err
+	}
+	return strconv.ParseBool(string(r))
+}
+
+func (n *namespaces) SetSchemaAutoUpdateCompatibilityStrategy(namespace NameSpaceName,
+	strategy SchemaAutoUpdateCompatibilityStrategy) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaAutoUpdateCompatibilityStrategy")
+	return n.client.put(endpoint, strategy.String(), nil)
+}
+
+func (n *namespaces) GetSchemaAutoUpdateCompatibilityStrategy(namespace NameSpaceName) (SchemaAutoUpdateCompatibilityStrategy, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaAutoUpdateCompatibilityStrategy")
+	b, err := n.client.getAndDecode(endpoint, nil, false)
+	if err != nil {
+		return "", err
+	}
+	s, err := ParseSchemaAutoUpdateCompatibilityStrategy(strings.ReplaceAll(string(b), "\"", ""))
+	if err != nil {
+		return "", err
+	}
+	return s, nil
+}
+
+func (n *namespaces) ClearOffloadDeleteLag(namespace NameSpaceName) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
+	return n.client.delete(endpoint, nil)
+}
+
+func (n *namespaces) SetOffloadDeleteLag(namespace NameSpaceName, timeMs int64) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
+	return n.client.put(endpoint, timeMs, nil)
+}
+
+func (n *namespaces) GetOffloadDeleteLag(namespace NameSpaceName) (int64, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
+	b, err := n.client.getAndDecode(endpoint, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.ParseInt(string(b), 10, 64)
+}
+
+func (n *namespaces) SetOffloadThreshold(namespace NameSpaceName, threshold int64) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
+	return n.client.put(endpoint, threshold, nil)
+}
+
+func (n *namespaces) GetOffloadThreshold(namespace NameSpaceName) (int64, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
+	b, err := n.client.getAndDecode(endpoint, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.ParseInt(string(b), 10, 64)
+}
+
+func (n *namespaces) SetCompactionThreshold(namespace NameSpaceName, threshold int64) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
+	return n.client.put(endpoint, threshold, nil)
+}
+
+func (n *namespaces) GetCompactionThreshold(namespace NameSpaceName) (int64, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
+	b, err := n.client.getAndDecode(endpoint, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.ParseInt(string(b), 10, 64)
 }
