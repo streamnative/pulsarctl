@@ -18,7 +18,6 @@
 package functions
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -145,8 +144,6 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 
 	state.Key = vc.NameArgs[0]
 	value := vc.NameArgs[1]
-
-	fmt.Println("value:", value)
 
 	if value == "-" {
 		state.StringValue = strings.Join(vc.NameArgs[2:], " ")

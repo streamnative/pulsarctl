@@ -19,7 +19,7 @@ func TestUpdateCluster(t *testing.T) {
 		"standalone",
 	}
 
-	_, _, _, err := TestClusterCommands(updateClusterCmd, args)
+	_, _, _, err := TestClusterCommands(UpdateClusterCmd, args)
 	if err != nil {
 		t.Error(err)
 	}

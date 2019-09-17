@@ -6,7 +6,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func createClusterCmd(vc *cmdutils.VerbCmd) {
+func CreateClusterCmd(vc *cmdutils.VerbCmd) {
 	// update the description
 	vc.SetDescription(
 		"add",

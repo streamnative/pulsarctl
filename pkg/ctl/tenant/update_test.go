@@ -29,7 +29,7 @@ func TestUpdateTenantCmd(t *testing.T) {
 	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
 
 	args = []string{"update", "--admin-roles", "new-role", "--allowed-clusters", "standalone", "update-tenant-test"}
-	_, execErr, _, _ = TestTenantCommands(updateTenantCmd, args)
+	_, execErr, _, _ = TestTenantCommands(UpdateTenantCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get", "update-tenant-test"}
@@ -48,14 +48,14 @@ func TestUpdateTenantCmd(t *testing.T) {
 
 func TestUpdateArgsError(t *testing.T) {
 	args := []string{"update"}
-	_, _, nameErr, _ := TestTenantCommands(updateTenantCmd, args)
+	_, _, nameErr, _ := TestTenantCommands(UpdateTenantCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestUpdateNonExistTenantError(t *testing.T) {
 	args := []string{"update", "--admin-roles", "update-role", "--allowed-clusters", "standalone", "non-existent-topic"}
-	_, execErr, _, _ := TestTenantCommands(updateTenantCmd, args)
+	_, execErr, _, _ := TestTenantCommands(UpdateTenantCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
 }
