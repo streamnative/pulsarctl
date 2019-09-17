@@ -18,7 +18,6 @@
 package namespace
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -125,7 +124,6 @@ func doSetRetention(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	)
 
 	if retentionTimeInSecond != -1 {
-		fmt.Println("retentionTimeInSecond: ", retentionTimeInSecond)
 		retentionTimeInMin = int(retentionTimeInSecond.Minutes())
 	} else {
 		retentionTimeInMin = -1

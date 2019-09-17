@@ -146,10 +146,18 @@ func (c *client) endpoint(componentPath string, parts ...string) string {
 
 // get is used to do a GET request against an endpoint
 // and deserialize the response into an interface
-func (c *client) getAndDecode(endpoint string, obj interface{}, decode bool) ([]byte, error) {
+func (c *client) getAndDecode(endpoint string, obj interface{}, decode bool, params map[string]string) ([]byte, error) {
 	req, err := c.newRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
+	}
+
+	if params != nil {
+		query := req.url.Query()
+		for k, v := range params {
+			query.Add(k, v)
+		}
+		req.params = query
 	}
 
 	resp, err := checkSuccessful(c.doRequest(req))
@@ -174,16 +182,28 @@ func (c *client) getAndDecode(endpoint string, obj interface{}, decode bool) ([]
 }
 
 func (c *client) get(endpoint string, obj interface{}) error {
-	_, err := c.getAndDecode(endpoint, obj, true)
+	_, err := c.getAndDecode(endpoint, obj, true, nil)
 	return err
 }
 
 func (c *client) put(endpoint string, in, obj interface{}) error {
+	return c.putWithQueryParams(endpoint, in, obj, nil)
+}
+
+func (c *client) putWithQueryParams(endpoint string, in, obj interface{}, params map[string]string) error {
 	req, err := c.newRequest(http.MethodPut, endpoint)
 	if err != nil {
 		return err
 	}
 	req.obj = in
+
+	if params != nil {
+		query := req.url.Query()
+		for k, v := range params {
+			query.Add(k, v)
+		}
+		req.params = query
+	}
 
 	resp, err := checkSuccessful(c.doRequest(req))
 	if err != nil {

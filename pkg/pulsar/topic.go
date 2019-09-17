@@ -118,7 +118,7 @@ func (t *topics) Lookup(topic TopicName) (LookupData, error) {
 
 func (t *topics) GetBundleRange(topic TopicName) (string, error) {
 	endpoint := fmt.Sprintf("%s/%s/%s", t.lookupPath, topic.GetRestPath(), "bundle")
-	data, err := t.client.getAndDecode(endpoint, nil, false)
+	data, err := t.client.getAndDecode(endpoint, nil, false, nil)
 	return string(data), err
 }
 

@@ -17,6 +17,10 @@
 
 package pulsar
 
+import (
+	"strconv"
+)
+
 type Namespaces interface {
 	// Get the list of all the namespaces for a certain tenant
 	GetNamespaces(tenant string) ([]string, error)
@@ -65,6 +69,53 @@ type Namespaces interface {
 
 	// Remove a backlog quota policy from a namespace
 	RemoveBacklogQuota(namespace string) error
+
+	// Get the replication clusters for a namespace
+	GetNamespaceReplicationClusters(namespace string) ([]string, error)
+
+	// Set the replication clusters for a namespace
+	SetNamespaceReplicationClusters(namespace string, clusterIds []string) error
+
+	// Set anti-affinity group name for a namespace
+	SetNamespaceAntiAffinityGroup(namespace string, namespaceAntiAffinityGroup string) error
+
+	// Get all namespaces that grouped with given anti-affinity group
+	GetAntiAffinityNamespaces(tenant, cluster, namespaceAntiAffinityGroup string) ([]string, error)
+
+	// Get anti-affinity group name for a namespace
+	GetNamespaceAntiAffinityGroup(namespace string) (string, error)
+
+	// Delete anti-affinity group name for a namespace
+	DeleteNamespaceAntiAffinityGroup(namespace string) error
+
+	// Set the deduplication status for all topics within a namespace
+	// When deduplication is enabled, the broker will prevent to store the same message multiple times
+	SetDeduplicationStatus(namespace string, enableDeduplication bool) error
+
+	// Set the persistence configuration for all the topics on a namespace
+	SetPersistence(namespace string, persistence PersistencePolicies) error
+
+	// Get the persistence configuration for a namespace
+	GetPersistence(namespace string) (*PersistencePolicies, error)
+
+	// Set bookie affinity group for a namespace to isolate namespace write to bookies that are
+	// part of given affinity group
+	SetBookieAffinityGroup(namespace string, bookieAffinityGroup BookieAffinityGroupData) error
+
+	// Delete bookie affinity group configured for a namespace
+	DeleteBookieAffinityGroup(namespace string) error
+
+	// Get bookie affinity group configured for a namespace
+	GetBookieAffinityGroup(namespace string) (*BookieAffinityGroupData, error)
+
+	// Unload a namespace from the current serving broker
+	Unload(namespace string) error
+
+	// Unload namespace bundle
+	UnloadNamespaceBundle(namespace, bundle string) error
+
+	// Split namespace bundle
+	SplitNamespaceBundle(namespace, bundle string, unloadSplitBundles bool) error
 }
 
 type namespaces struct {
@@ -231,4 +282,150 @@ func (n *namespaces) RemoveBacklogQuota(namespace string) error {
 		"backlogQuotaType": string(DestinationStorage),
 	}
 	return n.client.deleteWithQueryParams(endpoint, nil, params)
+}
+
+func (n *namespaces) GetNamespaceReplicationClusters(namespace string) ([]string, error) {
+	var data []string
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return nil, err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "replication")
+	err = n.client.get(endpoint, &data)
+	return data, err
+}
+
+func (n *namespaces) SetNamespaceReplicationClusters(namespace string, clusterIds []string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "replication")
+	return n.client.post(endpoint, &clusterIds, nil)
+}
+
+func (n *namespaces) SetNamespaceAntiAffinityGroup(namespace string, namespaceAntiAffinityGroup string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
+	return n.client.post(endpoint, namespaceAntiAffinityGroup, nil)
+}
+
+func (n *namespaces) GetAntiAffinityNamespaces(tenant, cluster, namespaceAntiAffinityGroup string) ([]string, error) {
+	var data []string
+	endpoint := n.client.endpoint(n.basePath, cluster, "antiAffinity", namespaceAntiAffinityGroup)
+	params := map[string]string{
+		"property": tenant,
+	}
+	_, err := n.client.getAndDecode(endpoint, &data, false, params)
+	return data, err
+}
+
+func (n *namespaces) GetNamespaceAntiAffinityGroup(namespace string) (string, error) {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return "", err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
+	data, err := n.client.getAndDecode(endpoint, nil, false, nil)
+	return string(data), err
+}
+
+func (n *namespaces) DeleteNamespaceAntiAffinityGroup(namespace string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
+	return n.client.delete(endpoint, nil)
+}
+
+func (n *namespaces) SetDeduplicationStatus(namespace string, enableDeduplication bool) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "deduplication")
+	return n.client.post(endpoint, enableDeduplication, nil)
+}
+
+func (n *namespaces) SetPersistence(namespace string, persistence PersistencePolicies) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence")
+	return n.client.post(endpoint, &persistence, nil)
+}
+
+func (n *namespaces) SetBookieAffinityGroup(namespace string, bookieAffinityGroup BookieAffinityGroupData) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
+	return n.client.post(endpoint, &bookieAffinityGroup, nil)
+}
+
+func (n *namespaces) DeleteBookieAffinityGroup(namespace string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
+	return n.client.delete(endpoint, nil)
+}
+
+func (n *namespaces) GetBookieAffinityGroup(namespace string) (*BookieAffinityGroupData, error) {
+	var data BookieAffinityGroupData
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return nil, err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
+	err = n.client.get(endpoint, &data)
+	return &data, err
+}
+
+func (n *namespaces) GetPersistence(namespace string) (*PersistencePolicies, error) {
+	var persistence PersistencePolicies
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return nil, err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence")
+	err = n.client.get(endpoint, &persistence)
+	return &persistence, err
+}
+
+func (n *namespaces) Unload(namespace string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), "unload")
+	return n.client.put(endpoint, "", nil)
+}
+
+func (n *namespaces) UnloadNamespaceBundle(namespace, bundle string) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), bundle, "unload")
+	return n.client.put(endpoint, "", nil)
+}
+
+func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitBundles bool) error {
+	nsName, err := GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.client.endpoint(n.basePath, nsName.String(), bundle, "split")
+	params := map[string]string{
+		"unload": strconv.FormatBool(unloadSplitBundles),
+	}
+	return n.client.putWithQueryParams(endpoint, "", nil, params)
 }
