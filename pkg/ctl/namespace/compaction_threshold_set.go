@@ -40,10 +40,10 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	vc.FlagSetGroup.InFlagSet("Compaction Threshold", func(set *pflag.FlagSet) {
-		set.StringVarP(&threshold, "size", "s", "0",
+		set.StringVar(&threshold, "size", "0",
 			"Maximum number of bytes in a topic backlog before compaction is triggered "+
 				"(e.g. 10M, 16G, 3T). 0 disable automatic compaction")
-		cobra.MarkFlagRequired(set, "lag")
+		cobra.MarkFlagRequired(set, "size")
 	})
 }
 

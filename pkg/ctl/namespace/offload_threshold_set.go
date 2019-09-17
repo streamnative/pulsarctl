@@ -40,12 +40,12 @@ func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	vc.FlagSetGroup.InFlagSet("Offload Threshold", func(set *pflag.FlagSet) {
-		set.StringVarP(&threshold, "size", "s", "-1",
+		set.StringVar(&threshold, "size", "-1",
 			"Maximum number of bytes stored in the pulsar cluster for a topic before data will  "+
 				"start being automatically offloaded to longterm  storage (e.g. 10m, 16g, 3t, 100)\n"+
 				"Negative values disable automatic offload.\n"+
 				"0 triggers offloading as soon as possible.")
-		cobra.MarkFlagRequired(set, "lag")
+		cobra.MarkFlagRequired(set, "size")
 	})
 }
 
