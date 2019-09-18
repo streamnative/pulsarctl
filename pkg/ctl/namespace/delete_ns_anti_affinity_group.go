@@ -18,33 +18,27 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Delete an anti-affinity group of a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	delAntiAffinity := pulsar.Example{
+		Desc:    "Delete an anti-affinity group of a namespace",
+		Command: "pulsarctl namespaces delete-anti-affinity-group tenant/namespace",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, delAntiAffinity)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "Delete the anti-affinity group successfully for [tenant/namespace]",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -66,28 +60,23 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"delete-anti-affinity-group",
+		"Delete an anti-affinity group of a namespace",
 		desc.ToString(),
-		"topics",
+		"delete-anti-affinity-group",
 	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doDeleteAntiAffinityGroup(vc)
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doDeleteAntiAffinityGroup(vc *cmdutils.VerbCmd) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	err := admin.Namespaces().DeleteNamespaceAntiAffinityGroup(ns)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Printf("Delete the anti-affinity group successfully for [%s]", ns)
 	}
 	return err
 }

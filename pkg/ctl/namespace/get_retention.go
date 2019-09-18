@@ -18,33 +18,30 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func getRetention(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Get the retention policy of a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	getRetention := pulsar.Example{
+		Desc:    "Get the retention policy of a namespace",
+		Command: "pulsarctl namespaces get-retention tenant/namespace",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, getRetention)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out: "{\n" +
+			"  \"RetentionTimeInMinutes\": 0,\n" +
+			"  \"RetentionSizeInMB\": 0\n" +
+			"}",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -66,28 +63,23 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"get-retention",
+		"Get the retention policy of a namespace",
 		desc.ToString(),
-		"topics",
+		"get-retention",
 	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doGetRetention(vc)
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doGetRetention(vc *cmdutils.VerbCmd) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	policy, err := admin.Namespaces().GetRetention(ns)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		cmdutils.PrintJson(vc.Command.OutOrStdout(), &policy)
 	}
 	return err
 }

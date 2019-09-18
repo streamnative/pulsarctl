@@ -18,33 +18,29 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func setMessageTTL(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Set Message TTL for a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	setMsgTTL := pulsar.Example{
+		Desc:    "Set Message TTL for a namespace",
+		Command: "pulsarctl namespaces set-message-ttl tenant/namespace -ttl 10",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, setMsgTTL)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "Set message TTL successfully for [tenant/namespace]",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -62,32 +58,43 @@ func getTopics(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
+	failOut := pulsar.Output{
+		Desc: "Invalid value for message TTL, please check -ttl arg",
+		Out:  "code: 412 reason: Invalid value for message TTL",
+	}
+	out = append(out, successOut, failOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"set-message-ttl",
+		"Set Message TTL for a namespace",
 		desc.ToString(),
-		"topics",
+		"set-message-ttl",
 	)
 
+	var namespaceData pulsar.NamespacesData
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doSetMessageTTL(vc, namespaceData)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+		flagSet.IntVarP(
+			&namespaceData.MessageTTL,
+			"messageTTL",
+			"t",
+			0,
+			"Message TTL in seconds")
+		cobra.MarkFlagRequired(flagSet, "messageTTL")
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doSetMessageTTL(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	err := admin.Namespaces().SetNamespaceMessageTTL(ns, data.MessageTTL)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Printf("Set message TTL successfully for [%s]", ns)
 	}
 	return err
 }

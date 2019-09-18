@@ -18,33 +18,33 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func unload(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Unload a namespace from the current serving broker"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	unload := pulsar.Example{
+		Desc:    "Unload a namespace from the current serving broker",
+		Command: "pulsarctl namespaces unload tenant/namespace",
 	}
 
-	examples = append(examples, topics)
+	unloadWithBundle := pulsar.Example{
+		Desc:    "Unload a namespace with bundle from the current serving broker",
+		Command: "pulsarctl namespaces unload tenant/namespace --bundle <{start-boundary}_{end-boundary}>",
+	}
+	examples = append(examples, unload, unloadWithBundle)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "Unload namespace <tenant/namespace> (with bundle <{start-boundary}_{end-boundary}>) successfully ",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -66,28 +66,41 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"unload",
+		"Unload a namespace from the current serving broker",
 		desc.ToString(),
-		"topics",
+		"unload",
 	)
 
+	var data pulsar.NamespacesData
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doUnload(vc, data)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&data.Bundle,
+			"bundle",
+			"b",
+			"",
+			"{start-boundary}_{end-boundary}(e.g. 0x00000000_0xffffffff)")
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doUnload(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
+	if data.Bundle == "" {
+		err := admin.Namespaces().Unload(ns)
+		if err == nil {
+			vc.Command.Printf("Unload namespace %s successfully", ns)
 		}
-		table.Render()
+		return err
+	}
+
+	err := admin.Namespaces().UnloadNamespaceBundle(ns, data.Bundle)
+	if err == nil {
+		vc.Command.Printf("Unload namespace %s with bundle %s successfully", ns, data.Bundle)
 	}
 	return err
 }

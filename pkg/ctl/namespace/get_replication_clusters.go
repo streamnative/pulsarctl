@@ -18,35 +18,28 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func getReplicationClusters(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Get the replicated clusters of a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	getReplication := pulsar.Example{
+		Desc:    "Get the replicated clusters of a namespace",
+		Command: "pulsarctl namespaces get-clusters tenant/namespace",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, getReplication)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "<cluster name>",
 	}
-
 	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
@@ -66,28 +59,23 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"get-clusters",
+		"Get the replicated clusters of a namespace",
 		desc.ToString(),
-		"topics",
+		"get-clusters",
 	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doGetReplicationClusters(vc)
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doGetReplicationClusters(vc *cmdutils.VerbCmd) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	clusters, err := admin.Namespaces().GetNamespaceReplicationClusters(ns)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		cmdutils.PrintJson(vc.Command.OutOrStdout(), &clusters)
 	}
 	return err
 }

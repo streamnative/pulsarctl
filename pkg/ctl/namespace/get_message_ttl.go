@@ -18,33 +18,27 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func getMessageTTL(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Get message TTL settings of a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	setMsgTTL := pulsar.Example{
+		Desc:    "Get message TTL settings of a namespace",
+		Command: "pulsarctl namespaces get-message-ttl tenant/namespace",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, setMsgTTL)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "<ttl-value>",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -66,28 +60,23 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"get-message-ttl",
+		"Get message TTL settings of a namespace",
 		desc.ToString(),
-		"topics",
+		"get-message-ttl",
 	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doGetMessageTTL(vc)
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doGetMessageTTL(vc *cmdutils.VerbCmd) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	ttl, err := admin.Namespaces().GetNamespaceMessageTTL(ns)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Print(ttl)
 	}
 	return err
 }

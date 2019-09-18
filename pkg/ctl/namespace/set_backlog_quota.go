@@ -18,31 +18,33 @@
 package namespace
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-const MaxBundles = int64(1) << 32
-
-func createNs(vc *cmdutils.VerbCmd) {
+func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Creates a new namespace"
+	desc.CommandUsedFor = "Set a backlog quota policy for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-	create := pulsar.Example{
-		Desc:    "creates a namespace named <namespace-name>",
-		Command: "pulsarctl namespaces create <namespace-name>",
+	setBacklog := pulsar.Example{
+		Desc: "Set a backlog quota policy for a namespace",
+		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
+			"\t--limit 2G \n" +
+			"\t--policy producer_request_hold",
 	}
-	examples = append(examples, create)
+	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created <namespace-name> successfully",
+		Out:  "Set backlog quota successfully for [tenant/namespace]",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -60,68 +62,71 @@ func createNs(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	positiveBundleErr := pulsar.Output{
-		Desc: "Invalid number of bundles, please check --bundles value",
-		Out:  "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].",
+	noSupportPolicyType := pulsar.Output{
+		Desc: "invalid retention policy type, please check --policy arg",
+		Out:  "invalid retention policy type: <policy type>",
 	}
 
-	out = append(out, successOut, tenantNotExistError, noNamespaceName, nsNotExistError, positiveBundleErr)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, noSupportPolicyType)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"create",
-		"Create a new namespace",
+		"set-backlog-quota",
+		"Set a backlog quota policy for a namespace",
 		desc.ToString(),
-		"create",
+		"set-backlog-quota",
 	)
 
 	var namespaceData pulsar.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doCreate(vc, namespaceData)
+		return doSetBacklogQuota(vc, namespaceData)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
-		flagSet.IntVarP(
-			&namespaceData.NumBundles,
-			"bundles",
-			"b",
-			0,
-			"number of bundles to activate")
+		flagSet.StringVarP(
+			&namespaceData.LimitStr,
+			"limit",
+			"l",
+			"",
+			"Size limit (eg: 10M, 16G)")
 
-		flagSet.StringSliceVarP(
-			&namespaceData.Clusters,
-			"clusters",
-			"c",
-			nil,
-			"List of clusters this namespace will be assigned")
+		flagSet.StringVarP(
+			&namespaceData.PolicyStr,
+			"policy",
+			"p",
+			"",
+			"Retention policy to enforce when the limit is reached.\n"+
+				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
+		cobra.MarkFlagRequired(flagSet, "limit")
+		cobra.MarkFlagRequired(flagSet, "policy")
 	})
 }
 
-func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
-	tenantAndNamespace := vc.NameArg
+func doSetBacklogQuota(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
-	if data.NumBundles < 0 || data.NumBundles > int(MaxBundles) {
-		return errors.New("Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].")
-	}
-
-	ns, err := pulsar.GetNamespaceName(tenantAndNamespace)
+	sizeLimit, err := utils.ValidateSizeString(data.LimitStr)
 	if err != nil {
 		return err
 	}
-	policies := pulsar.NewDefaultPolicies()
-	if data.NumBundles > 0 {
-		policies.Bundles = pulsar.NewBundlesDataWithNumBundles(data.NumBundles)
+
+	var policy pulsar.RetentionPolicy
+	switch data.PolicyStr {
+	case "producer_request_hold":
+		policy = pulsar.ProducerRequestHold
+	case "producer_exception":
+		policy = pulsar.ProducerException
+	case "consumer_backlog_eviction":
+		policy = pulsar.ConsumerBacklogEviction
+	default:
+		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
 	}
 
-	if data.Clusters != nil {
-		policies.ReplicationClusters = data.Clusters
-	}
-
-	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *policies)
+	err = admin.Namespaces().SetBacklogQuota(ns, pulsar.NewBacklogQuota(sizeLimit, policy))
 	if err == nil {
-		vc.Command.Printf("Created %s successfully", ns.String())
+		vc.Command.Printf("Set backlog quota successfully for [%s]", ns)
 	}
 	return err
 }

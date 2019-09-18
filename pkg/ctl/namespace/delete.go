@@ -41,17 +41,17 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 		Out:  "Deleted <namespace-name> successfully",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	out = append(out, successOut, notExistTenantName, notTenantName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
