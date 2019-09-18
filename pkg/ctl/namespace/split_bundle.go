@@ -51,18 +51,18 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 		Out:  "Split a namespace bundle: <{start-boundary}_{end-boundary}> successfully",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
@@ -71,7 +71,7 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 412 reason: Failed to find ownership for ServiceUnit:public/default/<bundle range>",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName, ownershipFail)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, ownershipFail)
 	desc.CommandOutput = out
 
 	vc.SetDescription(

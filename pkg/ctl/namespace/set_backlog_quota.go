@@ -22,6 +22,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
@@ -46,18 +47,18 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		Out:  "Set backlog quota successfully for [tenant/namespace]",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
@@ -66,7 +67,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		Out:  "invalid retention policy type: <policy type>",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName, noSupportPolicyType)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, noSupportPolicyType)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -106,7 +107,7 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
-	sizeLimit, err := validateSizeString(data.LimitStr)
+	sizeLimit, err := utils.ValidateSizeString(data.LimitStr)
 	if err != nil {
 		return err
 	}

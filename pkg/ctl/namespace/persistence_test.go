@@ -26,9 +26,9 @@ import (
 
 func TestPersistence(t *testing.T) {
 	setArgs := []string{"set-persistence", "public/default",
-		"--bookkeeper-ensemble", "2",
-		"--bookkeeper-write-quorum", "2",
-		"--bookkeeper-ack-quorum", "2",
+		"--ensemble-size", "2",
+		"--write-quorum-size", "2",
+		"--ack-quorum-size", "2",
 		"--ml-mark-delete-max-rate", "2.0",
 	}
 	setOut, execErr, _, _ := TestNamespaceCommands(setPersistence, setArgs)
@@ -50,9 +50,9 @@ func TestPersistence(t *testing.T) {
 
 func TestFailurePersistence(t *testing.T) {
 	setArgs := []string{"set-persistence", "public/default",
-		"--bookkeeper-ensemble", "2",
-		"--bookkeeper-write-quorum", "5",
-		"--bookkeeper-ack-quorum", "2",
+		"--ensemble-size", "2",
+		"--write-quorum-size", "5",
+		"--ack-quorum-size", "2",
 		"--ml-mark-delete-max-rate", "2.0",
 	}
 	_, execErr, _, _ := TestNamespaceCommands(setPersistence, setArgs)
@@ -60,9 +60,9 @@ func TestFailurePersistence(t *testing.T) {
 	assert.Equal(t, execErr.Error(), "code: 412 reason: Bookkeeper Ensemble (2) >= WriteQuorum (5) >= AckQuoru (2)")
 
 	setArgs = []string{"set-persistence", "public/default",
-		"--bookkeeper-ensemble", "2",
-		"--bookkeeper-write-quorum", "2",
-		"--bookkeeper-ack-quorum", "3",
+		"--ensemble-size", "2",
+		"--write-quorum-size", "2",
+		"--ack-quorum-size", "3",
 		"--ml-mark-delete-max-rate", "2.0",
 	}
 	_, execErr, _, _ = TestNamespaceCommands(setPersistence, setArgs)

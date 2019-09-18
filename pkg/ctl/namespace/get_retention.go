@@ -24,12 +24,12 @@ import (
 
 func getRetention(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the retention policy for a namespace"
+	desc.CommandUsedFor = "Get the retention policy of a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	getRetention := pulsar.Example{
-		Desc:    "Get the retention policy for a namespace",
+		Desc:    "Get the retention policy of a namespace",
 		Command: "pulsarctl namespaces get-retention tenant/namespace",
 	}
 	examples = append(examples, getRetention)
@@ -44,27 +44,27 @@ func getRetention(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"get-retention",
-		"Get the retention policy for a namespace",
+		"Get the retention policy of a namespace",
 		desc.ToString(),
 		"get-retention",
 	)

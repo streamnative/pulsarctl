@@ -26,12 +26,12 @@ import (
 
 func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get Anti-affinity namespaces grouped with the given anti-affinity group name"
+	desc.CommandUsedFor = "Get the list of namespaces in the same anti-affinity group."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	getRetention := pulsar.Example{
-		Desc:    "Get Anti-affinity namespaces grouped with the given anti-affinity group name",
+		Desc:    "Get the list of namespaces in the same anti-affinity group.",
 		Command: "pulsarctl namespaces get-anti-affinity-namespaces tenant/namespace",
 	}
 	examples = append(examples, getRetention)
@@ -43,29 +43,29 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 		Out: "<anti-affinity name list>",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	var data pulsar.NamespacesData
 
 	vc.SetDescription(
 		"get-anti-affinity-namespaces",
-		"Get Anti-affinity namespaces grouped with the given anti-affinity group name",
+		"Get the list of namespaces in the same anti-affinity group.",
 		desc.ToString(),
 		"get-anti-affinity-namespaces",
 	)
@@ -92,7 +92,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 		flagSet.StringVarP(
 			&data.Tenant,
 			"tenant",
-			"p",
+			"t",
 			"",
 			"tenant is only used for authorization. \n"+
 				"Client has to be admin of any of the tenant to access this api")

@@ -24,12 +24,12 @@ import (
 
 func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Delete Anti-affinity group name for a namespace"
+	desc.CommandUsedFor = "Delete an Anti-affinity group of a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	delAntiAffinity := pulsar.Example{
-		Desc:    "Delete Anti-affinity group name for a namespace",
+		Desc:    "Delete an Anti-affinity group of a namespace",
 		Command: "pulsarctl namespaces delete-anti-affinity-group tenant/namespace",
 	}
 	examples = append(examples, delAntiAffinity)
@@ -38,30 +38,30 @@ func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Delete Anti-affinity group name successfully for [tenant/namespace]",
+		Out:  "Delete the anti-affinity group successfully for [tenant/namespace]",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"delete-anti-affinity-group",
-		"Delete Anti-affinity group name for a namespace",
+		"Delete an Anti-affinity group of a namespace",
 		desc.ToString(),
 		"delete-anti-affinity-group",
 	)
@@ -76,7 +76,7 @@ func doDeleteAntiAffinityGroup(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().DeleteNamespaceAntiAffinityGroup(ns)
 	if err == nil {
-		vc.Command.Printf("Delete Anti-affinity group name successfully for [%s]", ns)
+		vc.Command.Printf("Delete the anti-affinity group successfully for [%s]", ns)
 	}
 	return err
 }

@@ -33,9 +33,9 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 	setPersistence := pulsar.Example{
 		Desc: "Set the persistence policies for a namespace",
 		Command: "pulsarctl namespaces set-persistence tenant/namespace \n" +
-			"\t--bookkeeper-ensemble 2 \n" +
-			"\t--bookkeeper-write-quorum 2 \n" +
-			"\t--bookkeeper-ack-quorum 2 \n" +
+			"\t--ensemble-size 2 \n" +
+			"\t--write-quorum-size 2 \n" +
+			"\t--ack-quorum-size 2 \n" +
 			"\t--ml-mark-delete-max-rate 2.0",
 	}
 
@@ -48,18 +48,18 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 		Out:  "Set the persistence policies successfully for [tenant/namespace]",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
@@ -68,7 +68,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 		Out:  "code: 412 reason: Bookkeeper Ensemble >= WriteQuorum >= AckQuoru",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName, errArgsForBk)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, errArgsForBk)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -87,21 +87,21 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.IntVarP(
 			&data.BookkeeperEnsemble,
-			"bookkeeper-ensemble",
+			"ensemble-size",
 			"e",
 			0,
 			"Number of bookies to use for a topic")
 
 		flagSet.IntVarP(
 			&data.BookkeeperWriteQuorum,
-			"bookkeeper-write-quorum",
+			"write-quorum-size",
 			"w",
 			0,
 			"How many writes to make of each entry")
 
 		flagSet.IntVarP(
 			&data.BookkeeperAckQuorum,
-			"bookkeeper-ack-quorum",
+			"ack-quorum-size",
 			"a",
 			0,
 			"Number of acks (garanteed copies) to wait for each entry")
@@ -113,9 +113,9 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 			0,
 			"Throttling rate of mark-delete operation (0 means no throttle)")
 
-		cobra.MarkFlagRequired(flagSet, "bookkeeper-ensemble")
-		cobra.MarkFlagRequired(flagSet, "bookkeeper-write-quorum")
-		cobra.MarkFlagRequired(flagSet, "bookkeeper-ack-quorum")
+		cobra.MarkFlagRequired(flagSet, "ensemble-size")
+		cobra.MarkFlagRequired(flagSet, "write-quorum-size")
+		cobra.MarkFlagRequired(flagSet, "ack-quorum-size")
 		cobra.MarkFlagRequired(flagSet, "ml-mark-delete-max-rate")
 	})
 }

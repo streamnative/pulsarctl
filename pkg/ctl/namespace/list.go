@@ -54,12 +54,12 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check if tenant name exists",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	out = append(out, successOut, notTenantName, notExistTenantName)
+	out = append(out, successOut, notTenantName, tenantNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
