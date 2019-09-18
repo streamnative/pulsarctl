@@ -26,8 +26,13 @@ import (
 )
 
 func TestClusters(t *testing.T) {
+	args := []string{"create", "public/test-cluster-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-cluster-namespace successfully")
+
 	clusterArgs := []string{"create", "test-replication-cluster", "--url", "192.168.12.11"}
-	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
+	_, _, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 
 	updateTenantArgs := []string{"update", "--allowed-clusters", "test-replication-cluster", "--allowed-clusters", "standalone", "public"}
@@ -35,12 +40,12 @@ func TestClusters(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 
-	setArgs := []string{"set-clusters", "public/default", "--clusters", "test-replication-cluster"}
+	setArgs := []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "test-replication-cluster"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/default")
+	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace")
 
-	getArgs := []string{"get-clusters", "public/default"}
+	getArgs := []string{"get-clusters", "public/test-cluster-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getReplicationClusters, getArgs)
 	assert.Nil(t, execErr)
 	assert.True(t, strings.Contains(getOut.String(), "test-replication-cluster"))
@@ -51,14 +56,14 @@ func TestClusters(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 
-	setArgs = []string{"set-clusters", "public/default", "--clusters", "standalone"}
+	setArgs = []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "standalone"}
 	setOut, execErr, _, _ = TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/default")
+	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace")
 }
 
 func TestFailureCluster(t *testing.T) {
-	setArgs := []string{"set-clusters", "public/default", "--clusters", "invalid-cluster"}
+	setArgs := []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "invalid-cluster"}
 	_, execErr, _, _ := TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "code: 403 reason: Invalid cluster id: invalid-cluster")

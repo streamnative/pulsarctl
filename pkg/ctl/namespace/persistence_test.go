@@ -25,7 +25,12 @@ import (
 )
 
 func TestPersistence(t *testing.T) {
-	setArgs := []string{"set-persistence", "public/default",
+	args := []string{"create", "public/test-persistent-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-persistent-namespace successfully")
+
+	setArgs := []string{"set-persistence", "public/test-persistent-namespace",
 		"--ensemble-size", "2",
 		"--write-quorum-size", "2",
 		"--ack-quorum-size", "2",
@@ -33,14 +38,14 @@ func TestPersistence(t *testing.T) {
 	}
 	setOut, execErr, _, _ := TestNamespaceCommands(setPersistence, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set the persistence policies successfully for [public/default]")
+	assert.Equal(t, setOut.String(), "Set the persistence policies successfully for [public/test-persistent-namespace]")
 
 	var persistence pulsar.PersistencePolicies
 
-	getArgs := []string{"get-persistence", "public/default"}
+	getArgs := []string{"get-persistence", "public/test-persistent-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getPersistence, getArgs)
 	assert.Nil(t, execErr)
-	err := json.Unmarshal(getOut.Bytes(), &persistence)
+	err = json.Unmarshal(getOut.Bytes(), &persistence)
 	assert.Nil(t, err)
 	assert.Equal(t, persistence.BookkeeperEnsemble, 2)
 	assert.Equal(t, persistence.BookkeeperWriteQuorum, 2)
@@ -49,7 +54,7 @@ func TestPersistence(t *testing.T) {
 }
 
 func TestFailurePersistence(t *testing.T) {
-	setArgs := []string{"set-persistence", "public/default",
+	setArgs := []string{"set-persistence", "public/test-persistent-namespace",
 		"--ensemble-size", "2",
 		"--write-quorum-size", "5",
 		"--ack-quorum-size", "2",
@@ -59,7 +64,7 @@ func TestFailurePersistence(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "code: 412 reason: Bookkeeper Ensemble (2) >= WriteQuorum (5) >= AckQuoru (2)")
 
-	setArgs = []string{"set-persistence", "public/default",
+	setArgs = []string{"set-persistence", "public/test-persistent-namespace",
 		"--ensemble-size", "2",
 		"--write-quorum-size", "2",
 		"--ack-quorum-size", "3",

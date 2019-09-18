@@ -25,12 +25,17 @@ import (
 )
 
 func TestPolicesCommand(t *testing.T) {
-	args := []string{"policies", "public/default"}
+	args := []string{"create", "public/test-policy-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-policy-namespace successfully")
+
+	args = []string{"policies", "public/test-policy-namespace"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.Nil(t, execErr)
 
 	var police pulsar.Policies
-	err := json.Unmarshal(out.Bytes(), &police)
+	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 
 	assert.Equal(t, police.DeduplicationEnabled, false)

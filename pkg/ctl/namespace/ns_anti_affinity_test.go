@@ -23,22 +23,27 @@ import (
 )
 
 func TestNsAntiAffinityGroup(t *testing.T) {
-	setArgs := []string{"set-anti-affinity-group", "public/default", "--group", "test-ns"}
+	args := []string{"create", "public/test-anti-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-anti-namespace successfully")
+
+	setArgs := []string{"set-anti-affinity-group", "public/test-anti-namespace", "--group", "test-ns"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setAntiAffinityGroup, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set the anti-affinity group: test-ns successfully for public/default")
+	assert.Equal(t, setOut.String(), "Set the anti-affinity group: test-ns successfully for public/test-anti-namespace")
 
-	getArgs := []string{"get-anti-affinity-group", "public/default"}
+	getArgs := []string{"get-anti-affinity-group", "public/test-anti-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getAntiAffinityGroup, getArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, getOut.String(), "\"test-ns\"\n")
 
-	delArgs := []string{"delete-anti-affinity-group", "public/default"}
+	delArgs := []string{"delete-anti-affinity-group", "public/test-anti-namespace"}
 	delOut, execErr, _, _ := TestNamespaceCommands(deleteAntiAffinityGroup, delArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, delOut.String(), "Delete the anti-affinity group successfully for [public/default]")
+	assert.Equal(t, delOut.String(), "Delete the anti-affinity group successfully for [public/test-anti-namespace]")
 
-	getArgs = []string{"get-anti-affinity-group", "public/default"}
+	getArgs = []string{"get-anti-affinity-group", "public/test-anti-namespace"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getAntiAffinityGroup, getArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, getOut.String(), "")
