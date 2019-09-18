@@ -32,8 +32,7 @@ func TestSplitBundle(t *testing.T) {
 	assert.Equal(t, execErr.Error(), errMsg)
 
 	topicArgs := []string{"create", "test-topic", "0"}
-	_, execErr, argsErr, err := topic.TestTopicCommands(crud.CreateTopicCmd, topicArgs)
-	assert.Nil(t, execErr)
+	_, _, argsErr, err := topic.TestTopicCommands(crud.CreateTopicCmd, topicArgs)
 	assert.Nil(t, argsErr)
 	assert.Nil(t, err)
 

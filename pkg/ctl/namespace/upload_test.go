@@ -28,13 +28,13 @@ func TestUpload(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, unloadOut.String(), "Unload namespace public/default successfully")
 
-	argsWithBundle := []string{"unload", "public/default", "--bundle", "0x00000000_0x40000000"}
+	argsWithBundle := []string{"unload", "public/default", "--bundle", "0x40000000_0x80000000"}
 	unloadOut, execErr, _, _ = TestNamespaceCommands(unload, argsWithBundle)
 	assert.Nil(t, execErr)
-	assert.Equal(t, unloadOut.String(), "Unload namespace public/default with bundle 0x00000000_0x40000000 successfully")
+	assert.Equal(t, unloadOut.String(), "Unload namespace public/default with bundle 0x40000000_0x80000000 successfully")
 
 	// test invalid upper boundary for bundle
-	argsWithInvalidBundle := []string{"unload", "public/default", "--bundle", "0x00000000_0x20000000"}
+	argsWithInvalidBundle := []string{"unload", "public/default", "--bundle", "0x00000000_0x60000000"}
 	_, execErr, _, _ = TestNamespaceCommands(unload, argsWithInvalidBundle)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "code: 500 reason: Unknown pulsar error")
