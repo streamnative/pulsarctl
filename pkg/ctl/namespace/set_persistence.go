@@ -26,12 +26,12 @@ import (
 
 func setPersistence(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Set the persistence policies for a namespace"
+	desc.CommandUsedFor = "Set the persistence policy for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	setPersistence := pulsar.Example{
-		Desc: "Set the persistence policies for a namespace",
+		Desc: "Set the persistence policy for a namespace",
 		Command: "pulsarctl namespaces set-persistence tenant/namespace \n" +
 			"\t--ensemble-size 2 \n" +
 			"\t--write-quorum-size 2 \n" +
@@ -73,7 +73,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"set-persistence",
-		"Set the persistence policies for a namespace",
+		"Set the persistence policy for a namespace",
 		desc.ToString(),
 		"set-persistence",
 	)

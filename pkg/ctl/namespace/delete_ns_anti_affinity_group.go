@@ -24,12 +24,12 @@ import (
 
 func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Delete an Anti-affinity group of a namespace"
+	desc.CommandUsedFor = "Delete an anti-affinity group of a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	delAntiAffinity := pulsar.Example{
-		Desc:    "Delete an Anti-affinity group of a namespace",
+		Desc:    "Delete an anti-affinity group of a namespace",
 		Command: "pulsarctl namespaces delete-anti-affinity-group tenant/namespace",
 	}
 	examples = append(examples, delAntiAffinity)
@@ -61,7 +61,7 @@ func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"delete-anti-affinity-group",
-		"Delete an Anti-affinity group of a namespace",
+		"Delete an anti-affinity group of a namespace",
 		desc.ToString(),
 		"delete-anti-affinity-group",
 	)
