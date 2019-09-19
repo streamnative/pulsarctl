@@ -24,7 +24,7 @@ import (
 
 func GetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to get message-dispatch-rate for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for getting message-dispatch-rate for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example

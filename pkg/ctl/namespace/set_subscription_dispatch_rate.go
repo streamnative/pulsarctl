@@ -25,7 +25,7 @@ import (
 
 func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to set subscription message-dispatch-rate for all subscriptions of a namespace."
+	desc.CommandUsedFor = "This command is used for setting subscription message-dispatch-rate for all subscriptions of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example

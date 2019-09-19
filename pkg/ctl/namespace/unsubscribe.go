@@ -26,7 +26,7 @@ import (
 
 func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to unsubscribe the specified subscription for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for unsubscribing the specified subscription for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example

@@ -25,7 +25,7 @@ import (
 
 func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to enable or disable messages encryption for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 

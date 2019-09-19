@@ -25,7 +25,7 @@ import (
 
 func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to set subscribe-rate per consumer for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for setting subscribe-rate per consumer for all topics of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example

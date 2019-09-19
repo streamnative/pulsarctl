@@ -25,7 +25,7 @@ import (
 
 func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to set replicator message-dispatch-rate for all topics of a namespace."
+	desc.CommandUsedFor = "--partition set replicator message-dispatch-rate for all topics of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example

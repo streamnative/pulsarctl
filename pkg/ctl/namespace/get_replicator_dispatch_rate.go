@@ -24,7 +24,7 @@ import (
 
 func GetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to get replicator message-dispatch-rate for all topics of a namespace."
+	desc.CommandUsedFor = "--partition get replicator message-dispatch-rate for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example

@@ -29,7 +29,7 @@ import (
 
 func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used to clear backlog for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for clearing backlog for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example
