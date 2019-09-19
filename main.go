@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -14,7 +16,6 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/sources"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
-	"os"
 )
 
 var rootCmd = &cobra.Command{
@@ -70,6 +71,7 @@ func addCommands(flagGrouping *cmdutils.FlagGrouping) {
 	rootCmd.AddCommand(tenant.Command(flagGrouping))
 	rootCmd.AddCommand(completion.Command(rootCmd))
 	rootCmd.AddCommand(functions.Command(flagGrouping))
+	rootCmd.AddCommand(topic.Command(flagGrouping))
 	rootCmd.AddCommand(sources.Command(flagGrouping))
 	rootCmd.AddCommand(sinks.Command(flagGrouping))
 	rootCmd.AddCommand(topic.Command(flagGrouping))
