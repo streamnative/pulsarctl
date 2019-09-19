@@ -11,7 +11,7 @@ import (
 
 func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a single topic."
+	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
@@ -44,7 +44,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"grant-permissions",
-		"Grant permissions to a client",
+		"Grant permissions to a client on a topic",
 		desc.ToString(),
 		"grant")
 

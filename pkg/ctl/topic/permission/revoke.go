@@ -11,7 +11,7 @@ import (
 
 func RevokePermissions(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for revoking permissions of a topic."
+	desc.CommandUsedFor = "This command is used for revoking a client role permissions on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
@@ -38,7 +38,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"revoke-permissions",
-		"Revoke permissions on topic",
+		"Revoke a client role permissions on a topic",
 		desc.ToString(),
 		"revoke")
 
