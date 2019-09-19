@@ -1,6 +1,7 @@
 package pulsar
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -9,10 +10,15 @@ type Topics interface {
 	Delete(TopicName, bool, bool) error
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
-	List(NameSpaceName) ([]string, []string, error)
-	GetPermissions(TopicName) (map[string][]AuthAction, error)
+	List(NameSpaceName) ([]string, []string, error)	GetPermissions(TopicName) (map[string][]AuthAction, error)
 	GrantPermission(TopicName, string, []AuthAction) error
 	RevokePermission(TopicName, string) error
+	Lookup(TopicName) (LookupData, error)
+	GetBundleRange(TopicName) (string, error)
+	GetLastMessageId(TopicName) (MessageId, error)
+	GetStats(TopicName) (TopicStats, error)
+	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
+	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 }
 
 type topics struct {
@@ -20,6 +26,7 @@ type topics struct {
 	basePath          string
 	persistentPath    string
 	nonPersistentPath string
+	lookupPath        string
 }
 
 func (c *client) Topics() Topics {
@@ -28,6 +35,7 @@ func (c *client) Topics() Topics {
 		basePath:          "",
 		persistentPath:    "/persistent",
 		nonPersistentPath: "/non-persistent",
+		lookupPath:        "/lookup/v2/topic",
 	}
 }
 
@@ -64,7 +72,7 @@ func (t *topics) GetMetadata(topic TopicName) (PartitionedTopicMetadata, error) 
 
 func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	var partitionedTopics, nonPartitionedTopics []string
-	partitionedTopicsChan  := make(chan []string)
+	partitionedTopicsChan := make(chan []string)
 	nonPartitionedTopicsChan := make(chan []string)
 	errChan := make(chan error)
 
@@ -81,15 +89,15 @@ func (t *topics) List(namespace NameSpaceName) ([]string, []string, error) {
 	requestCount := 4
 	for {
 		select {
-		case err :=<-errChan:
+		case err := <-errChan:
 			if err != nil {
 				return nil, nil, err
 			}
 			continue
-		case pTopic :=<- partitionedTopicsChan:
+		case pTopic := <-partitionedTopicsChan:
 			requestCount--
 			partitionedTopics = append(partitionedTopics, pTopic...)
-		case npTopic :=<- nonPartitionedTopicsChan:
+		case npTopic := <-nonPartitionedTopicsChan:
 			requestCount--
 			nonPartitionedTopics = append(nonPartitionedTopics, npTopic...)
 		}
@@ -125,4 +133,48 @@ func (t *topics) GrantPermission(topic TopicName, role string, action []AuthActi
 func (t *topics) RevokePermission(topic  TopicName, role string) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
 	return t.client.delete(endpoint, nil)
+}
+
+func (t *topics) Lookup(topic TopicName) (LookupData, error) {
+	var lookup LookupData
+	endpoint := fmt.Sprintf("%s/%s", t.lookupPath, topic.GetRestPath())
+	err := t.client.get(endpoint, &lookup)
+	return lookup, err
+}
+
+func (t *topics) GetBundleRange(topic TopicName) (string, error) {
+	endpoint := fmt.Sprintf("%s/%s/%s", t.lookupPath, topic.GetRestPath(), "bundle")
+	data, err := t.client.getWithQueryParams(endpoint, nil, nil, false)
+	return string(data), err
+}
+
+func (t *topics) GetLastMessageId(topic TopicName) (MessageId, error) {
+	var messageId MessageId
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "lastMessageId")
+	err := t.client.get(endpoint, &messageId)
+	return messageId, err
+}
+
+func (t *topics) GetStats(topic TopicName) (TopicStats, error) {
+	var stats TopicStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "stats")
+	err := t.client.get(endpoint, &stats)
+	return stats, err
+}
+
+func (t *topics) GetInternalStats(topic TopicName) (PersistentTopicInternalStats, error) {
+	var stats PersistentTopicInternalStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internalStats")
+	err := t.client.get(endpoint, &stats)
+	return stats, err
+}
+
+func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (PartitionedTopicStats, error) {
+	var stats PartitionedTopicStats
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitioned-stats")
+	params := map[string]string{
+		"perPartition": strconv.FormatBool(perPartition),
+	}
+	_, err := t.client.getWithQueryParams(endpoint, &stats, params, true)
+	return stats, err
 }

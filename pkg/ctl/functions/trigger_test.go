@@ -15,12 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
+// TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
+// +build functions
+
 package functions
 
 import (
-	`bytes`
-	`encoding/json`
-	`github.com/streamnative/pulsarctl/pkg/pulsar`
+	"bytes"
+	"encoding/json"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

@@ -15,17 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
+// TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
+// +build functions
+
 package functions
 
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStateFunctions(t *testing.T) {

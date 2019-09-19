@@ -9,7 +9,7 @@ import (
 
 func TestUpdatePeerClusters(t *testing.T) {
 	args := []string{"add", "test_peer_cluster"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	if err != nil {
 		t.Fatal(err)
 	}
