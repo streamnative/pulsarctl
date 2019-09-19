@@ -18,33 +18,31 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Set the anti-affinity group for a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	setAntiAffinityName := pulsar.Example{
+		Desc: "Set the anti-affinity group for a namespace",
+		Command: "pulsarctl namespaces set-anti-affinity-group tenant/namespace \n" +
+			"\t--group <anti-affinity group name>",
 	}
 
-	examples = append(examples, topics)
+	examples = append(examples, setAntiAffinityName)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "Set the anti-affinity group: <anti-affinity group name> successfully for <tenant/namespace>",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -66,28 +64,36 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"set-anti-affinity-group",
+		"Set the anti-affinity group for a namespace",
 		desc.ToString(),
-		"topics",
+		"set-anti-affinity-group",
 	)
 
+	var data pulsar.NamespacesData
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doSetAntiAffinityGroup(vc, data)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&data.AntiAffinityGroup,
+			"group",
+			"g",
+			"",
+			"Anti-affinity group name")
+
+		cobra.MarkFlagRequired(flagSet, "group")
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doSetAntiAffinityGroup(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+	err := admin.Namespaces().SetNamespaceAntiAffinityGroup(ns, data.AntiAffinityGroup)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Printf("Set the anti-affinity group: %s successfully for %s", data.AntiAffinityGroup, ns)
 	}
 	return err
 }

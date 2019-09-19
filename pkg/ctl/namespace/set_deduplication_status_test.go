@@ -22,25 +22,19 @@ import (
 	"testing"
 )
 
-func TestMessageTTL(t *testing.T) {
-	args := []string{"create", "public/test-ttl-namespace"}
+func TestDeduplicationStatus(t *testing.T) {
+	args := []string{"create", "public/test-dedup-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-ttl-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-dedup-namespace successfully")
 
-	setTTLArgs := []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "20"}
-	setOut, execErr, _, _ := TestNamespaceCommands(setMessageTTL, setTTLArgs)
+	args = []string{"set-deduplication", "public/test-dedup-namespace"}
+	out, execErr, _, _ := TestNamespaceCommands(setDeduplication, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message TTL successfully for [public/test-ttl-namespace]")
+	assert.Equal(t, out.String(), "Set deduplication is [false] successfully for public/test-dedup-namespace")
 
-	getTTLArgs := []string{"get-message-ttl", "public/test-ttl-namespace"}
-	getOut, execErr, _, _ := TestNamespaceCommands(getMessageTTL, getTTLArgs)
+	args = []string{"set-deduplication", "public/test-dedup-namespace", "--enable"}
+	out, execErr, _, _ = TestNamespaceCommands(setDeduplication, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
-
-	// test negative value for ttl arg
-	setTTLArgs = []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "-2"}
-	_, execErr, _, _ = TestNamespaceCommands(setMessageTTL, setTTLArgs)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
+	assert.Equal(t, out.String(), "Set deduplication is [true] successfully for public/test-dedup-namespace")
 }

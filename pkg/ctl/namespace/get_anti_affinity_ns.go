@@ -18,33 +18,29 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Get the list of namespaces in the same anti-affinity group."
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	getRetention := pulsar.Example{
+		Desc:    "Get the list of namespaces in the same anti-affinity group.",
+		Command: "pulsarctl namespaces get-anti-affinity-namespaces tenant/namespace",
 	}
-
-	examples = append(examples, topics)
+	examples = append(examples, getRetention)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out: "<anti-affinity name list>",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -65,29 +61,51 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
+	var data pulsar.NamespacesData
+
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"get-anti-affinity-namespaces",
+		"Get the list of namespaces in the same anti-affinity group.",
 		desc.ToString(),
-		"topics",
+		"get-anti-affinity-namespaces",
 	)
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+	vc.SetRunFunc(func() error {
+		return doGetAntiAffinityNamespaces(vc, data)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&data.AntiAffinityGroup,
+			"group",
+			"g",
+			"",
+			"Anti-affinity group name")
+
+		flagSet.StringVarP(
+			&data.Cluster,
+			"cluster",
+			"c",
+			"",
+			"Cluster name")
+
+		flagSet.StringVarP(
+			&data.Tenant,
+			"tenant",
+			"t",
+			"",
+			"tenant is only used for authorization. \n"+
+				"Client has to be admin of any of the tenant to access this api")
+
+		cobra.MarkFlagRequired(flagSet, "group")
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
-	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+func doGetAntiAffinityNamespaces(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V1)
+	strList, err := admin.Namespaces().GetAntiAffinityNamespaces(data.Tenant, data.Cluster, data.AntiAffinityGroup)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Println(strList)
 	}
 	return err
 }

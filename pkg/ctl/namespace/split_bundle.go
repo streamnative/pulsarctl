@@ -18,33 +18,37 @@
 package namespace
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func setBacklogQuota(vc *cmdutils.VerbCmd) {
+func splitBundle(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Set a backlog quota policy for a namespace"
+	desc.CommandUsedFor = "Split a namespace-bundle from the current serving broker"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-	setBacklog := pulsar.Example{
-		Desc: "Set a backlog quota policy for a namespace",
-		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
-			"\t--limit 2G \n" +
-			"\t--policy producer_request_hold",
+	splitBundle := pulsar.Example{
+		Desc:    "Split a namespace-bundle from the current serving broker",
+		Command: "pulsarctl namespaces split-bundle tenant/namespace --bundle <{start-boundary}_{end-boundary}>",
 	}
-	examples = append(examples, setBacklog)
+
+	splitBundleWithUnload := pulsar.Example{
+		Desc: "Split a namespace-bundle from the current serving broker",
+		Command: "pulsarctl namespaces split-bundle tenant/namespace \n" +
+			"\t--bundle <{start-boundary}_{end-boundary}>\n" +
+			"\t--unload",
+	}
+
+	examples = append(examples, splitBundle, splitBundleWithUnload)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Set backlog quota successfully for [tenant/namespace]",
+		Out:  "Split a namespace bundle: <{start-boundary}_{end-boundary}> successfully",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -62,71 +66,52 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	noSupportPolicyType := pulsar.Output{
-		Desc: "invalid retention policy type, please check --policy arg",
-		Out:  "invalid retention policy type: <policy type>",
+	ownershipFail := pulsar.Output{
+		Desc: "Please check if there is an active topic under the current split bundle.",
+		Out:  "[✖]  code: 412 reason: Failed to find ownership for ServiceUnit:public/default/<bundle range>",
 	}
 
-	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, noSupportPolicyType)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, ownershipFail)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"set-backlog-quota",
-		"Set a backlog quota policy for a namespace",
+		"split-bundle",
+		"Split a namespace-bundle from the current serving broker",
 		desc.ToString(),
-		"set-backlog-quota",
+		"split-bundle",
 	)
 
-	var namespaceData pulsar.NamespacesData
+	var data pulsar.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doSetBacklogQuota(vc, namespaceData)
+		return doSplitBundle(vc, data)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
-			&namespaceData.LimitStr,
-			"limit",
-			"l",
+			&data.Bundle,
+			"bundle",
+			"b",
 			"",
-			"Size limit (eg: 10M, 16G)")
+			"{start-boundary}_{end-boundary}")
 
-		flagSet.StringVarP(
-			&namespaceData.PolicyStr,
-			"policy",
-			"p",
-			"",
-			"Retention policy to enforce when the limit is reached.\n"+
-				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
-		cobra.MarkFlagRequired(flagSet, "limit")
-		cobra.MarkFlagRequired(flagSet, "policy")
+		flagSet.BoolVarP(
+			&data.Unload,
+			"unload",
+			"u",
+			false,
+			"Unload newly split bundles after splitting old bundle")
+
+		cobra.MarkFlagRequired(flagSet, "bundle")
 	})
 }
 
-func doSetBacklogQuota(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doSplitBundle(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-
-	sizeLimit, err := utils.ValidateSizeString(data.LimitStr)
-	if err != nil {
-		return err
-	}
-
-	var policy pulsar.RetentionPolicy
-	switch data.PolicyStr {
-	case "producer_request_hold":
-		policy = pulsar.ProducerRequestHold
-	case "producer_exception":
-		policy = pulsar.ProducerException
-	case "consumer_backlog_eviction":
-		policy = pulsar.ConsumerBacklogEviction
-	default:
-		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
-	}
-
-	err = admin.Namespaces().SetBacklogQuota(ns, pulsar.NewBacklogQuota(sizeLimit, policy))
+	err := admin.Namespaces().SplitNamespaceBundle(ns, data.Bundle, data.Unload)
 	if err == nil {
-		vc.Command.Printf("Set backlog quota successfully for [%s]", ns)
+		vc.Command.Printf("Split a namespace bundle: %s successfully", data.Bundle)
 	}
 	return err
 }

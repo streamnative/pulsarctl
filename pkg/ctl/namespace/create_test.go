@@ -124,6 +124,13 @@ func TestCreateNsForCluster(t *testing.T) {
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 	assert.Equal(t, "test-cluster", police.ReplicationClusters[0])
+
+	// reset namespace clusters for other test case
+	updateTenantArgs = []string{"update", "--allowed-clusters", "standalone", "public"}
+	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+
 }
 
 func TestCreateNsArgsError(t *testing.T) {

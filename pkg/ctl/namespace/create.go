@@ -45,18 +45,18 @@ func createNs(vc *cmdutils.VerbCmd) {
 		Out:  "Created <namespace-name> successfully",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
@@ -65,7 +65,7 @@ func createNs(vc *cmdutils.VerbCmd) {
 		Out:  "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].",
 	}
 
-	out = append(out, successOut, notExistTenantName, notTenantName, notExistNsName, positiveBundleErr)
+	out = append(out, successOut, tenantNotExistError, noNamespaceName, nsNotExistError, positiveBundleErr)
 	desc.CommandOutput = out
 
 	vc.SetDescription(

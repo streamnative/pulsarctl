@@ -18,33 +18,31 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"strings"
 )
 
-func getTopics(vc *cmdutils.VerbCmd) {
+func setReplicationClusters(vc *cmdutils.VerbCmd) {
 	desc := pulsar.LongDescription{}
-	desc.CommandUsedFor = "Get the list of topics for a namespace"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandUsedFor = "Set the replicated clusters for a namespace"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-
-	topics := pulsar.Example{
-		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+	setClusters := pulsar.Example{
+		Desc:    "Set the replicated clusters for a namespace",
+		Command: "pulsarctl namespaces set-clusters tenant/namespace --clusters <cluster name>",
 	}
 
-	examples = append(examples, topics)
+	examples = append(examples, setClusters)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+-------------+\n" +
-			"| TOPICS NAME |\n" +
-			"+-------------+\n" +
-			"+-------------+",
+		Out:  "Set replication clusters successfully for tenant/namespace",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -62,32 +60,48 @@ func getTopics(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
 	}
 
-	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
+	invalidClustersName := pulsar.Output{
+		Desc: "Invalid cluster name, please check if your cluster name has the appropriate " +
+			"permissions under the current tenant",
+		Out: "[✖]  code: 403 reason: Cluster name is not in the list of allowed clusters list for tenant [public]",
+	}
+
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, invalidClustersName)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"topics",
-		"Get the list of topics for a namespace",
+		"set-clusters",
+		"Set the replicated clusters for a namespace",
 		desc.ToString(),
-		"topics",
+		"set-clusters",
 	)
 
+	var data pulsar.NamespacesData
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doListTopics(vc)
+		return doSetReplicationClusters(vc, data)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&data.ClusterIds,
+			"clusters",
+			"c",
+			"",
+			"Replication Cluster Ids list (comma separated values)")
+
+		cobra.MarkFlagRequired(flagSet, "clusters")
 	})
 }
 
-func doListTopics(vc *cmdutils.VerbCmd) error {
-	tenantAndNamespace := vc.NameArg
+func doSetReplicationClusters(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
+
+	clusters := strings.Split(data.ClusterIds, ",")
+	err := admin.Namespaces().SetNamespaceReplicationClusters(ns, clusters)
 	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+		vc.Command.Printf("Set replication clusters successfully for %s", ns)
 	}
 	return err
 }

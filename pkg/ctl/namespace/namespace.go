@@ -53,6 +53,17 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetOffloadThresholdCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetCompactionThresholdCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetCompactionThresholdCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAntiAffinityNamespaces)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getPersistence)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setPersistence)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setDeduplication)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setReplicationClusters)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getReplicationClusters)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, unload)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, splitBundle)
 
 	return resourceCmd
 }
