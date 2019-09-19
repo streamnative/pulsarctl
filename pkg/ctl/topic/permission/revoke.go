@@ -11,12 +11,12 @@ import (
 
 func RevokePermissions(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for revoking permissions on a topic."
+	desc.CommandUsedFor = "This command is used for revoking permissions of a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
 	revoke := Example{
-		Desc:    "Revoke permissions on a topic <topic-name>",
+		Desc:    "Revoke permissions of a topic <topic-name>",
 		Command: "pulsarctl topic revoke-permissions --role <role> <topic-name>",
 	}
 	examples = append(examples, revoke)
@@ -24,7 +24,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Revoke permissions for the role <role> to the topic <topic-name> successfully\n",
+		Out:  "Revoke permissions for the role <role> of the topic <topic-name> successfully\n",
 	}
 
 	flagError := Output{
@@ -71,7 +71,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().RevokePermission(*topic, role)
 	if err == nil {
-		vc.Command.Printf("Revoke permissions for the role %s to "+
+		vc.Command.Printf("Revoke permissions for the role %s of "+
 			"the topic %s successfully\n", role, topic.String())
 	}
 

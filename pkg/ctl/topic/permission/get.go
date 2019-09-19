@@ -8,12 +8,12 @@ import (
 
 func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting the permissions on a topic."
+	desc.CommandUsedFor = "This command is used for getting the permissions of a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the permissions on a topic <topic-name>",
+		Desc:    "Get the permissions of a topic <topic-name>",
 		Command: "pulsarctl topic get-permissions <topic-name>",
 	}
 	desc.CommandExamples = append(examples, get)
@@ -34,9 +34,8 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get-permissions",
-		"Get the permissions on a topic",
-		desc.ToString(),
-		"get")
+		"Get the permissions of a topic",
+		desc.ToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
