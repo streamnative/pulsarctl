@@ -58,7 +58,6 @@ type Client interface {
 	Topics() Topics
 	Sources() Sources
 	Sinks() Sinks
-	Topics() Topics
 	Namespaces() Namespaces
 	Schemas() Schema
 }

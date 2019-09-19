@@ -10,7 +10,8 @@ type Topics interface {
 	Delete(TopicName, bool, bool) error
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
-	List(NameSpaceName) ([]string, []string, error)	GetPermissions(TopicName) (map[string][]AuthAction, error)
+	List(NameSpaceName) ([]string, []string, error)
+	GetPermissions(TopicName) (map[string][]AuthAction, error)
 	GrantPermission(TopicName, string, []AuthAction) error
 	RevokePermission(TopicName, string) error
 	Lookup(TopicName) (LookupData, error)
@@ -122,7 +123,7 @@ func (t *topics) GetPermissions(topic TopicName) (map[string][]AuthAction, error
 }
 
 func (t *topics) GrantPermission(topic TopicName, role string, action []AuthAction) error {
-	endpoint  := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
 	var s []string
 	for _, v := range action {
 		s = append(s, v.String())
@@ -130,7 +131,7 @@ func (t *topics) GrantPermission(topic TopicName, role string, action []AuthActi
 	return t.client.post(endpoint, s, nil)
 }
 
-func (t *topics) RevokePermission(topic  TopicName, role string) error {
+func (t *topics) RevokePermission(topic TopicName, role string) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
 	return t.client.delete(endpoint, nil)
 }
