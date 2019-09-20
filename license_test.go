@@ -64,10 +64,9 @@ var otherCheck = regexp.MustCompile(`#
 #
 `)
 
-var skip = map[string]bool{
-}
+var skip = map[string]bool{}
 
-func TestLicense(t *testing.T)  {
+func TestLicense(t *testing.T) {
 	err := filepath.Walk(".", func(path string, fi os.FileInfo, err error) error {
 		if skip[path] {
 			return nil
@@ -98,7 +97,7 @@ func TestLicense(t *testing.T)  {
 			}
 
 			// Find license
-			if !otherCheck.Match(src){
+			if !otherCheck.Match(src) {
 				t.Errorf("%v: license header not present", path)
 				return nil
 			}
