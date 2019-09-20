@@ -65,7 +65,6 @@ var otherCheck = regexp.MustCompile(`#
 `)
 
 var skip = map[string]bool{
-	// These files are based off the gRPC samples, and are under a BSD license.
 }
 
 func TestLicense(t *testing.T)  {
