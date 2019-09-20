@@ -25,18 +25,18 @@ import (
 
 func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption of a namespace."
+	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption for a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
 	var examples []Example
 	enable := Example{
-		Desc:    "Enable messages encryption of the namespace <namespace-name>",
+		Desc:    "Enable messages encryption for the namespace <namespace-name>",
 		Command: "pulsarctl namespaces messages-encryption <namespace-name>",
 	}
 
 	disable := Example{
-		Desc:    "Disable messages encryption of the namespace <namespace-name>",
+		Desc:    "Disable messages encryption for the namespace <namespace-name>",
 		Command: "pulsarct. namespaces messages-encryption --disable <namespace-name>",
 	}
 	desc.CommandExamples = append(examples, enable, disable)
@@ -44,7 +44,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Successfully set the subscription auth mode of namespace <namespace-name> to <mode>",
+		Out: "Enable/Disable message encryption for the namespace <namespace-name>",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)

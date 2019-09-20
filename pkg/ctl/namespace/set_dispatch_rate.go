@@ -31,7 +31,7 @@ func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	setByMsg := Example{
 		Desc:    "Set the default message dispatch rate by message of the namespace <namespace-name> to <rate>",
-		Command: "pulsarctl namespaces set-dispatch-rate --msg-rate <rate> <namespace",
+		Command: "pulsarctl namespaces set-dispatch-rate --msg-rate <rate> <namespace>",
 	}
 
 	setByByte := Example{
