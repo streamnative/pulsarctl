@@ -42,8 +42,8 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the replicator message-dispatch-rate for all "+
-			"topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default replicator message dispatch rate "+
+			"of the namespace %s to %+v", ns,
 			pulsar.DispatchRate{-1, -1, 1}),
 		out.String())
 
@@ -64,8 +64,8 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the replicator message-dispatch-rate for all "+
-			"topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default replicator message dispatch rate "+
+			"of the namespace %s to %+v", ns,
 			pulsar.DispatchRate{10, 10, 10}),
 		out.String())
 

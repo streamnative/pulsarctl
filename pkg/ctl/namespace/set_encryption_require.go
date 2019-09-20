@@ -25,18 +25,18 @@ import (
 
 func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption of a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
 	var examples []Example
 	enable := Example{
-		Desc:    "Enable messages encryption for all topics of the namespace <namespace-name>",
+		Desc:    "Enable messages encryption of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces messages-encryption <namespace-name>",
 	}
 
 	disable := Example{
-		Desc:    "Disable messages encryption for all topics of the namespace <namespace-name>",
+		Desc:    "Disable messages encryption of the namespace <namespace-name>",
 		Command: "pulsarct. namespaces messages-encryption --disable <namespace-name>",
 	}
 	desc.CommandExamples = append(examples, enable, disable)
@@ -52,7 +52,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"messages-encryption",
-		"Enable or disable messages encryption for all topics of a namespace",
+		"Enable or disable messages encryption of a namespace",
 		desc.ToString())
 
 	var d bool
@@ -81,7 +81,7 @@ func doSetEncryptionRequired(vc *cmdutils.VerbCmd, disable bool) error {
 		} else {
 			out = "Disable"
 		}
-		vc.Command.Printf("%s messages encryption for all topics of the namespace %s", out, ns.String())
+		vc.Command.Printf("%s messages encryption of the namespace %s", out, ns.String())
 	}
 
 	return nil

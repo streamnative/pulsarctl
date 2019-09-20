@@ -24,13 +24,13 @@ import (
 
 func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting subscribe-rate per consumer for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for getting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the subscribe-rate for all subscriptions of namespace <namespace-name>",
-		Command: "pulsarctl namespaces get-subscribe-rate <namespace",
+		Desc:    "Get the default subscribe rate per consumer of a namespace <namespace-name>",
+		Command: "pulsarctl namespaces get-subscribe-rate <namespace>",
 	}
 	desc.CommandExamples = append(examples, get)
 
@@ -45,7 +45,7 @@ func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get-subscribe-rate",
-		"Get the subscribe-rate per consumer for all topics of a namespace",
+		"Get the default subscribe rate per consumer of a namespace",
 		desc.ToString())
 
 	vc.SetRunFuncWithNameArg(func() error {

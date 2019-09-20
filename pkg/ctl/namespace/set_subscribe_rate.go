@@ -25,17 +25,17 @@ import (
 
 func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for setting subscribe-rate per consumer for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for setting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
 	setBySub := Example{
-		Desc:    "Set the subscribe-rate by subscribe <rate> for all subscriptions of namespace <namespace-name>",
-		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate <rate> <namespace",
+		Desc:    "Set the default subscribe rate by subscribe of the namespace <namespace-name> <rate>",
+		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate <rate> <namespace>",
 	}
 
 	setByTime := Example{
-		Desc:    "Set the subscribe-rate by time <period> for all subscriptions of namespace <namespace-name>",
+		Desc:    "Set the default subscribe rate by time of the namespace <namespace-name> <period>",
 		Command: "pulsarctl namespaces set-subscribe-rate --period <period> <namespace",
 	}
 	desc.CommandExamples = append(examples, setBySub, setByTime)
@@ -43,7 +43,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Success set the subscribe-rate for all topics of the namespace <namespace-name> to <rate>",
+		Out:  "Success set the default subscribe rate of the namespace <namespace-name> to <rate>",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -51,7 +51,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"set-subscribe-rate",
-		"Set the subscribe-rate per consumer for all topics of a namespace",
+		"Set the default subscribe rate per consumer of a namespace",
 		desc.ToString())
 
 	var rate SubscribeRate
@@ -77,7 +77,7 @@ func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate SubscribeRate) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetSubscribeRate(*ns, rate)
 	if err == nil {
-		vc.Command.Printf("Success set the subscribe-rate for all topics of the namespace %s to %+v", ns.String(), rate)
+		vc.Command.Printf("Success set the default subscribe rate of the namespace %s to %+v", ns.String(), rate)
 	}
 
 	return err

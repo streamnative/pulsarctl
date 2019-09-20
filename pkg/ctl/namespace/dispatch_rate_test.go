@@ -51,8 +51,8 @@ func TestDispatchRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the message-dispatch-rate for all "+
-			"topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default message dispatch rate "+
+			"of the namespace %s to %+v", ns,
 			pulsar.DispatchRate{-1, -1, 1}),
 		out.String())
 
@@ -71,8 +71,8 @@ func TestDispatchRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the message-dispatch-rate for all "+
-			"topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default message dispatch rate "+
+			"of the namespace %s to %+v", ns,
 			pulsar.DispatchRate{10, 10, 10}),
 		out.String())
 

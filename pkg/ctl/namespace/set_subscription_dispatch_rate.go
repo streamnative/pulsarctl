@@ -25,22 +25,22 @@ import (
 
 func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for setting subscription message-dispatch-rate for all subscriptions of a namespace."
+	desc.CommandUsedFor = "This command is used for setting the default subscription message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
 	setByMsg := Example{
-		Desc:    "Set the subscription message-dispatch-rate by message <rate> for all subscriptions of namespace <namespace-name>",
+		Desc:    "Set the default subscription message dispatch rate by message of the namespace <namespace-name> to <rate>",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --msg-rate <rate> <namespace",
 	}
 
 	setByByte := Example{
-		Desc:    "Set the subscription message-dispatch-rate by byte <rate> for all subscriptions of namespace <namespace-name>",
+		Desc:    "Set the default subscription message dispatch rate by byte of the namespace <namespace-name> to <rate>",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --byte-rate <rate> <namespace",
 	}
 
 	setByTime := Example{
-		Desc:    "Set the subscriptions message-dispatch-rate by time <period> for all subscriptions of namespace <namespace-name>",
+		Desc:    "Set the default subscriptions message dispatch rate by time of the namespace <namespace-name> to <rate>",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --period <period> <namespace",
 	}
 	desc.CommandExamples = append(examples, setByMsg, setByByte, setByTime)
@@ -48,8 +48,7 @@ func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out: "Success set the subscription message-dispatch-rate for all " +
-			"subscriptions of the namespace <namespace-name> to <rate>",
+		Out: "Success set the default subscription message dispatch rate of the namespace <namespace-name> to <rate>",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -57,7 +56,7 @@ func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"set-subscription-dispatch-rate",
-		"Set the subscription message-dispatch-rate for all subscriptions of a namespace",
+		"Set the default subscription message dispatch rate of a namespace",
 		desc.ToString())
 
 	var rate DispatchRate
@@ -85,8 +84,8 @@ func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, rate DispatchRate) erro
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetSubscriptionDispatchRate(*ns, rate)
 	if err == nil {
-		vc.Command.Printf("Success set the subscription message-dispatch-rate for all "+
-			"subscriptions of the namespace %s to %+v", ns.String(), rate)
+		vc.Command.Printf("Success set the default subscription message dispatch rate "+
+			"of the namespace %s to %+v", ns.String(), rate)
 	}
 
 	return err

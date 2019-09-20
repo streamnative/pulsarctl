@@ -37,7 +37,7 @@ func TestSetSubscriptionAuthModeCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(SetSubscriptionAuthModeCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully set the subscription auth mode of namespace %s to %s", ns, "Prefix"),
+		fmt.Sprintf("Successfully set the default subscription auth mode of namespace %s to %s", ns, "Prefix"),
 		out.String())
 
 	args = []string{"policies", ns}
@@ -56,7 +56,7 @@ func TestSetSubscriptionAuthModeCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetSubscriptionAuthModeCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully set the subscription auth mode of namespace %s to %s", ns, "None"),
+		fmt.Sprintf("Successfully set the default subscription auth mode of namespace %s to %s", ns, "None"),
 		out.String())
 
 	args = []string{"policies", ns}

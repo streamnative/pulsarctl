@@ -31,12 +31,12 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []Example
 	unsub := Example{
-		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of a namespace <namespace-name>",
+		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces unsubscribe <namespace-name> <subscription-name>",
 	}
 
 	unsubWithBundle := Example{
-		Desc: "Unsubscribe the specified subscription <subscription-name> for all topic of a namespace <namespace-name> " +
+		Desc: "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace <namespace-name> " +
 			"with bundle range <bundle>",
 		Command: "pulsarctl namespaces unsubscribe --bundle <bundle> <namespace-name> <subscription-name>",
 	}

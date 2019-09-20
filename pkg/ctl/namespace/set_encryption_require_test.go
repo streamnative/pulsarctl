@@ -37,7 +37,7 @@ func TestSetEncryptionRequiredCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(SetEncryptionRequiredCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("%s messages encryption for all topics of the namespace %s", "Enable", ns),
+		fmt.Sprintf("%s messages encryption of the namespace %s", "Enable", ns),
 		out.String())
 
 	args = []string{"policies", ns}
@@ -56,7 +56,7 @@ func TestSetEncryptionRequiredCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetEncryptionRequiredCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("%s messages encryption for all topics of the namespace %s", "Disable", ns),
+		fmt.Sprintf("%s messages encryption of the namespace %s", "Disable", ns),
 		out.String())
 
 	args = []string{"policies", ns}

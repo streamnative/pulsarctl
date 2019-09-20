@@ -50,8 +50,8 @@ func TestSubscribeRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetSubscribeRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the subscribe-rate for all "+
-			"topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default subscribe rate "+
+			"of the namespace %s to %+v", ns,
 			pulsar.SubscribeRate{-1, 30}),
 		out.String())
 
@@ -69,7 +69,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(SetSubscribeRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Success set the subscribe-rate for all topics of the namespace %s to %+v", ns,
+		fmt.Sprintf("Success set the default subscribe rate of the namespace %s to %+v", ns,
 			pulsar.SubscribeRate{10, 10}),
 		out.String())
 

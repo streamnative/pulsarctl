@@ -26,13 +26,13 @@ import (
 
 func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for setting the subscription auth mode of all topics under a namespace."
+	desc.CommandUsedFor = "This command is used for setting the default subscription auth mode of a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
 	var examples []Example
 	set := Example{
-		Desc:    "Set the subscription auth mode <mode> of all topics under the namespace <namespace-name>",
+		Desc:    "Set the default subscription auth mode <mode> of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces set-subscription-auth-mode --mode <mode> <namespace-name>",
 	}
 	desc.CommandExamples = append(examples, set)
@@ -40,7 +40,7 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Successfully set the subscription auth mode of namespace <namespace-name> to <mode>",
+		Out:  "Successfully set the default subscription auth mode of namespace <namespace-name> to <mode>",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -48,7 +48,7 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"set-subscription-auth-mode",
-		"Set the subscriprtion auth mode of a namespace",
+		"Set the default subscription auth mode of a namespace",
 		desc.ToString())
 
 	var mode string
@@ -78,7 +78,7 @@ func doSetSubscriptionAuthMode(vc *cmdutils.VerbCmd, mode string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetSubscriptionAuthMode(*ns, m)
 	if err == nil {
-		vc.Command.Printf("Successfully set the subscription auth mode of namespace %s to %s",
+		vc.Command.Printf("Successfully set the default subscription auth mode of namespace %s to %s",
 			ns.String(), m.String())
 	}
 

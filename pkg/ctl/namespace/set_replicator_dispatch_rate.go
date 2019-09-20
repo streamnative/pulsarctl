@@ -25,22 +25,22 @@ import (
 
 func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "--partition set replicator message-dispatch-rate for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for setting the default replicator message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
 	setByMsg := Example{
-		Desc:    "Set the replicator message-dispatch-rate by message <rate> for all topics of namespace <namespace-name>",
+		Desc:    "Set the default replicator message dispatch rate by message of the namespace <namespace-name> to <rate>",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --msg-rate <rate> <namespace",
 	}
 
 	setByByte := Example{
-		Desc:    "Set the replicator message-dispatch-rate by byte <rate> for all topics of namespace <namespace-name>",
+		Desc:    "Set the default replicator message dispatch rate by byte of the namespace <namespace-name> to <rate>",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --byte-rate <rate> <namespace",
 	}
 
 	setByTime := Example{
-		Desc:    "Set the replicator message-dispatch-rate by time <period> for all topics of namespace <namespace-name>",
+		Desc:    "Set the default replicator message dispatch rate by time of the namespace <namespace-name> to <period>",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --period <period> <namespace",
 	}
 	desc.CommandExamples = append(examples, setByMsg, setByByte, setByTime)
@@ -48,8 +48,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out: "Success set the replicator message-dispatch-rate for all " +
-			"topics of the namespace <namespace-name> to <rate>",
+		Out: "Success set the default replicator message dispatch rate of the namespace <namespace-name> to <rate>",
 	}
 
 	notConfigured := Output{
@@ -63,7 +62,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"set-replicator-dispatch-rate",
-		"Set the replicator message-dispatch-rate for all topics of a namespace",
+		"Set the default replicator message dispatch rate of a namespace",
 		desc.ToString())
 
 	var rate DispatchRate
@@ -91,8 +90,8 @@ func doSetReplicatorDispatchRate(vc *cmdutils.VerbCmd, rate DispatchRate) error 
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetReplicatorDispatchRate(*ns, rate)
 	if err == nil {
-		vc.Command.Printf("Success set the replicator message-dispatch-rate for all "+
-			"topics of the namespace %s to %+v", ns.String(), rate)
+		vc.Command.Printf("Success set the default replicator message dispatch rate "+
+			"of the namespace %s to %+v", ns.String(), rate)
 	}
 
 	return err

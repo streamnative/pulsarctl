@@ -24,12 +24,12 @@ import (
 
 func GetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for getting message-dispatch-rate for all topics of a namespace."
+	desc.CommandUsedFor = "This command is used for getting the default message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the message-dispatch-rate for all topics of namespace <namespace-name>",
+		Desc:    "Get the default message dispatch rate of namespace <namespace-name>",
 		Command: "pulsarctl namespaces get-dispatch-rate <namespace",
 	}
 	desc.CommandExamples = append(examples, get)
@@ -45,7 +45,7 @@ func GetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get-dispatch-rate",
-		"Get the message-dispatch-rate for all topics of a namespace",
+		"Get the default message dispatch rate of a namespace",
 		desc.ToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
