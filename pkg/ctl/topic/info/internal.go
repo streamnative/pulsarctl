@@ -60,7 +60,7 @@ func GetInternalInfoCmd(vc *cmdutils.VerbCmd)  {
 	}
 
 	failOut := Output{
-		Desc: "the specified topic does not existing",
+		Desc: "the specified topic does not exist",
 		Out: "[✖]  code: 500 reason: Unknown pulsar error",
 	}
 	out = append(out, successOut, ArgError, failOut)
