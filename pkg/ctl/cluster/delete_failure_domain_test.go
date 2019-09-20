@@ -7,7 +7,7 @@ import (
 
 func TestDeleteFailureDomainCmd(t *testing.T) {
 	args := []string{"create", "delete-failure-test"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create-failure-domain", "-b", "127.0.0.1:6650", "delete-failure-test", "delete-failure-domain"}

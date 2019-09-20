@@ -9,11 +9,11 @@ import (
 
 func TestGetFailureDomainSuccess(t *testing.T) {
 	args := []string{"create", "failure-broker-A"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "failure-broker-B"}
-	_, _, _, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create-failure-domain", "-b", "failure-broker-A", "-b", "failure-broker-B", "standalone", "failure-domain"}

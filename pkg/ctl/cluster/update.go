@@ -6,7 +6,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func updateClusterCmd(vc *cmdutils.VerbCmd) {
+func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the cluster data of the specified cluster."
 	desc.CommandPermission = "This command requires super-user permissions."

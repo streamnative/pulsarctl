@@ -55,8 +55,11 @@ type Client interface {
 	Clusters() Clusters
 	Functions() Functions
 	Tenants() Tenants
-	Sources() Sources
 	Topics() Topics
+	Sources() Sources
+	Sinks() Sinks
+	Namespaces() Namespaces
+	Schemas() Schema
 }
 
 type client struct {
@@ -143,33 +146,66 @@ func (c *client) endpoint(componentPath string, parts ...string) string {
 
 // get is used to do a GET request against an endpoint
 // and deserialize the response into an interface
-func (c *client) get(endpoint string, obj interface{}) error {
+
+func (c *client) getWithQueryParams(endpoint string, obj interface{}, params map[string]string, decode bool) ([]byte, error) {
+
 	req, err := c.newRequest(http.MethodGet, endpoint)
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	if params != nil {
+		query := req.url.Query()
+		for k, v := range params {
+			query.Add(k, v)
+		}
+		req.params = query
 	}
 
 	resp, err := checkSuccessful(c.doRequest(req))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer safeRespClose(resp)
 
 	if obj != nil {
 		if err := decodeJsonBody(resp, &obj); err != nil {
-			return err
+			return nil, err
 		}
+	} else if !decode {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		return body, err
 	}
 
-	return nil
+	return nil, err
+}
+
+func (c *client) get(endpoint string, obj interface{}) error {
+	_, err := c.getWithQueryParams(endpoint, obj, nil, true)
+	return err
 }
 
 func (c *client) put(endpoint string, in, obj interface{}) error {
+	return c.putWithQueryParams(endpoint, in, obj, nil)
+}
+
+func (c *client) putWithQueryParams(endpoint string, in, obj interface{}, params map[string]string) error {
 	req, err := c.newRequest(http.MethodPut, endpoint)
 	if err != nil {
 		return err
 	}
 	req.obj = in
+
+	if params != nil {
+		query := req.url.Query()
+		for k, v := range params {
+			query.Add(k, v)
+		}
+		req.params = query
+	}
 
 	resp, err := checkSuccessful(c.doRequest(req))
 	if err != nil {
@@ -201,6 +237,7 @@ func (c *client) deleteWithQueryParams(endpoint string, obj interface{}, params 
 		for k, v := range params {
 			query.Add(k, v)
 		}
+		req.params = query
 	}
 
 	resp, err := checkSuccessful(c.doRequest(req))

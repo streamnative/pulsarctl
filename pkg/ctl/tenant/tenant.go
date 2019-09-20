@@ -30,7 +30,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createTenantCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteTenantCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateTenantCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UpdateTenantCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listTenantCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getTenantCmd)
 

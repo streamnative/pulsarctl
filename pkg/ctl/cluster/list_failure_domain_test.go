@@ -9,15 +9,15 @@ import (
 
 func TestListFailureDomainsCmd(t *testing.T) {
 	args := []string{"create", "list-failure-test"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "list-failure-broker-A"}
-	_, _, _, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create", "list-failure-broker-B"}
-	_, _, _, err = TestClusterCommands(createClusterCmd, args)
+	_, _, _, err = TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"create-failure-domain", "--brokers", "list-failure-broker-A", "list-failure-test", "list-failure-A"}

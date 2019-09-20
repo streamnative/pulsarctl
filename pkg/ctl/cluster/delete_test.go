@@ -8,7 +8,7 @@ import (
 
 func TestDeleteClusterCmd(t *testing.T) {
 	args := []string{"add", "delete-test"}
-	_, _, _, err := TestClusterCommands(createClusterCmd, args)
+	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
 	args = []string{"list"}

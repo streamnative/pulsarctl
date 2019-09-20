@@ -18,7 +18,6 @@
 package sources
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -63,7 +62,6 @@ func TestFailureDeleteSource(t *testing.T) {
 
 	exceptedErr := "Source test-source-delete doesn't exist"
 	_, execErrMsg, _ := TestSourcesCommands(deleteSourcesCmd, failureDeleteArgs)
-	fmt.Println(execErrMsg.Error())
 	assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
 	assert.NotNil(t, execErrMsg)
 
