@@ -57,7 +57,7 @@ func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
 		return doRevokePermissions(vc, role)
 	})
 
-	vc.FlagSetGroup.InFlagSet("GrantPermissions", func(set *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("Revoke Permissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "",
 			"Client role to which revoke permissions")
 		cobra.MarkFlagRequired(set, "role")

@@ -30,7 +30,7 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	getNs := Example{
 		Desc:    "Get permissions configure data of a namespace <tenant>/<namespace>",
-		Command: "pulsarctl namespaces permissions get <tenant>/<namespace>",
+		Command: "pulsarctl namespaces permissions <tenant>/<namespace>",
 	}
 	desc.CommandExamples = append(examples, getNs)
 
@@ -44,6 +44,7 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 			"\n}",
 	}
 	out = append(out, successOut, ArgsError)
+	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
