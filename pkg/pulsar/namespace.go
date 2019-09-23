@@ -116,6 +116,12 @@ type Namespaces interface {
 
 	// Split namespace bundle
 	SplitNamespaceBundle(namespace, bundle string, unloadSplitBundles bool) error
+
+	GetNamespacePermissions(namespace NameSpaceName) (map[string][]AuthAction, error)
+	GrantNamespacePermission(namespace NameSpaceName, role string, action []AuthAction) error
+	RevokeNamespacePermission(namespace NameSpaceName, role string) error
+	GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error
+	RevokeSubPermission(namespace NameSpaceName, sName, role string) error
 }
 
 type namespaces struct {
@@ -428,4 +434,37 @@ func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitB
 		"unload": strconv.FormatBool(unloadSplitBundles),
 	}
 	return n.client.putWithQueryParams(endpoint, "", nil, params)
+}
+
+func (n *namespaces) GetNamespacePermissions(namespace NameSpaceName) (map[string][]AuthAction, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions")
+	var permissions map[string][]AuthAction
+	err := n.client.get(endpoint, &permissions)
+	return permissions, err
+}
+
+func (n *namespaces) GrantNamespacePermission(namespace NameSpaceName, role string, action []AuthAction) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
+	var s []string
+	for _, v := range action {
+		s = append(s, v.String())
+	}
+	return n.client.post(endpoint, s, nil)
+}
+
+func (n *namespaces) RevokeNamespacePermission(namespace NameSpaceName, role string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
+	return n.client.delete(endpoint, nil)
+}
+
+func (n *namespaces) GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
+		"subscription", sName)
+	return n.client.post(endpoint, roles, nil)
+}
+
+func (n *namespaces) RevokeSubPermission(namespace NameSpaceName, sName, role string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
+		"subscription", sName, role)
+	return n.client.delete(endpoint, nil)
 }

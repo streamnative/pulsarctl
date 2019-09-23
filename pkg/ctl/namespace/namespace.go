@@ -53,6 +53,11 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getReplicationClusters)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, unload)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, splitBundle)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetPermissionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GrantPermissionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RevokePermissionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GrantSubPermissionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RevokeSubPermissionsCmd)
 
 	return resourceCmd
 }
