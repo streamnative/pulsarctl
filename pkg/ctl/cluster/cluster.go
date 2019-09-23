@@ -36,11 +36,11 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"",
 		"cluster")
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createClusterCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, CreateClusterCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listClustersCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getClusterDataCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteClusterCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateClusterCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UpdateClusterCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updatePeerClustersCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getPeerClustersCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFailureDomainCmd)

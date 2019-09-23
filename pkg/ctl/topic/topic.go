@@ -9,6 +9,9 @@ import (
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/teminate"
 	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/unload"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/info"
+	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -24,16 +27,20 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetTopicCmd,
 		ListTopicsCmd,
 		UpdateTopicCmd,
-
-		GetStatsCmd,
-		GetInternalStatsCmd,
-
 		UnloadCmd,
 		OffloadCmd,
 		OffloadStatusCmd,
 		CompactCmd,
 		CompactStatusCmd,
 		TerminateCmd,
+		GrantPermissionCmd,
+		RevokePermissions,
+		GetPermissionsCmd,
+		LookupTopicCmd,
+		GetBundleRangeCmd,
+		GetLastMessageIdCmd,
+		GetStatsCmd,
+		GetInternalStatsCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

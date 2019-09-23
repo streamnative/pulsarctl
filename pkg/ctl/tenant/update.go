@@ -6,7 +6,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func updateTenantCmd(vc *cmdutils.VerbCmd) {
+func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the configuration of a tenant."
 	desc.CommandPermission = "This command requires super-user permissions."

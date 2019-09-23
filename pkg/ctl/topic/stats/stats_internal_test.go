@@ -45,12 +45,12 @@ func TestGetInternalStatsCmd(t *testing.T) {
 	assert.Equal(t, defaultStats.State, stats.State)
 }
 
-func TestGetPartitionedTopicInternalStats(t *testing.T) {
-	args := []string{"create", "test-partitioned-topic-internal-stats", "2"}
-	_, execErr, _, _ := TestTopicCommands(GetInternalStatsCmd, args)
+func TestGetPartitionedTopicInternalStatsError(t *testing.T) {
+	args := []string{"create", "test-partitioned-topic-internal-stats-error", "2"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"internal-stats", "test-partitioned-topic-internal-stats"}
+	args = []string{"internal-stats", "test-partitioned-topic-internal-stats-error"}
 	_, execErr, _, _ = TestTopicCommands(GetInternalStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())

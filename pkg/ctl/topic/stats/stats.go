@@ -22,12 +22,12 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 
 	getPartition := Example{
 		Desc:    "Get the partitioned topic <topic-name> stats",
-		Command: "pulsarctl topic stats --partition <topic-name>",
+		Command: "pulsarctl topic stats --partitioned-topic <topic-name>",
 	}
 
 	getPerPartition := Example{
 		Desc:    "Get the partitioned topic <topic-name> stats and per partition stats",
-		Command: "pulsarctl topic stats --partition --per-partition <topic-name>",
+		Command: "pulsarctl topic stats --partitioned-topic --per-partition <topic-name>",
 	}
 
 	desc.CommandExamples = append(examples, get, getPartition, getPerPartition)
@@ -104,9 +104,9 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, partitionOutput, perPartitionOutput, ArgError)
 
 	topicNotFoundError := Output{
-		Desc: "the specified topic is not exist " +
-			"or the specified topic is a partitioned-topic and you don't specified --partition " +
-			"or the specified topic is a non-partitioned topic and you specified --partition",
+		Desc: "the specified topic does not exist " +
+			"or the specified topic is a partitioned-topic and you don't specified --partitioned-topic " +
+			"or the specified topic is a non-partitioned topic and you specified --partitioned-topic",
 		Out: "code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
@@ -126,14 +126,14 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	vc.FlagSetGroup.InFlagSet("Stats", func(set *pflag.FlagSet) {
-		set.BoolVarP(&partition, "partition", "p", false,
+		set.BoolVarP(&partition, "partitioned-topic", "p", false,
 			"Get the partitioned topic stats")
 		set.BoolVarP(&perPartition, "per-partition", "", false,
 			"Get the per partition topic stats")
 	})
 }
 
-func doGetStats(vc *cmdutils.VerbCmd, partition, perPartition bool) error {
+func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -146,7 +146,7 @@ func doGetStats(vc *cmdutils.VerbCmd, partition, perPartition bool) error {
 
 	admin := cmdutils.NewPulsarClient()
 
-	if partition {
+	if partitionedTopic {
 		stats, err := admin.Topics().GetPartitionedStats(*topic, perPartition)
 		if err == nil {
 			cmdutils.PrintJson(vc.Command.OutOrStdout(), stats)

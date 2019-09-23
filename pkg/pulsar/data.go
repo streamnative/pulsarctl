@@ -117,9 +117,58 @@ type SourceData struct {
 	UpdateAuthData bool `json:"updateAuthData"`
 }
 
+type SinkData struct {
+	Tenant                  string  `json:"tenant"`
+	Namespace               string  `json:"namespace"`
+	Name                    string  `json:"name"`
+	SinkType                string  `json:"sinkType"`
+	Inputs                  string  `json:"inputs"`
+	TopicsPattern           string  `json:"topicsPattern"`
+	SubsName                string  `json:"subsName"`
+	CustomSerdeInputString  string  `json:"customSerdeInputString"`
+	CustomSchemaInputString string  `json:"customSchemaInputString"`
+	ProcessingGuarantees    string  `json:"processingGuarantees"`
+	RetainOrdering          bool    `json:"retainOrdering"`
+	Parallelism             int     `json:"parallelism"`
+	Archive                 string  `json:"archive"`
+	ClassName               string  `json:"className"`
+	SinkConfigFile          string  `json:"sinkConfigFile"`
+	CPU                     float64 `json:"cpu"`
+	RAM                     int64   `json:"ram"`
+	Disk                    int64   `json:"disk"`
+	SinkConfigString        string  `json:"sinkConfigString"`
+	AutoAck                 bool    `json:"autoAck"`
+	TimeoutMs               int64   `json:"timeoutMs"`
+
+	SinkConf   *SinkConfig `json:"-"`
+	InstanceID string      `json:"instanceId"`
+
+	UpdateAuthData bool `json:"updateAuthData"`
+}
+
 // Topic data
 type PartitionedTopicMetadata struct {
 	Partitions int `json:"partitions"`
+}
+
+type NamespacesData struct {
+	NumBundles                     int      `json:"numBundles"`
+	Clusters                       []string `json:"clusters"`
+	ClusterIds                     string   `json:"clusterIds"`
+	MessageTTL                     int      `json:"messageTTL"`
+	RetentionTimeStr               string   `json:"retentionTimeStr"`
+	LimitStr                       string   `json:"limitStr"`
+	PolicyStr                      string   `json:"policyStr"`
+	AntiAffinityGroup              string   `json:"antiAffinityGroup"`
+	Tenant                         string   `json:"tenant"`
+	Cluster                        string   `json:"cluster"`
+	BookkeeperEnsemble             int      `json:"bookkeeperEnsemble"`
+	BookkeeperWriteQuorum          int      `json:"bookkeeperWriteQuorum"`
+	BookkeeperAckQuorum            int      `json:"bookkeeperAckQuorum"`
+	ManagedLedgerMaxMarkDeleteRate float64  `json:"managedLedgerMaxMarkDeleteRate"`
+	Enable                         bool     `json:"enable"`
+	Bundle                         string   `json:"bundle"`
+	Unload                         bool     `json:"unload"`
 }
 
 type TopicStats struct {
@@ -242,4 +291,21 @@ type MessageId struct {
 	LedgerId       int64 `json:"ledgerId"`
 	EntryId        int64 `json:"entryId"`
 	PartitionIndex int   `json:"partitionIndex"`
+}
+
+type SchemaData struct {
+	Version         int64  `json:"version"`
+	Filename        string `json:"filename"`
+	Jar             string `json:"jar"`
+	Type            string `json:"type"`
+	Classname       string `json:"classname"`
+	AlwaysAllowNull bool   `json:"alwaysAllowNull"`
+	DryRun          bool   `json:"dryRun"`
+}
+
+type LookupData struct {
+	BrokerUrl    string `json:"brokerUrl"`
+	BrokerUrlTls string `json:"brokerUrlTls"`
+	HttpUrl      string `json:"httpUrl"`
+	HttpUrlTls   string `json:"httpUrlTls"`
 }

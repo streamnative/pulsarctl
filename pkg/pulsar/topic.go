@@ -1,6 +1,7 @@
 package pulsar
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -10,8 +11,6 @@ type Topics interface {
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
 	List(NameSpaceName) ([]string, []string, error)
-	GetStats(TopicName) (TopicStats, error)
-	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 	Compact(TopicName) error
 	CompactStatus(TopicName) (LongRunningProcessStatus, error)
@@ -19,6 +18,15 @@ type Topics interface {
 	Offload(TopicName, MessageId) error
 	OffloadStatus(TopicName) (OffloadProcessStatus, error)
 	Terminate(TopicName) (MessageId, error)
+	GetPermissions(TopicName) (map[string][]AuthAction, error)
+	GrantPermission(TopicName, string, []AuthAction) error
+	RevokePermission(TopicName, string) error
+	Lookup(TopicName) (LookupData, error)
+	GetBundleRange(TopicName) (string, error)
+	GetLastMessageId(TopicName) (MessageId, error)
+	GetStats(TopicName) (TopicStats, error)
+	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
+	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 }
 
 type topics struct {
@@ -26,6 +34,7 @@ type topics struct {
 	basePath          string
 	persistentPath    string
 	nonPersistentPath string
+	lookupPath        string
 }
 
 func (c *client) Topics() Topics {
@@ -34,6 +43,7 @@ func (c *client) Topics() Topics {
 		basePath:          "",
 		persistentPath:    "/persistent",
 		nonPersistentPath: "/non-persistent",
+		lookupPath:        "/lookup/v2/topic",
 	}
 }
 
@@ -112,6 +122,47 @@ func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- erro
 	out <- topics
 }
 
+func (t *topics) GetPermissions(topic TopicName) (map[string][]AuthAction, error) {
+	var permissions map[string][]AuthAction
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions")
+	err := t.client.get(endpoint, &permissions)
+	return permissions, err
+}
+
+func (t *topics) GrantPermission(topic TopicName, role string, action []AuthAction) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
+	var s []string
+	for _, v := range action {
+		s = append(s, v.String())
+	}
+	return t.client.post(endpoint, s, nil)
+}
+
+func (t *topics) RevokePermission(topic TopicName, role string) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
+	return t.client.delete(endpoint, nil)
+}
+
+func (t *topics) Lookup(topic TopicName) (LookupData, error) {
+	var lookup LookupData
+	endpoint := fmt.Sprintf("%s/%s", t.lookupPath, topic.GetRestPath())
+	err := t.client.get(endpoint, &lookup)
+	return lookup, err
+}
+
+func (t *topics) GetBundleRange(topic TopicName) (string, error) {
+	endpoint := fmt.Sprintf("%s/%s/%s", t.lookupPath, topic.GetRestPath(), "bundle")
+	data, err := t.client.getWithQueryParams(endpoint, nil, nil, false)
+	return string(data), err
+}
+
+func (t *topics) GetLastMessageId(topic TopicName) (MessageId, error) {
+	var messageId MessageId
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "lastMessageId")
+	err := t.client.get(endpoint, &messageId)
+	return messageId, err
+}
+
 func (t *topics) GetStats(topic TopicName) (TopicStats, error) {
 	var stats TopicStats
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "stats")
@@ -132,7 +183,7 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	params := map[string]string{
 		"perPartition": strconv.FormatBool(perPartition),
 	}
-	err := t.client.getWithQueryParams(endpoint, &stats, params)
+	_, err := t.client.getWithQueryParams(endpoint, &stats, params, true)
 	return stats, err
 }
 
