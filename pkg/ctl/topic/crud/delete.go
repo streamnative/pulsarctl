@@ -11,6 +11,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting an existing topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
 	var examples []pulsar.Example
 	deleteTopic := pulsar.Example{

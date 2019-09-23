@@ -12,6 +12,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandUsedFor = "This command is used for getting the internal stats for a non-partitioned topic or a " +
 		"partition of a partitioned topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
 	var examples []Example
 	get := Example{

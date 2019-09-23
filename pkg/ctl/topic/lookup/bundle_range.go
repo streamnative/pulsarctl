@@ -10,6 +10,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for getting namespace bundle range of a topic (partition)."
 	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
 	var examples []Example
 	get := Example{

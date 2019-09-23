@@ -13,6 +13,7 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for updating the partition number of an exist topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "partitioned topic"
 
 	var examples []Example
 	updateTopic := Example{

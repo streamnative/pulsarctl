@@ -11,6 +11,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
 	desc.CommandUsedFor = "This command is used for listing all exist topics under the specified namespace."
 	desc.CommandPermission = "This command requires admin permissions."
+	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
 	listTopics := Example{
 		Desc:    "List all exist topics under the namespace <tenant/namespace>",
