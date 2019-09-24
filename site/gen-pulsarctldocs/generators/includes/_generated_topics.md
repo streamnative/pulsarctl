@@ -375,6 +375,339 @@ pulsarctl topics get (topic-name)
 
 ------------
 
+## <em>get-permissions</em>
+
+>bdocs-tab:example Get the permissions of a topic (topic-name)
+
+```bdocs-tab:example_shell
+pulsarctl topic get-permissions (topic-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the permissions of a topic. 
+
+  
+### Required Permission
+ 
+
+ This command requires namespace admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "<role>": [ 
+
+ "<action>" 
+
+ ] 
+
+ } 
+
+  
+ //the topic name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+ [✖]  Invalid short topic name '<topic-name>', it should be in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+  
+ //the topic name is not in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid complete topic name '<topic-name>', it should be in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid topic name '<topic-name>', it should be in the format of<tenant>/<namespace>/<topic> 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ get-permissions`
+
+
+
+
+------------
+
+## <em>grant-permissions</em>
+
+>bdocs-tab:example Grant permissions to a client on a single topic (topic-name)
+
+```bdocs-tab:example_shell
+pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for granting permissions to a client role on a topic. 
+
+  
+### Required Permission
+ 
+
+ This command requires namespace admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Grant role %s and actions %v to the topic %s successfully 
+
+  
+ //the topic name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified role is empty 
+
+ Invalid role name 
+
+  
+ //the specified actions is not allowed. 
+
+ The auth action  only can be specified as 'produce', 'consume', or 'functions'. Invalid auth action '(actions)' 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+ [✖]  Invalid short topic name '<topic-name>', it should be in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+  
+ //the topic name is not in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid complete topic name '<topic-name>', it should be in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid topic name '<topic-name>', it should be in the format of<tenant>/<namespace>/<topic> 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ grant-permissions`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+actions |  | [] | Actions to be granted (produce,consume,functions) 
+role |  |  | Client role to which grant permissions 
+
+
+
+------------
+
+## <em>internal-info</em>
+
+>bdocs-tab:example Get the internal info of a topic <topic-name>
+
+```bdocs-tab:example_shell
+pulsarctl topic internal-info <topic-name>
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the internal info of a topic which has messages or subscriptions. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "version": 1, 
+
+ "creationDate": "", 
+
+ "modificationData": "", 
+
+ "ledgers": [ 
+
+ { 
+
+ "ledgerId": 0, 
+
+ "entries": 0, 
+
+ "size": 0, 
+
+ "timestamp": 0 
+
+ } 
+
+ ], 
+
+ "terminatedPosition": { 
+
+ "ledgerId": 0, 
+
+ "entryId": 0 
+
+ }, 
+
+ "cursors": { 
+
+ "hello": { 
+
+ "version": 0, 
+
+ "creationDate": "", 
+
+ "modificationDate": "", 
+
+ "cursorsLedgerId": 0, 
+
+ "markDelete": { 
+
+ "ledgerId": 0, 
+
+ "entryId": 0 
+
+ }, 
+
+ "individualDeletedMessages": null, 
+
+ "Properties": null 
+
+ } 
+
+ } 
+
+ } 
+
+  
+
+  
+ //the topic name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified topic does not exist 
+
+ [✖]  code: 500 reason: Unknown pulsar error 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+ [✖]  Invalid short topic name '<topic-name>', it should be in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+  
+ //the topic name is not in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid complete topic name '<topic-name>', it should be in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid topic name '<topic-name>', it should be in the format of<tenant>/<namespace>/<topic> 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ internal-info`
+
+
+
+
+------------
+
 ## <em>internal-stats</em>
 
 >bdocs-tab:example Get internal stats for an existing non-partitioned-topic (topic-name)
@@ -792,6 +1125,95 @@ pulsarctl topic lookup (topic-name)
 
 `$ lookup`
 
+
+
+
+------------
+
+## <em>revoke-permissions</em>
+
+
+
+### Used For
+ 
+
+ This command is used for revoking a client role permissions on a topic. 
+
+  
+### Required Permission
+ 
+
+ This command requires namespace admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Revoke permissions for the role (role) of the topic (topic-name) successfully 
+
+  
+
+  
+ //the specified role is empty 
+
+ Invalid role name 
+
+  
+ //the topic name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+ [✖]  Invalid short topic name '<topic-name>', it should be in the format of <tenant>/<namespace>/<topic> or <topic> 
+
+  
+ //the topic name is not in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid complete topic name '<topic-name>', it should be in the format of <domain>://<tenant>/<namespace>/<topic> 
+
+  
+ //the topic name is not in the format of <tenant>/<namespace>/<topic> 
+
+ [✖]  Invalid topic name '<topic-name>', it should be in the format of<tenant>/<namespace>/<topic> 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ revoke-permissions`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+role |  |  | Client role to which revoke permissions 
 
 
 

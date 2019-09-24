@@ -756,24 +756,19 @@ pulsarctl sink create
 
 Name | Shorthand | Default | Usage
 ---- | --------- | ------- | ----- 
-archive |  |  | Path to the archive file for the sink. It also supports url-path 
-[http/https/file (file protocol assumes that file already exists on worker host)] 
-from which worker can download the package. 
+archive |  |  | Path to the archive file for the sink. It also supports url-path [http/https/file (file protocol assumes that file already exists on worker host)] from which worker can download the package. 
 auto-ack |  | false | Whether or not the framework will automatically acknowledge messages 
 classname |  |  | The sink's class name if archive is file-url-path (file://) 
-cpu |  | 0 | The CPU (in cores) that needs to be allocated per sink instance
- (applicable only to Docker runtime) 
+cpu |  | 0 | The CPU (in cores) that needs to be allocated per sink instance (applicable only to Docker runtime) 
 custom-schema-inputs |  |  | The map of input topics to Schema types or class names (as a JSON string) 
 custom-serde-inputs |  |  | The map of input topics to SerDe class names (as a JSON string) 
-disk |  | 0 | The disk (in bytes) that need to be allocated per sink instance
- (applicable only to Docker runtime) 
+disk |  | 0 | The disk (in bytes) that need to be allocated per sink instance (applicable only to Docker runtime) 
 inputs | i |  | The sink's input topic or topics (multiple topics can be specified as a comma-separated list) 
 name |  |  | The sink's name 
 namespace |  |  | The sink's namespace 
 parallelism |  | 0 | The sink's parallelism factor (i.e. the number of sink instances to run) 
 processing-guarantees |  |  | The processing guarantees (aka delivery semantics) applied to the sink 
-ram |  | 0 | The RAM (in bytes) that need to be allocated per sink instance
- (applicable only to the process and Docker runtimes) 
+ram |  | 0 | The RAM (in bytes) that need to be allocated per sink instance (applicable only to the process and Docker runtimes) 
 retain-ordering |  | false | Sink consumes and sinks messages in order 
 sink-config |  |  | User defined configs key/values 
 sink-config-file |  |  | The path to a YAML config file specifying the sink's configuration 
@@ -781,9 +776,7 @@ sink-type | t |  | The sink's connector provider
 subs-name |  |  | Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer 
 tenant |  |  | The sink's tenant 
 timeout-ms |  | 0 | The message timeout in milliseconds 
-topics-pattern |  |  | TopicsPattern to consume from list of topics under a namespace that match the pattern.
- [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern 
-in --customSerdeInputs  (supported for java fun only) 
+topics-pattern |  |  | TopicsPattern to consume from list of topics under a namespace that match the pattern. [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern in --customSerdeInputs  (supported for java fun only) 
 
 
 

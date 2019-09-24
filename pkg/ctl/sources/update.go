@@ -153,7 +153,8 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.SchemaType,
 			"schema-type",
 			"",
-			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom Schema class name to be used to encode messages emitted from the source")
+			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom " +
+				"Schema class name to be used to encode messages emitted from the source")
 
 		flagSet.IntVar(
 			&sourceData.Parallelism,
@@ -166,7 +167,8 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"archive",
 			"a",
 			"",
-			"The path to the NAR archive for the Source. It also supports url-path [http/https/file (file protocol assumes that file already exists on worker host)] from which worker can download the package")
+			"The path to the NAR archive for the Source. It also supports url-path [http/https/file " +
+				"(file protocol assumes that file already exists on worker host)] from which worker can download the package")
 
 		flagSet.StringVar(
 			&sourceData.ClassName,

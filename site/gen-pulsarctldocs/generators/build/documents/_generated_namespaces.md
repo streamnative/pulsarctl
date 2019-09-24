@@ -15,6 +15,62 @@
 
 ------------
 
+## <em>clear-backlog</em>
+
+>bdocs-tab:example Clear backlog for all topics of the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces clear-backlog (namespace-name)
+```
+
+>bdocs-tab:example Clear backlog for all topic of the namespace (namespace-name) with a bundle range <bundle>
+
+```bdocs-tab:example_shell
+pulsarctl namespaces clear-backlog --bundle (bundle) (namespace-name)
+```
+
+>bdocs-tab:example Clear the specified subscription (subscription-name) backlog for all topics of the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces clear-backlog --subscription (subscription-name) (namespace-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for clearing backlog for all topics of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+
+ 
+
+### Usage
+
+`$ clear-backlog`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+bundle | b |  | {start-boundary}_{end-boundary} 
+force | f | false | Whether to force clear backlog without prompt 
+sub |  |  | subscription name 
+
+
+
+------------
+
 ## <em>create</em>
 
 >bdocs-tab:example creates a namespace named (namespace-name)
@@ -428,6 +484,74 @@ pulsarctl namespaces get-clusters tenant/namespace
 
 ------------
 
+## <em>get-dispatch-rate</em>
+
+>bdocs-tab:example Get the default message dispatch rate of namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces get-dispatch-rate (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the default message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "dispatchThrottlingRateInMsg" : 0, 
+
+ "dispatchThrottlingRateInByte" : 0, 
+
+ "ratePeriodInSecond" : 1 
+
+ } 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ get-dispatch-rate`
+
+
+
+
+------------
+
 ## <em>get-message-ttl</em>
 
 >bdocs-tab:example Get message TTL settings of a namespace
@@ -548,6 +672,74 @@ pulsarctl namespaces get-persistence tenant/namespace
 
 ------------
 
+## <em>get-replicator-dispatch-rate</em>
+
+>bdocs-tab:example Get the default replicator message dispatch rate of the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces get-replicator-dispatch-rate (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the default replicator message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "dispatchThrottlingRateInMsg" : 0, 
+
+ "dispatchThrottlingRateInByte" : 0, 
+
+ "ratePeriodInSecond" : 1 
+
+ } 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ get-replicator-dispatch-rate`
+
+
+
+
+------------
+
 ## <em>get-retention</em>
 
 >bdocs-tab:example Get the retention policy of a namespace
@@ -609,6 +801,160 @@ pulsarctl namespaces get-retention tenant/namespace
 
 ------------
 
+## <em>get-subscribe-rate</em>
+
+>bdocs-tab:example Get the default subscribe rate per consumer of a namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces get-subscribe-rate (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the default subscribe rate per consumer of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "subscribeThrottlingRatePerConsumer" : 0, 
+
+ "ratePeriodInSecond" : 30 
+
+ } 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ get-subscribe-rate`
+
+
+
+
+------------
+
+## <em>get-subscription-dispatch-rate</em>
+
+>bdocs-tab:example Get the default subscription message dispatch rate of namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces get-subscription-dispatch-rate (namespace-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for getting the default subscription message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ { 
+
+ "dispatchThrottlingRateInMsg" : 0, 
+
+ "dispatchThrottlingRateInByte" : 0, 
+
+ "ratePeriodInSecond" : 1 
+
+ } 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ get-subscription-dispatch-rate`
+
+
+
+
+------------
+
 ## <em>list</em>
 
 >bdocs-tab:example Get the list of namespaces of a tenant
@@ -664,6 +1010,89 @@ pulsarctl namespaces list (tenant name)
 
 `$ list`
 
+
+
+
+------------
+
+## <em>messages-encryption</em>
+
+>bdocs-tab:example Enable messages encryption for the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces messages-encryption (namespace-name)
+```
+
+>bdocs-tab:example Disable messages encryption for the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarct. namespaces messages-encryption --disable (namespace-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for enabling or disabling messages encryption for a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin and a broker needs the read-write operations of the global zookeeper. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Enable/Disable message encryption for the namespace (namespace-name) 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ messages-encryption`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+disable |  | false | Disable messages encryption 
 
 
 
@@ -1160,6 +1589,87 @@ enable | e | false | Enable deduplication
 
 ------------
 
+## <em>set-dispatch-rate</em>
+
+>bdocs-tab:example Set the default message dispatch rate by message of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-dispatch-rate --msg-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default message dispatch rate by byte of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-dispatch-rate --byte-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default message dispatch rate by time of the namespace (namespace-name) to (period)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-dispatch-rate --period (period) (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for setting the default message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires super-user permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Success set the default message dispatch rate of the namespace (namespace-name) to (rate) 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ set-dispatch-rate`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+byte-rate | b | -1 | byte dispatch rate (default -1) 
+msg-rate | m | -1 | message dispatch rate (default -1) 
+period | p | 1 | dispatch rate period (default 1 second) 
+
+
+
+------------
+
 ## <em>set-message-ttl</em>
 
 >bdocs-tab:example Set Message TTL for a namespace
@@ -1301,6 +1811,97 @@ write-quorum-size | w | 0 | How many writes to make of each entry
 
 ------------
 
+## <em>set-replicator-dispatch-rate</em>
+
+>bdocs-tab:example Set the default replicator message dispatch rate by message of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-replicator-dispatch-rate --msg-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default replicator message dispatch rate by byte of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-replicator-dispatch-rate --byte-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default replicator message dispatch rate by time of the namespace (namespace-name) to (period)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-replicator-dispatch-rate --period (period) (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for setting the default replicator message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires super-user permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Success set the default replicator message dispatch rate of the namespace (namespace-name) to (rate) 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the replicator-dispatch-rate is not configured 
+
+ [✖]  code: 404 reason: replicator-Dispatch-rate is not configured for cluster standalone 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ set-replicator-dispatch-rate`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+byte-rate | b | -1 | byte dispatch rate (default -1) 
+msg-rate | m | -1 | message dispatch rate (default -1) 
+period | p | 1 | dispatch rate period (default 1 second) 
+
+
+
+------------
+
 ## <em>set-retention</em>
 
 >bdocs-tab:example Set the retention policy for a namespace
@@ -1372,6 +1973,258 @@ size |  |  | Retention size limit (eg: 10M, 16G, 3T).
 0 or less than 1MB means no retention and -1 means infinite size retention 
 time |  |  | Retention time in minutes (or minutes, hours,days,weeks eg: 100m, 3h, 2d, 5w).
 0 means no retention and -1 means infinite time retention 
+
+
+
+------------
+
+## <em>set-subscribe-rate</em>
+
+>bdocs-tab:example Set the default subscribe rate by subscribe of the namespace (namespace-name) (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscribe-rate --subscribe-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default subscribe rate by time of the namespace (namespace-name) (period)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscribe-rate --period (period) (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for setting the default subscribe rate per consumer of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires super-user permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Success set the default subscribe rate of the namespace (namespace-name) to (rate) 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ set-subscribe-rate`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+period | p | 30 | dispatch rate period (default 30 second) 
+subscribe-rate | m | -1 | message dispatch rate (default -1) 
+
+
+
+------------
+
+## <em>set-subscription-auth-mode</em>
+
+>bdocs-tab:example Set the default subscription auth mode (mode) of the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscription-auth-mode --mode (mode) (namespace-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for setting the default subscription auth mode of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin and a broker needs the read-write operations of the global zookeeper. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Successfully set the default subscription auth mode of namespace <namespace-name> to <mode> 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ set-subscription-auth-mode`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+mode | m |  | Subscription authorization mode of a namespace. (e.g. None, Prefix) 
+
+
+
+------------
+
+## <em>set-subscription-dispatch-rate</em>
+
+>bdocs-tab:example Set the default subscription message dispatch rate by message of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscription-dispatch-rate --msg-rate <rate> <namespace
+```
+
+>bdocs-tab:example Set the default subscription message dispatch rate by byte of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscription-dispatch-rate --byte-rate (rate) (namespace)
+```
+
+>bdocs-tab:example Set the default subscriptions message dispatch rate by time of the namespace (namespace-name) to (rate)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces set-subscription-dispatch-rate --period (period) (namespace)
+```
+
+
+### Used For
+ 
+
+ This command is used for setting the default subscription message dispatch rate of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires super-user permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Success set the default subscription message dispatch rate of the namespace (namespace-name) to (rate) 
+
+  
+ //the namespace name is not specified 
+
+ [✖]  only one argument is allowed to be used as a name 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ set-subscription-dispatch-rate`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+byte-rate | b | -1 | byte dispatch rate (default -1) 
+msg-rate | m | -1 | message dispatch rate (default -1) 
+period | p | 1 | dispatch rate period (default 1 second) 
 
 
 
@@ -1577,6 +2430,89 @@ pulsarctl namespaces unload tenant/namespace --bundle ({start-boundary}_{end-bou
 Name | Shorthand | Default | Usage
 ---- | --------- | ------- | ----- 
 bundle | b |  | {start-boundary}_{end-boundary}(e.g. 0x00000000_0xffffffff) 
+
+
+
+------------
+
+## <em>unsubscribe</em>
+
+>bdocs-tab:example Unsubscribe the specified subscription <subscription-name> for all topic of the namespace (namespace-name)
+
+```bdocs-tab:example_shell
+pulsarctl namespaces unsubscribe (namespace-name) (subscription-name)
+```
+
+>bdocs-tab:example Unsubscribe the specified subscription (subscription-name) for all topic of the namespace (namespace-name) with bundle range <bundle>
+
+```bdocs-tab:example_shell
+pulsarctl namespaces unsubscribe --bundle (bundle) (namespace-name) (subscription-name)
+```
+
+
+### Used For
+ 
+
+ This command is used for unsubscribing the specified subscription for all topics of a namespace. 
+
+  
+### Required Permission
+ 
+
+ This command requires tenant admin permissions. 
+
+  
+### Output
+ 
+ //normal output 
+
+ Successfully unsubscribe the subscription (subscription-name) for all topics of the namespace (namespace-name) 
+
+  
+ //the namespace name is not specified or the subscription name is not specified 
+
+ [✖]  need two arguments apply to the command 
+
+  
+ //the specified namespace name does not exist 
+
+ [✖]  code: 404 reason: Namespace does not exist 
+
+  
+ //the namespace name is not in the format of <tenant>/<namespace> 
+
+ [✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name> 
+
+  
+ //the tenant name and(or) namespace name is empty 
+
+ [✖]  Invalid tenant or namespace. [<tenant>/<namespace>] 
+
+  
+ //the tenant name contains unsupported special chars. the alphanumeric (a-zA-Z0-9) and the special chars (-=:.%)  is allowed 
+
+ [✖]  Tenant name include unsupported special chars. tenant : [<namespace>] 
+
+  
+ //the namespace name contains unsupported special chars. the  alphanumeric (a-zA-Z0-9) and the special chars (-=:.%) is allowed 
+
+ [✖]  Namespace name include unsupported special chars. namespace : [<namespace>] 
+
+  
+
+ 
+
+### Usage
+
+`$ unsubscribe`
+
+
+
+### Flags
+
+Name | Shorthand | Default | Usage
+---- | --------- | ------- | ----- 
+bundle | b |  | {start_boundary}_{end_boundary} 
 
 
 

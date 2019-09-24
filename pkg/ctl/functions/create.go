@@ -228,7 +228,9 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.Jar,
 			"jar",
 			"",
-			"Path to the JAR file for the function (if the function is written in Java) It also supports URL path [http/https/file (file protocol assumes that file already exists on worker host)] from which worker can download the package.")
+			"Path to the JAR file for the function (if the function is written in Java) " +
+				"It also supports URL path [http/https/file (file protocol assumes that file " +
+				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVar(
 			&functionData.Py,
@@ -253,7 +255,9 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"The topic pattern to consume from list of topics under a namespace that match the pattern. [--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in --custom-serde-inputs (supported for java fun only)")
+			"The topic pattern to consume from list of topics under a namespace " +
+				"that match the pattern. [--input] and [--topic-pattern] are mutually exclusive. " +
+				"Add SerDe class name for a pattern in --custom-serde-inputs (supported for java fun only)")
 
 		flagSet.StringVarP(
 			&functionData.Output,
@@ -339,13 +343,15 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.RAM,
 			"ram",
 			0,
-			"The ram in bytes that need to be allocated per function instance(applicable only to process/docker runtime)")
+			"The ram in bytes that need to be allocated per function instance" +
+				"(applicable only to process/docker runtime)")
 
 		flagSet.Int64Var(
 			&functionData.Disk,
 			"disk",
 			0,
-			"The disk in bytes that need to be allocated per function instance(applicable only to docker runtime)")
+			"The disk in bytes that need to be allocated per function instance" +
+				"(applicable only to docker runtime)")
 
 		flagSet.IntVar(
 			&functionData.WindowLengthCount,

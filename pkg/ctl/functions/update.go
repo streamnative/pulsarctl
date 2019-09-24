@@ -190,7 +190,9 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.Jar,
 			"jar",
 			"",
-			"Path to the JAR file for the function (if the function is written in Java). It also supports URL path [http/https/file (file protocol assumes that file already exists on worker host)] from which worker can download the package.")
+			"Path to the JAR file for the function (if the function is written in Java). " +
+				"It also supports URL path [http/https/file (file protocol assumes that file " +
+				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVar(
 			&functionData.Py,
@@ -208,7 +210,9 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"The topic pattern to consume from list of topics under a namespace that match the pattern. [--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in --custom-serde-inputs (supported for java fun only)")
+			"The topic pattern to consume from list of topics under a namespace that match the pattern. " +
+				"[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern " +
+				"in --custom-serde-inputs (supported for java fun only)")
 
 		flagSet.StringVar(
 			&functionData.Inputs,

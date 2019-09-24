@@ -111,7 +111,7 @@ pulsarctl clusters create-failure-domain -b (broker-ip):(broker-port) -b (broker
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -168,7 +168,7 @@ pulsarctl clusters delete (cluster-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -285,7 +285,7 @@ pulsarctl clusters get (cluster-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -345,7 +345,7 @@ pulsarctl clusters get-failure-domain (cluster-name) (domain-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -403,7 +403,7 @@ pulsarctl clusters get-peer-clusters (cluster-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -489,7 +489,7 @@ pulsarctl clusters list-failure-domains (cluster-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -563,7 +563,7 @@ pulsarctl clusters update -p (cluster-a) -p (cluster-b) (cluster)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -630,7 +630,7 @@ pulsarctl clusters update-failure-domain --broker-list <cluster-A> --broker-list
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 
@@ -687,7 +687,7 @@ pulsarctl clusters update-peer-clusters -p cluster-a -p cluster-b (cluster-name)
   
  //the specified cluster does not exist in the broker 
 
- [✖]  code: 412 reason: Cluster <cluster-name> does not exist. 
+ [✖]  code: 412 reason: Cluster (cluster-name) does not exist. 
 
   
 

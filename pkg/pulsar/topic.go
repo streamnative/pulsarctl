@@ -1,3 +1,20 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package pulsar
 
 import (
@@ -11,6 +28,10 @@ type Topics interface {
 	Update(TopicName, int) error
 	GetMetadata(TopicName) (PartitionedTopicMetadata, error)
 	List(NameSpaceName) ([]string, []string, error)
+	GetInternalInfo(TopicName) (ManagedLedgerInfo, error)
+	GetPermissions(TopicName) (map[string][]AuthAction, error)
+	GrantPermission(TopicName, string, []AuthAction) error
+	RevokePermission(TopicName, string) error
 	Lookup(TopicName) (LookupData, error)
 	GetBundleRange(TopicName) (string, error)
 	GetLastMessageId(TopicName) (MessageId, error)
@@ -110,6 +131,34 @@ func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- erro
 	var topics []string
 	err <- t.client.get(endpoint, &topics)
 	out <- topics
+}
+
+func (t *topics) GetInternalInfo(topic TopicName) (ManagedLedgerInfo, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internal-info")
+	var info ManagedLedgerInfo
+	err := t.client.get(endpoint, &info)
+	return  info, err
+}
+
+func (t *topics) GetPermissions(topic TopicName) (map[string][]AuthAction, error) {
+	var permissions map[string][]AuthAction
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions")
+	err := t.client.get(endpoint, &permissions)
+	return permissions, err
+}
+
+func (t *topics) GrantPermission(topic TopicName, role string, action []AuthAction) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
+	var s []string
+	for _, v := range action {
+		s = append(s, v.String())
+	}
+	return t.client.post(endpoint, s, nil)
+}
+
+func (t *topics) RevokePermission(topic TopicName, role string) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
+	return t.client.delete(endpoint, nil)
 }
 
 func (t *topics) Lookup(topic TopicName) (LookupData, error) {

@@ -165,7 +165,9 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"TopicsPattern to consume from list of topics under a namespace that match the pattern. [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern in --customSerdeInputs  (supported for java fun only)")
+			"TopicsPattern to consume from list of topics under a namespace that match the pattern. " +
+				"[--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern " +
+				"in --customSerdeInputs  (supported for java fun only)")
 
 		flagSet.StringVar(
 			&sinkData.SubsName,
@@ -207,7 +209,9 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.Archive,
 			"archive",
 			"",
-			"Path to the archive file for the sink. It also supports url-path [http/https/file (file protocol assumes that file already exists on worker host)] from which worker can download the package.")
+			"Path to the archive file for the sink. It also supports url-path " +
+				"[http/https/file (file protocol assumes that file already exists on worker host)] " +
+				"from which worker can download the package.")
 
 		flagSet.StringVar(
 			&sinkData.ClassName,
@@ -237,7 +241,8 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per sink instance (applicable only to the process and Docker runtimes)")
+			"The RAM (in bytes) that need to be allocated per sink instance " +
+				"(applicable only to the process and Docker runtimes)")
 
 		flagSet.StringVar(
 			&sinkData.SinkConfigString,
