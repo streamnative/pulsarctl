@@ -18,9 +18,9 @@
 package pulsar
 
 type DispatchRate struct {
-	DispatchThrottlingRateInMsg  int
-	DispatchThrottlingRateInByte int64
-	RatePeriodInSecond           int
+	DispatchThrottlingRateInMsg  int   `json:"dispatchThrottlingRateInMsg"`
+	DispatchThrottlingRateInByte int64 `json:"dispatchThrottlingRateInByte"`
+	RatePeriodInSecond           int   `json:"ratePeriodInSecond"`
 }
 
 func NewDispatchRate() *DispatchRate {
@@ -32,8 +32,8 @@ func NewDispatchRate() *DispatchRate {
 }
 
 type SubscribeRate struct {
-	SubscribeThrottlingRatePerConsumer int
-	RatePeriodInSecond                 int
+	SubscribeThrottlingRatePerConsumer int `json:"subscribeThrottlingRatePerConsumer"`
+	RatePeriodInSecond                 int `json:"ratePeriodInSecond"`
 }
 
 func NewSubscribeRate() *SubscribeRate {

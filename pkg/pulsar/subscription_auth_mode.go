@@ -15,25 +15,28 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package info
+package pulsar
 
-import (
-	"testing"
+import "github.com/pkg/errors"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
-	"github.com/stretchr/testify/assert"
+type SubscriptionAuthMode string
+
+const (
+	None   SubscriptionAuthMode = "None"
+	Prefix SubscriptionAuthMode = "Prefix"
 )
 
-func TestGetInternalInfoArgError(t *testing.T) {
-	args := []string{"internal-info"}
-	_, _, nameErr, _ := TestTopicCommands(GetInternalInfoCmd, args)
-	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+func ParseSubscriptionAuthMode(s string) (SubscriptionAuthMode, error) {
+	switch s {
+	case "None":
+		return None, nil
+	case "Prefix":
+		return Prefix, nil
+	default:
+		return "", errors.New("Invalid subscription auth mode")
+	}
 }
 
-func TestGetNonExistingTopicInternalInfo(t *testing.T)  {
-	args := []string{"internal-info", "non-existing-topic"}
-	_, execErr, _, _ := TestTopicCommands(GetInternalInfoCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 500 reason: Unknown pulsar error", execErr.Error())
+func (s SubscriptionAuthMode) String() string {
+	return string(s)
 }
