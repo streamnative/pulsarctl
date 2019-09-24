@@ -18,6 +18,7 @@
 package compact
 
 import (
+	"github.com/spf13/pflag"
 	"time"
 
 	"github.com/pkg/errors"
@@ -72,6 +73,10 @@ func CompactStatusCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doCompactStatus(vc, wait)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Compact Status", func(set *pflag.FlagSet) {
+		set.BoolVarP(&wait, "wait", "w", false, "Wait for compacting to complete")
 	})
 }
 
