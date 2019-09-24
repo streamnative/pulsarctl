@@ -19,7 +19,7 @@ package namespace
 
 import . "github.com/streamnative/pulsarctl/pkg/pulsar"
 
-var ArgsError = Output{
+var ArgError = Output{
 	Desc: "the namespace name is not specified",
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
@@ -27,6 +27,11 @@ var ArgsError = Output{
 var AuthNotEnable = Output{
 	Desc: "the authorization is not enabled",
 	Out:  "[✖]  code: 501 reason: Authorization is not enabled",
+}
+
+var NsNotExistError = Output{
+	Desc: "the specified namespace name does not exist",
+	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
 var NsErrors = []Output{

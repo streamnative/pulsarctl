@@ -58,6 +58,18 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RevokePermissionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GrantSubPermissionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RevokeSubPermissionsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, ClearBacklogCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetEncryptionRequiredCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetReplicatorDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetReplicatorDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSubscribeRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscribeRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSubscriptionDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UnsubscribeCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionAuthModeCmd)
 
 	return resourceCmd
 }
