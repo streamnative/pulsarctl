@@ -36,7 +36,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions stop \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 	examples = append(examples, stop)
 
@@ -45,7 +45,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions stop \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>\n" +
+			"\t--name (the name of Pulsar Function)\n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, stopWithInstanceID)
@@ -61,7 +61,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Stopped <the name of a Pulsar Function> successfully",
+		Out:  "Stopped (the name of a Pulsar Function) successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -71,7 +71,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithWrongInstanceID := pulsar.Output{
@@ -86,6 +86,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"stop",
 		"Stops function instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"stop",
 	)
 

@@ -47,14 +47,14 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Update a Pulsar IO sink connector with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithParallelism := pulsar.Example{
 		Desc: "Update a Pulsar IO sink connector with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithResource := pulsar.Example{
@@ -63,14 +63,14 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithSinkConfig := pulsar.Example{
 		Desc: "Update a Pulsar IO sink connector with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	examples = append(examples, update, updateWithSinkConfig, updateWithResource, updateWithParallelism, updateWithSchema)
@@ -79,12 +79,12 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Updated <the name of a Pulsar Sink> successfully",
+		Out:  "Updated (the name of a Pulsar Sink) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -94,6 +94,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a Pulsar IO sink connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update",
 	)
 

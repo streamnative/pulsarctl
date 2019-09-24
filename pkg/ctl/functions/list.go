@@ -57,6 +57,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"List all Pulsar Functions running under a specific tenant and namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"list",
 	)
 

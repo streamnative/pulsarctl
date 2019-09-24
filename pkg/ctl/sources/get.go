@@ -35,7 +35,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source get \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 
 	examples = append(examples, get)
@@ -64,7 +64,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 	out = append(out, successOut, nameNotExistOut)
 	desc.CommandOutput = out
@@ -73,6 +73,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Gets the information about a Pulsar IO source connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get",
 	)
 

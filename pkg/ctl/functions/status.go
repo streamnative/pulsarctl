@@ -35,7 +35,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 	examples = append(examples, status)
 
@@ -82,7 +82,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithWrongInstanceID := pulsar.Output{
@@ -97,6 +97,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Check the current status of a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 

@@ -14,19 +14,19 @@ func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	empty := pulsar.Example{
 		Desc:    "clear the tenant configuration of a tenant",
-		Command: "pulsarctl tenant update <tenant-name>",
+		Command: "pulsarctl tenant update (tenant-name)",
 	}
 	examples = append(examples, empty)
 
 	updateAdminRole := pulsar.Example{
-		Desc:    "update the admin roles for tenant <tenant-name>",
-		Command: "pulsarctl tenants update --admin-roles <admin-A> --admin-roles <admin-B> <tenant-name>",
+		Desc:    "update the admin roles for tenant (tenant-name)",
+		Command: "pulsarctl tenants update --admin-roles (admin-A)--admin-roles (admin-B) (tenant-name)",
 	}
 	examples = append(examples, updateAdminRole)
 
 	updateClusters := pulsar.Example{
-		Desc:    "update the allowed cluster list for tenant <tenant-name>",
-		Command: "pulsarctl tenants update --allowed-clusters <cluster-A> --allowed-clusters <cluster-B> <tenant-name>",
+		Desc:    "update the allowed cluster list for tenant (tenant-name)",
+		Command: "pulsarctl tenants update --allowed-clusters (cluster-A) --allowed-clusters (cluster-B) (tenant-name)",
 	}
 	examples = append(examples, updateClusters)
 	desc.CommandExamples = examples
@@ -55,6 +55,7 @@ func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"update the configuration for a tenant",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"u")
 
 	var data pulsar.TenantData

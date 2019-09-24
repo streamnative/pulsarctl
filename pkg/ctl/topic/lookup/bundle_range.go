@@ -13,15 +13,15 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get namespace bundle range of a topic <topic-name>",
-		Command: "pulsarctl topic bundle-range <topic-name>",
+		Desc:    "Get namespace bundle range of a topic (topic-name)",
+		Command: "pulsarctl topic bundle-range (topic-name)",
 	}
 	desc.CommandExamples = append(examples, get)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "The bundle range of the topic <topic-name> is: <bundle-range>",
+		Out:  "The bundle range of the topic (topic-name) is: (bundle-range)",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
@@ -32,6 +32,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 		"bundle-range",
 		"Get the namespace bundle range of a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"")
 
 	vc.SetRunFuncWithNameArg(func() error {

@@ -35,7 +35,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions get \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 
 	getWithFqfn := pulsar.Example{
@@ -74,7 +74,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -84,6 +84,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Fetch information about a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get",
 	)
 

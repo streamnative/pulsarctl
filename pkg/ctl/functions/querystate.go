@@ -35,8 +35,8 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions querystate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t--key <the name of key> \n" +
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t--key (the name of key) \n" +
 			"\t--watch",
 	}
 	examples = append(examples, querystate)
@@ -45,7 +45,7 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Fetch a key/value pair from the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions querystate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]\n" +
-			"\t--key <the name of key> \n" +
+			"\t--key (the name of key) \n" +
 			"\t--watch",
 	}
 	examples = append(examples, querystateWithFQFN)
@@ -55,8 +55,8 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions querystate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t--key <the name of key> ",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t--key (the name of key) ",
 	}
 	examples = append(examples, querystateNoWatch)
 
@@ -96,6 +96,7 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"querystate",
 		"Fetch a key/value pair from the state associated with a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"querystate",
 	)
 

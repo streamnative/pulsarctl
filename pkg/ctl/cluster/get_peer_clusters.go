@@ -13,8 +13,8 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "getting the <cluster-name> peer clusters",
-		Command: "pulsarctl clusters get-peer-clusters <cluster-name>",
+		Desc:    "getting the (cluster-name) peer clusters",
+		Command: "pulsarctl clusters get-peer-clusters (cluster-name)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -38,6 +38,7 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 		"get-peer-clusters",
 		"Getting list of peer clusters",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"gpc")
 
 	vc.SetRunFuncWithNameArg(func() error {

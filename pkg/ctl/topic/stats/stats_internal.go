@@ -15,13 +15,13 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get internal stats for an existing non-partitioned-topic <topic-name>",
-		Command: "pulsarctl topic internal-stats <topic-name>",
+		Desc:    "Get internal stats for an existing non-partitioned-topic (topic-name)",
+		Command: "pulsarctl topic internal-stats (topic-name)",
 	}
 
 	getPartition := Example{
 		Desc:    "Get internal stats for a partition of a partitioned topic",
-		Command: "pulsarctl topic internal-stats --partition <partition> <topic-name>",
+		Command: "pulsarctl topic internal-stats --partition (partition) (topic-name)",
 	}
 	desc.CommandExamples = append(examples, get, getPartition)
 
@@ -66,6 +66,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 		"internal-stats",
 		"Get the internal stats of the specified topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"")
 
 	var partition int

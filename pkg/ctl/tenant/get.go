@@ -12,8 +12,8 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	getSuccess := pulsar.Example{
-		Desc:    "get the configuration of tenant <tenant-name>",
-		Command: "pulsarctl tenants get <tenant-name>",
+		Desc:    "get the configuration of tenant (tenant-name)",
+		Command: "pulsarctl tenants get (tenant-name)",
 	}
 	examples = append(examples, getSuccess)
 	desc.CommandExamples = examples
@@ -40,6 +40,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"get the configuration of a tenant",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"g")
 
 	vc.SetRunFuncWithNameArg(func() error {

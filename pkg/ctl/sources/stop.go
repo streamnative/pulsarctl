@@ -36,7 +36,7 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source stop \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, stop)
 
@@ -45,7 +45,7 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source stop \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>\n" +
+			"\t--name (the name of Pulsar Source)\n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, stopWithInstanceID)
@@ -54,12 +54,12 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Stopped <the name of a Pulsar Source> successfully",
+		Out:  "Stopped (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -69,6 +69,7 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 		"stop",
 		"Stops source instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"stop",
 	)
 

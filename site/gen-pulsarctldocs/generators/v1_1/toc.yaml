@@ -1,0 +1,13 @@
+categories:
+- name: GETTING STARTED
+  include: _getting_started.md
+  commands:
+  - clusters
+  - completion
+  - functions
+  - namespaces
+  - schemas
+  - sinks
+  - sources
+  - tenants
+  - topics

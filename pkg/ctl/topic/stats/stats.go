@@ -16,18 +16,18 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []Example
 	get := Example{
-		Desc:    "Get the non-partitioned topic <topic-name> stats",
-		Command: "pulsarctl topic stats <topic-name>",
+		Desc:    "Get the non-partitioned topic (topic-name) stats",
+		Command: "pulsarctl topic stats (topic-name)",
 	}
 
 	getPartition := Example{
-		Desc:    "Get the partitioned topic <topic-name> stats",
-		Command: "pulsarctl topic stats --partitioned-topic <topic-name>",
+		Desc:    "Get the partitioned topic (topic-name) stats",
+		Command: "pulsarctl topic stats --partitioned-topic (topic-name)",
 	}
 
 	getPerPartition := Example{
-		Desc:    "Get the partitioned topic <topic-name> stats and per partition stats",
-		Command: "pulsarctl topic stats --partitioned-topic --per-partition <topic-name>",
+		Desc:    "Get the partitioned topic (topic-name) stats and per partition stats",
+		Command: "pulsarctl topic stats --partitioned-topic --per-partition (topic-name)",
 	}
 
 	desc.CommandExamples = append(examples, get, getPartition, getPerPartition)
@@ -117,7 +117,10 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"stats",
 		"Get the stats of an existing topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString(),
+		"stats",
+		)
 
 	var partition bool
 	var perPartition bool

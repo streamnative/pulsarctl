@@ -33,22 +33,22 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	putstate := pulsar.Example{
-		Desc: "Put a key/<string value> pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/(string value) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t<key name> - <string value> ",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t(key name) - (string value) ",
 	}
 	examples = append(examples, putstate)
 
 	putstateWithByte := pulsar.Example{
-		Desc: "Put a key/<file path> pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/(file path) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t<key name> = <file path> ",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t(key name) = (file path) ",
 	}
 	examples = append(examples, putstateWithByte)
 
@@ -56,7 +56,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
-			"\t<key name> - <string value> ",
+			"\t(key name) - (string value) ",
 	}
 	examples = append(examples, putstateWithFQFN)
 	desc.CommandExamples = examples
@@ -64,7 +64,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Put state <the function state> successfully",
+		Out:  "Put state (the function state) successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -74,7 +74,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the `--name` arg",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithKeyOrValueNotExist := pulsar.Output{
@@ -94,6 +94,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"putstate",
 		"Put a key/value pair to the state associated with a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"putstate",
 	)
 

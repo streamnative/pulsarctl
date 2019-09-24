@@ -12,8 +12,8 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "getting the broker list in the <cluster-name> cluster failure domain <domain-name>",
-		Command: "pulsarctl clusters get-failure-domain <cluster-name> <domain-name>",
+		Desc:    "getting the broker list in the (cluster-name) cluster failure domain (domain-name)",
+		Command: "pulsarctl clusters get-failure-domain (cluster-name) (domain-name)",
 	}
 	examples = append(examples, get)
 
@@ -36,6 +36,7 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		"get-failure-domain",
 		"Get the failure domain",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"gfd")
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {

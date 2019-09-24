@@ -14,32 +14,32 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 
 	updateUrl := pulsar.Example{
-		Desc:    "updating the web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --url http://example:8080 <cluster-name>",
+		Desc:    "updating the web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --url http://example:8080 (cluster-name)",
 	}
 	examples = append(examples, updateUrl)
 
 	updateUrlTls := pulsar.Example{
-		Desc:    "updating the tls secured web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --url-tls https://example:8080 <cluster-name>",
+		Desc:    "updating the tls secured web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --url-tls https://example:8080 (cluster-name)",
 	}
 	examples = append(examples, updateUrlTls)
 
 	updateBrokerUrl := pulsar.Example{
-		Desc:    "updating the broker service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 <cluster-name>",
+		Desc:    "updating the broker service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 (cluster-name)",
 	}
 	examples = append(examples, updateBrokerUrl)
 
 	updateBrokerUrlTls := pulsar.Example{
-		Desc:    "updating the tls secured web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 <cluster-name>",
+		Desc:    "updating the tls secured web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 (cluster-name)",
 	}
 	examples = append(examples, updateBrokerUrlTls)
 
 	updatePeerCluster := pulsar.Example{
-		Desc:    "registered as a peer-cluster of the <cluster-name> clusters",
-		Command: "pulsarctl clusters update -p <cluster-a> -p <cluster-b> <cluster>",
+		Desc:    "registered as a peer-cluster of the (cluster-name) clusters",
+		Command: "pulsarctl clusters update -p (cluster-a) -p (cluster-b) (cluster)",
 	}
 	examples = append(examples, updatePeerCluster)
 
@@ -48,7 +48,7 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Cluster <cluster-name> updated",
+		Out:  "Cluster (cluster-name) updated",
 	}
 	out = append(out, successOut)
 	out = append(out, argsError)
@@ -59,6 +59,7 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update")
 
 	clusterData := &pulsar.ClusterData{}

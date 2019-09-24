@@ -13,8 +13,8 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []Example
 	getTopic := Example{
-		Desc:    "Get hte metadata of an exist topic <topic-name> metadata",
-		Command: "pulsarctl topics get <topic-name>",
+		Desc:    "Get hte metadata of an exist topic (topic-name) metadata",
+		Command: "pulsarctl topics get (topic-name)",
 	}
 	desc.CommandExamples = append(examples, getTopic)
 
@@ -22,7 +22,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	successOut := Output{
 		Desc: "normal output",
 		Out:  "{\n" +
-			"  \"partitions\": \"<partitions>\"\n" +
+			"  \"partitions\": \"(partitions)\"\n" +
 			"}",
 	}
 	out = append(out, successOut, ArgError)
@@ -34,6 +34,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Get the specified topic metadata",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get")
 
 	vc.SetRunFuncWithNameArg(func() error {

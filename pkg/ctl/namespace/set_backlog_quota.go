@@ -59,12 +59,12 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	noSupportPolicyType := pulsar.Output{
 		Desc: "invalid retention policy type, please check --policy arg",
-		Out:  "invalid retention policy type: <policy type>",
+		Out:  "invalid retention policy type: (policy type)",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, noSupportPolicyType)
@@ -74,6 +74,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		"set-backlog-quota",
 		"Set a backlog quota policy for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-backlog-quota",
 	)
 

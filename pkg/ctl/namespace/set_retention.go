@@ -61,7 +61,7 @@ func setRetention(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	notSetBacklog := pulsar.Output{
@@ -76,6 +76,7 @@ func setRetention(vc *cmdutils.VerbCmd) {
 		"set-retention",
 		"Set the retention policy for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-retention",
 	)
 

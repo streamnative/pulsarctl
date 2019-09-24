@@ -55,7 +55,7 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	failOut := pulsar.Output{
@@ -69,6 +69,7 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 		"set-message-ttl",
 		"Set Message TTL for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-message-ttl",
 	)
 

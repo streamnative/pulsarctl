@@ -35,7 +35,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 	examples = append(examples, status)
 	desc.CommandExamples = examples
@@ -72,7 +72,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Sink doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Sink <your sink name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Sink (your sink name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -82,6 +82,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Get the current status of a Pulsar Sink",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 

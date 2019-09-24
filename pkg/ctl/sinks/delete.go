@@ -35,7 +35,7 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -43,12 +43,12 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <the name of a Pulsar Sink> successfully",
+		Out:  "Deleted (the name of a Pulsar Sink) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -58,6 +58,7 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a Pulsar IO Sink connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

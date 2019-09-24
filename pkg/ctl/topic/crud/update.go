@@ -17,14 +17,14 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 	var examples []Example
 	updateTopic := Example{
 		Desc:    "",
-		Command: "pulsarctl topics update <topic-name> <partition-num>",
+		Command: "pulsarctl topics update (topic-name) (partition-num)",
 	}
 	desc.CommandExamples = append(examples, updateTopic)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Update topic <topic-name> with <partition-num> partitions successfully",
+		Out:  "Update topic (topic-name) with (partition-num) partitions successfully",
 	}
 
 	topicNotExist := Output{
@@ -40,6 +40,7 @@ func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update partitioned topic partitions",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"up")
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
