@@ -38,6 +38,7 @@ type Topics interface {
 	GetStats(TopicName) (TopicStats, error)
 	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
+	Terminate(TopicName) (MessageId, error)
 }
 
 type topics struct {
@@ -137,7 +138,7 @@ func (t *topics) GetInternalInfo(topic TopicName) (ManagedLedgerInfo, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internal-info")
 	var info ManagedLedgerInfo
 	err := t.client.get(endpoint, &info)
-	return  info, err
+	return info, err
 }
 
 func (t *topics) GetPermissions(topic TopicName) (map[string][]AuthAction, error) {
@@ -203,4 +204,11 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	}
 	_, err := t.client.getWithQueryParams(endpoint, &stats, params, true)
 	return stats, err
+}
+
+func (t *topics) Terminate(topic TopicName) (MessageId, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "terminate")
+	var messageId MessageId
+	err := t.client.post(endpoint, "", &messageId)
+	return messageId, err
 }
