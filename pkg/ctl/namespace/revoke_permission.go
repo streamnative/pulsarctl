@@ -26,29 +26,29 @@ import (
 
 func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for revoking a client role permissions on a namespace."
+	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
 	var examples []Example
 	revoke := Example{
-		Desc:    "Revoke the client role <role-name> on the namespace <namespace-name>",
-		Command: "pulsarctl namespaces revoke --role <role-name> <namespace-name>",
+		Desc:    "Revoke the client role <role-name> of accessing the namespace <namespace-name>",
+		Command: "pulsarctl namespaces revoke-permission --role <role-name> <namespace-name>",
 	}
 	desc.CommandExamples = append(examples, revoke)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Revoke the client role <role-name> permissions on the namespace <namespace-name> successfully",
+		Out:  "Revoke the client role <role-name> permissions of accessing the namespace <namespace-name> successfully",
 	}
 	out = append(out, successOut, ArgsError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"revoke",
-		"Revoke a client role permissions on a namespace",
+		"revoke-permission",
+		"Revoke a client role permissions of accessing a namespace",
 		desc.ToString())
 
 	var role string
@@ -78,7 +78,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().RevokeNamespacePermission(*ns, role)
 	if err == nil {
-		vc.Command.Printf("Revoke the client role %s permissions on the namespace %s successfully",
+		vc.Command.Printf("Revoke the client role %s permissions of accessing the namespace %s successfully",
 			role, ns.String())
 	}
 

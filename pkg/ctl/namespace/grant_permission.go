@@ -26,33 +26,33 @@ import (
 
 func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a namespace."
+	desc.CommandUsedFor = "This command is used for granting permissions to a client role to access a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []Example
 	grant := Example{
-		Desc:    "Grant permission <action> to the client role <role-name> on the namespace <namespace-name>",
-		Command: "pulsarctl namespaces grant --role <role-name> --actions <action> <namespace-name>",
+		Desc:    "Grant permission <action> to the client role <role-name> to access the namespace <namespace-name>",
+		Command: "pulsarctl namespaces grant-permission --role <role-name> --actions <action> <namespace-name>",
 	}
 
 	grantActions := Example{
-		Desc:    "Grant permissions <actions> to the client role <role-name> on the namespace <namespace-name>",
-		Command: "pulsarctl namespaces grant --role <role-name> --actions <action-1> --actions <action-2> <namespace-name>",
+		Desc:    "Grant permissions <actions> to the client role <role-name> to access the namespace <namespace-name>",
+		Command: "pulsarctl namespaces grant-permission --role <role-name> --actions <action-1> --actions <action-2> <namespace-name>",
 	}
 	desc.CommandExamples = append(examples, grant, grantActions)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Grant permissions <actions> to the client role <role-name> on the namespace <namespace-name> successfully",
+		Out:  "Grant permissions <actions> to the client role <role-name> to access the namespace <namespace-name> successfully",
 	}
 	out = append(out, successOut, ArgsError, AuthNotEnable)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"grant",
-		"Grant permissions to a client role on a namespace",
+		"grant-permission",
+		"Grant permissions to a client role to access a namespace",
 		desc.ToString())
 
 	var role string
@@ -91,7 +91,7 @@ func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) err
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().GrantNamespacePermission(*ns, role, a)
 	if err == nil {
-		vc.Command.Printf("Grant permissions %+v to the client role %s on the namespace %s successfully\n",
+		vc.Command.Printf("Grant permissions %+v to the client role %s to access the namespace %s successfully\n",
 			a, role, ns.String())
 	}
 

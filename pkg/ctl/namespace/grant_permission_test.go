@@ -29,7 +29,7 @@ func TestGrantPermissionsCmd(t *testing.T) {
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"grant", "--role", "test-permissions",
+	args = []string{"grant-permission", "--role", "test-permissions",
 		"--actions", "produce", "--actions", "consume", "--actions", "functions", ns}
 	_, execErr, _, _ = TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, execErr)
@@ -39,17 +39,17 @@ func TestGrantPermissionsCmd(t *testing.T) {
 func TestGrantPermissionsArgsError(t *testing.T) {
 	ns := "public/grant-permissions-tests"
 
-	args := []string{"grant", ns}
+	args := []string{"grant-permission", ns}
 	_, _, _, err := TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"actions\", \"role\" not set", err.Error())
 
-	args = []string{"grant", "--role", "test-role", "--actions", "consume"}
+	args = []string{"grant-permission", "--role", "test-role", "--actions", "consume"}
 	_, _, nameErr, _ := TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 
-	args = []string{"grant", "--role", "test-role", "--actions", "fail", ns}
+	args = []string{"grant-permission", "--role", "test-role", "--actions", "fail", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "The auth action only can be specified as 'produce', "+

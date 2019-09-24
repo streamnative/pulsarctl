@@ -27,21 +27,21 @@ import (
 
 func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for revoking a client role permissions on a subscription of a namespace."
+	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a subscription of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
 	var examples []Example
 	revoke := Example{
-		Desc:    "Revoke a client role <role-name> on the subscription <namespace-name> of the <namespace-name>",
-		Command: "pulsarctl namespaces revoke --role <role-name> <namespace-name> <subscription-name>",
+		Desc:    "Revoke a client role <role-name> permissions of accessing the subscription <namespace-name> of the <namespace-name>",
+		Command: "pulsarctl namespaces revoke-subscription-permission --role <role-name> <namespace-name> <subscription-name>",
 	}
 	desc.CommandExamples = append(examples, revoke)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Revoke the client role <role-name> permissions on the subscription <subscription-name> of the namespace <namespace-name> successfully",
+		Out:  "Revoke the client role <role-name> permissions of accessing the subscription <subscription-name> of the namespace <namespace-name> successfully",
 	}
 
 	argsError := Output{
@@ -53,8 +53,8 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"revoke-sub",
-		"Revoke a client role permissions on a subscription of a namespace",
+		"revoke-subscription-permission",
+		"Revoke a client role permissions of accessing a subscription of a namespace",
 		desc.ToString())
 
 	var role string
@@ -89,7 +89,7 @@ func doRevokeSubPermissions(vc *cmdutils.VerbCmd, role string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().RevokeSubPermission(*ns, vc.NameArgs[1], role)
 	if err == nil {
-		vc.Command.Printf("Revoke the client role %s permissions on the subscription %s of the namespace %s successfully\n",
+		vc.Command.Printf("Revoke the client role %s permissions of accessing the subscription %s of the namespace %s successfully\n",
 			role, vc.NameArgs[1], ns.String())
 	}
 

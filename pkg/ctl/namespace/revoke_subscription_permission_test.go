@@ -25,12 +25,12 @@ import (
 func TestRevokeSubPermissionsArgsError(t *testing.T) {
 	ns := "public/revoke-sub-permissions-args-tests"
 
-	args := []string{"revoke-sub", ns}
+	args := []string{"revoke-subscription-permission", ns}
 	_, _, _, err := TestNamespaceCommands(RevokeSubPermissionsCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
 
-	args = []string{"revoke-sub", "--role", "test-role"}
+	args = []string{"revoke-subscription-permission", "--role", "test-role"}
 	_, _, nameErr, _ := TestNamespaceCommands(RevokeSubPermissionsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified namespace name and subscription name", nameErr.Error())

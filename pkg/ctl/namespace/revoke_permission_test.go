@@ -25,12 +25,12 @@ import (
 func TestRevokePermissionsArgsError(t *testing.T) {
 	ns := "public/revoke-permissions-args-tests"
 
-	args := []string{"revoke", ns}
+	args := []string{"revoke-permission", ns}
 	_, _, _, err := TestNamespaceCommands(RevokePermissionsCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
 
-	args = []string{"revoke", "--role", "test-role"}
+	args = []string{"revoke-permission", "--role", "test-role"}
 	_, _, nameErr, _ := TestNamespaceCommands(RevokePermissionsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())

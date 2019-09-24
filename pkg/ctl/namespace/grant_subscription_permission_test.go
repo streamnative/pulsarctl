@@ -29,7 +29,7 @@ func TestGrantSubPermissionsCmd(t *testing.T) {
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"grant-sub", "--role", "test-permissions", ns, "test-grant-sub"}
+	args = []string{"grant-subscription-permission", "--role", "test-permissions", ns, "test-grant-sub"}
 	_, execErr, _, _ = TestNamespaceCommands(GrantSubPermissionsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 501 reason: Authorization is not enabled", execErr.Error())
@@ -38,17 +38,17 @@ func TestGrantSubPermissionsCmd(t *testing.T) {
 func TestGrantSubPermissionsArgsError(t *testing.T) {
 	ns := "public/grant-sub-permissions-args-tests"
 
-	args := []string{"grant-sub", ns}
+	args := []string{"grant-subscription-permission", ns}
 	_, _, _, err := TestNamespaceCommands(GrantSubPermissionsCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
 
-	args = []string{"grant-sub", "--role", "test-role"}
+	args = []string{"grant-subscription-permission", "--role", "test-role"}
 	_, _, nameErr, _ := TestNamespaceCommands(GrantSubPermissionsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified namespace name and subscription name", nameErr.Error())
 
-	args = []string{"grant-sub", "--role", "test-role", ns}
+	args = []string{"grant-subscription-permission", "--role", "test-role", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GrantSubPermissionsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to specified namespace name and subscription name", execErr.Error())

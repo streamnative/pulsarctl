@@ -27,21 +27,21 @@ import (
 
 func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for granting client roles to a subscription of a namespace."
+	desc.CommandUsedFor = "This command is used for granting client roles to access a subscription of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []Example
 	grant := Example{
-		Desc: "Grant client roles <roles-name> to the subscription <subscription-name> of the " +
+		Desc: "Grant the client roles <roles-name> to access the subscription <subscription-name> of the " +
 			"namespace <namespace-name>",
-		Command: "pulsarctl namespaces grant-sub --role <role1-name> --role <role2-name> <namespace-name> <subscription-name>",
+		Command: "pulsarctl namespaces grant-subscription-permission --role <role1-name> --role <role2-name> <namespace-name> <subscription-name>",
 	}
 	desc.CommandExamples = append(examples, grant)
 
 	var out []Output
 	successOut := Output{
 		Desc: "normal output",
-		Out:  "Grant client roles <role-name> to the subscription <subscription-name> of the namespace <namespace-name> successfully",
+		Out:  "Grant the client role <role-name> to access the subscription <subscription-name> of the namespace <namespace-name> successfully",
 	}
 
 	argsError := Output{
@@ -53,8 +53,8 @@ func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"grant-sub",
-		"Grant client roles to subscription of a namespace",
+		"grant-subscription-permission",
+		"Grant a client role to access a subscription of a namespace",
 		desc.ToString())
 
 	var role []string
@@ -89,7 +89,7 @@ func doGrantSubscriptionPermissions(vc *cmdutils.VerbCmd, role []string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().GrantSubPermission(*ns, vc.NameArgs[1], role)
 	if err == nil {
-		vc.Command.Printf("Grant client roles %+v to the subscription %s of the namespace %s successfully\n",
+		vc.Command.Printf("Grant the client role %+v to access the subscription %s of the namespace %s successfully\n",
 			role, vc.NameArgs[1], ns.String())
 	}
 
