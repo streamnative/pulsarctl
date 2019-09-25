@@ -2,9 +2,11 @@ package cluster
 
 import (
 	"encoding/json"
-	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {

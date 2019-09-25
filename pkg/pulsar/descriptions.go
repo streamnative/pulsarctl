@@ -3,7 +3,7 @@ package pulsar
 import "strings"
 
 var SPACES = "    "
-var USED_FOR = "USED FOR:"
+var USEDFOR = "USED FOR:"
 var PERMISSION = "REQUIRED PERMISSION:"
 var EXAMPLES = "EXAMPLES:"
 var OUTPUT = "OUTPUT:"
@@ -26,7 +26,7 @@ type Output struct {
 }
 
 func (desc *LongDescription) ToString() string {
-	return USED_FOR + "\n" +
+	return USEDFOR + "\n" +
 		SPACES + desc.CommandUsedFor + "\n\n" +
 		PERMISSION + "\n" +
 		SPACES + desc.CommandPermission + "\n\n" +

@@ -7,7 +7,8 @@ import (
 
 func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for deleting the failure domain <domain-name> of the cluster <cluster-name>"
+	desc.CommandUsedFor = "This command is used for deleting the failure domain <domain-name>" +
+		" of the cluster <cluster-name>"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
@@ -64,7 +65,8 @@ func doDeleteFailureDomain(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().DeleteFailureDomain(failureDomain)
 	if err == nil {
-		vc.Command.Printf("Delete failure domain [%s] for cluster [%s] succeed\n", failureDomain.DomainName, failureDomain.ClusterName)
+		vc.Command.Printf("Delete failure domain [%s] for cluster [%s] succeed\n",
+			failureDomain.DomainName, failureDomain.ClusterName)
 	}
 
 	return err

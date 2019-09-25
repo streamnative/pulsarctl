@@ -81,7 +81,7 @@ func doGetBacklogQuotas(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	backlogQuotasMap, err := admin.Namespaces().GetBacklogQuotaMap(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &backlogQuotasMap)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &backlogQuotasMap)
 	}
 	return err
 }

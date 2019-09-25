@@ -19,12 +19,14 @@ package namespace
 
 import (
 	"encoding/json"
+	"strings"
+	"testing"
+
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/stretchr/testify/assert"
-	"strings"
-	"testing"
 )
 
 func TestCreateNs(t *testing.T) {
@@ -79,14 +81,15 @@ func TestCreateNsForNegativeBundles(t *testing.T) {
 
 func TestCreateNsForPositiveBundles(t *testing.T) {
 	args := []string{"create", "public/test-namespace-positive-bundles", "--bundles", "12"}
-	_, _, _, err := TestNamespaceCommands(createNs, args)
+	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, execErr)
 
 	policiesArgs := []string{"policies", "public/test-namespace-positive-bundles"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
 	assert.Nil(t, execErr)
 
 	var police pulsar.Policies
-	err = json.Unmarshal(out.Bytes(), &police)
+	err := json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 	assert.Equal(t, 12, police.Bundles.NumBundles)
 }
@@ -107,13 +110,15 @@ func TestCreateNsForCluster(t *testing.T) {
 	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 
-	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster", "--allowed-clusters", "standalone", "public"}
+	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster",
+		"--allowed-clusters", "standalone", "public"}
 	_, execErr, _, err := tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 
 	nsArgs := []string{"create", "public/test-namespace-cluster", "--clusters", "test-cluster"}
-	nsOut, _, _, err := TestNamespaceCommands(createNs, nsArgs)
+	nsOut, execErr, _, _ := TestNamespaceCommands(createNs, nsArgs)
+	assert.Nil(t, execErr)
 	assert.Equal(t, "Created public/test-namespace-cluster successfully", nsOut.String())
 
 	policiesArgs := []string{"policies", "public/test-namespace-cluster"}

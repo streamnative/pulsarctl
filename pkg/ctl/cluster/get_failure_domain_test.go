@@ -2,9 +2,11 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFailureDomainSuccess(t *testing.T) {
@@ -16,7 +18,8 @@ func TestGetFailureDomainSuccess(t *testing.T) {
 	_, _, _, err = TestClusterCommands(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"create-failure-domain", "-b", "failure-broker-A", "-b", "failure-broker-B", "standalone", "failure-domain"}
+	args = []string{"create-failure-domain",
+		"-b", "failure-broker-A", "-b", "failure-broker-B", "standalone", "failure-domain"}
 	_, _, _, err = TestClusterCommands(createFailureDomainCmd, args)
 	assert.Nil(t, err)
 

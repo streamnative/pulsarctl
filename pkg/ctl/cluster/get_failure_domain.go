@@ -55,7 +55,7 @@ func doGetFailureDomain(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	resFailureDomain, err := admin.Clusters().GetFailureDomain(clusterName, domainName)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), resFailureDomain)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), resFailureDomain)
 	}
 
 	return err

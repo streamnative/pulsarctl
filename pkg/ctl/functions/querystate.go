@@ -18,10 +18,12 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
+	"time"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"time"
+
+	"github.com/spf13/pflag"
 )
 
 func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -154,14 +156,15 @@ func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) e
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	for {
-		functionState, err := admin.Functions().GetFunctionState(funcData.Tenant, funcData.Namespace, funcData.FuncName, funcData.Key)
+		functionState, err := admin.Functions().GetFunctionState(
+			funcData.Tenant, funcData.Namespace, funcData.FuncName, funcData.Key)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			cmdutils.PrintJson(vc.Command.OutOrStdout(), functionState)
+			cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionState)
 		}
 
 		if funcData.Watch {

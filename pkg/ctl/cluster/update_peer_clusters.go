@@ -1,9 +1,10 @@
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {

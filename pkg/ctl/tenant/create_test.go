@@ -1,9 +1,10 @@
 package tenant
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateTenantCmd(t *testing.T) {
@@ -24,7 +25,7 @@ func TestCreateTenantArgsError(t *testing.T) {
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
-func TestCreateTenantAlreadyExistError(t *testing.T)  {
+func TestCreateTenantAlreadyExistError(t *testing.T) {
 	args := []string{"create", "--allowed-clusters", "standalone", "create-tenant-duplicate"}
 	_, execErr, _, _ := TestTenantCommands(createTenantCmd, args)
 	assert.Nil(t, execErr)

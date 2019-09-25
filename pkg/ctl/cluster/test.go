@@ -2,13 +2,16 @@ package cluster
 
 import (
 	"bytes"
+	"os"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"os"
 )
 
-func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error) {
+func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
+	execErr, nameErr, err error) {
 	var execError error
 	cmdutils.ExecErrorHandler = func(err error) {
 		execError = err
@@ -51,7 +54,7 @@ var (
 	basePath string
 )
 
-func TestTlsHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error) {
+func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error) {
 	var rootCmd = &cobra.Command{
 		Use:   "pulsarctl [command]",
 		Short: "a CLI for Apache Pulsar",

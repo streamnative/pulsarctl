@@ -1,9 +1,10 @@
 package cluster
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetPeerClustersCmd(t *testing.T) {

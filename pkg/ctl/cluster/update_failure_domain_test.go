@@ -2,9 +2,11 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdateFailureDomain(t *testing.T) {
@@ -15,10 +17,10 @@ func TestUpdateFailureDomain(t *testing.T) {
 	assert.Nil(t, err)
 
 	args = []string{"get-failure-domain", "standalone", "standalone-failure-domain"}
-	out,  execErr, _, _ := TestClusterCommands(getFailureDomainCmd, args)
+	out, execErr, _, _ := TestClusterCommands(getFailureDomainCmd, args)
 	assert.Nil(t, execErr)
 
-	var failureDomain  pulsar.FailureDomainData
+	var failureDomain pulsar.FailureDomainData
 	err = json.Unmarshal(out.Bytes(), &failureDomain)
 	if err != nil {
 		t.Fatal(err)
@@ -26,12 +28,12 @@ func TestUpdateFailureDomain(t *testing.T) {
 	assert.Equal(t, 1, len(failureDomain.BrokerList))
 	assert.Equal(t, "127.0.0.1:6650", failureDomain.BrokerList[0])
 
-	args = []string{"update-failure-domain", "-b", "192.168.0.1:6650", "standalone",  "standalone-failure-domain"}
+	args = []string{"update-failure-domain", "-b", "192.168.0.1:6650", "standalone", "standalone-failure-domain"}
 	_, execErr, _, _ = TestClusterCommands(updateFailureDomainCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get-failure-domain", "standalone", "standalone-failure-domain"}
-	out,  execErr, _, _ = TestClusterCommands(getFailureDomainCmd, args)
+	out, execErr, _, _ = TestClusterCommands(getFailureDomainCmd, args)
 	assert.Nil(t, execErr)
 
 	err = json.Unmarshal(out.Bytes(), &failureDomain)
@@ -48,7 +50,7 @@ func TestUpdateFailureDomainArgsError(t *testing.T) {
 	assert.Equal(t, "broker list must be specified", execErr.Error())
 }
 
-func TestUpdateFailureDomainWithNonExistTopic(t *testing.T)  {
+func TestUpdateFailureDomainWithNonExistTopic(t *testing.T) {
 	args := []string{"update-failure-domain", "-b", "192.168.0.1:6650", "non-exist-cluster", "failure-domain"}
 	_, execErr, _, _ := TestClusterCommands(updateFailureDomainCmd, args)
 	assert.NotNil(t, execErr)

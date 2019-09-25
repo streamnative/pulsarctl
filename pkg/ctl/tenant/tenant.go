@@ -1,9 +1,10 @@
 package tenant
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/cobra"
 )
 
 var tenantNameArgsError = pulsar.Output{

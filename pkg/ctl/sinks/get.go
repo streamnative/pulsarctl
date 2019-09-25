@@ -18,9 +18,10 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSinksCmd(vc *cmdutils.VerbCmd) {
@@ -116,12 +117,12 @@ func doGetSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sinkConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sinkConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkConfig)
 	}
 
 	return err

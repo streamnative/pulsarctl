@@ -1,9 +1,10 @@
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
@@ -13,29 +14,29 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 
-	updateUrl := pulsar.Example{
+	updateURL := pulsar.Example{
 		Desc:    "updating the web service url of the <cluster-name>",
 		Command: "pulsarctl clusters update --url http://example:8080 <cluster-name>",
 	}
-	examples = append(examples, updateUrl)
+	examples = append(examples, updateURL)
 
-	updateUrlTls := pulsar.Example{
+	updateURLTLS := pulsar.Example{
 		Desc:    "updating the tls secured web service url of the <cluster-name>",
 		Command: "pulsarctl clusters update --url-tls https://example:8080 <cluster-name>",
 	}
-	examples = append(examples, updateUrlTls)
+	examples = append(examples, updateURLTLS)
 
-	updateBrokerUrl := pulsar.Example{
+	updateBrokerURL := pulsar.Example{
 		Desc:    "updating the broker service url of the <cluster-name>",
 		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 <cluster-name>",
 	}
-	examples = append(examples, updateBrokerUrl)
+	examples = append(examples, updateBrokerURL)
 
-	updateBrokerUrlTls := pulsar.Example{
+	updateBrokerURLTLS := pulsar.Example{
 		Desc:    "updating the tls secured web service url of the <cluster-name>",
 		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 <cluster-name>",
 	}
-	examples = append(examples, updateBrokerUrlTls)
+	examples = append(examples, updateBrokerURLTLS)
 
 	updatePeerCluster := pulsar.Example{
 		Desc:    "registered as a peer-cluster of the <cluster-name> clusters",

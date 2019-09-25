@@ -1,9 +1,10 @@
 package tenant
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteTenantCmd(t *testing.T) {
@@ -38,7 +39,7 @@ func TestDeleteNonExistTenant(t *testing.T) {
 }
 
 func TestDeleteNonEmptyTenant(t *testing.T) {
-	args :=  []string{"delete", "public"}
+	args := []string{"delete", "public"}
 	_, execErr, _, _ := TestTenantCommands(deleteTenantCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 409 reason: The tenant still has active namespaces", execErr.Error())

@@ -1,12 +1,14 @@
 package crud
 
 import (
-	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"strconv"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
@@ -33,9 +35,9 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Create topic <topic-name> with <partition-num> partitions successfully",
 	}
-	out = append(out, successOut, ArgsError, TopicAlreadyExistError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgsError, e.TopicAlreadyExistError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -46,7 +48,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doCreateTopic(vc)
-	}, CheckTopicNameTwoArgs)
+	}, args.CheckTopicNameTwoArgs)
 }
 
 func doCreateTopic(vc *cmdutils.VerbCmd) error {

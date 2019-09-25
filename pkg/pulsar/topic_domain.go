@@ -5,8 +5,8 @@ import "github.com/pkg/errors"
 type TopicDomain string
 
 const (
-	persistent     TopicDomain = "persistent"
-	non_persistent TopicDomain = "non-persistent"
+	persistent    TopicDomain = "persistent"
+	nonPersistent TopicDomain = "non-persistent"
 )
 
 func ParseTopicDomain(domain string) (TopicDomain, error) {
@@ -14,9 +14,9 @@ func ParseTopicDomain(domain string) (TopicDomain, error) {
 	case "persistent":
 		return persistent, nil
 	case "non-persistent":
-		return non_persistent, nil
+		return nonPersistent, nil
 	default:
-		return "", errors.Errorf("The domain only can be specified as 'persistent' or " +
+		return "", errors.Errorf("The domain only can be specified as 'persistent' or "+
 			"'non-persistent'. Input domain is '%s'.", domain)
 	}
 }

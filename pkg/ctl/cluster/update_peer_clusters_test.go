@@ -2,9 +2,11 @@ package cluster
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdatePeerClusters(t *testing.T) {
@@ -21,7 +23,7 @@ func TestUpdatePeerClusters(t *testing.T) {
 	}
 
 	args = []string{"get", "standalone"}
-	out, _, _, err := TestClusterCommands(getClusterDataCmd, args)
+	out, _, _, _ := TestClusterCommands(getClusterDataCmd, args)
 
 	var clusterData pulsar.ClusterData
 	err = json.Unmarshal(out.Bytes(), &clusterData)
@@ -29,6 +31,6 @@ func TestUpdatePeerClusters(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	peer_cluster := clusterData.PeerClusterNames[0]
-	assert.Equal(t, "test_peer_cluster", peer_cluster)
+	peerCluster := clusterData.PeerClusterNames[0]
+	assert.Equal(t, "test_peer_cluster", peerCluster)
 }

@@ -18,9 +18,10 @@
 package functions
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateFunctions(t *testing.T) {
@@ -69,7 +70,7 @@ func TestCreateFunctions(t *testing.T) {
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
 	assert.Nil(t, err)
 
-	argsWithFileUrl := []string{"create",
+	argsWithFileURL := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-functions-create-file",
@@ -80,6 +81,6 @@ func TestCreateFunctions(t *testing.T) {
 		"--processing-guarantees", "EFFECTIVELY_ONCE",
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileUrl)
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileURL)
 	assert.Nil(t, err)
 }

@@ -1,10 +1,11 @@
 package crud
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
@@ -23,7 +24,8 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl topics delete --non-partitioned <topic-name>",
 	}
 
-	desc.CommandExamples = append(examples, deleteTopic, deleteNonPartitionedTopic)
+	examples = append(examples, deleteTopic, deleteNonPartitionedTopic)
+	desc.CommandExamples = examples
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
@@ -39,10 +41,10 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 		Desc: "the non-partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
-	out = append(out, successOut, ArgError,
+	out = append(out, successOut, e.ArgError,
 		partitionedTopicNotExistError, nonPartitionedTopicNotExistError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -71,6 +73,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 
 // TODO add delete schema
 func doDeleteTopic(vc *cmdutils.VerbCmd, force, deleteSchema, nonPartitioned bool) error {
+	_ = deleteSchema
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
