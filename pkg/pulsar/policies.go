@@ -73,4 +73,3 @@ func NewDefaultPolicies() *Policies {
 		SchemaValidationEnforced:    false,
 	}
 }
-

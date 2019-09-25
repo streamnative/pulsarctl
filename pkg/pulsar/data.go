@@ -214,24 +214,24 @@ type SubscriptionStats struct {
 }
 
 type ConsumerStats struct {
-	ConsumerName                 string            `json:"consumerName"`
+	BlockedConsumerOnUnAckedMsgs bool              `json:"blockedConsumerOnUnackedMsgs"`
+	AvailablePermits             int               `json:"availablePermits"`
+	UnAckedMessages              int               `json:"unackedMessages"`
 	MsgRateOut                   float64           `json:"msgRateOut"`
 	MsgThroughputOut             float64           `json:"msgThroughputOut"`
 	MsgRateRedeliver             float64           `json:"msgRateRedeliver"`
-	AvailablePermits             int               `json:"availablePermits"`
-	UnAckedMessages              int               `json:"unackedMessages"`
-	BlockedConsumerOnUnAckedMsgs bool              `json:"blockedConsumerOnUnackedMsgs"`
+	ConsumerName                 string            `json:"consumerName"`
 	Metadata                     map[string]string `json:"metadata"`
 }
 
 type ReplicatorStats struct {
+	Connected                 bool    `json:"connected"`
 	MsgRateIn                 float64 `json:"msgRateIn"`
 	MsgRateOut                float64 `json:"msgRateOut"`
 	MsgThroughputIn           float64 `json:"msgThroughputIn"`
 	MsgThroughputOut          float64 `json:"msgThroughputOut"`
 	MsgRateExpired            float64 `json:"msgRateExpired"`
 	ReplicationBacklog        int64   `json:"replicationBacklog"`
-	Connected                 bool    `json:"connected"`
 	ReplicationDelayInSeconds int64   `json:"replicationDelayInSeconds"`
 	InboundConnection         string  `json:"inboundConnection"`
 	InboundConnectedSince     string  `json:"inboundConnectedSince"`
@@ -240,6 +240,8 @@ type ReplicatorStats struct {
 }
 
 type PersistentTopicInternalStats struct {
+	WaitingCursorsCount                int                    `json:"waitingCursorsCount"`
+	PendingAddEntriesCount             int                    `json:"pendingAddEntriesCount"`
 	EntriesAddedCounter                int64                  `json:"entriesAddedCounter"`
 	NumberOfEntries                    int64                  `json:"numberOfEntries"`
 	TotalSize                          int64                  `json:"totalSize"`
@@ -247,8 +249,6 @@ type PersistentTopicInternalStats struct {
 	CurrentLedgerSize                  int64                  `json:"currentLedgerSize"`
 	LastLedgerCreatedTimestamp         string                 `json:"lastLedgerCreatedTimestamp"`
 	LastLedgerCreationFailureTimestamp string                 `json:"lastLedgerCreationFailureTimestamp"`
-	WaitingCursorsCount                int                    `json:"waitingCursorsCount"`
-	PendingAddEntriesCount             int                    `json:"pendingAddEntriesCount"`
 	LastConfirmedEntry                 string                 `json:"lastConfirmedEntry"`
 	State                              string                 `json:"state"`
 	Ledgers                            []LedgerInfo           `json:"ledgers"`
@@ -266,15 +266,15 @@ type CursorInfo struct {
 	Version                   int                `json:"version"`
 	CreationDate              string             `json:"creationDate"`
 	ModificationDate          string             `json:"modificationDate"`
-	CursorsLedgerId           int64              `json:"cursorsLedgerId"`
+	CursorsLedgerID           int64              `json:"cursorsLedgerId"`
 	MarkDelete                PositionInfo       `json:"markDelete"`
 	IndividualDeletedMessages []MessageRangeInfo `json:"individualDeletedMessages"`
 	Properties                map[string]int64
 }
 
 type PositionInfo struct {
-	LedgerId int64 `json:"ledgerId"`
-	EntryId  int64 `json:"entryId"`
+	LedgerID int64 `json:"ledgerId"`
+	EntryID  int64 `json:"entryId"`
 }
 
 type MessageRangeInfo struct {

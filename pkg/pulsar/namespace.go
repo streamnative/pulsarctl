@@ -142,16 +142,20 @@ type Namespaces interface {
 	// Clear backlog for all topics on a namespace
 	ClearNamespaceBacklog(namespace NameSpaceName) error
 
-	// Set replicator-message-dispatch-rate (Replicators under this namespace can dispatch this many messages per second)
+	// Set replicator-message-dispatch-rate (Replicators under this namespace
+	// can dispatch this many messages per second)
 	SetReplicatorDispatchRate(namespace NameSpaceName, rate DispatchRate) error
 
-	// Get replicator-message-dispatch-rate (Replicators under this namespace can dispatch this many messages per second)
+	// Get replicator-message-dispatch-rate (Replicators under this namespace
+	// can dispatch this many messages per second)
 	GetReplicatorDispatchRate(namespace NameSpaceName) (DispatchRate, error)
 
-	// Set subscription-message-dispatch-rate (subscriptions under this namespace can dispatch this many messages per second)
+	// Set subscription-message-dispatch-rate (subscriptions under this namespace
+	// can dispatch this many messages per second)
 	SetSubscriptionDispatchRate(namespace NameSpaceName, rate DispatchRate) error
 
-	// Get subscription-message-dispatch-rate (subscriptions under this namespace can dispatch this many messages per second)
+	// Get subscription-message-dispatch-rate (subscriptions under this namespace
+	// can dispatch this many messages per second)
 	GetSubscriptionDispatchRate(namespace NameSpaceName) (DispatchRate, error)
 
 	// Set namespace-subscribe-rate (topics under this namespace will limit by subscribeRate)
@@ -481,47 +485,47 @@ func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitB
 
 func (n *namespaces) SetSubscriptionAuthMode(namespace NameSpaceName, mode SubscriptionAuthMode) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscriptionAuthMode")
-	return n.client.post(endpoint, mode.String(), nil)
+	return n.client.post(endpoint, mode.String())
 }
 
 func (n *namespaces) SetEncryptionRequiredStatus(namespace NameSpaceName, encrypt bool) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "encryptionRequired")
-	return n.client.post(endpoint, strconv.FormatBool(encrypt), nil)
+	return n.client.post(endpoint, strconv.FormatBool(encrypt))
 }
 
 func (n *namespaces) UnsubscribeNamespace(namespace NameSpaceName, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "unsubscribe", url.QueryEscape(sName))
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) UnsubscribeNamespaceBundle(namespace NameSpaceName, bundle, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "unsubscribe", url.QueryEscape(sName))
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBundleBacklogForSubscription(namespace NameSpaceName, bundle, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "clearBacklog", url.QueryEscape(sName))
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBundleBacklog(namespace NameSpaceName, bundle string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "clearBacklog")
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBacklogForSubscription(namespace NameSpaceName, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "clearBacklog", url.QueryEscape(sName))
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBacklog(namespace NameSpaceName) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "clearBacklog")
-	return n.client.post(endpoint, "", nil)
+	return n.client.post(endpoint, "")
 }
 
 func (n *namespaces) SetReplicatorDispatchRate(namespace NameSpaceName, rate DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "replicatorDispatchRate")
-	return n.client.post(endpoint, rate, nil)
+	return n.client.post(endpoint, rate)
 }
 
 func (n *namespaces) GetReplicatorDispatchRate(namespace NameSpaceName) (DispatchRate, error) {
@@ -533,7 +537,7 @@ func (n *namespaces) GetReplicatorDispatchRate(namespace NameSpaceName) (Dispatc
 
 func (n *namespaces) SetSubscriptionDispatchRate(namespace NameSpaceName, rate DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscriptionDispatchRate")
-	return n.client.post(endpoint, rate, nil)
+	return n.client.post(endpoint, rate)
 }
 
 func (n *namespaces) GetSubscriptionDispatchRate(namespace NameSpaceName) (DispatchRate, error) {
@@ -545,7 +549,7 @@ func (n *namespaces) GetSubscriptionDispatchRate(namespace NameSpaceName) (Dispa
 
 func (n *namespaces) SetSubscribeRate(namespace NameSpaceName, rate SubscribeRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscribeRate")
-	return n.client.post(endpoint, rate, nil)
+	return n.client.post(endpoint, rate)
 }
 
 func (n *namespaces) GetSubscribeRate(namespace NameSpaceName) (SubscribeRate, error) {
@@ -557,7 +561,7 @@ func (n *namespaces) GetSubscribeRate(namespace NameSpaceName) (SubscribeRate, e
 
 func (n *namespaces) SetDispatchRate(namespace NameSpaceName, rate DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "dispatchRate")
-	return n.client.post(endpoint, rate, nil)
+	return n.client.post(endpoint, rate)
 }
 
 func (n *namespaces) GetDispatchRate(namespace NameSpaceName) (DispatchRate, error) {

@@ -48,7 +48,7 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"LedgerID\": 0,\n" +
-			"  \"EntryId\": 0,\n" +
+			"  \"EntryID\": 0,\n" +
 			"  \"PartitionedIndex\": 0" +
 			"\n}",
 	}

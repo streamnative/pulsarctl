@@ -137,7 +137,7 @@ func (t *topics) GetInternalInfo(topic TopicName) (ManagedLedgerInfo, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internal-info")
 	var info ManagedLedgerInfo
 	err := t.client.get(endpoint, &info)
-	return  info, err
+	return info, err
 }
 
 func (t *topics) GetPermissions(topic TopicName) (map[string][]AuthAction, error) {
