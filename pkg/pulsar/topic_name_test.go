@@ -65,13 +65,13 @@ func TestGetTopicName(t *testing.T) {
 
 	fail, err = GetTopicName("persistent://tenant/namespace")
 	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid topic name 'tenant/namespace', it should be in the format "+
+	assert.Equal(t, "invalid topic name 'tenant/namespace', it should be in the format "+
 		"of <tenant>/<namespace>/<topic>", err.Error())
 	assert.Nil(t, fail)
 
 	fail, err = GetTopicName("persistent://tenant/namespace/")
 	assert.NotNil(t, err)
-	assert.Equal(t, "Topic name can not be empty.", err.Error())
+	assert.Equal(t, "topic name can not be empty", err.Error())
 	assert.Nil(t, fail)
 }
 

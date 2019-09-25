@@ -74,7 +74,7 @@ func TestCreateNsForNegativeBundles(t *testing.T) {
 	args := []string{"create", "public/test-namespace-negative-bundles", "--bundles", "-1"}
 	createOut, execErr, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	exceptedErr := "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]."
+	exceptedErr := "invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]"
 	t.Log(createOut.String())
 	assert.Equal(t, exceptedErr, execErr.Error())
 }

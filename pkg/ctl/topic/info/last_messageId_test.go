@@ -50,6 +50,6 @@ func TestGetLastMessageIdNotAllowedError(t *testing.T) {
 	_, execErr, _, _ = test.TestTopicCommands(GetLastMessageIDCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t,
-		"code: 405 reason: GetLastMessageID on a non-persistent topic is not allowed",
+		"code: 405 reason: GetLastMessageId on a non-persistent topic is not allowed",
 		execErr.Error())
 }
