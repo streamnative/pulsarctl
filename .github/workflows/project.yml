@@ -1,4 +1,4 @@
-name: Go
+name: ProjectStyle
 on: [pull_request]
 jobs:
 
@@ -19,13 +19,13 @@ jobs:
       - name: InstallTool
         run: |
           wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.18.0
-          golangci-lint --version
+          ./bin/golangci-lint --version
 
       - name: Build
         run: go build .
 
       - name: CheckStyle
         run: |
-          golangci-lint run -c ./golangci.yml ./...
+          ./bin/golangci-lint run -c ./golangci.yml ./...
 
 
