@@ -15,20 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
-// +build functions
-
 package functions
 
 import (
-	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -62,17 +61,19 @@ func TestStateFunctions(t *testing.T) {
 		"pulsar", "-", "hello",
 	}
 
-	outPutState := new(bytes.Buffer)
-
-	for {
-		outPutState, _, _ = TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
-
-		if strings.Contains(outPutState.String(), "successfully") {
-			break
+	task := func(args []string, obj interface{}) (bool, error) {
+		out, execErr, _ := TestFunctionsCommands(putstateFunctionsCmd, args)
+		if execErr != nil {
+			return false, execErr
 		}
+
+		return strings.Contains(out.String(), "successfully"), nil
 	}
 
-	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// test failure case for put state
 	failureStateArgs := []string{"putstate",
@@ -174,17 +175,19 @@ func TestByteValue(t *testing.T) {
 		"pulsar", "=", file.Name(),
 	}
 
-	outPutState := new(bytes.Buffer)
-
-	for {
-		outPutState, _, _ = TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
-
-		if strings.Contains(outPutState.String(), "successfully") {
-			break
+	task := func(args []string, obj interface{}) (bool, error) {
+		out, execErr, _ := TestFunctionsCommands(putstateFunctionsCmd, args)
+		if execErr != nil {
+			return false, execErr
 		}
+
+		return strings.Contains(out.String(), "successfully"), nil
 	}
 
-	assert.True(t, strings.Contains(outPutState.String(), "successfully"))
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// query state
 	queryStateArgs := []string{"querystate",

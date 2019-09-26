@@ -15,18 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
-// +build functions
-
 package functions
 
 import (
-	"bytes"
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusFunctions(t *testing.T) {
@@ -72,19 +72,27 @@ func TestStatusFunctions(t *testing.T) {
 		"--name", "test-functions-status",
 	}
 
-	outStatus := new(bytes.Buffer)
 	var status pulsar.FunctionStatus
 
-	for {
-		outStatus, _, _ = TestFunctionsCommands(statusFunctionsCmd, statusArgs)
-		if strings.Contains(outStatus.String(), "true") {
-			break
+	task := func(args []string, obj interface{}) (bool, error) {
+		outStatus, execErr, _ := TestFunctionsCommands(startFunctionsCmd, args)
+		if execErr != nil {
+			return false, execErr
 		}
+
+		err = json.Unmarshal(outStatus.Bytes(), &obj)
+		if err != nil {
+			return false, err
+		}
+
+		s := obj.(pulsar.FunctionStatus)
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running == true, nil
 	}
 
-	t.Log(outStatus.String())
-	err = json.Unmarshal(outStatus.Bytes(), &status)
-	assert.Nil(t, err)
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, status)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.Equal(t, 1, status.NumRunning)
 	assert.Equal(t, 1, status.NumInstances)

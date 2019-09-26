@@ -18,12 +18,15 @@
 package sinks
 
 import (
-	"bytes"
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusSink(t *testing.T) {
@@ -52,19 +55,27 @@ func TestStatusSink(t *testing.T) {
 		"--name", "test-sink-status",
 	}
 
-	outStatus := new(bytes.Buffer)
 	var status pulsar.SinkStatus
 
-	for {
-		outStatus, _, _ = TestSinksCommands(statusSinksCmd, statusArgs)
-		if strings.Contains(outStatus.String(), "true") {
-			break
+	task := func(args []string, obj interface{}) (bool, error) {
+		outStatus, execErr, _ := TestSinksCommands(statusSinksCmd, args)
+		if execErr != nil {
+			return false, execErr
 		}
+
+		err = json.Unmarshal(outStatus.Bytes(), &obj)
+		if err != nil {
+			return false, err
+		}
+
+		s := obj.(pulsar.SinkStatus)
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running == true, nil
 	}
 
-	t.Log(outStatus.String())
-	err = json.Unmarshal(outStatus.Bytes(), &status)
-	assert.Nil(t, err)
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, status)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.Equal(t, 1, status.NumRunning)
 	assert.Equal(t, 1, status.NumInstances)
