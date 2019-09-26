@@ -19,30 +19,30 @@ package unload
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func UnloadCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for unloading a topic."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
-	unload := Example{
-		Desc: "Unload a topic <topic-name>",
+	var examples []pulsar.Example
+	unload := pulsar.Example{
+		Desc:    "Unload a topic <topic-name>",
 		Command: "pulsarctl topic unload <topic-name>",
 	}
 	desc.CommandExamples = append(examples, unload)
 
-	var out  []Output
-	successOut := Output{
-		Desc:  "normal output",
-		Out: "Unload topic <topic-name> successfully",
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Unload topic <topic-name> successfully",
 	}
-	out = append(out, successOut, ArgError, TopicNotFoundError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError, e.TopicNotFoundError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -61,7 +61,7 @@ func doUnloadCmd(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
