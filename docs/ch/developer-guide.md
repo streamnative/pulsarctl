@@ -48,15 +48,15 @@ Pulsarctl 是使用 go 语言编写的一个命令行工具，可以帮助管理
 
 - `pkg` 用来存放 Pulsarctl 相关的 libraries, 有四个子目录, 详情如下：
     - `auth` 用来存储加密相关的代码
-    - `cmdutils` 是封装 Pulsarctl 的工具包
+    - `cmdutils` 对 cobra 进行了简单封装，
     - `ctl` 用来存放 Pulsarctl 相关的命令
     - `pulsar` 是 Pulsarctl 的公共包
-- `test` 用来存放和 test 相关的 code
+- `test` 用来存放和 test 相关的资源
 - `site` 是 Pulsarctl 的 website 相关的 code，方便用户查看和快速定位相关命令的使用和注意事项等
 - `docs` 用来存放 Pulsarctl 相关的文档内容
 
 > 为了避免循环引用, 其中 `auth` 和 `cmdutils` 是两个独立的包, 不会引用 `ctl` 和 `pulsar` 这两个包, 彼此之间也不会相互引用。 
-`pulsar` 作为公共的包，会引用到 `auth` 和 `cmdutils`, 但是不会引用到 `ctl`。 
+`pulsar` 作为公共的包，会引用到 `auth`, 但是不会引用到 `ctl` 和 `cmdutils`。 
 `ctl` 作为实现 Pulsarctl 的核心 pkg, 会同时引用到 `auth`, `cmdutils`, `pulsar` 这三个包, 但是其它包不会引用到它。
 
 ## 添加一个新命令
@@ -64,7 +64,7 @@ Pulsarctl 是使用 go 语言编写的一个命令行工具，可以帮助管理
 Pulsarctl 使用的命令格式如下：
 
 ```bash
-Pulsarctl [commands] [sub commands] [flags]
+pulsarctl [commands] [sub commands] [flags]
 ```
 
 其中 `[command]` 的内容与 `ctl` 下的文件目录保持一致，当你想要创建一个新的 command 时，请在 `ctl` 目录下创建一个新的文件夹，
@@ -74,7 +74,7 @@ Pulsarctl [commands] [sub commands] [flags]
 请在该 command 的目录下创建一个 `sub-command-name.go` 的文件，添加你相关的代码逻辑。在完成代码的编写之后，请为你的代码添加相关的测试代码，
 确保该测试可以覆盖到你的代码逻辑。
 
-下面，以 `Pulsarctl topics create (topic name) 0` 为例，详细阐述如何快速为 Pulsarctl 添加一个新的 command。
+下面，以 `pulsarctl topics create (topic name) 0` 为例，详细阐述如何快速为 Pulsarctl 添加一个新的 command。
 
 1. 在 ctl 目录下创建一个名字为 topic 的文件夹
 
@@ -220,6 +220,32 @@ func (t *topics) Create(topic TopicName, partitions int) error {
 - post
 
 可根据具体情况，选择使用不同的请求类型。
+
+在完成上述调用后，对于输出到命令终端的信息，pulsarctl 提供了如下几种打印形式：
+
+- PrintJson // 按照 json 格式打印
+- PrintError // 当有错误时，按照封装好的错误信息输出
+
+- 如果需要按照表格形式打印，可以使用 `tablewriter` lib，具体如下：
+
+    ```
+    table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+    table.SetHeader([]string{"Pulsar Function Name"})
+    
+    for _, f := range functions {
+        table.Append([]string{f})
+    }
+    
+    table.Render()
+    ```
+
+- 如果输出的信息是单行文本的提示信息，具体如下：
+
+    ```
+    vc.Command.Printf("Create topic %s with %d partitions successfully\n", topic.String(), partitions)
+    ```
+
+为了方便测试，pulsarctl 对 error 信息进行了拦截处理，
 
 ### 编写 `ctl/topic/topic.go`
 
