@@ -47,7 +47,7 @@ func TestStatusFunctions(t *testing.T) {
 
 	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-status successfully")
+	assert.Equal(t, "Created test-functions-status successfully", out.String())
 
 	getArgs := []string{"get",
 		"--tenant", "public",
@@ -75,21 +75,21 @@ func TestStatusFunctions(t *testing.T) {
 	var status pulsar.FunctionStatus
 
 	task := func(args []string, obj interface{}) (bool, error) {
-		outStatus, execErr, _ := TestFunctionsCommands(startFunctionsCmd, args)
+		outStatus, execErr, _ := TestFunctionsCommands(statusFunctionsCmd, args)
 		if execErr != nil {
 			return false, execErr
 		}
 
-		err = json.Unmarshal(outStatus.Bytes(), &obj)
+		err = json.Unmarshal(outStatus.Bytes(), obj)
 		if err != nil {
 			return false, err
 		}
 
-		s := obj.(pulsar.FunctionStatus)
+		s := obj.(*pulsar.FunctionStatus)
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running == true, nil
 	}
 
-	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, status)
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)
 	if err != nil {
 		t.Fatal(err)
 	}
