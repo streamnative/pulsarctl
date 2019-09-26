@@ -37,8 +37,8 @@ Before contributing, you need to fork [pulsarcli](https://github.com/streamnativ
 $ git remote add streamnative https://github.com/streamnative/pulsarctl.git
 // sync with remote master
 $ git checkout master
-$ git fetch apache
-$ git rebase apache/master
+$ git fetch streamnative
+$ git rebase streamnative/master
 $ git push origin master
 // create PR branch
 $ git checkout -b your_branch   
