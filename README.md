@@ -62,6 +62,10 @@ export GO111MODULE=on
 go build -o pulsarctl main.go
 ```
 
+## Contributing
+
+Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+
 ## Contact
 
 ##### Mailing lists
