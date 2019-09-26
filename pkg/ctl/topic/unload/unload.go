@@ -33,7 +33,8 @@ func UnloadCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Unload a topic <topic-name>",
 		Command: "pulsarctl topic unload <topic-name>",
 	}
-	desc.CommandExamples = append(examples, unload)
+	examples = append(examples, unload)
+	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
