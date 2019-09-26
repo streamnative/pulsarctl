@@ -20,27 +20,28 @@ package compact
 import (
 	"testing"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCompactCmd(t *testing.T) {
 	args := []string{"create", "test-compact-topic", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"compact-status", "test-compact-topic"}
-	out, execErr, _, _ := TestTopicCommands(CompactStatusCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(CompactStatusCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is not running", out.String())
 
 	args = []string{"compact", "test-compact-topic"}
-	_, execErr, _, _ = TestTopicCommands(CompactCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(CompactCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"compact-status", "test-compact-topic"}
-	out, execErr, _, _ = TestTopicCommands(CompactStatusCmd, args)
+	out, execErr, _, _ = test.TestTopicCommands(CompactStatusCmd, args)
 	assert.Nil(t, execErr)
 
 	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is running", out.String())
@@ -48,21 +49,21 @@ func TestCompactCmd(t *testing.T) {
 
 func TestCompactArgError(t *testing.T) {
 	args := []string{"compact"}
-	_, _, nameErr, _ := TestTopicCommands(CompactCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(CompactCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestCompactNonExistingTopic(t *testing.T) {
 	args := []string{"compact", "test-compact-non-existing-topic"}
-	_, execErr, _, _ := TestTopicCommands(CompactCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(CompactCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
 
 func TestCompactNonPersistentTopic(t *testing.T) {
 	args := []string{"compact", "non-persistent://public/default/test-compact-non-persistent-topic"}
-	_, execErr, _, _ := TestTopicCommands(CompactCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(CompactCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to provide a persistent topic", execErr.Error())
 }

@@ -18,50 +18,51 @@
 package compact
 
 import (
-	"github.com/spf13/pflag"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 func CompactStatusCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting status of compaction on a topic."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	compactStatus := Example{
+	var examples []pulsar.Example
+	compactStatus := pulsar.Example{
 		Desc:    "Get status of compaction of a persistent topic <topic-name>",
 		Command: "pulsarctl topic compact-status <topic-name>",
 	}
 	desc.CommandExamples = append(examples, compactStatus)
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Compacting the topic <topic-name> is done successfully",
 	}
 
-	notRun := Output{
+	notRun := pulsar.Output{
 		Desc: "Compacting the topic <topic-name> is not running",
 		Out:  "Compacting the topic <topic-name> is not running",
 	}
 
-	running := Output{
+	running := pulsar.Output{
 		Desc: "Compacting the topic <topic-name> is running",
 		Out:  "Compacting the topic <topic-name> is running",
 	}
 
-	errorOut := Output{
+	errorOut := pulsar.Output{
 		Desc: "Compacting the topic <topic-name> is done with error",
-		Out: "Compacting the topic <topic-name> is done with error <error-msg>",
+		Out:  "Compacting the topic <topic-name> is done with error <error-msg>",
 	}
-	out = append(out, successOut, notRun, running, errorOut, ArgError, TopicNotFoundError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, notRun, running, errorOut, e.ArgError, e.TopicNotFoundError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -86,12 +87,12 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
-	if !topic.IsPersistent(){
+	if !topic.IsPersistent() {
 		return errors.New("need to provide a persistent topic")
 	}
 
@@ -101,7 +102,7 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
 		return err
 	}
 
-	for wait && status.Status == RUNNING {
+	for wait && status.Status == pulsar.RUNNING {
 		time.Sleep(1 * time.Second)
 		status, err = admin.Topics().CompactStatus(*topic)
 		if err != nil {
@@ -110,13 +111,13 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
 	}
 
 	switch status.Status {
-	case NOT_RUN:
+	case pulsar.NOT_RUN:
 		vc.Command.Printf("Compacting the topic %s is not running", topic.String())
-	case RUNNING:
+	case pulsar.RUNNING:
 		vc.Command.Printf("Compacting the topic %s is running", topic.String())
-	case SUCCESS:
+	case pulsar.SUCCESS:
 		vc.Command.Printf("Compacting the topic %s is done successfully", topic.String())
-	case ERROR:
+	case pulsar.ERROR:
 		vc.Command.Printf("Compacting the topic %s is done with error %s", topic.String(), status.LastError)
 	}
 

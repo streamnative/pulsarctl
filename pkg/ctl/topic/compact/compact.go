@@ -18,32 +18,33 @@
 package compact
 
 import (
-	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func CompactCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for compacting a persistent topic."
 	desc.CommandPermission = "This command is requires tenant admin permissions."
 
-	var examples []Example
-	compact := Example{
+	var examples []pulsar.Example
+	compact := pulsar.Example{
 		Desc:    "Compact a persistent topic <topic-name>",
 		Command: "pulsarctl topic compact <topic-name>",
 	}
 	desc.CommandExamples = append(examples, compact)
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Sending compact topic <topic-name> request successfully",
 	}
-	out = append(out, successOut, ArgError, TopicNotFoundError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError, e.TopicNotFoundError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -62,7 +63,7 @@ func doCompact(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
