@@ -18,46 +18,48 @@
 package offload
 
 import (
-	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func OffloadCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for triggering offloading the data from a topic " +
 		"to long-term storage (e.g. Amazon S3)"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	offload := Example{
+	var examples []pulsar.Example
+	offload := pulsar.Example{
 		Desc: "Trigger offloading the data from a topic <topic-name> to a long-term storage and " +
 			"keep the configured amount of data in BookKeeper only (e.g. 10M, 5G, default is byte)",
 		Command: "pulsarctl topic offload <topic-name> <threshold>",
 	}
-	desc.CommandExamples = append(examples, offload)
+	examples = append(examples, offload)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Offload trigger for <topic-name> for messages before <message-id>",
 	}
 
-	nothingOut := Output{
+	nothingOut := pulsar.Output{
 		Desc: "noting to offload",
 		Out:  "Nothing to offload",
 	}
 
-	argsError := Output{
+	argsError := pulsar.Output{
 		Desc: "the topic name is not specified or the offload threshold is not specified",
 		Out:  "[✖]  only two argument is allowed to be used as names",
 	}
-	out = append(out, successOut, nothingOut, argsError, TopicNotFoundError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, nothingOut, argsError, e.TopicNotFoundError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -67,7 +69,7 @@ func OffloadCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doOffload(vc)
-	}, CheckTopicNameTwoArgs)
+	}, args.CheckTopicNameTwoArgs)
 
 }
 
@@ -77,7 +79,7 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArgs[0])
+	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}
@@ -115,13 +117,13 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 	return err
 }
 
-func findFirstLedgerWithinThreshold(ledgers []LedgerInfo, sizeThreshold int64) *MessageId {
+func findFirstLedgerWithinThreshold(ledgers []pulsar.LedgerInfo, sizeThreshold int64) *pulsar.MessageId {
 	var suffixSize int64
 	previousLedger := ledgers[len(ledgers)-1].LedgerId
 	for i := len(ledgers) - 1; i >= 0; i-- {
 		suffixSize += ledgers[i].Size
 		if suffixSize > sizeThreshold {
-			return &MessageId{
+			return &pulsar.MessageId{
 				LedgerId:         previousLedger,
 				EntryId:          0,
 				PartitionedIndex: -1,

@@ -20,31 +20,32 @@ package offload
 import (
 	"testing"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestOffloadCmd(t *testing.T) {
 	args := []string{"create", "test-offload-topic", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"offload", "test-offload-topic", "10M"}
-	out, execErr, _, _ := TestTopicCommands(OffloadCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(OffloadCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Nothing to offload", out.String())
 }
 
 func TestOffloadArgsError(t *testing.T) {
 	args := []string{"offload", "test-offload-topic-args-error"}
-	_, _, nameErr, _ := TestTopicCommands(OffloadCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(OffloadCmd, args)
 	assert.Equal(t, "need to specified the topic name and the partitions", nameErr.Error())
 }
 
 func TestOffloadNonExistingTopicError(t *testing.T) {
 	args := []string{"offload", "test-offload-non-existing-topic", "10m"}
-	_, execErr, _, _ := TestTopicCommands(OffloadCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(OffloadCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
