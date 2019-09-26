@@ -18,38 +18,40 @@
 package teminate
 
 import (
-	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func TerminateCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
-	desc.CommandUsedFor  = "This command is used for terminating a non-partitioned topic and not allow any more " +
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for terminating a non-partitioned topic and not allow any more " +
 		"messages to be published."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	terminate := Example{
-		Desc: "Terminate a non-partitioned topic <topic-name> and not allow any messages to be published",
+	var examples []pulsar.Example
+	terminate := pulsar.Example{
+		Desc:    "Terminate a non-partitioned topic <topic-name> and not allow any messages to be published",
 		Command: "pulsarctl topic terminate <topic-name>",
 	}
-	desc.CommandExamples = append(examples, terminate)
+	examples = append(examples, terminate)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Topic <topic-name> successfully terminated at <message-id>",
+		Out:  "Topic <topic-name> successfully terminated at <message-id>",
 	}
 
-	partitionError := Output{
+	partitionError := pulsar.Output{
 		Desc: "the specified is a partitioned topic",
-		Out: "[✖]  code: 405 reason: Termination of a partitioned topic is not allowed",
+		Out:  "[✖]  code: 405 reason: Termination of a partitioned topic is not allowed",
 	}
-	out = append(out, successOut, ArgError, TopicNotFoundError, partitionError)
-	out = append(out, TopicNameErrors...)
-	out  = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError, e.TopicNotFoundError, partitionError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -68,7 +70,7 @@ func doTerminate(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -78,7 +80,7 @@ func doTerminate(vc *cmdutils.VerbCmd) error {
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	messageId, err :=admin.Topics().Terminate(*topic)
+	messageId, err := admin.Topics().Terminate(*topic)
 	if err == nil {
 		vc.Command.Printf("Topic %s successfully terminated at %+v", topic.String(), messageId)
 	}
