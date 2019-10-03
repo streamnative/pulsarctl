@@ -75,7 +75,7 @@ func doGetReplicationClusters(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	clusters, err := admin.Namespaces().GetNamespaceReplicationClusters(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &clusters)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &clusters)
 	}
 	return err
 }

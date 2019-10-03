@@ -18,9 +18,10 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -124,7 +125,7 @@ func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	err = admin.Functions().DeleteFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		return err

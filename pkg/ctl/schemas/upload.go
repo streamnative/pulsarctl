@@ -19,10 +19,12 @@ package schemas
 
 import (
 	"encoding/json"
-	"github.com/spf13/pflag"
+	"io/ioutil"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"io/ioutil"
+
+	"github.com/spf13/pflag"
 )
 
 func uploadSchema(vc *cmdutils.VerbCmd) {

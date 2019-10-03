@@ -18,9 +18,10 @@
 package sources
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestListSources(t *testing.T) {

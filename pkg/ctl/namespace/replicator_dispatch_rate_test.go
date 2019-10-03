@@ -34,17 +34,22 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"get-replicator-dispatch-rate", ns}
-	out, execErr, _, _ := TestNamespaceCommands(GetReplicatorDispatchRateCmd, args)
+	_, execErr, _, _ = TestNamespaceCommands(GetReplicatorDispatchRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: replicator-Dispatch-rate is not configured for cluster standalone", execErr.Error())
+	assert.Equal(t, "code: 404 reason: replicator-Dispatch-rate is not configured "+
+		"for cluster standalone", execErr.Error())
 
 	args = []string{"set-replicator-dispatch-rate", ns}
-	out, execErr, _, _ = TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
+	out, execErr, _, _ := TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default replicator message dispatch rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.DispatchRate{-1, -1, 1}),
+			pulsar.DispatchRate{
+				DispatchThrottlingRateInMsg:  -1,
+				DispatchThrottlingRateInByte: -1,
+				RatePeriodInSecond:           1,
+			}),
 		out.String())
 
 	args = []string{"get-replicator-dispatch-rate", ns}
@@ -66,7 +71,11 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default replicator message dispatch rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.DispatchRate{10, 10, 10}),
+			pulsar.DispatchRate{
+				DispatchThrottlingRateInMsg:  10,
+				DispatchThrottlingRateInByte: 10,
+				RatePeriodInSecond:           10,
+			}),
 		out.String())
 
 	args = []string{"get-replicator-dispatch-rate", ns}

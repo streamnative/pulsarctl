@@ -18,10 +18,11 @@
 package sources
 
 import (
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
 )
 
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -86,7 +87,7 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 func doListSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 	processNamespaceCmd(sourceData)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

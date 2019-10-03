@@ -18,37 +18,43 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for unsubscribing the specified subscription for all topics of a namespace."
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for unsubscribing the specified " +
+		"subscription for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	unsub := Example{
-		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace <namespace-name>",
+	var examples []pulsar.Example
+	unsub := pulsar.Example{
+		Desc: "Unsubscribe the specified subscription <subscription-name> for " +
+			"all topic of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces unsubscribe <namespace-name> <subscription-name>",
 	}
 
-	unsubWithBundle := Example{
-		Desc: "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace <namespace-name> " +
+	unsubWithBundle := pulsar.Example{
+		Desc: "Unsubscribe the specified subscription <subscription-name> for " +
+			"all topic of the namespace <namespace-name> " +
 			"with bundle range <bundle>",
 		Command: "pulsarctl namespaces unsubscribe --bundle <bundle> <namespace-name> <subscription-name>",
 	}
-	desc.CommandExamples = append(examples, unsub, unsubWithBundle)
+	examples = append(examples, unsub, unsubWithBundle)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Successfully unsubscribe the subscription <subscription-name> for all topics of the namespace <namespace-name>",
+		Out: "Successfully unsubscribe the subscription <subscription-name> for " +
+			"all topics of the namespace <namespace-name>",
 	}
 
-	argsError := Output{
+	argsError := pulsar.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need two arguments apply to the command",
 	}
@@ -79,7 +85,7 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doUnsubscribe(vc *cmdutils.VerbCmd, bundle string) (err error) {
-	ns, err := GetNamespaceName(vc.NameArgs[0])
+	ns, err := pulsar.GetNamespaceName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

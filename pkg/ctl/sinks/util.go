@@ -20,14 +20,17 @@ package sinks
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os"
-	"strings"
 )
 
 func processArguments(sinkData *pulsar.SinkData) error {
@@ -45,7 +48,7 @@ func processArguments(sinkData *pulsar.SinkData) error {
 			if err != nil {
 				return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
 			}
-		} else if err != nil && !os.IsNotExist(err) {
+		} else if !os.IsNotExist(err) {
 			return fmt.Errorf("load conf file failed, err:%s", err.Error())
 		}
 	}
@@ -127,7 +130,6 @@ func processArguments(sinkData *pulsar.SinkData) error {
 		if sinkData.SinkConf.Resources == nil {
 			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
 		}
-		fmt.Println("====cpu====")
 
 		sinkData.SinkConf.Resources.CPU = sinkData.CPU
 	}
@@ -136,7 +138,6 @@ func processArguments(sinkData *pulsar.SinkData) error {
 		if sinkData.SinkConf.Resources == nil {
 			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
 		}
-		fmt.Println("====disk====")
 
 		sinkData.SinkConf.Resources.Disk = sinkData.Disk
 	}
@@ -145,9 +146,8 @@ func processArguments(sinkData *pulsar.SinkData) error {
 		if sinkData.SinkConf.Resources == nil {
 			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
 		}
-		fmt.Println("====ram====")
 
-		sinkData.SinkConf.Resources.Ram = sinkData.RAM
+		sinkData.SinkConf.Resources.RAM = sinkData.RAM
 	}
 
 	if sinkData.SinkConfigString != "" {
@@ -167,10 +167,10 @@ func processArguments(sinkData *pulsar.SinkData) error {
 
 func validateSinkType(sinkType string) string {
 	availableSinks := make([]string, 0, 10)
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	connectorDefinition, err := admin.Sinks().GetBuiltInSinks()
 	if err != nil {
-		fmt.Errorf("get builtin sinks error: %s", err.Error())
+		log.Printf("get builtin sinks error: %s\n", err.Error())
 		return ""
 	}
 
@@ -180,7 +180,7 @@ func validateSinkType(sinkType string) string {
 
 	availableSinksString := strings.Join(availableSinks, " ")
 	if !strings.Contains(availableSinksString, sinkType) {
-		fmt.Errorf("invalid sink type [%s] -- Available sinks are: %s", sinkType, availableSinks)
+		log.Printf("invalid sink type [%s] -- Available sinks are: %s", sinkType, availableSinks)
 		return ""
 	}
 
@@ -206,7 +206,7 @@ func validateSinkConfigs(sinkConf *pulsar.SinkConfig) error {
 
 	utils.InferMissingSinkeArguments(sinkConf)
 
-	if utils.IsPackageUrlSupported(sinkConf.Archive) && strings.HasPrefix(sinkConf.Archive, utils.BUILTIN) {
+	if utils.IsPackageURLSupported(sinkConf.Archive) && strings.HasPrefix(sinkConf.Archive, utils.BUILTIN) {
 		if !utils.IsFileExist(sinkConf.Archive) {
 			return fmt.Errorf("sink Archive %s does not exist", sinkConf.Archive)
 		}

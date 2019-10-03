@@ -18,19 +18,20 @@
 package tenant
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
-func createTenantCmd(vc *cmdutils.VerbCmd)  {
+func createTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a new tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc: "create a tenant named <tenant-name>",
+		Desc:    "create a tenant named <tenant-name>",
 		Command: "pulsarctl tenants create <tenant-name>",
 	}
 	examples = append(examples, create)
@@ -39,7 +40,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Create tenant <tenant-name> successfully",
+		Out:  "Create tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
 	out = append(out, tenantNameArgsError, tenantAlreadyExistError)

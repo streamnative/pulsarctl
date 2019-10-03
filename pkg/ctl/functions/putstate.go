@@ -18,12 +18,14 @@
 package functions
 
 import (
-	"github.com/pkg/errors"
-	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"io/ioutil"
 	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -138,22 +140,23 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	var state pulsar.FunctionState
 
 	state.Key = vc.NameArgs[0]
 	value := vc.NameArgs[1]
 
-	if value == "-" {
+	switch value {
+	case "-":
 		state.StringValue = strings.Join(vc.NameArgs[2:], " ")
-	} else if value == "=" {
+	case "=":
 		contents, err := ioutil.ReadFile(vc.NameArgs[2])
 		if err != nil {
 			return err
 		}
 		state.ByteValue = contents
-	} else {
+	default:
 		return errors.New("error input format")
 	}
 

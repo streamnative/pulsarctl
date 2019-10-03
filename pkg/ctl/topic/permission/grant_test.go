@@ -21,19 +21,20 @@ import (
 	"encoding/json"
 	"testing"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 	args := []string{"create", "test-grant-permission-non-partitioned-topic", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get-permissions", "test-grant-permission-non-partitioned-topic"}
-	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
 	var permissions map[string][]pulsar.AuthAction
@@ -49,11 +50,11 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 		"--actions", "produce",
 		"test-grant-permission-non-partitioned-topic",
 	}
-	_, execErr, _, _ = TestTopicCommands(GrantPermissionCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get-permissions", "test-grant-permission-non-partitioned-topic"}
-	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
+	out, execErr, _, _ = test.TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
 	err = json.Unmarshal(out.Bytes(), &permissions)
@@ -66,11 +67,11 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 
 func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 	args := []string{"create", "test-grant-permission-partitioned-topic", "2"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get-permissions", "test-grant-permission-partitioned-topic"}
-	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
 	var permissions map[string][]pulsar.AuthAction
@@ -86,11 +87,11 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 		"--actions", "consume",
 		"test-grant-permission-partitioned-topic",
 	}
-	_, execErr, _, _ = TestTopicCommands(GrantPermissionCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"get-permissions", "test-grant-permission-partitioned-topic"}
-	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
+	out, execErr, _, _ = test.TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
 	err = json.Unmarshal(out.Bytes(), &permissions)
@@ -103,17 +104,17 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 
 func TestGrantPermissionArgError(t *testing.T) {
 	args := []string{"grant-permissions", "--role", "test-arg-error-role", "--actions", "produce"}
-	_, _, nameErr, _ := TestTopicCommands(GrantPermissionCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 
 	args = []string{"grant-permissions", "args-error-topic"}
-	_, _, _, err := TestTopicCommands(GrantPermissionCmd, args)
+	_, _, _, err := test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"actions\", \"role\" not set", err.Error())
 
 	args = []string{"grant-permissions", "--role", "", "--actions", "produce", "role-empty-topic"}
-	_, execErr, _, _ := TestTopicCommands(GrantPermissionCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "Invalid role name", execErr.Error())
 
@@ -122,7 +123,7 @@ func TestGrantPermissionArgError(t *testing.T) {
 		"--actions", "args-error-action",
 		"invalid-actions-topic",
 	}
-	_, execErr, _, _ = TestTopicCommands(GrantPermissionCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "The auth action  only can be specified as 'produce', "+
 		"'consume', or 'functions'. Invalid auth action 'args-error-action'", execErr.Error())
