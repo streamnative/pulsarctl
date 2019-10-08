@@ -38,7 +38,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 
 	restartWithInstanceID := pulsar.Example{
@@ -46,7 +46,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>\n" +
+			"\t--name (the name of Pulsar Sink)\n" +
 			"\t--instance-id 1",
 	}
 
@@ -56,12 +56,12 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Restarted <the name of a Pulsar Sink> successfully",
+		Out:  "Restarted (the name of a Pulsar Sink) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -71,6 +71,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 		"Restart sink instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"restart",
 	)
 

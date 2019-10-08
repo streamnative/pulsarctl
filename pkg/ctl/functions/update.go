@@ -45,8 +45,8 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	updateWithConf := pulsar.Example{
 		Desc: "Update a Pulsar Function using a function config yaml file",
 		Command: "pulsarctl functions update \n" +
-			"\t--function-config-file <the path of function config yaml file> \n" +
-			"\t--jar <the path of user code jar>",
+			"\t--function-config-file (the path of function config yaml file) \n" +
+			"\t--jar (the path of user code jar)",
 	}
 	examples = append(examples, updateWithConf)
 
@@ -54,7 +54,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Change the log topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithLogTopic)
 
@@ -63,7 +63,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions update \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
 			"\t--max-message-retries 10\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithDeadLetterTopic)
 
@@ -71,7 +71,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Update the user configs of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithUserConfig)
 
@@ -79,7 +79,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Change the schemas of the input topics for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithCustomSchemasInputs)
 
@@ -87,7 +87,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Change the schema type of the input topic for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithSchema)
 
@@ -95,7 +95,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Change the parallelism of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithParallelism)
 
@@ -105,7 +105,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithResource)
 
@@ -116,7 +116,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--window-length-duration-ms 1000\n" +
 			"\t--sliding-interval-count 3\n" +
 			"\t--sliding-interval-duration-ms 1000\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, updateWithWindowFunctions)
 	desc.CommandExamples = examples
@@ -124,7 +124,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Updated <the name of a Pulsar Function> successfully",
+		Out:  "Updated (the name of a Pulsar Function) successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -134,7 +134,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -144,6 +144,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a Pulsar Function that has been deployed to a Pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update",
 	)
 
@@ -190,38 +191,35 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.Jar,
 			"jar",
 			"",
-			"Path to the JAR file for the function (if the function is written in Java). \n"+
-				"It also supports URL path [http/https/file (file protocol assumes that file \n"+
+			"Path to the JAR file for the function (if the function is written in Java). "+
+				"It also supports URL path [http/https/file (file protocol assumes that file "+
 				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVar(
 			&functionData.Py,
 			"py",
 			"",
-			"Path to the main Python file/Python Wheel file for the function\n"+
-				" (if the function is written in Python)")
+			"Path to the main Python file/Python Wheel file for the function (if the function is written in Python)")
 
 		flagSet.StringVar(
 			&functionData.Go,
 			"go",
 			"",
-			"Path to the main Go executable binary for the function \n"+
-				"(if the function is written in Go)")
+			"Path to the main Go executable binary for the function (if the function is written in Go)")
 
 		flagSet.StringVar(
 			&functionData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"The topic pattern to consume from list of topics under a namespace that match the pattern. \n"+
-				"[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in \n"+
-				"--custom-serde-inputs (supported for java fun only)")
+			"The topic pattern to consume from list of topics under a namespace that match the pattern. "+
+				"[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern "+
+				"in --custom-serde-inputs (supported for java fun only)")
 
 		flagSet.StringVar(
 			&functionData.Inputs,
 			"inputs",
 			"",
-			"The input topic or topics (multiple topics can be specified as a comma-separated list) \n"+
-				"of a Pulsar Function")
+			"The input topic or topics (multiple topics can be specified as a comma-separated list) of a Pulsar Function")
 
 		flagSet.StringVarP(
 			&functionData.Output,
@@ -241,8 +239,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"schema-type",
 			"t",
 			"",
-			"The builtin schema type or custom schema class name to be used for \n"+
-				"messages output by the function")
+			"The builtin schema type or custom schema class name to be used for messages output by the function")
 
 		flagSet.StringVar(
 			&functionData.CustomSerDeInputs,
@@ -266,8 +263,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.FunctionConfigFile,
 			"function-config-file",
 			"",
-			"The path to a YAML config file that specifies the configuration \n"+
-				"of a Pulsar Function")
+			"The path to a YAML config file that specifies the configuration of a Pulsar Function")
 
 		flagSet.StringVar(
 			&functionData.UserConfig,

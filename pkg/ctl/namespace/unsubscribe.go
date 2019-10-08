@@ -33,16 +33,14 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	unsub := pulsar.Example{
-		Desc: "Unsubscribe the specified subscription <subscription-name> for " +
-			"all topic of the namespace <namespace-name>",
-		Command: "pulsarctl namespaces unsubscribe <namespace-name> <subscription-name>",
+		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces unsubscribe (namespace-name) (subscription-name)",
 	}
 
 	unsubWithBundle := pulsar.Example{
-		Desc: "Unsubscribe the specified subscription <subscription-name> for " +
-			"all topic of the namespace <namespace-name> " +
+		Desc: "Unsubscribe the specified subscription (subscription-name) for all topic of the namespace (namespace-name) " +
 			"with bundle range <bundle>",
-		Command: "pulsarctl namespaces unsubscribe --bundle <bundle> <namespace-name> <subscription-name>",
+		Command: "pulsarctl namespaces unsubscribe --bundle (bundle) (namespace-name) (subscription-name)",
 	}
 	examples = append(examples, unsub, unsubWithBundle)
 	desc.CommandExamples = examples
@@ -50,8 +48,8 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Successfully unsubscribe the subscription <subscription-name> for " +
-			"all topics of the namespace <namespace-name>",
+		Out: "Successfully unsubscribe the subscription (subscription-name) " +
+			"for all topics of the namespace (namespace-name)",
 	}
 
 	argsError := pulsar.Output{
@@ -65,7 +63,8 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"unsubscribe",
 		"Unsubscribe the specified subscription for all topic of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var bundle string
 

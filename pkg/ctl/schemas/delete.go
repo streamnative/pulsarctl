@@ -30,7 +30,7 @@ func deleteSchema(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	del := pulsar.Example{
 		Desc:    "Delete the latest schema for a topic",
-		Command: "pulsarctl schemas delete <topic name>",
+		Command: "pulsarctl schemas delete (topic name)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -38,7 +38,7 @@ func deleteSchema(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <topic name> successfully",
+		Out:  "Deleted (topic name) successfully",
 	}
 
 	notTopicName := pulsar.Output{
@@ -52,6 +52,7 @@ func deleteSchema(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete the latest schema for a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

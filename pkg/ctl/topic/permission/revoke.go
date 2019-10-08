@@ -34,8 +34,8 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	revoke := pulsar.Example{
-		Desc:    "Revoke permissions of a topic <topic-name>",
-		Command: "pulsarctl topic revoke-permissions --role <role> <topic-name>",
+		Desc:    "Revoke permissions of a topic (topic-name)",
+		Command: "pulsarctl topic revoke-permissions --role (role) (topic-name)",
 	}
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples
@@ -43,7 +43,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Revoke permissions for the role <role> of the topic <topic-name> successfully\n",
+		Out:  "Revoke permissions for the role (role) of the topic (topic-name) successfully\n",
 	}
 
 	flagError := pulsar.Output{
@@ -59,6 +59,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 		"revoke-permissions",
 		"Revoke a client role permissions on a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"revoke")
 
 	var role string

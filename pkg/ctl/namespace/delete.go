@@ -30,7 +30,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	del := pulsar.Example{
 		Desc:    "Delete a namespace",
-		Command: "pulsarctl namespaces delete <namespace-name>",
+		Command: "pulsarctl namespaces delete (namespace-name)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -38,7 +38,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <namespace-name> successfully",
+		Out:  "Deleted (namespace-name) successfully",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -58,6 +58,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a namespace. The namespace needs to be empty",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

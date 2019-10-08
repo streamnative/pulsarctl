@@ -30,8 +30,8 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "Get namespace bundle range of a topic <topic-name>",
-		Command: "pulsarctl topic bundle-range <topic-name>",
+		Desc:    "Get namespace bundle range of a topic (topic-name)",
+		Command: "pulsarctl topic bundle-range (topic-name)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -39,7 +39,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The bundle range of the topic <topic-name> is: <bundle-range>",
+		Out:  "The bundle range of the topic (topic-name) is: (bundle-range)",
 	}
 	out = append(out, successOut, e.ArgError)
 	out = append(out, e.TopicNameErrors...)
@@ -50,6 +50,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 		"bundle-range",
 		"Get the namespace bundle range of a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"")
 
 	vc.SetRunFuncWithNameArg(func() error {

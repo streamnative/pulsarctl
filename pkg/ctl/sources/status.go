@@ -37,7 +37,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, status)
 	desc.CommandExamples = examples
@@ -74,7 +74,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Source doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Source <your source name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Source (your source name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -84,6 +84,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Check the current status of a Pulsar Source",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 

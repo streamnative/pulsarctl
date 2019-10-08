@@ -32,12 +32,12 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	deleteTopic := pulsar.Example{
-		Desc:    "Delete a partitioned topic <topic-name>",
-		Command: "pulsarctl topics delete <topic-name>",
+		Desc:    "Delete a partitioned topic (topic-name)",
+		Command: "pulsarctl topics delete (topic-name)",
 	}
 
 	deleteNonPartitionedTopic := pulsar.Example{
-		Desc:    "Delete a non-partitioned topic <topic-name>",
+		Desc:    "Delete a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topics delete --non-partitioned <topic-name>",
 	}
 
@@ -46,7 +46,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Delete topic <topic-name> successfully",
+		Out:  "Delete topic (topic-name) successfully",
 	}
 
 	partitionedTopicNotExistError := pulsar.Output{
@@ -68,6 +68,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"d")
 
 	var force bool
