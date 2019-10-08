@@ -28,21 +28,21 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func OffloadStatusCmd(vc *cmdutils.VerbCmd) {
+func TopicOffloadStatusCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for checking the status of data offloading" +
-		" from a persistent topic to long-term storage."
+	desc.CommandUsedFor = "This command is used for checking the status of offloading data" +
+		" from a persistent topic to a long-term storage."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	offloadStatus := pulsar.Example{
-		Desc:    "Check the status of data offloading from a topic <persistent-topic-name> to long-term storage",
-		Command: "pulsarctl topic offload-status <persistent-topic-name>",
+		Desc:    "Check the status of offloading data from a topic (persistent-topic-name) to a long-term storage",
+		Command: "pulsarctl topic offload-status (persistent-topic-name)",
 	}
 
 	waiting := pulsar.Example{
 		Desc:    "Wait for offloading to complete",
-		Command: "pulsarctl topic offload-status --wait <persistent-topic-name>",
+		Command: "pulsarctl topic offload-status --wait (persistent-topic-name)",
 	}
 	examples = append(examples, offloadStatus, waiting)
 	desc.CommandExamples = examples
@@ -50,22 +50,22 @@ func OffloadStatusCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Offloading topic <topic-name> data is done successfully",
+		Out:  "Offloading topic (topic-name) data is done successfully",
 	}
 
 	notRun := pulsar.Output{
 		Desc: "Offloading topic is not running",
-		Out:  "Offloading topic <topic-name> data is not running",
+		Out:  "Offloading topic (topic-name) data is not running",
 	}
 
 	running := pulsar.Output{
 		Desc: "Offloading topic is running",
-		Out:  "Offloading topic <topic-name> data is running",
+		Out:  "Offloading topic (topic-name) data is running",
 	}
 
 	errorOut := pulsar.Output{
 		Desc: "Offloading topic with error",
-		Out:  "Offloading topic <topic-name> data is done with error <error-msg>",
+		Out:  "Offloading topic (topic-name) data is done with error (error-msg)",
 	}
 	out = append(out, successOut, notRun, running, errorOut, e.ArgError, e.TopicNotFoundError)
 	out = append(out, e.TopicNameErrors...)
@@ -118,14 +118,14 @@ func doOffloadStatus(vc *cmdutils.VerbCmd, wait bool) error {
 	}
 
 	switch status.Status {
-	case pulsar.NOT_RUN:
-		vc.Command.Printf("Offloading topic %s data is not running", topic.String())
+	case pulsar.NOTRUN:
+		vc.Command.Printf("Offloading topic %s is not running", topic.String())
 	case pulsar.RUNNING:
-		vc.Command.Printf("Offloading topic %s data is running", topic.String())
+		vc.Command.Printf("Offloading topic %s is running", topic.String())
 	case pulsar.SUCCESS:
-		vc.Command.Printf("Offloading topic %s data is done successfully", topic.String())
+		vc.Command.Printf("Offloading topic %s is done successfully", topic.String())
 	case pulsar.ERROR:
-		vc.Command.Printf("Offloading topic %s data is done with error %s", topic.String(), status.LastError)
+		vc.Command.Printf("Offloading topic %s is done with error %s", topic.String(), status.LastError)
 	}
 
 	return err

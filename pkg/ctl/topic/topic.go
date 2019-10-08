@@ -37,8 +37,8 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"topic")
 
 	commands := []func(*cmdutils.VerbCmd){
-		offload.OffloadCmd,
-		offload.OffloadStatusCmd,
+		offload.TopicOffloadCmd,
+		offload.TopicOffloadStatusCmd,
 		crud.CreateTopicCmd,
 		crud.DeleteTopicCmd,
 		crud.GetTopicCmd,

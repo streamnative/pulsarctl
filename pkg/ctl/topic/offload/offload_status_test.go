@@ -32,29 +32,29 @@ func TestOffloadStatusCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"offload-status", "test-offload-topic"}
-	out, execErr, _, _ := test.TestTopicCommands(OffloadStatusCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(TopicOffloadStatusCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Offloading topic persistent://public/default/test-offload-topic data is not running",
+	assert.Equal(t, "Offloading topic persistent://public/default/test-offload-topic is not running",
 		out.String())
 }
 
 func TestOffloadStatusArgsError(t *testing.T) {
 	args := []string{"offload-status"}
-	_, _, nameErr, _ := test.TestTopicCommands(OffloadStatusCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(TopicOffloadStatusCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestOffloadStatusNonPersistentTopicError(t *testing.T) {
 	args := []string{"offload-status", "non-persistent://public/default/test-offload-status-non-persistent-topic"}
-	_, execErr, _, _ := test.TestTopicCommands(OffloadStatusCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(TopicOffloadStatusCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to provide a persistent topic", execErr.Error())
 }
 
 func TestOffloadStatusNonExistingTopicError(t *testing.T) {
 	args := []string{"offload-status", "non-existing-topic"}
-	_, execErr, _, _ := test.TestTopicCommands(OffloadStatusCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(TopicOffloadStatusCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

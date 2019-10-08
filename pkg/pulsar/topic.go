@@ -38,7 +38,7 @@ type Topics interface {
 	GetStats(TopicName) (TopicStats, error)
 	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
-	Offload(TopicName, MessageId) error
+	Offload(TopicName, MessageID) error
 	OffloadStatus(TopicName) (OffloadProcessStatus, error)
 }
 
@@ -207,9 +207,9 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	return stats, err
 }
 
-func (t *topics) Offload(topic TopicName, messageId MessageId) error {
+func (t *topics) Offload(topic TopicName, messageId MessageID) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
-	return t.client.put(endpoint, messageId, nil)
+	return t.client.put(endpoint, messageId)
 }
 
 func (t *topics) OffloadStatus(topic TopicName) (OffloadProcessStatus, error) {

@@ -20,21 +20,21 @@ package pulsar
 type Status string
 
 const (
-	NOT_RUN Status = "NOT_RUN"
+	NOTRUN  Status = "NOT_RUN"
 	RUNNING Status = "RUNNING"
 	SUCCESS Status = "SUCCESS"
-	ERROR Status = "ERROR"
+	ERROR   Status = "ERROR"
 )
 
 type LongRunningProcessStatus struct {
-	Status Status `json:"status"`
+	Status    Status `json:"status"`
 	LastError string `json:"lastError"`
 }
 
 type OffloadProcessStatus struct {
-	Status Status `json:"status"`
-	LastError string `json:"lastError"`
-	FirstUnOffloadedMessage MessageId `json:"firstUnoffloadedMessage"`
+	Status                  Status    `json:"status"`
+	LastError               string    `json:"lastError"`
+	FirstUnOffloadedMessage MessageID `json:"firstUnoffloadedMessage"`
 }
 
 func (s Status) String() string {
