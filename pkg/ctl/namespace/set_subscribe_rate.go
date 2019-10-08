@@ -18,32 +18,34 @@
 package namespace
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
-	setBySub := Example{
-		Desc:    "Set the default subscribe rate by subscribe of the namespace <namespace-name> <rate>",
-		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate <rate> <namespace>",
+	var examples []pulsar.Example
+	setBySub := pulsar.Example{
+		Desc:    "Set the default subscribe rate by subscribe of the namespace (namespace-name) (rate)",
+		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate (rate) (namespace)",
 	}
 
-	setByTime := Example{
-		Desc:    "Set the default subscribe rate by time of the namespace <namespace-name> <period>",
-		Command: "pulsarctl namespaces set-subscribe-rate --period <period> <namespace",
+	setByTime := pulsar.Example{
+		Desc:    "Set the default subscribe rate by time of the namespace (namespace-name) (period)",
+		Command: "pulsarctl namespaces set-subscribe-rate --period (period) (namespace)",
 	}
-	desc.CommandExamples = append(examples, setBySub, setByTime)
+	examples = append(examples, setBySub, setByTime)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Success set the default subscribe rate of the namespace <namespace-name> to <rate>",
+		Out:  "Success set the default subscribe rate of the namespace (namespace-name) to (rate)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -52,9 +54,10 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-subscribe-rate",
 		"Set the default subscribe rate per consumer of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
-	var rate SubscribeRate
+	var rate pulsar.SubscribeRate
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSubscribeRate(vc, rate)
@@ -68,8 +71,8 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate SubscribeRate) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate pulsar.SubscribeRate) error {
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

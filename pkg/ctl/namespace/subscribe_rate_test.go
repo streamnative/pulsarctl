@@ -52,7 +52,10 @@ func TestSubscribeRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default subscribe rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.SubscribeRate{-1, 30}),
+			pulsar.SubscribeRate{
+				SubscribeThrottlingRatePerConsumer: -1,
+				RatePeriodInSecond:                 30,
+			}),
 		out.String())
 
 	args = []string{"get-subscribe-rate", ns}
@@ -70,7 +73,10 @@ func TestSubscribeRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default subscribe rate of the namespace %s to %+v", ns,
-			pulsar.SubscribeRate{10, 10}),
+			pulsar.SubscribeRate{
+				SubscribeThrottlingRatePerConsumer: 10,
+				RatePeriodInSecond:                 10,
+			}),
 		out.String())
 
 	args = []string{"get-subscribe-rate", ns}

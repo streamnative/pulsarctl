@@ -18,9 +18,10 @@
 package cluster
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
@@ -30,8 +31,8 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "getting the <cluster-name> peer clusters",
-		Command: "pulsarctl clusters get-peer-clusters <cluster-name>",
+		Desc:    "getting the (cluster-name) peer clusters",
+		Command: "pulsarctl clusters get-peer-clusters (cluster-name)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -55,6 +56,7 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 		"get-peer-clusters",
 		"Getting list of peer clusters",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"gpc")
 
 	vc.SetRunFuncWithNameArg(func() error {

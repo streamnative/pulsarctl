@@ -18,11 +18,13 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
-	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
+	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestClusters(t *testing.T) {
@@ -35,7 +37,8 @@ func TestClusters(t *testing.T) {
 	_, _, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 
-	updateTenantArgs := []string{"update", "--allowed-clusters", "test-replication-cluster", "--allowed-clusters", "standalone", "public"}
+	updateTenantArgs := []string{"update", "--allowed-clusters", "test-replication-cluster",
+		"--allowed-clusters", "standalone", "public"}
 	_, execErr, _, err := tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)

@@ -38,12 +38,12 @@ func getPersistence(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "{\n" +
-				"  \"bookkeeperEnsemble\": 1,\n" +
-				"  \"bookkeeperWriteQuorum\": 1,\n" +
-				"  \"bookkeeperAckQuorum\": 1,\n" +
-				"  \"managedLedgerMaxMarkDeleteRate\": 0\n" +
-				"}",
+		Out: `{
+  "bookkeeperEnsemble": 1,
+  "bookkeeperWriteQuorum": 1,
+  "bookkeeperAckQuorum": 1,
+  "managedLedgerMaxMarkDeleteRate": 0,
+}`,
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -58,7 +58,7 @@ func getPersistence(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -68,6 +68,7 @@ func getPersistence(vc *cmdutils.VerbCmd) {
 		"get-persistence",
 		"Get the persistence policy of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-persistence",
 	)
 
@@ -81,7 +82,7 @@ func doGetPersistence(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policy, err := admin.Namespaces().GetPersistence(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &policy)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &policy)
 	}
 	return err
 }

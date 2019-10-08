@@ -18,45 +18,48 @@
 package permission
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func RevokePermissions(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
-	var examples []Example
-	revoke := Example{
-		Desc:    "Revoke permissions of a topic <topic-name>",
-		Command: "pulsarctl topic revoke-permissions --role <role> <topic-name>",
+	var examples []pulsar.Example
+	revoke := pulsar.Example{
+		Desc:    "Revoke permissions of a topic (topic-name)",
+		Command: "pulsarctl topic revoke-permissions --role (role) (topic-name)",
 	}
 	examples = append(examples, revoke)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Revoke permissions for the role <role> of the topic <topic-name> successfully\n",
+		Out:  "Revoke permissions for the role (role) of the topic (topic-name) successfully\n",
 	}
 
-	flagError := Output{
+	flagError := pulsar.Output{
 		Desc: "the specified role is empty",
 		Out:  "Invalid role name",
 	}
-	out = append(out, successOut, flagError, ArgError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, flagError, e.ArgError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"revoke-permissions",
 		"Revoke a client role permissions on a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"revoke")
 
 	var role string
@@ -80,7 +83,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 	if role == "" {
 		return errors.New("Invalid role name")
 	}
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

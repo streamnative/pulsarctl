@@ -18,12 +18,14 @@
 package functions
 
 import (
-	"github.com/pkg/errors"
-	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"io/ioutil"
 	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -33,22 +35,22 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	putstate := pulsar.Example{
-		Desc: "Put a key/<string value> pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/(string value) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t<key name> - <string value> ",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t(key name) - (string value) ",
 	}
 	examples = append(examples, putstate)
 
 	putstateWithByte := pulsar.Example{
-		Desc: "Put a key/<file path> pair to the state associated with a Pulsar Function",
+		Desc: "Put a key/(file path) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t<key name> = <file path> ",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t(key name) = (file path) ",
 	}
 	examples = append(examples, putstateWithByte)
 
@@ -56,7 +58,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
-			"\t<key name> - <string value> ",
+			"\t(key name) - (string value) ",
 	}
 	examples = append(examples, putstateWithFQFN)
 	desc.CommandExamples = examples
@@ -64,7 +66,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Put state <the function state> successfully",
+		Out:  "Put state (the function state) successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -74,7 +76,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the `--name` arg",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithKeyOrValueNotExist := pulsar.Output{
@@ -94,6 +96,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"putstate",
 		"Put a key/value pair to the state associated with a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"putstate",
 	)
 
@@ -138,22 +141,23 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	var state pulsar.FunctionState
 
 	state.Key = vc.NameArgs[0]
 	value := vc.NameArgs[1]
 
-	if value == "-" {
+	switch value {
+	case "-":
 		state.StringValue = strings.Join(vc.NameArgs[2:], " ")
-	} else if value == "=" {
+	case "=":
 		contents, err := ioutil.ReadFile(vc.NameArgs[2])
 		if err != nil {
 			return err
 		}
 		state.ByteValue = contents
-	} else {
+	default:
 		return errors.New("error input format")
 	}
 

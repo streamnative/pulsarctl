@@ -18,37 +18,39 @@
 package namespace
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []Example
-	setByMsg := Example{
-		Desc:    "Set the default message dispatch rate by message of the namespace <namespace-name> to <rate>",
-		Command: "pulsarctl namespaces set-dispatch-rate --msg-rate <rate> <namespace>",
+	var examples []pulsar.Example
+	setByMsg := pulsar.Example{
+		Desc:    "Set the default message dispatch rate by message of the namespace (namespace-name) to (rate)",
+		Command: "pulsarctl namespaces set-dispatch-rate --msg-rate (rate) (namespace)",
 	}
 
-	setByByte := Example{
-		Desc:    "Set the default message dispatch rate by byte of the namespace <namespace-name> to <rate>",
-		Command: "pulsarctl namespaces set-dispatch-rate --byte-rate <rate> <namespace>",
+	setByByte := pulsar.Example{
+		Desc:    "Set the default message dispatch rate by byte of the namespace (namespace-name) to (rate)",
+		Command: "pulsarctl namespaces set-dispatch-rate --byte-rate (rate) (namespace)",
 	}
 
-	setByTime := Example{
-		Desc:    "Set the default message dispatch rate by time of the namespace <namespace-name> to <period>",
-		Command: "pulsarctl namespaces set-dispatch-rate --period <period> <namespace",
+	setByTime := pulsar.Example{
+		Desc:    "Set the default message dispatch rate by time of the namespace (namespace-name) to (period)",
+		Command: "pulsarctl namespaces set-dispatch-rate --period (period) (namespace)",
 	}
-	desc.CommandExamples = append(examples, setByMsg, setByByte, setByTime)
+	examples = append(examples, setByMsg, setByByte, setByTime)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Success set the default message dispatch rate of the namespace <namespace-name> to <rate>",
+		Out:  "Success set the default message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
 	out = append(out, successOut)
 	out = append(out, NsErrors...)
@@ -57,9 +59,10 @@ func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-dispatch-rate",
 		"Set the default message dispatch rate of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
-	var rate DispatchRate
+	var rate pulsar.DispatchRate
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetDispatchRate(vc, rate)
@@ -75,8 +78,8 @@ func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetDispatchRate(vc *cmdutils.VerbCmd, rate DispatchRate) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+func doSetDispatchRate(vc *cmdutils.VerbCmd, rate pulsar.DispatchRate) error {
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -84,7 +87,7 @@ func doSetDispatchRate(vc *cmdutils.VerbCmd, rate DispatchRate) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetDispatchRate(*ns, rate)
 	if err == nil {
-		vc.Command.Printf("Success set the default message dispatch rate " +
+		vc.Command.Printf("Success set the default message dispatch rate "+
 			"of the namespace %s to %+v", ns.String(), rate)
 	}
 

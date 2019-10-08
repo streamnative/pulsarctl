@@ -18,9 +18,10 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +36,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -43,12 +44,12 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <the name of a Pulsar Source> successfully",
+		Out:  "Deleted (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -58,6 +59,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a Pulsar IO source connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 
@@ -96,7 +98,7 @@ func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	err = admin.Sources().DeleteSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		return err

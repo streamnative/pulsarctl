@@ -18,10 +18,12 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func restartSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -36,7 +38,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 
 	restartWithInstanceID := pulsar.Example{
@@ -44,7 +46,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>\n" +
+			"\t--name (the name of Pulsar Source)\n" +
 			"\t--instance-id 1",
 	}
 
@@ -54,12 +56,12 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Restarted <the name of a Pulsar Source> successfully",
+		Out:  "Restarted (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -69,6 +71,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 		"Restart source instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"restart",
 	)
 
@@ -113,7 +116,7 @@ func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {
@@ -123,7 +126,8 @@ func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Restarted instanceID[%s] of Pulsar Sources[%s] successfully", sourceData.InstanceID, sourceData.Name)
+		vc.Command.Printf("Restarted instanceID[%s] of Pulsar Sources[%s] successfully",
+			sourceData.InstanceID, sourceData.Name)
 	} else {
 		err = admin.Sources().RestartSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
