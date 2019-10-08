@@ -19,10 +19,10 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/info"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
 

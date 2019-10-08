@@ -102,21 +102,21 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 	}
 
 	if len(stats.Ledgers) < 1 {
-		return errors.New("Topic doesn't have any data.")
+		return errors.New("topic doesn't have any data")
 	}
 
 	ledgers := stats.Ledgers
 	ledgers[len(ledgers)-1].Size = stats.CurrentLedgerSize
-	messageId := findFirstLedgerWithinThreshold(ledgers, size)
-	if err == nil {
+	messageID := findFirstLedgerWithinThreshold(ledgers, size)
+	if messageID == nil {
 		vc.Command.Printf("Nothing to offload")
 		return nil
 	}
 
-	err = admin.Topics().Offload(*topic, *messageId)
+	err = admin.Topics().Offload(*topic, *messageID)
 	if err == nil {
 		vc.Command.Printf("Trigger offloading the data before the message %+v of the topic %s successfully",
-			messageId, topic.String())
+			messageID, topic.String())
 	}
 
 	return err

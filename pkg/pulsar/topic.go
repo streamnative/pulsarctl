@@ -207,9 +207,9 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	return stats, err
 }
 
-func (t *topics) Offload(topic TopicName, messageId MessageID) error {
+func (t *topics) Offload(topic TopicName, messageID MessageID) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
-	return t.client.put(endpoint, messageId)
+	return t.client.put(endpoint, messageID)
 }
 
 func (t *topics) OffloadStatus(topic TopicName) (OffloadProcessStatus, error) {
