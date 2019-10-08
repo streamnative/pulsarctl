@@ -23,7 +23,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func UnloadCmd(vc *cmdutils.VerbCmd) {
+func TopicUnloadCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for unloading a topic."
 	desc.CommandPermission = "This command requires super-user permissions."

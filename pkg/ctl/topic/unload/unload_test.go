@@ -32,21 +32,21 @@ func TestUnloadCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"unload", "test-unload-topic"}
-	out, execErr, _, _ := test.TestTopicCommands(UnloadCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(TopicUnloadCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Unload topic persistent://public/default/test-unload-topic successfully/n", out.String())
 }
 
 func TestUnloadArgError(t *testing.T) {
 	args := []string{"unload"}
-	_, _, nameErr, _ := test.TestTopicCommands(UnloadCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(TopicUnloadCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestUnloadNonExistingTopic(t *testing.T) {
 	args := []string{"unload", "test-unload-non-existing-topic"}
-	_, execErr, _, _ := test.TestTopicCommands(UnloadCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(TopicUnloadCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

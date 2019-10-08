@@ -208,5 +208,5 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 
 func (t *topics) Unload(topic TopicName) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "unload")
-	return t.client.put(endpoint, "", nil)
+	return t.client.put(endpoint, "")
 }
