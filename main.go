@@ -19,8 +19,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg"
 	"os"
+
+	"github.com/streamnative/pulsarctl/pkg"
 )
 
 func main() {

@@ -50,7 +50,7 @@ func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Success set the default message dispatch rate of the namespace (namespace-name) to (rate)",
+		Out:  "Success set the default message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
 	out = append(out, successOut)
 	out = append(out, NsErrors...)

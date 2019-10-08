@@ -143,8 +143,8 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"TopicsPattern to consume from list of topics under a namespace that match the pattern." +
-				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern" +
+			"TopicsPattern to consume from list of topics under a namespace that match the pattern."+
+				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern"+
 				" in --customSerdeInputs  (supported for java fun only)")
 
 		flagSet.StringVar(

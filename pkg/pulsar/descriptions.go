@@ -18,7 +18,7 @@
 package pulsar
 
 import (
-	`strings`
+	"strings"
 )
 
 var SPACES = "    "

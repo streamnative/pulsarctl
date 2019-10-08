@@ -39,7 +39,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "{\n" +
+		Out: "{\n" +
 			"  \"partitions\": \"(partitions)\"\n" +
 			"}",
 	}

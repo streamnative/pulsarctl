@@ -50,7 +50,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Success set the default replicator message dispatch rate of the namespace (namespace-name) to (rate)",
+		Out:  "Success set the default replicator message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
 
 	notConfigured := pulsar.Output{

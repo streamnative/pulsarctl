@@ -45,7 +45,7 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 
 	NonEmptyError := pulsar.Output{
 		Desc: "there has namespace(s) under the tenant (tenant-name)",
-		Out: "code: 409 reason: The tenant still has active namespaces",
+		Out:  "code: 409 reason: The tenant still has active namespaces",
 	}
 	out = append(out, tenantNameArgsError, tenantNotExistError, NonEmptyError)
 	desc.CommandOutput = out

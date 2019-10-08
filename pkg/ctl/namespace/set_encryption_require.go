@@ -46,7 +46,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Enable/Disable message encryption for the namespace (namespace-name)",
+		Out:  "Enable/Disable message encryption for the namespace (namespace-name)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)

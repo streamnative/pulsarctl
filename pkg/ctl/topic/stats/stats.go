@@ -138,7 +138,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString(),
 		"stats",
-		)
+	)
 
 	var partition bool
 	var perPartition bool

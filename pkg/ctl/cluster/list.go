@@ -40,12 +40,12 @@ func listClustersCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "+--------------+\n" +
-				"| CLUSTER NAME |\n" +
-				"+--------------+\n" +
-				"| standalone   |\n" +
-				"| test-a       |\n" +
-				"+--------------+",
+		Out: "+--------------+\n" +
+			"| CLUSTER NAME |\n" +
+			"+--------------+\n" +
+			"| standalone   |\n" +
+			"| test-a       |\n" +
+			"+--------------+",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out

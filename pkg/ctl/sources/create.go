@@ -180,7 +180,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.SchemaType,
 			"schema-type",
 			"",
-			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom Schema class name " +
+			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom Schema class name "+
 				"to be used to encode messages emitted from the source")
 
 		flagSet.IntVar(
@@ -194,7 +194,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"archive",
 			"a",
 			"",
-			"The path to the NAR archive for the Source. It also supports url-path [http/https/file " +
+			"The path to the NAR archive for the Source. It also supports url-path [http/https/file "+
 				"(file protocol assumes that file already exists on worker host)] from which worker can download the package")
 
 		flagSet.StringVar(
@@ -219,7 +219,8 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per source instance (applicable only to the process and Docker runtimes)")
+			"The RAM (in bytes) that need to be allocated per source instance (applicable only to the "+
+				"process and Docker runtimes)")
 
 		flagSet.Int64Var(
 			&sourceData.Disk,

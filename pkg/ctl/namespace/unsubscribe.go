@@ -48,7 +48,8 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Successfully unsubscribe the subscription (subscription-name) for all topics of the namespace (namespace-name)",
+		Out: "Successfully unsubscribe the subscription (subscription-name) " +
+			"for all topics of the namespace (namespace-name)",
 	}
 
 	argsError := pulsar.Output{

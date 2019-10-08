@@ -26,9 +26,10 @@ import (
 
 func CreateClusterCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for adding the configuration data for a cluster.\n"+
-			"The configuration data is mainly used for geo-replication between clusters, so please make sure the service urls provided in this command are reachable between clusters.\n"+
-			"This operation requires Pulsar super-user privileges."
+	desc.CommandUsedFor = "This command is used for adding the configuration data for a cluster. " +
+		"The configuration data is mainly used for geo-replication between clusters, so please " +
+		"make sure the service urls provided in this command are reachable between clusters. " +
+		"This operation requires Pulsar super-user privileges."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example

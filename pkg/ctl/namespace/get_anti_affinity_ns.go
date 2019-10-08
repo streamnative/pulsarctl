@@ -41,7 +41,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "(anti-affinity name list)",
+		Out:  "(anti-affinity name list)",
 	}
 
 	noNamespaceName := pulsar.Output{

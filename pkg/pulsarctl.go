@@ -18,20 +18,20 @@
 package pkg
 
 import (
-    "github.com/streamnative/pulsarctl/pkg/cmdutils"
-    "github.com/streamnative/pulsarctl/pkg/ctl/cluster"
-    "github.com/streamnative/pulsarctl/pkg/ctl/completion"
-    "github.com/streamnative/pulsarctl/pkg/ctl/namespace"
-    "github.com/streamnative/pulsarctl/pkg/ctl/tenant"
-    "github.com/streamnative/pulsarctl/pkg/ctl/topic"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
+	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
+	"github.com/streamnative/pulsarctl/pkg/ctl/namespace"
+	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 
-    functiona "github.com/streamnative/pulsarctl/pkg/ctl/functions"
-    schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
-    sink "github.com/streamnative/pulsarctl/pkg/ctl/sinks"
-    source "github.com/streamnative/pulsarctl/pkg/ctl/sources"
+	functiona "github.com/streamnative/pulsarctl/pkg/ctl/functions"
+	schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
+	sink "github.com/streamnative/pulsarctl/pkg/ctl/sinks"
+	source "github.com/streamnative/pulsarctl/pkg/ctl/sources"
 
-    "github.com/kris-nova/logger"
-    "github.com/spf13/cobra"
+	"github.com/kris-nova/logger"
+	"github.com/spf13/cobra"
 )
 
 func NewPulsarctlCmd() *cobra.Command {

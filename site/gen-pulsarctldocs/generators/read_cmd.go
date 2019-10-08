@@ -18,8 +18,9 @@
 package generators
 
 import (
-	`github.com/streamnative/pulsarctl/pkg`
 	"sort"
+
+	"github.com/streamnative/pulsarctl/pkg"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"

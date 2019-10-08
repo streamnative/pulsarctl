@@ -18,11 +18,12 @@
 package main
 
 import (
-    `flag`
-    `github.com/streamnative/pulsarctl/site/gen-pulsarctldocs/generators`
+	"flag"
+
+	"github.com/streamnative/pulsarctl/site/gen-pulsarctldocs/generators"
 )
 
 func main() {
-    flag.Parse()
-    generators.GenerateFiles()
+	flag.Parse()
+	generators.GenerateFiles()
 }

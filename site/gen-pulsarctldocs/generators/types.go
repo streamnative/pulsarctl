@@ -52,7 +52,7 @@ type Command struct {
 }
 
 type Manifest struct {
-	Docs     []Doc    `json:"docs,omitempty"`
+	Docs      []Doc  `json:"docs,omitempty"`
 	Title     string `json:"title,omitempty"`
 	Copyright string `json:"copyright,omitempty"`
 }
@@ -66,8 +66,7 @@ type ToC struct {
 }
 
 type Category struct {
-	Name     string `yaml:",omitempty"`
+	Name     string   `yaml:",omitempty"`
 	Commands []string `yaml:",omitempty"`
-	Include string `yaml:",omitempty"`
+	Include  string   `yaml:",omitempty"`
 }
-

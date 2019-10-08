@@ -31,7 +31,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc: "create a tenant named (tenant-name)",
+		Desc:    "create a tenant named (tenant-name)",
 		Command: "pulsarctl tenants create (tenant-name)",
 	}
 	examples = append(examples, create)
@@ -40,7 +40,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Create tenant (tenant-name) successfully",
+		Out:  "Create tenant (tenant-name) successfully",
 	}
 	out = append(out, successOut)
 	out = append(out, tenantNameArgsError, tenantAlreadyExistError)
