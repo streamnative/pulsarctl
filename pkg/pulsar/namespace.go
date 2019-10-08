@@ -88,7 +88,7 @@ type Namespaces interface {
 
 	// Get the maxProducersPerTopic for a namespace.
 	GetMaxProducersPerTopic(namespace NameSpaceName) (int, error)
-=======
+
 	// Get the replication clusters for a namespace
 	GetNamespaceReplicationClusters(namespace string) ([]string, error)
 
@@ -357,12 +357,12 @@ func (n *namespaces) RemoveBacklogQuota(namespace string) error {
 
 func (n *namespaces) SetMaxConsumersPerSubscription(namespace NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
-	return n.client.post(endpoint, max, nil)
+	return n.client.post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxConsumersPerSubscription(namespace NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
-	b, err := n.client.getAndDecode(endpoint, nil, false)
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -371,12 +371,12 @@ func (n *namespaces) GetMaxConsumersPerSubscription(namespace NameSpaceName) (in
 
 func (n *namespaces) SetMaxConsumersPerTopic(namespace NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
-	return n.client.post(endpoint, max, nil)
+	return n.client.post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxConsumersPerTopic(namespace NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
-	b, err := n.client.getAndDecode(endpoint, nil, false)
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -385,12 +385,12 @@ func (n *namespaces) GetMaxConsumersPerTopic(namespace NameSpaceName) (int, erro
 
 func (n *namespaces) SetMaxProducersPerTopic(namespace NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
-	return n.client.post(endpoint, max, nil)
+	return n.client.post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxProducersPerTopic(namespace NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
-	b, err := n.client.getAndDecode(endpoint, nil, false)
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
