@@ -20,16 +20,17 @@ package pulsar
 import "github.com/pkg/errors"
 
 type SchemaAutoUpdateCompatibilityStrategy string
+type SchemaCompatibilityStrategy string
 
 const (
-	AutoUpdateDisabled SchemaAutoUpdateCompatibilityStrategy = "AutoUpdateDisabled"
-	Backward           SchemaAutoUpdateCompatibilityStrategy = "Backward"
-	Forward            SchemaAutoUpdateCompatibilityStrategy = "Forward"
-	Full               SchemaAutoUpdateCompatibilityStrategy = "Full"
-	AlwaysCompatible   SchemaAutoUpdateCompatibilityStrategy = "AlwaysCompatible"
-	BackwardTransitive SchemaAutoUpdateCompatibilityStrategy = "BackwardTransitive"
-	ForwardTransitive  SchemaAutoUpdateCompatibilityStrategy = "ForwardTransitive"
-	FullTransitive     SchemaAutoUpdateCompatibilityStrategy = "FullTransitive"
+	AutoUpdateDisabled SchemaCompatibilityStrategy = "AutoUpdateDisabled"
+	Backward           SchemaCompatibilityStrategy = "Backward"
+	Forward            SchemaCompatibilityStrategy = "Forward"
+	Full               SchemaCompatibilityStrategy = "Full"
+	AlwaysCompatible   SchemaCompatibilityStrategy = "AlwaysCompatible"
+	BackwardTransitive SchemaCompatibilityStrategy = "BackwardTransitive"
+	ForwardTransitive  SchemaCompatibilityStrategy = "ForwardTransitive"
+	FullTransitive     SchemaCompatibilityStrategy = "FullTransitive"
 )
 
 func ParseSchemaAutoUpdateCompatibilityStrategy(str string) (SchemaAutoUpdateCompatibilityStrategy, error) {

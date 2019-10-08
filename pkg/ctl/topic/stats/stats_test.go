@@ -1,12 +1,30 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package stats
 
 import (
 	"encoding/json"
 	"testing"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,11 +43,11 @@ var defaultStats = pulsar.TopicStats{
 
 func TestGetStatsCmd(t *testing.T) {
 	args := []string{"create", "test-non-partitioned-topic-stats", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"stats", "test-non-partitioned-topic-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
 	var stats pulsar.TopicStats
@@ -43,36 +61,36 @@ func TestGetStatsCmd(t *testing.T) {
 
 func TestGetPartitionedStats(t *testing.T) {
 	args := []string{"create", "test-partitioned-topic-stats", "2"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"stats", "test-partitioned-topic-stats"}
-	_, execErr, _, _ = TestTopicCommands(GetStatsCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
 
 func TestGetStatsArgsError(t *testing.T) {
 	args := []string{"stats"}
-	_, _, nameErr, _ := TestTopicCommands(GetStatsCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestGetNonExistingTopicStats(t *testing.T) {
 	args := []string{"stats", "non-existing-topic"}
-	_, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
 
 func TestGetPartitionedStatsCmd(t *testing.T) {
 	args := []string{"create", "test-topic-partitioned-stats", "2"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"stats", "--partitioned-topic", "test-topic-partitioned-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
 	var stats pulsar.PartitionedTopicStats
@@ -98,11 +116,11 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 
 func TestGetPerPartitionedStatsCmd(t *testing.T) {
 	args := []string{"create", "test-topic-per-partitioned-stats", "2"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"stats", "--partitioned-topic", "--per-partition", "test-topic-per-partitioned-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
 	var stats pulsar.PartitionedTopicStats
@@ -144,25 +162,25 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 
 func TestGetPartitionedStatsArgError(t *testing.T) {
 	args := []string{"stats", "--partitioned-topic"}
-	_, _, nameErr, _ := TestTopicCommands(GetStatsCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestGetNonExistingTopicStatsError(t *testing.T) {
 	args := []string{"stats", "--partitioned-topic", "non-existing-topic"}
-	_, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
 }
 
 func TestGetNonPartitionedTopicStatsError(t *testing.T) {
 	args := []string{"create", "test-non-partitioned-topic-partitioned-stats", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"stats", "--partitioned-topic", "test-non-partitioned-topic-partitioned-stats"}
-	_, execErr, _, _ = TestTopicCommands(GetStatsCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
 }

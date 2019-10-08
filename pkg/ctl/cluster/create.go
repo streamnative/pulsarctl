@@ -1,22 +1,59 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func CreateClusterCmd(vc *cmdutils.VerbCmd) {
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for adding the configuration data for a cluster. " +
+		"The configuration data is mainly used for geo-replication between clusters, so please " +
+		"make sure the service urls provided in this command are reachable between clusters. " +
+		"This operation requires Pulsar super-user privileges."
+	desc.CommandPermission = "This command requires super-user permissions."
+
+	var examples []pulsar.Example
+	create := pulsar.Example{
+		Desc:    "Provisions a new cluster",
+		Command: "pulsarctl clusters create (cluster-name)",
+	}
+	examples = append(examples, create)
+	desc.CommandExamples = examples
+
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out:  "Cluster (cluster-name) added",
+	}
+	out = append(out, successOut)
+	desc.CommandOutput = out
+
 	// update the description
 	vc.SetDescription(
 		"add",
 		"Add a pulsar cluster",
-		"This command is used for adding the configuration data for a cluster.\n"+
-			"The configuration data is mainly used for geo-replication between clusters,\n"+
-			"so please make sure the service urls provided in this command are reachable\n"+
-			"between clusters.\n"+
-			"\n"+
-			"This operation requires Pulsar super-user privileges.",
+		desc.ToString(),
+		desc.ExampleToString(),
 		"create")
 
 	clusterData := &pulsar.ClusterData{}

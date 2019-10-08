@@ -18,10 +18,11 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 func setPersistence(vc *cmdutils.VerbCmd) {
@@ -60,7 +61,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	errArgsForBk := pulsar.Output{
@@ -75,6 +76,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 		"set-persistence",
 		"Set the persistence policy for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-persistence",
 	)
 
@@ -104,7 +106,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 			"ack-quorum-size",
 			"a",
 			0,
-			"Number of acks (garanteed copies) to wait for each entry")
+			"Number of acks (guaranteed copies) to wait for each entry")
 
 		flagSet.Float64VarP(
 			&data.ManagedLedgerMaxMarkDeleteRate,

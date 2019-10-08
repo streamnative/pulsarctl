@@ -1,9 +1,27 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package cmdutils
 
 import (
+	"os"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 // VerbCmd holds attributes that most of the commands use
@@ -14,7 +32,7 @@ type VerbCmd struct {
 	NameArgs     []string
 
 	// for testing
-	NameError 	error
+	NameError error
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
@@ -28,18 +46,19 @@ func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, ne
 	parentResourceCmd.AddCommand(verb.Command)
 }
 
-func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd ...func(cmd *VerbCmd))  {
+func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd ...func(cmd *VerbCmd)) {
 	for _, cmd := range newVerbCmd {
 		AddVerbCmd(flagGrouping, parentResourceCmd, cmd)
 	}
 }
 
 // SetDescription sets usage along with short and long descriptions as well as aliases
-func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
+func (vc *VerbCmd) SetDescription(use, short, long, example string, aliases ...string) {
 	vc.Command.Use = use
 	vc.Command.Short = short
 	vc.Command.Long = long
 	vc.Command.Aliases = aliases
+	vc.Command.Example = example
 }
 
 // SetRunFunc registers a command function

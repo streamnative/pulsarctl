@@ -18,9 +18,10 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +36,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source get \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 
 	examples = append(examples, get)
@@ -64,7 +65,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 	out = append(out, successOut, nameNotExistOut)
 	desc.CommandOutput = out
@@ -73,6 +74,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Gets the information about a Pulsar IO source connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get",
 	)
 
@@ -111,12 +113,12 @@ func doGetSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sourceConfig, err := admin.Sources().GetSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceConfig)
 	}
 
 	return err

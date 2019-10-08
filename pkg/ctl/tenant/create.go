@@ -1,20 +1,38 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package tenant
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
-func createTenantCmd(vc *cmdutils.VerbCmd)  {
+func createTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a new tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc: "create a tenant named <tenant-name>",
-		Command: "pulsarctl tenants create <tenant-name>",
+		Desc:    "create a tenant named (tenant-name)",
+		Command: "pulsarctl tenants create (tenant-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
@@ -22,7 +40,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Create tenant <tenant-name> successfully",
+		Out:  "Create tenant (tenant-name) successfully",
 	}
 	out = append(out, successOut)
 	out = append(out, tenantNameArgsError, tenantAlreadyExistError)
@@ -32,6 +50,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd)  {
 		"create",
 		"Create a tenant",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"create")
 
 	var tenantData pulsar.TenantData

@@ -56,7 +56,7 @@ func getRetention(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -66,6 +66,7 @@ func getRetention(vc *cmdutils.VerbCmd) {
 		"get-retention",
 		"Get the retention policy of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-retention",
 	)
 
@@ -79,7 +80,7 @@ func doGetRetention(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policy, err := admin.Namespaces().GetRetention(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &policy)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &policy)
 	}
 	return err
 }
