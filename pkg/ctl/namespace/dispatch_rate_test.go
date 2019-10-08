@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -53,7 +54,10 @@ func TestDispatchRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default message dispatch rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.DispatchRate{-1, -1, 1}),
+			pulsar.DispatchRate{
+				DispatchThrottlingRateInMsg:  -1,
+				DispatchThrottlingRateInByte: -1,
+				RatePeriodInSecond:           1}),
 		out.String())
 
 	args = []string{"get-dispatch-rate", ns}
@@ -73,7 +77,11 @@ func TestDispatchRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default message dispatch rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.DispatchRate{10, 10, 10}),
+			pulsar.DispatchRate{
+				DispatchThrottlingRateInMsg:  10,
+				DispatchThrottlingRateInByte: 10,
+				RatePeriodInSecond:           10,
+			}),
 		out.String())
 
 	args = []string{"get-dispatch-rate", ns}

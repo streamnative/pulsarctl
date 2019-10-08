@@ -18,10 +18,11 @@
 package schemas
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSchema(t *testing.T) {
@@ -32,7 +33,13 @@ func TestSchema(t *testing.T) {
 
 	_, err = f.WriteString("{\n" +
 		"   \"type\": \"AVRO\",\n" +
-		"   \"schema\": \"{\\\"type\\\":\\\"record\\\",\\\"name\\\":\\\"Test\\\",\\\"fields\\\":[{\\\"name\\\":\\\"id\\\",\\\"type\\\":[\\\"null\\\",\\\"int\\\"]},{\\\"name\\\":\\\"name\\\",\\\"type\\\":[\\\"null\\\",\\\"string\\\"]}]}\",\n" +
+		"   \"schema\": " +
+		"\"{\\\"type\\\":\\\"record\\\"," +
+		"\\\"name\\\":\\\"Test\\\"," +
+		"\\\"fields\\\":[{" +
+		"\\\"name\\\":\\\"id\\\"," +
+		"\\\"type\\\":[\\\"null\\\",\\\"int\\\"]}," +
+		"{\\\"name\\\":\\\"name\\\",\\\"type\\\":[\\\"null\\\",\\\"string\\\"]}]}\",\n" +
 		"   \"properties\": {}\n" +
 		"}\n")
 	assert.Nil(t, err)

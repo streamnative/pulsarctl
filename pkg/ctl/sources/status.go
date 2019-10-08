@@ -18,10 +18,12 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func statusSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -125,23 +127,24 @@ func doStatusSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {
 			return err
 		}
-		sourceInstanceStatusData, err := admin.Sources().GetSourceStatusWithID(sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
+		sourceInstanceStatusData, err := admin.Sources().GetSourceStatusWithID(
+			sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceInstanceStatusData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceInstanceStatusData)
 	} else {
 		sourceStatus, err := admin.Sources().GetSourceStatus(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceStatus)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceStatus)
 	}
 
 	return err

@@ -18,10 +18,11 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func createSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -193,7 +194,8 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"a",
 			"",
 			"The path to the NAR archive for the Source. It also supports url-path [http/https/file \n"+
-				"(file protocol assumes that file already exists on worker host)] from which worker can download the package")
+				"(file protocol assumes that file already exists on worker host)] from which worker can download"+
+				" the package")
 
 		flagSet.StringVar(
 			&sourceData.ClassName,
@@ -249,13 +251,14 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
-	if utils.IsPackageUrlSupported(sourceData.Archive) {
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	if utils.IsPackageURLSupported(sourceData.Archive) {
 		err = admin.Sources().CreateSourceWithURL(sourceData.SourceConf, sourceData.Archive)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created instanceID[%s] of Pulsar Sources[%s] successfully", sourceData.InstanceID, sourceData.Name)
+			vc.Command.Printf("Created instanceID[%s] of Pulsar Sources[%s] successfully",
+				sourceData.InstanceID, sourceData.Name)
 		}
 	} else {
 		err = admin.Sources().CreateSource(sourceData.SourceConf, sourceData.Archive)

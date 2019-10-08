@@ -21,8 +21,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kris-nova/logger"
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
@@ -33,6 +31,9 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/sources"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
+
+	"github.com/kris-nova/logger"
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{

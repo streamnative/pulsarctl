@@ -18,11 +18,13 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
+	"strings"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strings"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 func setReplicationClusters(vc *cmdutils.VerbCmd) {

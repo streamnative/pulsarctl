@@ -18,9 +18,10 @@
 package cmdutils
 
 import (
+	"os"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 // VerbCmd holds attributes that most of the commands use
@@ -31,7 +32,7 @@ type VerbCmd struct {
 	NameArgs     []string
 
 	// for testing
-	NameError 	error
+	NameError error
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
@@ -45,7 +46,7 @@ func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, ne
 	parentResourceCmd.AddCommand(verb.Command)
 }
 
-func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd ...func(cmd *VerbCmd))  {
+func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd ...func(cmd *VerbCmd)) {
 	for _, cmd := range newVerbCmd {
 		AddVerbCmd(flagGrouping, parentResourceCmd, cmd)
 	}

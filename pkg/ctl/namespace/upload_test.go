@@ -18,8 +18,9 @@
 package namespace
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpload(t *testing.T) {
@@ -36,7 +37,8 @@ func TestUpload(t *testing.T) {
 	argsWithBundle := []string{"unload", "public/test-unload-namespace", "--bundle", "0x40000000_0x80000000"}
 	unloadOut, execErr, _, _ = TestNamespaceCommands(unload, argsWithBundle)
 	assert.Nil(t, execErr)
-	assert.Equal(t, unloadOut.String(), "Unload namespace public/test-unload-namespace with bundle 0x40000000_0x80000000 successfully")
+	assert.Equal(t, unloadOut.String(),
+		"Unload namespace public/test-unload-namespace with bundle 0x40000000_0x80000000 successfully")
 
 	// test invalid upper boundary for bundle
 	argsWithInvalidBundle := []string{"unload", "public/test-unload-namespace", "--bundle", "0x00000000_0x60000000"}

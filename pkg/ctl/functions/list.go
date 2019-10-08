@@ -18,10 +18,11 @@
 package functions
 
 import (
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -86,7 +87,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doListFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 	processNamespaceCmd(funcData)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	functions, err := admin.Functions().GetFunctions(funcData.Tenant, funcData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

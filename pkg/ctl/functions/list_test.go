@@ -18,10 +18,11 @@
 package functions
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestListFunctions(t *testing.T) {
@@ -55,7 +56,7 @@ func TestListFunctions(t *testing.T) {
 	}
 
 	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
-	assert.Nil(t, nil)
+	assert.Nil(t, err)
 
 	listArgsAgain := []string{"list",
 		"--tenant", "public",

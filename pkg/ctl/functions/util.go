@@ -18,358 +18,372 @@
 package functions
 
 import (
-    `encoding/json`
-    `fmt`
-    `github.com/pkg/errors`
-    `github.com/streamnative/pulsarctl/pkg/ctl/utils`
-    `github.com/streamnative/pulsarctl/pkg/pulsar`
-    `gopkg.in/yaml.v2`
-    `io/ioutil`
-    `os`
-    `strings`
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 )
 
 func parseFullyQualifiedFunctionName(fqfn string, functionConfig *pulsar.FunctionConfig) error {
-    args := strings.Split(fqfn, "/")
-    if len(args) != 3 {
-        return errors.New("fully qualified function names (FQFNs) must be of the form tenant/namespace/name")
-    }
+	args := strings.Split(fqfn, "/")
+	if len(args) != 3 {
+		return errors.New("fully qualified function names (FQFNs) must be of the form tenant/namespace/name")
+	}
 
-    functionConfig.Tenant = args[0]
-    functionConfig.Namespace = args[1]
-    functionConfig.Name = args[2]
+	functionConfig.Tenant = args[0]
+	functionConfig.Namespace = args[1]
+	functionConfig.Name = args[2]
 
-    return nil
+	return nil
 }
 
 func processArgs(funcData *pulsar.FunctionData) error {
-    // Initialize config builder either from a supplied YAML config file or from scratch
-    if funcData.FuncConf != nil {
-        // no-op
-    } else {
-        funcData.FuncConf = new(pulsar.FunctionConfig)
-    }
+	// Initialize config builder either from a supplied YAML config file or from scratch
+	if funcData.FuncConf != nil {
+		// no-op
+	} else {
+		funcData.FuncConf = new(pulsar.FunctionConfig)
+	}
 
-    if funcData.FunctionConfigFile != "" {
-        yamlFile, err := ioutil.ReadFile(funcData.FunctionConfigFile)
-        if err == nil {
-            err = yaml.Unmarshal(yamlFile, funcData.FuncConf)
-            if err != nil {
-                return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
-            }
-        } else if err != nil && !os.IsNotExist(err) {
-            return fmt.Errorf("load conf file failed, err:%s", err.Error())
-        }
-    }
+	if funcData.FunctionConfigFile != "" {
+		yamlFile, err := ioutil.ReadFile(funcData.FunctionConfigFile)
+		if err == nil {
+			err = yaml.Unmarshal(yamlFile, funcData.FuncConf)
+			if err != nil {
+				return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
+			}
+		} else if !os.IsNotExist(err) {
+			return fmt.Errorf("load conf file failed, err:%s", err.Error())
+		}
+	}
 
-    if funcData.FQFN != "" {
-        err := parseFullyQualifiedFunctionName(funcData.FQFN, funcData.FuncConf)
-        if err != nil {
-            return err
-        }
-    } else {
-        if funcData.Tenant != "" {
-            funcData.FuncConf.Tenant = funcData.Tenant
-        }
-        if funcData.Namespace != "" {
-            funcData.FuncConf.Namespace = funcData.Namespace
-        }
-        if funcData.FuncName != "" {
-            funcData.FuncConf.Name = funcData.FuncName
-        }
-    }
+	if funcData.FQFN != "" {
+		err := parseFullyQualifiedFunctionName(funcData.FQFN, funcData.FuncConf)
+		if err != nil {
+			return err
+		}
+	} else {
+		if funcData.Tenant != "" {
+			funcData.FuncConf.Tenant = funcData.Tenant
+		}
+		if funcData.Namespace != "" {
+			funcData.FuncConf.Namespace = funcData.Namespace
+		}
+		if funcData.FuncName != "" {
+			funcData.FuncConf.Name = funcData.FuncName
+		}
+	}
 
-    if funcData.Inputs != "" {
-        inputTopics := strings.Split(funcData.Inputs, ",")
-        funcData.FuncConf.Inputs = inputTopics
-    }
+	if funcData.Inputs != "" {
+		inputTopics := strings.Split(funcData.Inputs, ",")
+		funcData.FuncConf.Inputs = inputTopics
+	}
 
-    if funcData.CustomSerDeInputs != "" {
-        customSerdeInputMap := make(map[string]string)
-        err := json.Unmarshal([]byte(funcData.CustomSerDeInputs), &customSerdeInputMap)
-        if err != nil {
-            return err
-        }
-        funcData.FuncConf.CustomSerdeInputs = customSerdeInputMap
-    }
+	if funcData.CustomSerDeInputs != "" {
+		customSerdeInputMap := make(map[string]string)
+		err := json.Unmarshal([]byte(funcData.CustomSerDeInputs), &customSerdeInputMap)
+		if err != nil {
+			return err
+		}
+		funcData.FuncConf.CustomSerdeInputs = customSerdeInputMap
+	}
 
-    if funcData.ProcessingGuarantees != "" {
-        funcData.FuncConf.ProcessingGuarantees = funcData.ProcessingGuarantees
-    }
+	if funcData.ProcessingGuarantees != "" {
+		funcData.FuncConf.ProcessingGuarantees = funcData.ProcessingGuarantees
+	}
 
-    if funcData.CustomSchemaInput != "" {
-        customSchemaInputMap := make(map[string]string)
-        err := json.Unmarshal([]byte(funcData.CustomSchemaInput), &customSchemaInputMap)
-        if err != nil {
-            return err
-        }
-        funcData.FuncConf.CustomSchemaInputs = customSchemaInputMap
-    }
+	if funcData.CustomSchemaInput != "" {
+		customSchemaInputMap := make(map[string]string)
+		err := json.Unmarshal([]byte(funcData.CustomSchemaInput), &customSchemaInputMap)
+		if err != nil {
+			return err
+		}
+		funcData.FuncConf.CustomSchemaInputs = customSchemaInputMap
+	}
 
-    if funcData.TopicsPattern != "" {
-        funcData.FuncConf.TopicsPattern = &funcData.TopicsPattern
-    }
+	if funcData.TopicsPattern != "" {
+		funcData.FuncConf.TopicsPattern = &funcData.TopicsPattern
+	}
 
-    if funcData.Output != "" {
-        funcData.FuncConf.Output = funcData.Output
-    }
+	if funcData.Output != "" {
+		funcData.FuncConf.Output = funcData.Output
+	}
 
-    if funcData.LogTopic != "" {
-        funcData.FuncConf.LogTopic = funcData.LogTopic
-    }
+	if funcData.LogTopic != "" {
+		funcData.FuncConf.LogTopic = funcData.LogTopic
+	}
 
-    if funcData.ClassName != "" {
-        funcData.FuncConf.ClassName = funcData.ClassName
-    }
+	if funcData.ClassName != "" {
+		funcData.FuncConf.ClassName = funcData.ClassName
+	}
 
-    if funcData.OutputSerDeClassName != "" {
-        funcData.FuncConf.OutputSerdeClassName = funcData.OutputSerDeClassName
-    }
+	if funcData.OutputSerDeClassName != "" {
+		funcData.FuncConf.OutputSerdeClassName = funcData.OutputSerDeClassName
+	}
 
-    if funcData.SchemaType != "" {
-        funcData.FuncConf.OutputSchemaType = funcData.SchemaType
-    }
+	if funcData.SchemaType != "" {
+		funcData.FuncConf.OutputSchemaType = funcData.SchemaType
+	}
 
-    if funcData.RetainOrdering {
-        funcData.FuncConf.RetainOrdering = funcData.RetainOrdering
-    }
+	if funcData.RetainOrdering {
+		funcData.FuncConf.RetainOrdering = funcData.RetainOrdering
+	}
 
-    if funcData.SubsName != "" {
-        funcData.FuncConf.SubName = funcData.SubsName
-    }
+	if funcData.SubsName != "" {
+		funcData.FuncConf.SubName = funcData.SubsName
+	}
 
-    if funcData.UserConfig != "" {
-        userConfigMap := make(map[string]interface{})
-        err := json.Unmarshal([]byte(funcData.UserConfig), &userConfigMap)
-        if err != nil {
-            return err
-        }
+	if funcData.UserConfig != "" {
+		userConfigMap := make(map[string]interface{})
+		err := json.Unmarshal([]byte(funcData.UserConfig), &userConfigMap)
+		if err != nil {
+			return err
+		}
 
-        funcData.FuncConf.UserConfig = userConfigMap
-    }
+		funcData.FuncConf.UserConfig = userConfigMap
+	}
 
-    if funcData.FuncConf.UserConfig == nil {
-        funcData.FuncConf.UserConfig = make(map[string]interface{})
-    }
+	if funcData.FuncConf.UserConfig == nil {
+		funcData.FuncConf.UserConfig = make(map[string]interface{})
+	}
 
-    if funcData.Parallelism != 0 {
-        funcData.FuncConf.Parallelism = funcData.Parallelism
-    } else {
-        funcData.FuncConf.Parallelism = 1
-    }
+	if funcData.Parallelism != 0 {
+		funcData.FuncConf.Parallelism = funcData.Parallelism
+	} else {
+		funcData.FuncConf.Parallelism = 1
+	}
 
-    if funcData.CPU != 0 {
-        if funcData.FuncConf.Resources == nil {
-            funcData.FuncConf.Resources = pulsar.NewDefaultResources()
-        }
+	if funcData.CPU != 0 {
+		if funcData.FuncConf.Resources == nil {
+			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+		}
 
-        funcData.FuncConf.Resources.CPU = funcData.CPU
-    }
+		funcData.FuncConf.Resources.CPU = funcData.CPU
+	}
 
-    if funcData.Disk != 0 {
-        if funcData.FuncConf.Resources == nil {
-            funcData.FuncConf.Resources = pulsar.NewDefaultResources()
-        }
+	if funcData.Disk != 0 {
+		if funcData.FuncConf.Resources == nil {
+			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+		}
 
-        funcData.FuncConf.Resources.Disk = funcData.Disk
-    }
+		funcData.FuncConf.Resources.Disk = funcData.Disk
+	}
 
-    if funcData.RAM != 0 {
-        if funcData.FuncConf.Resources == nil {
-            funcData.FuncConf.Resources = pulsar.NewDefaultResources()
-        }
+	if funcData.RAM != 0 {
+		if funcData.FuncConf.Resources == nil {
+			funcData.FuncConf.Resources = pulsar.NewDefaultResources()
+		}
 
-        funcData.FuncConf.Resources.Ram = funcData.RAM
-    }
+		funcData.FuncConf.Resources.RAM = funcData.RAM
+	}
 
-    if funcData.TimeoutMs != 0 {
-        funcData.FuncConf.TimeoutMs = &funcData.TimeoutMs
-    }
+	if funcData.TimeoutMs != 0 {
+		funcData.FuncConf.TimeoutMs = &funcData.TimeoutMs
+	}
 
-    // window configs
-    if funcData.WindowLengthCount != 0 {
-        if funcData.FuncConf.WindowConfig == nil {
-            funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
-        }
+	// window configs
+	if funcData.WindowLengthCount != 0 {
+		if funcData.FuncConf.WindowConfig == nil {
+			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+		}
 
-        funcData.FuncConf.WindowConfig.WindowLengthCount = funcData.WindowLengthCount
-    }
+		funcData.FuncConf.WindowConfig.WindowLengthCount = funcData.WindowLengthCount
+	}
 
-    if funcData.WindowLengthDurationMs != 0 {
-        if funcData.FuncConf.WindowConfig == nil {
-            funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
-        }
+	if funcData.WindowLengthDurationMs != 0 {
+		if funcData.FuncConf.WindowConfig == nil {
+			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+		}
 
-        funcData.FuncConf.WindowConfig.WindowLengthDurationMs = funcData.WindowLengthDurationMs
-    }
+		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = funcData.WindowLengthDurationMs
+	}
 
-    if funcData.SlidingIntervalCount != 0 {
-        if funcData.FuncConf.WindowConfig == nil {
-            funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
-        }
+	if funcData.SlidingIntervalCount != 0 {
+		if funcData.FuncConf.WindowConfig == nil {
+			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+		}
 
-        funcData.FuncConf.WindowConfig.SlidingIntervalCount = funcData.SlidingIntervalCount
-    }
+		funcData.FuncConf.WindowConfig.SlidingIntervalCount = funcData.SlidingIntervalCount
+	}
 
-    if funcData.SlidingIntervalDurationMs != 0 {
-        if funcData.FuncConf.WindowConfig == nil {
-            funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
-        }
+	if funcData.SlidingIntervalDurationMs != 0 {
+		if funcData.FuncConf.WindowConfig == nil {
+			funcData.FuncConf.WindowConfig = pulsar.NewDefaultWindowConfing()
+		}
 
-        funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = funcData.SlidingIntervalDurationMs
-    }
+		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = funcData.SlidingIntervalDurationMs
+	}
 
-    if funcData.AutoAck {
-        funcData.FuncConf.AutoAck = funcData.AutoAck
-    } else {
-        funcData.FuncConf.AutoAck = true
-    }
+	if funcData.AutoAck {
+		funcData.FuncConf.AutoAck = funcData.AutoAck
+	} else {
+		funcData.FuncConf.AutoAck = true
+	}
 
-    if funcData.MaxMessageRetries != 0 {
-        funcData.FuncConf.MaxMessageRetries = funcData.MaxMessageRetries
-    }
+	if funcData.MaxMessageRetries != 0 {
+		funcData.FuncConf.MaxMessageRetries = funcData.MaxMessageRetries
+	}
 
-    if funcData.DeadLetterTopic != "" {
-        funcData.FuncConf.DeadLetterTopic = funcData.DeadLetterTopic
-    }
+	if funcData.DeadLetterTopic != "" {
+		funcData.FuncConf.DeadLetterTopic = funcData.DeadLetterTopic
+	}
 
-    if funcData.Jar != "" {
-        funcData.FuncConf.Jar = funcData.Jar
-    }
+	if funcData.Jar != "" {
+		funcData.FuncConf.Jar = funcData.Jar
+	}
 
-    if funcData.Py != "" {
-        funcData.FuncConf.Py = funcData.Py
-    }
+	if funcData.Py != "" {
+		funcData.FuncConf.Py = funcData.Py
+	}
 
-    if funcData.Go != "" {
-        funcData.FuncConf.Go = funcData.Go
-    }
+	if funcData.Go != "" {
+		funcData.FuncConf.Go = funcData.Go
+	}
 
-    if funcData.FuncConf.Jar != "" {
-        funcData.UserCodeFile = funcData.FuncConf.Jar
-    } else if funcData.FuncConf.Py != "" {
-        funcData.UserCodeFile = funcData.FuncConf.Py
-    } else if funcData.FuncConf.Go != "" {
-        funcData.UserCodeFile = funcData.FuncConf.Go
-    }
+	if funcData.FuncConf.Go != "" {
+		funcData.UserCodeFile = funcData.FuncConf.Go
+	}
 
-    return nil
+	if funcData.FuncConf.Py != "" {
+		funcData.UserCodeFile = funcData.FuncConf.Py
+	}
+
+	if funcData.FuncConf.Jar != "" {
+		funcData.UserCodeFile = funcData.FuncConf.Jar
+	}
+
+	return nil
 }
 
 func validateFunctionConfigs(functionConfig *pulsar.FunctionConfig) error {
-    if functionConfig.Name == "" {
-        utils.InferMissingFunctionName(functionConfig)
-    }
+	if functionConfig.Name == "" {
+		utils.InferMissingFunctionName(functionConfig)
+	}
 
-    if functionConfig.Tenant == "" {
-        utils.InferMissingTenant(functionConfig)
-    }
+	if functionConfig.Tenant == "" {
+		utils.InferMissingTenant(functionConfig)
+	}
 
-    if functionConfig.Namespace == "" {
-        utils.InferMissingNamespace(functionConfig)
-    }
+	if functionConfig.Namespace == "" {
+		utils.InferMissingNamespace(functionConfig)
+	}
 
-    if functionConfig.Jar != "" && functionConfig.Py != "" && functionConfig.Go != "" {
-        return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
-                "be specified for the function, Cannot specify both")
-    }
+	if functionConfig.Jar != "" && functionConfig.Py != "" && functionConfig.Go != "" {
+		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
+			"be specified for the function, Cannot specify both")
+	}
 
-    if functionConfig.Jar == "" && functionConfig.Py == "" && functionConfig.Go == "" {
-        return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
-                "be specified for the function. Please specify one")
-    }
+	if functionConfig.Jar == "" && functionConfig.Py == "" && functionConfig.Go == "" {
+		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
+			"be specified for the function. Please specify one")
+	}
 
-    if functionConfig.Jar != "" && !utils.IsPackageUrlSupported(functionConfig.Jar) &&
-            !utils.IsFileExist(functionConfig.Jar) {
-        return errors.New("the specified jar file does not exist")
-    }
+	if functionConfig.Jar != "" && !utils.IsPackageURLSupported(functionConfig.Jar) &&
+		!utils.IsFileExist(functionConfig.Jar) {
+		return errors.New("the specified jar file does not exist")
+	}
 
-    if functionConfig.Py != "" && !utils.IsPackageUrlSupported(functionConfig.Py) &&
-            !utils.IsFileExist(functionConfig.Py) {
-        return errors.New("the specified py file does not exist")
-    }
+	if functionConfig.Py != "" && !utils.IsPackageURLSupported(functionConfig.Py) &&
+		!utils.IsFileExist(functionConfig.Py) {
+		return errors.New("the specified py file does not exist")
+	}
 
-    if functionConfig.Go != "" && !utils.IsPackageUrlSupported(functionConfig.Go) &&
-            !utils.IsFileExist(functionConfig.Go) {
-        return errors.New("the specified go file does not exist")
-    }
+	if functionConfig.Go != "" && !utils.IsPackageURLSupported(functionConfig.Go) &&
+		!utils.IsFileExist(functionConfig.Go) {
+		return errors.New("the specified go file does not exist")
+	}
 
-    if functionConfig.Jar != "" {
-        functionConfig.Runtime = pulsar.JavaRuntime
-    } else if functionConfig.Py != "" {
-        functionConfig.Runtime = pulsar.PythonRuntime
-    } else if functionConfig.Go != "" {
-        functionConfig.Runtime = pulsar.GoRuntime
-    }
+	if functionConfig.Go != "" {
+		functionConfig.Runtime = pulsar.GoRuntime
+	}
 
-    // go doesn't need className
-    if functionConfig.Runtime == pulsar.JavaRuntime || functionConfig.Runtime == pulsar.PythonRuntime  {
-        if functionConfig.ClassName == "" {
-            return errors.New("no Function Classname specified")
-        }
-    }
+	if functionConfig.Py != "" {
+		functionConfig.Runtime = pulsar.PythonRuntime
+	}
 
-    return nil
+	if functionConfig.Jar != "" {
+		functionConfig.Runtime = pulsar.JavaRuntime
+	}
+
+	// go doesn't need className
+	if functionConfig.Runtime == pulsar.JavaRuntime || functionConfig.Runtime == pulsar.PythonRuntime {
+		if functionConfig.ClassName == "" {
+			return errors.New("no Function Classname specified")
+		}
+	}
+
+	return nil
 }
 
 func processBaseArguments(funcData *pulsar.FunctionData) error {
-    usesSetters := funcData.Tenant != "" || funcData.Namespace != "" || funcData.FuncName != ""
-    usesFqfn := funcData.FQFN != ""
+	usesSetters := funcData.Tenant != "" || funcData.Namespace != "" || funcData.FuncName != ""
+	usesFqfn := funcData.FQFN != ""
 
-    // return error if --fqfn is set alongside any combination of --tenant, --namespace, and --name
-    if usesFqfn && usesSetters {
-        return errors.New("you must specify either a Fully Qualified Function Name (FQFN) or tenant, namespace, and function name")
-    } else if usesFqfn {
-        // If the --fqfn flag is used, parse tenant, namespace, and name using that flag
-        fqfnParts := strings.Split(funcData.FQFN, "/")
-        if len(fqfnParts) != 3 {
-            return errors.New("fully qualified function names (FQFNs) must be of the form tenant/namespace/name")
-        }
+	// return error if --fqfn is set alongside any combination of --tenant, --namespace, and --name
+	if usesFqfn && usesSetters {
+		return errors.New("you must specify either a Fully Qualified Function Name (FQFN)" +
+			" or tenant, namespace, and function name")
+	}
 
-        funcData.Tenant = fqfnParts[0]
-        funcData.Namespace = fqfnParts[1]
-        funcData.FuncName = fqfnParts[2]
-    } else {
-        if funcData.Tenant == "" {
-            funcData.Tenant = utils.PublicTenant
-        }
+	if usesFqfn {
+		// If the --fqfn flag is used, parse tenant, namespace, and name using that flag
+		fqfnParts := strings.Split(funcData.FQFN, "/")
+		if len(fqfnParts) != 3 {
+			return errors.New("fully qualified function names (FQFNs) must be of the form" +
+				" tenant/namespace/name")
+		}
 
-        if funcData.Namespace == "" {
-            funcData.Namespace = utils.DefaultNamespace
-        }
+		funcData.Tenant = fqfnParts[0]
+		funcData.Namespace = fqfnParts[1]
+		funcData.FuncName = fqfnParts[2]
+	} else {
+		if funcData.Tenant == "" {
+			funcData.Tenant = utils.PublicTenant
+		}
 
-        if funcData.FuncName == "" {
-            return errors.New("you must specify a name for the function or a Fully Qualified Function Name (FQFN)")
-        }
-    }
+		if funcData.Namespace == "" {
+			funcData.Namespace = utils.DefaultNamespace
+		}
 
-    return nil
+		if funcData.FuncName == "" {
+			return errors.New("you must specify a name for the function or a Fully Qualified" +
+				" Function Name (FQFN)")
+		}
+	}
+
+	return nil
 }
 
 func processNamespaceCmd(funcData *pulsar.FunctionData) {
-    if funcData.Tenant == "" || funcData.Namespace == "" {
-        funcData.Tenant = utils.PublicTenant
-        funcData.Namespace = utils.DefaultNamespace
-    }
+	if funcData.Tenant == "" || funcData.Namespace == "" {
+		funcData.Tenant = utils.PublicTenant
+		funcData.Namespace = utils.DefaultNamespace
+	}
 }
 
 func checkArgsForUpdate(functionConfig *pulsar.FunctionConfig) error {
-    if functionConfig.ClassName == "" {
-        if functionConfig.Name == "" {
-            return errors.New("function Name not provided")
-        }
-    } else if functionConfig.Name == "" {
-        utils.InferMissingFunctionName(functionConfig)
-    }
+	if functionConfig.ClassName == "" {
+		if functionConfig.Name == "" {
+			return errors.New("function Name not provided")
+		}
+	} else if functionConfig.Name == "" {
+		utils.InferMissingFunctionName(functionConfig)
+	}
 
-    if functionConfig.Tenant == "" {
-        utils.InferMissingTenant(functionConfig)
-    }
+	if functionConfig.Tenant == "" {
+		utils.InferMissingTenant(functionConfig)
+	}
 
-    if functionConfig.Namespace == "" {
-        utils.InferMissingNamespace(functionConfig)
-    }
+	if functionConfig.Namespace == "" {
+		utils.InferMissingNamespace(functionConfig)
+	}
 
-    return nil
+	return nil
 }
-
