@@ -33,13 +33,13 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	splitBundle := pulsar.Example{
 		Desc:    "Split a namespace-bundle from the current serving broker",
-		Command: "pulsarctl namespaces split-bundle tenant/namespace --bundle <{start-boundary}_{end-boundary}>",
+		Command: "pulsarctl namespaces split-bundle tenant/namespace --bundle ({start-boundary}_{end-boundary})",
 	}
 
 	splitBundleWithUnload := pulsar.Example{
 		Desc: "Split a namespace-bundle from the current serving broker",
 		Command: "pulsarctl namespaces split-bundle tenant/namespace \n" +
-			"\t--bundle <{start-boundary}_{end-boundary}>\n" +
+			"\t--bundle ({start-boundary}_{end-boundary})\n" +
 			"\t--unload",
 	}
 
@@ -49,7 +49,7 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Split a namespace bundle: <{start-boundary}_{end-boundary}> successfully",
+		Out:  "Split a namespace bundle: ({start-boundary}_{end-boundary}) successfully",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -64,12 +64,12 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	ownershipFail := pulsar.Output{
 		Desc: "Please check if there is an active topic under the current split bundle.",
-		Out:  "[✖]  code: 412 reason: Failed to find ownership for ServiceUnit:public/default/<bundle range>",
+		Out:  "[✖]  code: 412 reason: Failed to find ownership for ServiceUnit:public/default/(bundle range)",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, ownershipFail)
@@ -79,6 +79,7 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 		"split-bundle",
 		"Split a namespace-bundle from the current serving broker",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"split-bundle",
 	)
 

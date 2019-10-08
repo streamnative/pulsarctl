@@ -36,7 +36,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Sink> \n" +
+			"\t--name (the name of Pulsar Sink) \n" +
 			"\t--inputs test-jdbc  \n" +
 			"\t--archive connectors/pulsar-io-jdbc-2.4.0.nar \n" +
 			"\t--sink-config-file connectors/mysql-jdbc-sink.yaml \n" +
@@ -48,7 +48,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Sink> \n" +
+			"\t--name (the name of Pulsar Sink) \n" +
 			"\t--inputs test-jdbc  \n" +
 			"\t--archive file:/http: + connectors/pulsar-io-jdbc-2.4.0.nar",
 	}
@@ -57,14 +57,14 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Sink in cluster mode with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	createWithParallelism := pulsar.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	createWithResource := pulsar.Example{
@@ -73,21 +73,21 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	createWithSinkConfig := pulsar.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	createWithProcessingGuarantees := pulsar.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with processing guarantees",
 		Command: "pulsarctl sink create \n" +
 			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	examples = append(examples, create, createWithPkgURL, createWithSchema, createWithParallelism,
@@ -97,7 +97,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created <the name of a Pulsar Sinks> successfully",
+		Out:  "Created (the name of a Pulsar Sinks) successfully",
 	}
 
 	failureOut := pulsar.Output{
@@ -117,6 +117,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		"create",
 		"Create a Pulsar IO sink connector to run in a Pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"create",
 	)
 
@@ -165,8 +166,8 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"TopicsPattern to consume from list of topics under a namespace that match the pattern.\n"+
-				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern \n"+
+			"TopicsPattern to consume from list of topics under a namespace that match the pattern. "+
+				"[--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern "+
 				"in --customSerdeInputs  (supported for java fun only)")
 
 		flagSet.StringVar(
@@ -209,8 +210,8 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.Archive,
 			"archive",
 			"",
-			"Path to the archive file for the sink. It also supports url-path \n"+
-				"[http/https/file (file protocol assumes that file already exists on worker host)] \n"+
+			"Path to the archive file for the sink. It also supports url-path "+
+				"[http/https/file (file protocol assumes that file already exists on worker host)] "+
 				"from which worker can download the package.")
 
 		flagSet.StringVar(
@@ -229,22 +230,20 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.CPU,
 			"cpu",
 			0.0,
-			"The CPU (in cores) that needs to be allocated per sink instance\n"+
-				" (applicable only to Docker runtime)")
+			"The CPU (in cores) that needs to be allocated per sink instance (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sinkData.Disk,
 			"disk",
 			0,
-			"The disk (in bytes) that need to be allocated per sink instance\n"+
-				" (applicable only to Docker runtime)")
+			"The disk (in bytes) that need to be allocated per sink instance (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sinkData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per sink instance\n"+
-				" (applicable only to the process and Docker runtimes)")
+			"The RAM (in bytes) that need to be allocated per sink instance "+
+				"(applicable only to the process and Docker runtimes)")
 
 		flagSet.StringVar(
 			&sinkData.SinkConfigString,

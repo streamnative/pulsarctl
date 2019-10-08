@@ -31,8 +31,8 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires admin permissions."
 
 	listTopics := pulsar.Example{
-		Desc:    "List all exist topics under the namespace <tenant/namespace>",
-		Command: "pulsarctl topics list <tenant/namespace>",
+		Desc:    "List all exist topics under the namespace(tenant/namespace)",
+		Command: "pulsarctl topics list (tenant/namespace)",
 	}
 	desc.CommandExamples = []pulsar.Example{listTopics}
 
@@ -57,6 +57,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"List all exist topics under the specified namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"lp")
 
 	vc.SetRunFuncWithNameArg(func() error {

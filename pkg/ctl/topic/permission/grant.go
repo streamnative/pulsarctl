@@ -34,8 +34,8 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	grant := pulsar.Example{
-		Desc:    "Grant permissions to a client on a single topic <topic-name>",
-		Command: "pulsarctl topic grant-permissions --role <role> --actions <action-1> --actions <action-2> <topic-name>",
+		Desc:    "Grant permissions to a client on a single topic (topic-name)",
+		Command: "pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)",
 	}
 	examples = append(examples, grant)
 	desc.CommandExamples = examples
@@ -54,7 +54,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	actionsError := pulsar.Output{
 		Desc: "the specified actions is not allowed.",
 		Out: "The auth action  only can be specified as 'produce', " +
-			"'consume', or 'functions'. Invalid auth action '<actions>'",
+			"'consume', or 'functions'. Invalid auth action '(actions)'",
 	}
 	out = append(out, successOut, e.ArgError, flagError, actionsError)
 	out = append(out, e.TopicNameErrors...)
@@ -65,6 +65,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 		"grant-permissions",
 		"Grant permissions to a client on a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"grant")
 
 	var role string

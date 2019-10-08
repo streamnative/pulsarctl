@@ -58,6 +58,7 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"List all running Pulsar IO source connectors",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"list",
 	)
 

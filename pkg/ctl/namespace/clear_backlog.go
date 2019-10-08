@@ -35,19 +35,19 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	clear := pulsar.Example{
-		Desc:    "Clear backlog for all topics of the namespace <namespace-name>",
-		Command: "pulsarctl namespaces clear-backlog <namespace-name>",
+		Desc:    "Clear backlog for all topics of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces clear-backlog (namespace-name)",
 	}
 
 	clearWithBundle := pulsar.Example{
-		Desc:    "Clear backlog for all topic of the namespace <namespace-name> with a bundle range <bundle>",
-		Command: "pulsarctl namespaces clear-backlog --bundle <bundle> <namespace-name>",
+		Desc:    "Clear backlog for all topic of the namespace (namespace-name) with a bundle range <bundle>",
+		Command: "pulsarctl namespaces clear-backlog --bundle (bundle) (namespace-name)",
 	}
 
 	clearWithSubName := pulsar.Example{
-		Desc: "Clear the specified subscription <subscription-name> backlog for all topics of the " +
-			"namespace <namespace-name>",
-		Command: "pulsarctl namespaces clear-backlog --subscription <subscription-name> <namespace-name>",
+		Desc: "Clear the specified subscription (subscription-name) backlog for all topics of the " +
+			"namespace (namespace-name)",
+		Command: "pulsarctl namespaces clear-backlog --subscription (subscription-name) (namespace-name)",
 	}
 	examples = append(examples, clear, clearWithBundle, clearWithSubName)
 	desc.CommandExamples = examples
@@ -55,7 +55,7 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Successfully clear backlog for all topics of the namespace <namespace-name>",
+		Out:  "Successfully clear backlog for all topics of the namespace (namespace-name)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -64,7 +64,8 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"clear-backlog",
 		"Clear backlog for all topics of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var sName, bundle string
 	var force bool

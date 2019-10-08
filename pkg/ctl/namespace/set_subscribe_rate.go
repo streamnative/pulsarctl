@@ -31,13 +31,13 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	setBySub := pulsar.Example{
-		Desc:    "Set the default subscribe rate by subscribe of the namespace <namespace-name> <rate>",
-		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate <rate> <namespace>",
+		Desc:    "Set the default subscribe rate by subscribe of the namespace (namespace-name) (rate)",
+		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate (rate) (namespace)",
 	}
 
 	setByTime := pulsar.Example{
-		Desc:    "Set the default subscribe rate by time of the namespace <namespace-name> <period>",
-		Command: "pulsarctl namespaces set-subscribe-rate --period <period> <namespace",
+		Desc:    "Set the default subscribe rate by time of the namespace (namespace-name) (period)",
+		Command: "pulsarctl namespaces set-subscribe-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setBySub, setByTime)
 	desc.CommandExamples = examples
@@ -45,7 +45,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Success set the default subscribe rate of the namespace <namespace-name> to <rate>",
+		Out:  "Success set the default subscribe rate of the namespace (namespace-name) to (rate)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -54,7 +54,8 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-subscribe-rate",
 		"Set the default subscribe rate per consumer of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var rate pulsar.SubscribeRate
 

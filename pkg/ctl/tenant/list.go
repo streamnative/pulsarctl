@@ -54,6 +54,7 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"List all exist tenants",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"l")
 
 	vc.SetRunFunc(func() error {

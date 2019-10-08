@@ -38,7 +38,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 	examples = append(examples, restart)
 
@@ -47,7 +47,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>\n" +
+			"\t--name (the name of Pulsar Function)\n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, restartWithInstanceID)
@@ -63,7 +63,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Restarted <the name of a Pulsar Function> successfully",
+		Out:  "Restarted (the name of a Pulsar Function) successfully",
 	}
 
 	failOut := pulsar.Output{
@@ -73,7 +73,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithWrongInstanceID := pulsar.Output{
@@ -88,6 +88,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 		"Restart function instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"restart",
 	)
 

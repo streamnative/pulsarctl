@@ -37,8 +37,8 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t--topic <the name of input topic>\n" +
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t--topic (the name of input topic)\n" +
 			"\t--trigger-value \"hello pulsar\"",
 	}
 	examples = append(examples, trigger)
@@ -47,7 +47,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]\n" +
-			"\t--topic <the name of input topic>\n" +
+			"\t--topic (the name of input topic)\n" +
 			"\t--trigger-value \"hello pulsar\"",
 	}
 	examples = append(examples, triggerWithFQFN)
@@ -57,9 +57,9 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function> \n" +
-			"\t--topic <the name of input topic>\n" +
-			"\t--trigger-file <the path of trigger file>",
+			"\t--name (the name of Pulsar Function) \n" +
+			"\t--topic (the name of input topic)\n" +
+			"\t--trigger-file (the path of trigger file)",
 	}
 	examples = append(examples, triggerWithFile)
 
@@ -73,7 +73,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithWrongInstanceID := pulsar.Output{
@@ -98,6 +98,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"trigger",
 		"Trigger the specified Pulsar Function with a supplied value",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"trigger",
 	)
 

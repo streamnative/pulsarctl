@@ -58,6 +58,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"Get the list of all the running Pulsar IO sink connectors",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"list",
 	)
 
