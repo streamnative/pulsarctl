@@ -75,7 +75,8 @@ func TopicOffloadStatusCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"offload-status",
 		"Check the status of data offloading",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var wait bool
 

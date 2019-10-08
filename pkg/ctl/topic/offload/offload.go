@@ -65,7 +65,8 @@ func TopicOffloadCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"offload",
 		"Offload the messages of a topic to a long-term storage",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doOffload(vc)
