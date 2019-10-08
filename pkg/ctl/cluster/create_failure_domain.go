@@ -18,10 +18,11 @@
 package cluster
 
 import (
-	"errors"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 func createFailureDomainCmd(vc *cmdutils.VerbCmd) {

@@ -19,9 +19,11 @@ package functions
 
 import (
 	"errors"
-	"github.com/spf13/pflag"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -158,17 +160,19 @@ func doTriggerFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	if funcData.TriggerValue == "" && funcData.TriggerFile == "" {
 		return errors.New("either a trigger value or a trigger filepath needs to be specified")
 	}
 
 	if funcData.TriggerValue != "" && funcData.TriggerFile != "" {
-		return errors.New("either a triggerValue or a triggerFile needs to specified for the function, cannot specify both")
+		return errors.New("either a triggerValue or a triggerFile needs to specified for the" +
+			" function, cannot specify both")
 	}
 
-	retval, err := admin.Functions().TriggerFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName, funcData.Topic, funcData.TriggerValue, funcData.TriggerFile)
+	retval, err := admin.Functions().TriggerFunction(funcData.Tenant, funcData.Namespace,
+		funcData.FuncName, funcData.Topic, funcData.TriggerValue, funcData.TriggerFile)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {

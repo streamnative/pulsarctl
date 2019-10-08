@@ -18,11 +18,12 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func setRetention(vc *cmdutils.VerbCmd) {

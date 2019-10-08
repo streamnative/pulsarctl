@@ -18,10 +18,11 @@
 package namespace
 
 import (
-	"github.com/pkg/errors"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 const MaxBundles = int64(1) << 32
@@ -103,7 +104,7 @@ func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	admin := cmdutils.NewPulsarClient()
 
 	if data.NumBundles < 0 || data.NumBundles > int(MaxBundles) {
-		return errors.New("Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].")
+		return errors.New("invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]")
 	}
 
 	ns, err := pulsar.GetNamespaceName(tenantAndNamespace)

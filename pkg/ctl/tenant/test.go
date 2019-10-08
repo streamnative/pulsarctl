@@ -19,12 +19,15 @@ package tenant
 
 import (
 	"bytes"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func TestTenantCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error) {
+func TestTenantCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
+	execErr, nameErr, err error) {
 	var execError error
 	cmdutils.ExecErrorHandler = func(err error) {
 		execError = err
@@ -61,5 +64,4 @@ func TestTenantCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out
 	err = rootCmd.Execute()
 
 	return buf, execError, nameError, err
-
 }
