@@ -27,21 +27,21 @@ import (
 
 func TestCompactStatusArgsError(t *testing.T) {
 	args := []string{"compact-status"}
-	_, _, nameErr, _ := test.TestTopicCommands(CompactStatusCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(StatusCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestCompactStatusNonExistingTopicError(t *testing.T) {
 	args := []string{"compact-status", "test-non-existing-compact-status"}
-	_, execErr, _, _ := test.TestTopicCommands(CompactStatusCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(StatusCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
 
 func TestCompactStatusNonPersistentTopicError(t *testing.T) {
 	args := []string{"compact-status", "non-persistent://public/default/test-non-persistent-topic-compact-status"}
-	_, execErr, _, _ := test.TestTopicCommands(CompactStatusCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(StatusCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to provide a persistent topic", execErr.Error())
 }

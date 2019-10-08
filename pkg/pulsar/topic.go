@@ -209,7 +209,7 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 
 func (t *topics) Compact(topic TopicName) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
-	return t.client.put(endpoint, "", nil)
+	return t.client.put(endpoint, "")
 }
 
 func (t *topics) CompactStatus(topic TopicName) (LongRunningProcessStatus, error) {

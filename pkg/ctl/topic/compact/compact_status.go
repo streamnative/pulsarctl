@@ -28,17 +28,24 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func CompactStatusCmd(vc *cmdutils.VerbCmd) {
+func StatusCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting status of compaction on a topic."
+	desc.CommandUsedFor = "This command is used for getting compaction status of a topic " +
+		"or a partition of a partitioned topic."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	compactStatus := pulsar.Example{
-		Desc:    "Get status of compaction of a persistent topic <topic-name>",
+		Desc:    "Get compaction status of a persistent topic <topic-name>",
 		Command: "pulsarctl topic compact-status <topic-name>",
 	}
-	desc.CommandExamples = append(examples, compactStatus)
+
+	compactPartitionStatus := pulsar.Example{
+		Desc:    "Get compaction status of a partition of partitioned topic",
+		Command: "pulsarctl topic compact-status --partition <partition> <topic-name>",
+	}
+	examples = append(examples, compactStatus, compactPartitionStatus)
+	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
@@ -71,17 +78,20 @@ func CompactStatusCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString())
 
 	var wait bool
+	var partition int
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doCompactStatus(vc, wait)
+		return doCompactStatus(vc, wait, partition)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Compact Status", func(set *pflag.FlagSet) {
 		set.BoolVarP(&wait, "wait", "w", false, "Wait for compacting to complete")
+		set.IntVarP(&partition, "partition", "p", -1,
+			"The partitioned topic index value")
 	})
 }
 
-func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
+func doCompactStatus(vc *cmdutils.VerbCmd, wait bool, partition int) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -94,6 +104,13 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
 
 	if !topic.IsPersistent() {
 		return errors.New("need to provide a persistent topic")
+	}
+
+	if partition >= 0 {
+		topic, err = topic.GetPartition(partition)
+		if err != nil {
+			return err
+		}
 	}
 
 	admin := cmdutils.NewPulsarClient()
@@ -111,7 +128,7 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool) error {
 	}
 
 	switch status.Status {
-	case pulsar.NOT_RUN:
+	case pulsar.NOTRUN:
 		vc.Command.Printf("Compacting the topic %s is not running", topic.String())
 	case pulsar.RUNNING:
 		vc.Command.Printf("Compacting the topic %s is running", topic.String())

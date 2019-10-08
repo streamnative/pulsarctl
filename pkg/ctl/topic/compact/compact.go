@@ -23,11 +23,12 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
 	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
-func CompactCmd(vc *cmdutils.VerbCmd) {
+func TopicCompactCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for compacting a persistent topic."
+	desc.CommandUsedFor = "This command is used for compacting a persistent topic or a partition of a partitioned topic."
 	desc.CommandPermission = "This command is requires tenant admin permissions."
 
 	var examples []pulsar.Example
@@ -35,7 +36,13 @@ func CompactCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Compact a persistent topic <topic-name>",
 		Command: "pulsarctl topic compact <topic-name>",
 	}
-	desc.CommandExamples = append(examples, compact)
+
+	compactPartition := pulsar.Example{
+		Desc:    "Compact a partition of a partitioned topic",
+		Command: "pulsarctl topic compact --partition <index> <topic-name>",
+	}
+	examples = append(examples, compact, compactPartition)
+	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
@@ -52,12 +59,19 @@ func CompactCmd(vc *cmdutils.VerbCmd) {
 		"Compact a topic",
 		desc.ToString())
 
+	var partition int
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doCompact(vc)
+		return doCompact(vc, partition)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Compact", func(set *pflag.FlagSet) {
+		set.IntVarP(&partition, "partition", "p", -1,
+			"The partitioned topic index value")
 	})
 }
 
-func doCompact(vc *cmdutils.VerbCmd) error {
+func doCompact(vc *cmdutils.VerbCmd, partition int) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -68,6 +82,13 @@ func doCompact(vc *cmdutils.VerbCmd) error {
 		return err
 	}
 
+	if partition >= 0 {
+		topic, err = topic.GetPartition(partition)
+		if err != nil {
+			return err
+		}
+	}
+
 	if !topic.IsPersistent() {
 		return errors.New("need to provide a persistent topic")
 	}
@@ -75,7 +96,7 @@ func doCompact(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().Compact(*topic)
 	if err == nil {
-		vc.Command.Printf("Sending compact topic %s request successfully/n", topic.String())
+		vc.Command.Printf("Successfully triggered compacting topic %s\n", topic.String())
 	}
 
 	return err
