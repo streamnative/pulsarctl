@@ -36,13 +36,13 @@ func StatusCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	compactStatus := pulsar.Example{
-		Desc:    "Get compaction status of a persistent topic <topic-name>",
-		Command: "pulsarctl topic compact-status <topic-name>",
+		Desc:    "Get compaction status of a persistent topic (topic-name)",
+		Command: "pulsarctl topic compact-status (topic-name)",
 	}
 
 	compactPartitionStatus := pulsar.Example{
 		Desc:    "Get compaction status of a partition of partitioned topic",
-		Command: "pulsarctl topic compact-status --partition <partition> <topic-name>",
+		Command: "pulsarctl topic compact-status --partition (partition) (topic-name)",
 	}
 	examples = append(examples, compactStatus, compactPartitionStatus)
 	desc.CommandExamples = examples
@@ -50,22 +50,22 @@ func StatusCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Compacting the topic <topic-name> is done successfully",
+		Out:  "Compacting the topic (topic-name) is done successfully",
 	}
 
 	notRun := pulsar.Output{
-		Desc: "Compacting the topic <topic-name> is not running",
-		Out:  "Compacting the topic <topic-name> is not running",
+		Desc: "Compacting the topic (topic-name) is not running",
+		Out:  "Compacting the topic (topic-name) is not running",
 	}
 
 	running := pulsar.Output{
-		Desc: "Compacting the topic <topic-name> is running",
-		Out:  "Compacting the topic <topic-name> is running",
+		Desc: "Compacting the topic (topic-name) is running",
+		Out:  "Compacting the topic (topic-name) is running",
 	}
 
 	errorOut := pulsar.Output{
-		Desc: "Compacting the topic <topic-name> is done with error",
-		Out:  "Compacting the topic <topic-name> is done with error <error-msg>",
+		Desc: "Compacting the topic (topic-name) is done with error",
+		Out:  "Compacting the topic (topic-name) is done with error <error-msg>",
 	}
 	out = append(out, successOut, notRun, running, errorOut, e.ArgError, e.TopicNotFoundError)
 	out = append(out, e.TopicNameErrors...)
@@ -75,7 +75,8 @@ func StatusCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"compact-status",
 		"Get status of compaction on a topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var wait bool
 	var partition int

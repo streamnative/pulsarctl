@@ -33,13 +33,13 @@ func TopicCompactCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	compact := pulsar.Example{
-		Desc:    "Compact a persistent topic <topic-name>",
-		Command: "pulsarctl topic compact <topic-name>",
+		Desc:    "Compact a persistent topic (topic-name)",
+		Command: "pulsarctl topic compact (topic-name)",
 	}
 
 	compactPartition := pulsar.Example{
 		Desc:    "Compact a partition of a partitioned topic",
-		Command: "pulsarctl topic compact --partition <index> <topic-name>",
+		Command: "pulsarctl topic compact --partition (index) (topic-name)",
 	}
 	examples = append(examples, compact, compactPartition)
 	desc.CommandExamples = examples
@@ -47,7 +47,7 @@ func TopicCompactCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Sending compact topic <topic-name> request successfully",
+		Out:  "Sending compact topic (topic-name) request successfully",
 	}
 	out = append(out, successOut, e.ArgError, e.TopicNotFoundError)
 	out = append(out, e.TopicNameErrors...)
@@ -57,7 +57,8 @@ func TopicCompactCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"compact",
 		"Compact a topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var partition int
 
