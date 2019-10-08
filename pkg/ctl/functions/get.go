@@ -18,9 +18,10 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -130,12 +131,12 @@ func doGetFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	functionConfig, err := admin.Functions().GetFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionConfig)
 	}
 
 	return err

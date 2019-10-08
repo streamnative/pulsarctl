@@ -18,9 +18,10 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -97,7 +98,7 @@ func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	err = admin.Sources().DeleteSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		return err

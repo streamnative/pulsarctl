@@ -19,9 +19,11 @@ package schemas
 
 import (
 	"bytes"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func TestSchemasCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, err error) {

@@ -80,7 +80,7 @@ func doGetRetention(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policy, err := admin.Namespaces().GetRetention(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &policy)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &policy)
 	}
 	return err
 }

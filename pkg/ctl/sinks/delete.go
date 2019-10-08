@@ -18,9 +18,10 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func deleteSinksCmd(vc *cmdutils.VerbCmd) {
@@ -97,7 +98,7 @@ func doDeleteSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	err = admin.Sinks().DeleteSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 	if err != nil {
 		return err

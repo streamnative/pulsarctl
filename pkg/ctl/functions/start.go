@@ -18,10 +18,12 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func startFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -138,7 +140,7 @@ func doStartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {
@@ -148,7 +150,8 @@ func doStartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Started instanceID[%s] of Pulsar Functions[%s] successfully ", funcData.InstanceID, funcData.FuncName)
+		vc.Command.Printf("Started instanceID[%s] of Pulsar Functions[%s] successfully ",
+			funcData.InstanceID, funcData.FuncName)
 	} else {
 		err = admin.Functions().StartFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {

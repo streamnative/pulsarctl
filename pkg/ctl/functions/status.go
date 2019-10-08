@@ -18,10 +18,12 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -148,23 +150,24 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {
 			return err
 		}
-		functionInstanceStatusData, err := admin.Functions().GetFunctionStatusWithInstanceID(funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
+		functionInstanceStatusData, err := admin.Functions().GetFunctionStatusWithInstanceID(
+			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionInstanceStatusData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionInstanceStatusData)
 	} else {
 		functionStatus, err := admin.Functions().GetFunctionStatus(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionStatus)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionStatus)
 	}
 
 	return err

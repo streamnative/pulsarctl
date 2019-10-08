@@ -18,9 +18,10 @@
 package schemas
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSchema(vc *cmdutils.VerbCmd) {
@@ -129,7 +130,7 @@ func doGetSchema(vc *cmdutils.VerbCmd, schemaData *pulsar.SchemaData) error {
 	}
 	info, err := admin.Schemas().GetSchemaInfoByVersion(topic, schemaData.Version)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), info)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
 	}
 
 	return err

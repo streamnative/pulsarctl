@@ -18,9 +18,10 @@
 package cluster
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {

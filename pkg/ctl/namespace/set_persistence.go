@@ -18,10 +18,11 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 func setPersistence(vc *cmdutils.VerbCmd) {
@@ -105,7 +106,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 			"ack-quorum-size",
 			"a",
 			0,
-			"Number of acks (garanteed copies) to wait for each entry")
+			"Number of acks (guaranteed copies) to wait for each entry")
 
 		flagSet.Float64VarP(
 			&data.ManagedLedgerMaxMarkDeleteRate,

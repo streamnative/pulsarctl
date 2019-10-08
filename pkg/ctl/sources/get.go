@@ -18,9 +18,10 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -112,12 +113,12 @@ func doGetSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sourceConfig, err := admin.Sources().GetSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceConfig)
 	}
 
 	return err

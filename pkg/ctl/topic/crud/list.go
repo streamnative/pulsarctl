@@ -18,25 +18,26 @@
 package crud
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func ListTopicsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for listing all exist topics under the specified namespace."
 	desc.CommandPermission = "This command requires admin permissions."
 
-	listTopics := Example{
+	listTopics := pulsar.Example{
 		Desc:    "List all exist topics under the namespace(tenant/namespace)",
 		Command: "pulsarctl topics list (tenant/namespace)",
 	}
-	desc.CommandExamples = []Example{listTopics}
+	desc.CommandExamples = []pulsar.Example{listTopics}
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out: `+----------------------------------------------------------+---------------+
 |                        TOPIC NAME                        | PARTITIONED ? |
@@ -44,12 +45,12 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 +----------------------------------------------------------+---------------+`,
 	}
 
-	argError := Output{
+	argError := pulsar.Output{
 		Desc: "the namespace is not specified",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
-	out = append(out, successOut, argError, TenantNotExistError, NamespaceNotExistError)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, argError, e.TenantNotExistError, e.NamespaceNotExistError)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -70,7 +71,7 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	namespace, err := GetNamespaceName(vc.NameArg)
+	namespace, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

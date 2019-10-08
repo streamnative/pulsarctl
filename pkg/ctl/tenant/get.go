@@ -74,7 +74,7 @@ func doGetTenant(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Tenants().Get(vc.NameArg)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), data)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), data)
 	}
 	return err
 }

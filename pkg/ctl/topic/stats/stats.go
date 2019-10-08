@@ -18,39 +18,40 @@
 package stats
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func GetStatsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the stats for an existing topic and its " +
 		"connected producers and consumers. (All the rates are computed over a 1 minute window " +
 		"and are relative the last completed 1 minute period)"
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
-	var examples []Example
-	get := Example{
+	var examples []pulsar.Example
+	get := pulsar.Example{
 		Desc:    "Get the non-partitioned topic (topic-name) stats",
 		Command: "pulsarctl topic stats (topic-name)",
 	}
 
-	getPartition := Example{
+	getPartition := pulsar.Example{
 		Desc:    "Get the partitioned topic (topic-name) stats",
 		Command: "pulsarctl topic stats --partitioned-topic (topic-name)",
 	}
 
-	getPerPartition := Example{
+	getPerPartition := pulsar.Example{
 		Desc:    "Get the partitioned topic (topic-name) stats and per partition stats",
 		Command: "pulsarctl topic stats --partitioned-topic --per-partition (topic-name)",
 	}
+	examples = append(examples, get, getPartition, getPerPartition)
+	desc.CommandExamples = examples
 
-	desc.CommandExamples = append(examples, get, getPartition, getPerPartition)
-
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "Get the non-partitioned topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -66,7 +67,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 }`,
 	}
 
-	partitionOutput := Output{
+	partitionOutput := pulsar.Output{
 		Desc: "Get the partitioned topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -86,7 +87,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 }`,
 	}
 
-	perPartitionOutput := Output{
+	perPartitionOutput := pulsar.Output{
 		Desc: "Get the partitioned topic stats and per partition topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -118,17 +119,17 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
   }
 }`,
 	}
-	out = append(out, successOut, partitionOutput, perPartitionOutput, ArgError)
+	out = append(out, successOut, partitionOutput, perPartitionOutput, e.ArgError)
 
-	topicNotFoundError := Output{
+	topicNotFoundError := pulsar.Output{
 		Desc: "the specified topic does not exist " +
 			"or the specified topic is a partitioned-topic and you don't specified --partitioned-topic " +
 			"or the specified topic is a non-partitioned topic and you specified --partitioned-topic",
 		Out: "code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -159,7 +160,7 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -169,14 +170,14 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error
 	if partitionedTopic {
 		stats, err := admin.Topics().GetPartitionedStats(*topic, perPartition)
 		if err == nil {
-			cmdutils.PrintJson(vc.Command.OutOrStdout(), stats)
-		}
-		return err
-	} else {
-		topicStats, err := admin.Topics().GetStats(*topic)
-		if err == nil {
-			cmdutils.PrintJson(vc.Command.OutOrStdout(), topicStats)
+			cmdutils.PrintJSON(vc.Command.OutOrStdout(), stats)
 		}
 		return err
 	}
+
+	topicStats, err := admin.Topics().GetStats(*topic)
+	if err == nil {
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), topicStats)
+	}
+	return err
 }

@@ -80,7 +80,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 			"  },\n" +
 			"  \"DeduplicationEnabled\": false,\n" +
 			"  \"LatencyStatsSampleRate\": null,\n" +
-			"  \"MessageTtlInSeconds\": 0,\n" +
+			"  \"MessageTTLInSeconds\": 0,\n" +
 			"  \"RetentionPolicies\": {\n" +
 			"    \"RetentionTimeInMinutes\": 0,\n" +
 			"    \"RetentionSizeInMB\": 0\n" +
@@ -95,7 +95,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 			"  \"CompactionThreshold\": 0,\n" +
 			"  \"OffloadThreshold\": 0,\n" +
 			"  \"OffloadDeletionLagMs\": 0,\n" +
-			"  \"SchemaAutoUpdateCompatibilityStrategy\": \"\",\n" +
+			"  \"SchemaCompatibilityStrategy\": \"\",\n" +
 			"  \"SchemaValidationEnforced\": false\n" +
 			"}",
 	}
@@ -136,7 +136,7 @@ func doGetPolicies(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policies, err := admin.Namespaces().GetPolicies(namespace)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), policies)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), policies)
 	}
 	return err
 }

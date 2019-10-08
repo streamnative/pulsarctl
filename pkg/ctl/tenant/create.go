@@ -18,12 +18,13 @@
 package tenant
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
-func createTenantCmd(vc *cmdutils.VerbCmd)  {
+func createTenantCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a new tenant."
 	desc.CommandPermission = "This command requires super-user permissions."

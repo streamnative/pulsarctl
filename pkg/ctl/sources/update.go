@@ -18,10 +18,11 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updateSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -73,7 +74,8 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other source parameters ",
 	}
 
-	examples = append(examples, update, updateWithSourceConfig, updateWithResource, updateWithParallelism, updateWithSchema)
+	examples = append(examples, update, updateWithSourceConfig,
+		updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
@@ -217,17 +219,18 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 
 	checkArgsForUpdate(sourceData.SourceConf)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	updateOptions := pulsar.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sourceData.UpdateAuthData
 
-	if utils.IsPackageUrlSupported(sourceData.Archive) {
-		err = admin.Sources().UpdateSourceWithUrl(sourceData.SourceConf, sourceData.Archive, updateOptions)
+	if utils.IsPackageURLSupported(sourceData.Archive) {
+		err = admin.Sources().UpdateSourceWithURL(sourceData.SourceConf, sourceData.Archive, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully ",
+				sourceData.InstanceID, sourceData.Name)
 		}
 	} else {
 		err = admin.Sources().UpdateSource(sourceData.SourceConf, sourceData.Archive, updateOptions)

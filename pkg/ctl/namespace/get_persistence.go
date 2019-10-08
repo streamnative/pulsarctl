@@ -38,12 +38,12 @@ func getPersistence(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "{\n" +
-				"  \"bookkeeperEnsemble\": 1,\n" +
-				"  \"bookkeeperWriteQuorum\": 1,\n" +
-				"  \"bookkeeperAckQuorum\": 1,\n" +
-				"  \"managedLedgerMaxMarkDeleteRate\": 0\n" +
-				"}",
+		Out: `{
+  "bookkeeperEnsemble": 1,
+  "bookkeeperWriteQuorum": 1,
+  "bookkeeperAckQuorum": 1,
+  "managedLedgerMaxMarkDeleteRate": 0,
+}`,
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -82,7 +82,7 @@ func doGetPersistence(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policy, err := admin.Namespaces().GetPersistence(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &policy)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &policy)
 	}
 	return err
 }

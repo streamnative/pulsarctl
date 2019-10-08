@@ -19,9 +19,11 @@ package namespace
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBacklogQuota(t *testing.T) {
@@ -30,7 +32,8 @@ func TestBacklogQuota(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, createOut.String(), "Created public/test-backlog-namespace successfully")
 
-	args = []string{"set-backlog-quota", "public/test-backlog-namespace", "--limit", "2G", "--policy", "producer_request_hold"}
+	args = []string{"set-backlog-quota", "public/test-backlog-namespace",
+		"--limit", "2G", "--policy", "producer_request_hold"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set backlog quota successfully for [public/test-backlog-namespace]")
@@ -55,7 +58,8 @@ func TestBacklogQuota(t *testing.T) {
 }
 
 func TestFailureBacklogQuota(t *testing.T) {
-	args := []string{"set-backlog-quota", "public/test-backlog-namespace", "--limit", "12M", "--policy", "no-support-policy"}
+	args := []string{"set-backlog-quota", "public/test-backlog-namespace",
+		"--limit", "12M", "--policy", "no-support-policy"}
 	_, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "invalid retention policy type: no-support-policy")

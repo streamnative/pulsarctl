@@ -18,10 +18,11 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	`github.com/streamnative/pulsarctl/pkg/ctl/utils`
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -357,17 +358,18 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	updateOptions := pulsar.NewUpdateOptions()
 	updateOptions.UpdateAuthData = funcData.UpdateAuthData
 
-	if utils.IsPackageUrlSupported(funcData.Jar) {
-		err = admin.Functions().UpdateFunctionWithUrl(funcData.FuncConf, funcData.Jar, updateOptions)
+	if utils.IsPackageURLSupported(funcData.Jar) {
+		err = admin.Functions().UpdateFunctionWithURL(funcData.FuncConf, funcData.Jar, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Functions[%s] successfully ", funcData.InstanceID, funcData.FuncName)
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Functions[%s] successfully ",
+				funcData.InstanceID, funcData.FuncName)
 		}
 	} else {
 		err = admin.Functions().UpdateFunction(funcData.FuncConf, funcData.UserCodeFile, updateOptions)
