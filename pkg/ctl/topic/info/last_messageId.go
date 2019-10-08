@@ -32,13 +32,13 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "Get the last message id of a topic <persistent-topic-name>",
-		Command: "pulsarctl topic last-message-id <persistent-topic-name>",
+		Desc:    "Get the last message id of a topic (persistent-topic-name)",
+		Command: "pulsarctl topic last-message-id (persistent-topic-name)",
 	}
 
 	getPartitionedTopic := pulsar.Example{
-		Desc:    "Get the last message id of a partition of a partitioned topic <topic-name>",
-		Command: "pulsarctl topic last-message-id --partition <partition> <topic-name>",
+		Desc:    "Get the last message id of a partition of a partitioned topic (topic-name)",
+		Command: "pulsarctl topic last-message-id --partition (partition) (topic-name)",
 	}
 	examples = append(examples, get, getPartitionedTopic)
 	desc.CommandExamples = examples
@@ -55,14 +55,14 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, e.ArgError)
 
 	topicNotFoundError := pulsar.Output{
-		Desc: "the topic <persistent-topic-name> does not exist in the cluster",
+		Desc: "the topic (persistent-topic-name) does not exist in the cluster",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
 
 	notAllowedError := pulsar.Output{
-		Desc: "the topic <persistent-topic-name> does not a persistent topic",
-		Out:  "[✖]  code: 405 reason: GetLastMessageID on a non-persistent topic is not allowed",
+		Desc: "the topic (persistent-topic-name) does not a persistent topic",
+		Out:  "[✖]  code: 405 reason: GetLastMessageId on a non-persistent topic is not allowed",
 	}
 	out = append(out, notAllowedError)
 	out = append(out, e.TopicNameErrors...)
@@ -75,6 +75,7 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 		"last-message-id",
 		"Get the last message id of a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"lmi")
 
 	vc.SetRunFuncWithNameArg(func() error {

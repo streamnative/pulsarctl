@@ -32,13 +32,13 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	enable := pulsar.Example{
-		Desc:    "Enable messages encryption for the namespace <namespace-name>",
-		Command: "pulsarctl namespaces messages-encryption <namespace-name>",
+		Desc:    "Enable messages encryption for the namespace (namespace-name)",
+		Command: "pulsarctl namespaces messages-encryption (namespace-name)",
 	}
 
 	disable := pulsar.Example{
-		Desc:    "Disable messages encryption for the namespace <namespace-name>",
-		Command: "pulsarct. namespaces messages-encryption --disable <namespace-name>",
+		Desc:    "Disable messages encryption for the namespace (namespace-name)",
+		Command: "pulsarct. namespaces messages-encryption --disable (namespace-name)",
 	}
 	examples = append(examples, enable, disable)
 	desc.CommandExamples = examples
@@ -46,7 +46,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Enable/Disable message encryption for the namespace <namespace-name>",
+		Out:  "Enable/Disable message encryption for the namespace (namespace-name)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -55,7 +55,8 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"messages-encryption",
 		"Enable or disable messages encryption of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var d bool
 

@@ -53,11 +53,12 @@ func AddVerbCmds(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, n
 }
 
 // SetDescription sets usage along with short and long descriptions as well as aliases
-func (vc *VerbCmd) SetDescription(use, short, long string, aliases ...string) {
+func (vc *VerbCmd) SetDescription(use, short, long, example string, aliases ...string) {
 	vc.Command.Use = use
 	vc.Command.Short = short
 	vc.Command.Long = long
 	vc.Command.Aliases = aliases
+	vc.Command.Example = example
 }
 
 // SetRunFunc registers a command function

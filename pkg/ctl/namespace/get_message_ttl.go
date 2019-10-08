@@ -38,7 +38,7 @@ func getMessageTTL(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "<ttl-value>",
+		Out:  "(ttl-value)",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -53,7 +53,7 @@ func getMessageTTL(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -63,6 +63,7 @@ func getMessageTTL(vc *cmdutils.VerbCmd) {
 		"get-message-ttl",
 		"Get message TTL settings of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-message-ttl",
 	)
 

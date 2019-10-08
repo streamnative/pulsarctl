@@ -61,7 +61,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	errArgsForBk := pulsar.Output{
@@ -76,6 +76,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 		"set-persistence",
 		"Set the persistence policy for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-persistence",
 	)
 

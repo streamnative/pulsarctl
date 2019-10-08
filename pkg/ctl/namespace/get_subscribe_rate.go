@@ -29,8 +29,8 @@ func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "Get the default subscribe rate per consumer of a namespace <namespace-name>",
-		Command: "pulsarctl namespaces get-subscribe-rate <namespace>",
+		Desc:    "Get the default subscribe rate per consumer of a namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-subscribe-rate (namespace)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -47,7 +47,8 @@ func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"get-subscribe-rate",
 		"Get the default subscribe rate per consumer of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSubscribeRate(vc)

@@ -31,18 +31,18 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	setByMsg := pulsar.Example{
-		Desc:    "Set the default replicator message dispatch rate by message of the namespace <namespace-name> to <rate>",
-		Command: "pulsarctl namespaces set-replicator-dispatch-rate --msg-rate <rate> <namespace",
+		Desc:    "Set the default replicator message dispatch rate by message of the namespace (namespace-name) to (rate)",
+		Command: "pulsarctl namespaces set-replicator-dispatch-rate --msg-rate (rate) (namespace)",
 	}
 
 	setByByte := pulsar.Example{
-		Desc:    "Set the default replicator message dispatch rate by byte of the namespace <namespace-name> to <rate>",
-		Command: "pulsarctl namespaces set-replicator-dispatch-rate --byte-rate <rate> <namespace",
+		Desc:    "Set the default replicator message dispatch rate by byte of the namespace (namespace-name) to (rate)",
+		Command: "pulsarctl namespaces set-replicator-dispatch-rate --byte-rate (rate) (namespace)",
 	}
 
 	setByTime := pulsar.Example{
-		Desc:    "Set the default replicator message dispatch rate by time of the namespace <namespace-name> to <period>",
-		Command: "pulsarctl namespaces set-replicator-dispatch-rate --period <period> <namespace",
+		Desc:    "Set the default replicator message dispatch rate by time of the namespace (namespace-name) to (period)",
+		Command: "pulsarctl namespaces set-replicator-dispatch-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setByMsg, setByByte, setByTime)
 	desc.CommandExamples = examples
@@ -50,7 +50,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Success set the default replicator message dispatch rate of the namespace <namespace-name> to <rate>",
+		Out:  "Success set the default replicator message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
 
 	notConfigured := pulsar.Output{
@@ -65,7 +65,8 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-replicator-dispatch-rate",
 		"Set the default replicator message dispatch rate of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var rate pulsar.DispatchRate
 

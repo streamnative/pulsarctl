@@ -36,7 +36,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sources create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Sources> \n" +
+			"\t--name (the name of Pulsar Sources) \n" +
 			"\t--destination-topic-name kafka-topic  \n" +
 			"\t--classname org.apache.pulsar.io.kafka.KafkaBytesSource \n" +
 			"\t--archive pulsar-io-kafka-2.4.0.nar \n" +
@@ -49,7 +49,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Source> \n" +
+			"\t--name (the name of Pulsar Source) \n" +
 			"\t--destination-topic-name kafka-topic  \n" +
 			"\t--classname org.apache.pulsar.io.kafka.KafkaBytesSource \n" +
 			"\t--archive file://(or http://) + /examples/api-examples.nar",
@@ -59,14 +59,14 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Source in cluster mode with schema type",
 		Command: "pulsarctl source create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	createWithParallelism := pulsar.Example{
 		Desc: "Create a Pulsar Source in cluster mode with parallelism",
 		Command: "pulsarctl source create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	createWithResource := pulsar.Example{
@@ -75,21 +75,21 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	createWithSourceConfig := pulsar.Example{
 		Desc: "Create a Pulsar Source in cluster mode with source config",
 		Command: "pulsarctl source create \n" +
 			"\t--source-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	createWithProcessingGuarantees := pulsar.Example{
 		Desc: "Create a Pulsar Source in cluster mode with processing guarantees",
 		Command: "pulsarctl source create \n" +
 			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	examples = append(examples, create, createWithPkgURL, createWithSchema, createWithParallelism,
@@ -99,7 +99,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created <the name of a Pulsar Sources> successfully",
+		Out:  "Created (the name of a Pulsar Sources) successfully",
 	}
 
 	failureOut := pulsar.Output{
@@ -120,6 +120,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		"create",
 		"Submit a Pulsar IO source connector to run in a Pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"create",
 	)
 
@@ -179,8 +180,8 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.SchemaType,
 			"schema-type",
 			"",
-			"The schema type (either a builtin schema like 'avro', 'json', etc.. \n"+
-				"or custom Schema class name to be used to encode messages emitted from the source")
+			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom Schema class name "+
+				"to be used to encode messages emitted from the source")
 
 		flagSet.IntVar(
 			&sourceData.Parallelism,
@@ -193,9 +194,8 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"archive",
 			"a",
 			"",
-			"The path to the NAR archive for the Source. It also supports url-path [http/https/file \n"+
-				"(file protocol assumes that file already exists on worker host)] from which worker can download"+
-				" the package")
+			"The path to the NAR archive for the Source. It also supports url-path [http/https/file "+
+				"(file protocol assumes that file already exists on worker host)] from which worker can download the package")
 
 		flagSet.StringVar(
 			&sourceData.ClassName,
@@ -213,22 +213,20 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.CPU,
 			"cpu",
 			0.0,
-			"The CPU (in cores) that needs to be allocated per source instance\n"+
-				" (applicable only to Docker runtime)")
+			"The CPU (in cores) that needs to be allocated per source instance (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sourceData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per source instance \n"+
-				"(applicable only to the process and Docker runtimes)")
+			"The RAM (in bytes) that need to be allocated per source instance (applicable only to the "+
+				"process and Docker runtimes)")
 
 		flagSet.Int64Var(
 			&sourceData.Disk,
 			"disk",
 			0,
-			"The disk (in bytes) that need to be allocated per source instance \n"+
-				" (applicable only to Docker runtime)")
+			"The disk (in bytes) that need to be allocated per source instance (applicable only to Docker runtime)")
 
 		flagSet.StringVar(
 			&sourceData.SourceConfigFile,

@@ -35,7 +35,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	setClusters := pulsar.Example{
 		Desc:    "Set the replicated clusters for a namespace",
-		Command: "pulsarctl namespaces set-clusters tenant/namespace --clusters <cluster name>",
+		Command: "pulsarctl namespaces set-clusters tenant/namespace --clusters (cluster name)",
 	}
 
 	examples = append(examples, setClusters)
@@ -59,7 +59,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	invalidClustersName := pulsar.Output{
@@ -75,6 +75,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 		"set-clusters",
 		"Set the replicated clusters for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-clusters",
 	)
 
