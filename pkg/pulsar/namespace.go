@@ -123,7 +123,7 @@ type Namespaces interface {
 	RevokeNamespacePermission(namespace NameSpaceName, role string) error
 	GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error
 	RevokeSubPermission(namespace NameSpaceName, sName, role string) error
-  
+
 	// Set the given subscription auth mode on all topics on a namespace
 	SetSubscriptionAuthMode(namespace NameSpaceName, mode SubscriptionAuthMode) error
 
@@ -498,28 +498,28 @@ func (n *namespaces) GetNamespacePermissions(namespace NameSpaceName) (map[strin
 
 func (n *namespaces) GrantNamespacePermission(namespace NameSpaceName, role string, action []AuthAction) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
-	var s []string
+	s := make([]string, 0)
 	for _, v := range action {
 		s = append(s, v.String())
 	}
-	return n.client.post(endpoint, s, nil)
+	return n.client.post(endpoint, s)
 }
 
 func (n *namespaces) RevokeNamespacePermission(namespace NameSpaceName, role string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
-	return n.client.delete(endpoint, nil)
+	return n.client.delete(endpoint)
 }
 
 func (n *namespaces) GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
 		"subscription", sName)
-	return n.client.post(endpoint, roles, nil)
+	return n.client.post(endpoint, roles)
 }
 
 func (n *namespaces) RevokeSubPermission(namespace NameSpaceName, sName, role string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
 		"subscription", sName, role)
-	return n.client.delete(endpoint, nil)
+	return n.client.delete(endpoint)
 }
 
 func (n *namespaces) SetSubscriptionAuthMode(namespace NameSpaceName, mode SubscriptionAuthMode) error {

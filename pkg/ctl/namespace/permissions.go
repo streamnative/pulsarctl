@@ -19,23 +19,24 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting permissions configure data of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	getNs := Example{
-		Desc:    "Get permissions configure data of a namespace <tenant>/<namespace>",
-		Command: "pulsarctl namespaces permissions <tenant>/<namespace>",
+	var examples []pulsar.Example
+	getNs := pulsar.Example{
+		Desc:    "Get permissions configure data of a namespace (tenant)/(namespace)",
+		Command: "pulsarctl namespaces permissions (tenant)/(namespace)",
 	}
-	desc.CommandExamples = append(examples, getNs)
+	examples = append(examples, getNs)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"<role>\": [\n" +
@@ -43,14 +44,15 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 			"  ]" +
 			"\n}",
 	}
-	out = append(out, successOut, ArgsError)
+	out = append(out, successOut, ArgError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"permissions",
 		"Get permissions configure data of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
@@ -63,7 +65,7 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -71,7 +73,7 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Namespaces().GetNamespacePermissions(*ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), data)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), data)
 	}
 
 	return err

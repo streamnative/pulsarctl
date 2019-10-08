@@ -18,33 +18,39 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
-	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a subscription of a namespace."
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for revoking a client role permissions of " +
+		"accessing a subscription of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
-	var examples []Example
-	revoke := Example{
-		Desc:    "Revoke a client role <role-name> permissions of accessing the subscription <namespace-name> of the <namespace-name>",
-		Command: "pulsarctl namespaces revoke-subscription-permission --role <role-name> <namespace-name> <subscription-name>",
+	var examples []pulsar.Example
+	revoke := pulsar.Example{
+		Desc: "Revoke a client role (role-name) permissions of accessing the subscription " +
+			"(subscription-name) of the (namespace-name)",
+		Command: "pulsarctl namespaces revoke-subscription-permission --role (role-name) " +
+			"(namespace-name) (subscription-name)",
 	}
-	desc.CommandExamples = append(examples, revoke)
+	examples = append(examples, revoke)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Revoke the client role <role-name> permissions of accessing the subscription <subscription-name> of the namespace <namespace-name> successfully",
+		Out: "Revoke the client role (role-name) permissions of accessing the subscription " +
+			"(subscription-name) of the namespace (namespace-name) successfully",
 	}
 
-	argsError := Output{
+	argsError := pulsar.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need to specified namespace name and subscription name",
 	}
@@ -55,6 +61,7 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"revoke-subscription-permission",
 		"Revoke a client role permissions of accessing a subscription of a namespace",
+		desc.ToString(),
 		desc.ToString())
 
 	var role string
@@ -81,7 +88,7 @@ func doRevokeSubPermissions(vc *cmdutils.VerbCmd, role string) error {
 		return vc.NameError
 	}
 
-	ns, err := GetNamespaceName(vc.NameArgs[0])
+	ns, err := pulsar.GetNamespaceName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}
@@ -89,7 +96,8 @@ func doRevokeSubPermissions(vc *cmdutils.VerbCmd, role string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().RevokeSubPermission(*ns, vc.NameArgs[1], role)
 	if err == nil {
-		vc.Command.Printf("Revoke the client role %s permissions of accessing the subscription %s of the namespace %s successfully\n",
+		vc.Command.Printf("Revoke the client role %s permissions of accessing the "+
+			"subscription %s of the namespace %s successfully\n",
 			role, vc.NameArgs[1], ns.String())
 	}
 

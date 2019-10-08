@@ -18,38 +18,41 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
-	var examples []Example
-	revoke := Example{
-		Desc:    "Revoke the client role <role-name> of accessing the namespace <namespace-name>",
-		Command: "pulsarctl namespaces revoke-permission --role <role-name> <namespace-name>",
+	var examples []pulsar.Example
+	revoke := pulsar.Example{
+		Desc:    "Revoke the client role (role-name) of accessing the namespace (namespace-name)",
+		Command: "pulsarctl namespaces revoke-permission --role (role-name) (namespace-name)",
 	}
-	desc.CommandExamples = append(examples, revoke)
+	examples = append(examples, revoke)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Revoke the client role <role-name> permissions of accessing the namespace <namespace-name> successfully",
+		Out:  "Revoke the client role (role-name) permissions of accessing the namespace (namespace-name) successfully",
 	}
-	out = append(out, successOut, ArgsError)
+	out = append(out, successOut, ArgError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"revoke-permission",
 		"Revoke a client role permissions of accessing a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var role string
 
@@ -70,7 +73,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 		return vc.NameError
 	}
 
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

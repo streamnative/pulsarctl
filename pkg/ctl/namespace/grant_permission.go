@@ -18,42 +18,47 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role to access a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	grant := Example{
-		Desc:    "Grant permission <action> to the client role <role-name> to access the namespace <namespace-name>",
-		Command: "pulsarctl namespaces grant-permission --role <role-name> --actions <action> <namespace-name>",
+	var examples []pulsar.Example
+	grant := pulsar.Example{
+		Desc:    "Grant permission (action) to the client role (role-name) to access the namespace (namespace-name)",
+		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action) (namespace-name)",
 	}
 
-	grantActions := Example{
-		Desc:    "Grant permissions <actions> to the client role <role-name> to access the namespace <namespace-name>",
-		Command: "pulsarctl namespaces grant-permission --role <role-name> --actions <action-1> --actions <action-2> <namespace-name>",
+	grantActions := pulsar.Example{
+		Desc: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)",
+		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action-1) --actions (action-2) " +
+			"(namespace-name)",
 	}
-	desc.CommandExamples = append(examples, grant, grantActions)
+	examples = append(examples, grant, grantActions)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Grant permissions <actions> to the client role <role-name> to access the namespace <namespace-name> successfully",
+		Out: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)" +
+			" successfully",
 	}
-	out = append(out, successOut, ArgsError, AuthNotEnable)
+	out = append(out, successOut, ArgError, AuthNotEnable)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"grant-permission",
 		"Grant permissions to a client role to access a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var role string
 	var actions []string
@@ -78,7 +83,7 @@ func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) err
 		return vc.NameError
 	}
 
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -91,17 +96,17 @@ func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) err
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().GrantNamespacePermission(*ns, role, a)
 	if err == nil {
-		vc.Command.Printf("Grant permissions %+v to the client role %s to access the namespace %s successfully\n",
-			a, role, ns.String())
+		vc.Command.Printf("Grant permissions %+v to the client role %s to access the"+
+			" namespace %s successfully\n", a, role, ns.String())
 	}
 
 	return err
 }
 
-func parseActions(actions []string) ([]AuthAction, error) {
-	var r []AuthAction
+func parseActions(actions []string) ([]pulsar.AuthAction, error) {
+	r := make([]pulsar.AuthAction, 0)
 	for _, v := range actions {
-		a, err := ParseAuthAction(v)
+		a, err := pulsar.ParseAuthAction(v)
 		if err != nil {
 			return nil, err
 		}

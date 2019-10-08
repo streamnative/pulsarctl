@@ -19,9 +19,11 @@ package namespace
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPermissionsCmd(t *testing.T) {
@@ -46,7 +48,7 @@ func TestPermissionsCmd(t *testing.T) {
 	assert.Equal(t, empty, permissions)
 }
 
-func TestGetPermissionsArgsError(t *testing.T)  {
+func TestGetPermissionsArgsError(t *testing.T) {
 	args := []string{"permissions"}
 	_, _, nameErr, _ := TestNamespaceCommands(GetPermissionsCmd, args)
 	assert.NotNil(t, nameErr.Error())
