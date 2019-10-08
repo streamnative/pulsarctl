@@ -49,7 +49,8 @@ func TopicUnloadCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"unload",
 		"Unloading a topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUnloadCmd(vc)
