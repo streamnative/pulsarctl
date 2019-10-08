@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package teminate
+package stop
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -23,30 +23,36 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
 	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
-func TerminateCmd(vc *cmdutils.VerbCmd) {
+func TopicTerminateCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for terminating a non-partitioned topic and not allow any more " +
-		"messages to be published."
+	desc.CommandUsedFor = "This command is used for terminating a non-partitioned topic or a partition of " +
+		"a partitioned topic. Upon termination, no more messages are allowed to published to it."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	terminate := pulsar.Example{
-		Desc:    "Terminate a non-partitioned topic <topic-name> and not allow any messages to be published",
-		Command: "pulsarctl topic terminate <topic-name>",
+		Desc:    "Terminate a non-partitioned topic (topic-name)",
+		Command: "pulsarctl topic terminate (topic-name)",
 	}
-	examples = append(examples, terminate)
+
+	terminateWithPartition := pulsar.Example{
+		Desc:    "Terminate a partition of a partitioned topic",
+		Command: "pulsarctl topic terminate --partition (partition) (topic-name)",
+	}
+	examples = append(examples, terminate, terminateWithPartition)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Topic <topic-name> successfully terminated at <message-id>",
+		Out:  "Topic (topic-name) is successfully terminated at (message-id)",
 	}
 
 	partitionError := pulsar.Output{
-		Desc: "the specified is a partitioned topic",
+		Desc: "the specified topic is a partitioned topic",
 		Out:  "[✖]  code: 405 reason: Termination of a partitioned topic is not allowed",
 	}
 	out = append(out, successOut, e.ArgError, e.TopicNotFoundError, partitionError)
@@ -57,14 +63,22 @@ func TerminateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"terminate",
 		"Terminate a non-partitioned topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
+
+	var partition int
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doTerminate(vc)
+		return doTerminate(vc, partition)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Terminate", func(set *pflag.FlagSet) {
+		set.IntVarP(&partition, "partition", "p", -1,
+			"The partitioned topic index value")
 	})
 }
 
-func doTerminate(vc *cmdutils.VerbCmd) error {
+func doTerminate(vc *cmdutils.VerbCmd, partition int) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -76,13 +90,20 @@ func doTerminate(vc *cmdutils.VerbCmd) error {
 	}
 
 	if !topic.IsPersistent() {
-		return errors.New("need to provide a persistent topic")
+		return errors.New("only support terminating a persistent topic")
+	}
+
+	if partition >= 0 {
+		topic, err = topic.GetPartition(partition)
+		if err != nil {
+			return err
+		}
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	messageId, err := admin.Topics().Terminate(*topic)
+	messageID, err := admin.Topics().Terminate(*topic)
 	if err == nil {
-		vc.Command.Printf("Topic %s successfully terminated at %+v", topic.String(), messageId)
+		vc.Command.Printf("Topic %s is successfully terminated at %+v", topic.String(), messageID)
 	}
 
 	return err

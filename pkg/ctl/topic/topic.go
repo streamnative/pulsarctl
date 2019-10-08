@@ -19,12 +19,12 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/terminate"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/info"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stop"
 
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"topic")
 
 	commands := []func(*cmdutils.VerbCmd){
-		teminate.TerminateCmd,
+		stop.TopicTerminateCmd,
 		crud.CreateTopicCmd,
 		crud.DeleteTopicCmd,
 		crud.GetTopicCmd,

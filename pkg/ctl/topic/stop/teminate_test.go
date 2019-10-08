@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package teminate
+package stop
 
 import (
 	"strings"
@@ -33,10 +33,10 @@ func TestTerminateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"terminate", "test-terminate-topic"}
-	out, execErr, _, _ := test.TestTopicCommands(TerminateCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(TopicTerminateCmd, args)
 	assert.Nil(t, execErr)
 	assert.True(t, strings.HasPrefix(out.String(),
-		"Topic persistent://public/default/test-terminate-topic successfully terminated at"))
+		"Topic persistent://public/default/test-terminate-topic is successfully terminated at"))
 }
 
 func TestTerminatePartitionedTopicError(t *testing.T) {
@@ -45,21 +45,21 @@ func TestTerminatePartitionedTopicError(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"terminate", "test-terminate-partitioned-topic"}
-	_, execErr, _, _ = test.TestTopicCommands(TerminateCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(TopicTerminateCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 405 reason: Termination of a partitioned topic is not allowed", execErr.Error())
 }
 
 func TestTerminateArgError(t *testing.T) {
 	args := []string{"terminate"}
-	_, _, nameErr, _ := test.TestTopicCommands(TerminateCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(TopicTerminateCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestTerminateNonExistingTopic(t *testing.T) {
 	args := []string{"terminate", "non-existing-topic"}
-	_, execErr, _, _ := test.TestTopicCommands(TerminateCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(TopicTerminateCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

@@ -38,7 +38,7 @@ type Topics interface {
 	GetStats(TopicName) (TopicStats, error)
 	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
-	Terminate(TopicName) (MessageId, error)
+	Terminate(TopicName) (MessageID, error)
 }
 
 type topics struct {
@@ -206,9 +206,9 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 	return stats, err
 }
 
-func (t *topics) Terminate(topic TopicName) (MessageId, error) {
+func (t *topics) Terminate(topic TopicName) (MessageID, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "terminate")
-	var messageId MessageId
-	err := t.client.post(endpoint, "", &messageId)
-	return messageId, err
+	var messageID MessageID
+	err := t.client.postWithObj(endpoint, "", &messageID)
+	return messageID, err
 }

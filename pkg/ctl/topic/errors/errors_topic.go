@@ -35,17 +35,17 @@ var TopicAlreadyExistError = pulsar.Output{
 }
 
 var TopicNotFoundError = pulsar.Output{
-	Desc: "the specified topic does not found",
+	Desc: "the specified topic does not exist",
 	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
 var TenantNotExistError = pulsar.Output{
-	Desc: "the tenant of the namespace is not exist",
+	Desc: "the tenant of the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",
 }
 
 var NamespaceNotExistError = pulsar.Output{
-	Desc: "the namespace is not exist",
+	Desc: "the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
