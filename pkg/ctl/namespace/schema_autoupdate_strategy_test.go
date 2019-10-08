@@ -1,3 +1,20 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package namespace
 
 import (
@@ -18,35 +35,39 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The schema auto-update strategy is %s for the namespace %s", pulsar.Full.String(), ns),
+		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n", ns, pulsar.Full.String()),
 		out.String())
 
 	args = []string{"set-schema-autoupdate-strategy", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Set the schema auto-update strategy %s for the namespace %s", pulsar.AutoUpdateDisabled.String(), ns),
+		fmt.Sprintf("Successfully set the schema auto-update strategy of the namespace %s to %s\n",
+			ns, pulsar.AutoUpdateDisabled.String()),
 		out.String())
 
 	args = []string{"get-schema-autoupdate-strategy", ns}
 	out, execErr, _, _ = TestNamespaceCommands(GetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The schema auto-update strategy is %s for the namespace %s", pulsar.AutoUpdateDisabled.String(), ns),
+		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n",
+			ns, pulsar.AutoUpdateDisabled.String()),
 		out.String())
 
 	args = []string{"set-schema-autoupdate-strategy", "--compatibility", "BackwardTransitive", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Set the schema auto-update strategy %s for the namespace %s", pulsar.BackwardTransitive.String(), ns),
+		fmt.Sprintf("Successfully set the schema auto-update strategy of the namespace %s to %s\n",
+			ns, pulsar.BackwardTransitive.String()),
 		out.String())
 
 	args = []string{"get-schema-autoupdate-strategy", ns}
 	out, execErr, _, _ = TestNamespaceCommands(GetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The schema auto-update strategy is %s for the namespace %s", pulsar.BackwardTransitive.String(), ns),
+		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n",
+			ns, pulsar.BackwardTransitive.String()),
 		out.String())
 }
 

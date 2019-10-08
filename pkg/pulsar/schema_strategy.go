@@ -19,7 +19,6 @@ package pulsar
 
 import "github.com/pkg/errors"
 
-type SchemaAutoUpdateCompatibilityStrategy string
 type SchemaCompatibilityStrategy string
 
 const (
@@ -33,7 +32,7 @@ const (
 	FullTransitive     SchemaCompatibilityStrategy = "FullTransitive"
 )
 
-func ParseSchemaAutoUpdateCompatibilityStrategy(str string) (SchemaAutoUpdateCompatibilityStrategy, error) {
+func ParseSchemaAutoUpdateCompatibilityStrategy(str string) (SchemaCompatibilityStrategy, error) {
 	switch str {
 	case "AutoUpdateDisabled":
 		return AutoUpdateDisabled, nil
@@ -56,6 +55,6 @@ func ParseSchemaAutoUpdateCompatibilityStrategy(str string) (SchemaAutoUpdateCom
 	}
 }
 
-func (s SchemaAutoUpdateCompatibilityStrategy) String() string {
+func (s SchemaCompatibilityStrategy) String() string {
 	return string(s)
 }

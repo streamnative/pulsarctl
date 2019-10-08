@@ -1,30 +1,49 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package namespace
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the schema whether open schema validation enforced."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []Example
-	enable := Example{
+	var examples []pulsar.Example
+	enable := pulsar.Example{
 		Desc:    "Enable schema validation enforced",
-		Command: "pulsarctl namespace set-schema-validation-enforced <namespace-name>",
+		Command: "pulsarctl namespaces set-schema-validation-enforced <namespace-name>",
 	}
 
-	disable := Example{
+	disable := pulsar.Example{
 		Desc:    "Disable schema validation enforced",
 		Command: "pulsarctl namespace set-schema-validation-enforced --disable <namespace-name>",
 	}
-	desc.CommandExamples = append(examples, enable, disable)
+	examples = append(examples, enable, disable)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Enable/Disable schema validation enforced",
 	}
@@ -35,7 +54,8 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-schema-validation-enforced",
 		"Enable/Disable schema validation enforced",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var d bool
 
@@ -50,7 +70,7 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSchemaValidationEnforced(vc *cmdutils.VerbCmd, disable bool) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -64,7 +84,7 @@ func doSetSchemaValidationEnforced(vc *cmdutils.VerbCmd, disable bool) error {
 		} else {
 			out += "Enable "
 		}
-		vc.Command.Println(out + "schema validation enforced")
+		vc.Command.Printf(out+"the namespace %s schema validation enforced\n", ns.String())
 	}
 
 	return err

@@ -1,24 +1,42 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the schema validation enforced."
 	desc.CommandPermission = "This command requires super-user and tenant admin permissions."
 
-	var examples []Example
-	get := Example{
+	var examples []pulsar.Example
+	get := pulsar.Example{
 		Desc:    "Get schema validation status",
-		Command: "pulsarctl namespace get-schema-validation-enforced <namespace-name>",
+		Command: "pulsarctl namespaces get-schema-validation-enforced <namespace-name>",
 	}
-	desc.CommandExamples = append(examples, get)
+	examples = append(examples, get)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Schema validation enforced is enabled/disabled",
 	}
@@ -29,7 +47,8 @@ func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"get-schema-validation-enforced",
 		"Enable/Disable schema validation enforced",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSchemaValidationEnforced(vc)
@@ -37,7 +56,7 @@ func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetSchemaValidationEnforced(vc *cmdutils.VerbCmd) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -45,13 +64,13 @@ func doGetSchemaValidationEnforced(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	s, err := admin.Namespaces().GetSchemaValidationEnforced(*ns)
 	if err == nil {
-		out := "Schema validation enforced is "
+		out := "Namespace %s schema validation enforced is "
 		if s {
-			out += "enabled"
+			out += "enabled\n"
 		} else {
-			out += "disabled"
+			out += "disabled\n"
 		}
-		vc.Command.Println(out)
+		vc.Command.Printf(out, ns.String())
 	}
 
 	return err
