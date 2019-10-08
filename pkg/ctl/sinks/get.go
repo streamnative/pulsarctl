@@ -18,9 +18,10 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSinksCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +36,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink get \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 
 	examples = append(examples, get)
@@ -69,7 +70,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 	out = append(out, successOut, nameNotExistOut)
 	desc.CommandOutput = out
@@ -78,6 +79,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Get the information about a Pulsar IO sink connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get",
 	)
 
@@ -116,12 +118,12 @@ func doGetSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sinkConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sinkConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkConfig)
 	}
 
 	return err

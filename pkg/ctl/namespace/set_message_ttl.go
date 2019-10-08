@@ -18,10 +18,11 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 func setMessageTTL(vc *cmdutils.VerbCmd) {
@@ -43,32 +44,33 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 		Out:  "Set message TTL successfully for [tenant/namespace]",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	failOut := pulsar.Output{
 		Desc: "Invalid value for message TTL, please check -ttl arg",
 		Out:  "code: 412 reason: Invalid value for message TTL",
 	}
-	out = append(out, successOut, failOut, notTenantName, notExistTenantName, notExistNsName)
+	out = append(out, successOut, failOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"set-message-ttl",
 		"Set Message TTL for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-message-ttl",
 	)
 

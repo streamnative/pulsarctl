@@ -18,10 +18,12 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func restartSinksCmd(vc *cmdutils.VerbCmd) {
@@ -36,7 +38,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 
 	restartWithInstanceID := pulsar.Example{
@@ -44,7 +46,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink restart \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>\n" +
+			"\t--name (the name of Pulsar Sink)\n" +
 			"\t--instance-id 1",
 	}
 
@@ -54,12 +56,12 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Restarted <the name of a Pulsar Sink> successfully",
+		Out:  "Restarted (the name of a Pulsar Sink) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -69,6 +71,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 		"Restart sink instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"restart",
 	)
 
@@ -113,7 +116,7 @@ func doRestartSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sinkData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sinkData.InstanceID)
 		if err != nil {

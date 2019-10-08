@@ -19,10 +19,12 @@ package functions
 
 import (
 	"bytes"
+	"os"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"os"
 )
 
 func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, err error) {
@@ -59,7 +61,7 @@ func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 }
 
 var (
-	flag bool
+	flag     bool
 	basePath string
 )
 

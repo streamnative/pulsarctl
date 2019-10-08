@@ -20,14 +20,17 @@ package sources
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os"
-	"strings"
 )
 
 func processArguments(sourceData *pulsar.SourceData) error {
@@ -45,7 +48,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 			if err != nil {
 				return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
 			}
-		} else if err != nil && !os.IsNotExist(err) {
+		} else if !os.IsNotExist(err) {
 			return fmt.Errorf("load conf file failed, err:%s", err.Error())
 		}
 	}
@@ -121,7 +124,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 			sourceData.SourceConf.Resources = pulsar.NewDefaultResources()
 		}
 
-		sourceData.SourceConf.Resources.Ram = sourceData.RAM
+		sourceData.SourceConf.Resources.RAM = sourceData.RAM
 	}
 
 	if sourceData.SourceConfigString != "" {
@@ -133,10 +136,10 @@ func processArguments(sourceData *pulsar.SourceData) error {
 
 func validateSourceType(sourceType string) string {
 	availableSources := make([]string, 0, 10)
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	connectorDefinition, err := admin.Sources().GetBuiltInSources()
 	if err != nil {
-		fmt.Errorf("get builtin sources error: %s", err.Error())
+		log.Printf("get builtin sources error: %s", err.Error())
 		return ""
 	}
 
@@ -146,7 +149,7 @@ func validateSourceType(sourceType string) string {
 
 	availableSourcesString := strings.Join(availableSources, " ")
 	if !strings.Contains(availableSourcesString, sourceType) {
-		fmt.Errorf("invalid source type [%s] -- Available sources are: %s", sourceType, availableSources)
+		log.Printf("invalid source type [%s] -- Available sources are: %s", sourceType, availableSources)
 		return ""
 	}
 
@@ -172,7 +175,7 @@ func validateSourceConfigs(sourceConfig *pulsar.SourceConfig) error {
 
 	utils.InferMissingSourceArguments(sourceConfig)
 
-	if utils.IsPackageUrlSupported(sourceConfig.Archive) && strings.HasPrefix(sourceConfig.Archive, utils.BUILTIN) {
+	if utils.IsPackageURLSupported(sourceConfig.Archive) && strings.HasPrefix(sourceConfig.Archive, utils.BUILTIN) {
 		if !utils.IsFileExist(sourceConfig.Archive) {
 			return fmt.Errorf("source Archive %s does not exist", sourceConfig.Archive)
 		}

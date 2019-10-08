@@ -19,10 +19,11 @@ package sinks
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetSink(t *testing.T) {
@@ -50,7 +51,8 @@ func TestGetSink(t *testing.T) {
 		"--name", "test-sink-get",
 	}
 
-	out, _, err := TestSinksCommands(getSinksCmd, getArgs)
+	out, execErr, _ := TestSinksCommands(getSinksCmd, getArgs)
+	assert.Nil(t, execErr)
 
 	var sinkConf pulsar.SinkConfig
 	err = json.Unmarshal(out.Bytes(), &sinkConf)

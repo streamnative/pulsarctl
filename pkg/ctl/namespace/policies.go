@@ -30,7 +30,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	police := pulsar.Example{
 		Desc:    "Get the configuration policies of a namespace",
-		Command: "pulsarctl namespaces policies <tenant/namespace>",
+		Command: "pulsarctl namespaces policies (tenant/namespace)",
 	}
 	examples = append(examples, police)
 	desc.CommandExamples = examples
@@ -80,7 +80,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 			"  },\n" +
 			"  \"DeduplicationEnabled\": false,\n" +
 			"  \"LatencyStatsSampleRate\": null,\n" +
-			"  \"MessageTtlInSeconds\": 0,\n" +
+			"  \"MessageTTLInSeconds\": 0,\n" +
 			"  \"RetentionPolicies\": {\n" +
 			"    \"RetentionTimeInMinutes\": 0,\n" +
 			"    \"RetentionSizeInMB\": 0\n" +
@@ -95,33 +95,34 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 			"  \"CompactionThreshold\": 0,\n" +
 			"  \"OffloadThreshold\": 0,\n" +
 			"  \"OffloadDeletionLagMs\": 0,\n" +
-			"  \"SchemaAutoUpdateCompatibilityStrategy\": \"\",\n" +
+			"  \"SchemaCompatibilityStrategy\": \"\",\n" +
 			"  \"SchemaValidationEnforced\": false\n" +
 			"}",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	out = append(out, successOut, notExistTenantName, notTenantName, notExistNsName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"policies",
 		"Get the configuration policies of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"policies",
 	)
 
@@ -135,7 +136,7 @@ func doGetPolicies(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policies, err := admin.Namespaces().GetPolicies(namespace)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), policies)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), policies)
 	}
 	return err
 }

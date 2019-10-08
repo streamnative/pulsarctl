@@ -19,28 +19,35 @@ package namespace
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRetention(t *testing.T) {
-	getArgs := []string{"get-retention", "public/default"}
+	args := []string{"create", "public/test-retention"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-retention successfully")
+
+	getArgs := []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getRetention, getArgs)
 	assert.Nil(t, execErr)
 
 	var retention pulsar.RetentionPolicies
-	err := json.Unmarshal(getOut.Bytes(), &retention)
+	err = json.Unmarshal(getOut.Bytes(), &retention)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(0), retention.RetentionSizeInMB)
 	assert.Equal(t, 0, retention.RetentionTimeInMinutes)
 
-	setArgs := []string{"set-retention", "public/default", "--time", "10m", "--size", "10M"}
+	setArgs := []string{"set-retention", "public/test-retention", "--time", "10m", "--size", "10M"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setRetention, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set retention successfully for [public/default]")
+	assert.Equal(t, setOut.String(), "Set retention successfully for [public/test-retention]")
 
-	getArgs = []string{"get-retention", "public/default"}
+	getArgs = []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getRetention, getArgs)
 	assert.Nil(t, execErr)
 
@@ -50,11 +57,11 @@ func TestRetention(t *testing.T) {
 	assert.Equal(t, 10, retention.RetentionTimeInMinutes)
 
 	// test negative value for time arg
-	setArgWithTime := []string{"set-retention", "public/default", "--time", "-10m", "--size", "10M"}
+	setArgWithTime := []string{"set-retention", "public/test-retention", "--time", "-10m", "--size", "10M"}
 	_, execErr, _, _ = TestNamespaceCommands(setRetention, setArgWithTime)
 	assert.Nil(t, execErr)
 
-	getArgs = []string{"get-retention", "public/default"}
+	getArgs = []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getRetention, getArgs)
 	assert.Nil(t, execErr)
 

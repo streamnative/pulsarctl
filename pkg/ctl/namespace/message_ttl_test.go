@@ -18,23 +18,29 @@
 package namespace
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMessageTTL(t *testing.T) {
-	setTTLArgs := []string{"set-message-ttl", "public/default", "-t", "20"}
+	args := []string{"create", "public/test-ttl-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-ttl-namespace successfully")
+
+	setTTLArgs := []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "20"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setMessageTTL, setTTLArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message TTL successfully for [public/default]")
+	assert.Equal(t, setOut.String(), "Set message TTL successfully for [public/test-ttl-namespace]")
 
-	getTTLArgs := []string{"get-message-ttl", "public/default"}
+	getTTLArgs := []string{"get-message-ttl", "public/test-ttl-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getMessageTTL, getTTLArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, getOut.String(), "20")
 
 	// test negative value for ttl arg
-	setTTLArgs = []string{"set-message-ttl", "public/default", "-t", "-2"}
+	setTTLArgs = []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "-2"}
 	_, execErr, _, _ = TestNamespaceCommands(setMessageTTL, setTTLArgs)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")

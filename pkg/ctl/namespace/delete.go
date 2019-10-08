@@ -30,7 +30,7 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	del := pulsar.Example{
 		Desc:    "Delete a namespace",
-		Command: "pulsarctl namespaces delete <namespace-name>",
+		Command: "pulsarctl namespaces delete (namespace-name)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -38,26 +38,27 @@ func deleteNs(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <namespace-name> successfully",
+		Out:  "Deleted (namespace-name) successfully",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	out = append(out, successOut, notExistTenantName, notTenantName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"delete",
 		"Delete a namespace. The namespace needs to be empty",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

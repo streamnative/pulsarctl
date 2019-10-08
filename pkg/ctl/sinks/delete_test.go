@@ -19,9 +19,10 @@ package sinks
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteSinks(t *testing.T) {

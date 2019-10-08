@@ -18,11 +18,12 @@
 package namespace
 
 import (
-	"fmt"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func setRetention(vc *cmdutils.VerbCmd) {
@@ -49,19 +50,19 @@ func setRetention(vc *cmdutils.VerbCmd) {
 		Out:  "Set retention successfully for [tenant/namespace]",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace not exist, please check namespace name",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	notSetBacklog := pulsar.Output{
@@ -69,15 +70,14 @@ func setRetention(vc *cmdutils.VerbCmd) {
 		Out:  "Retention Quota must exceed configured backlog quota for namespace",
 	}
 
-	//Retention Quota must exceed configured backlog quota for namespace
-
-	out = append(out, successOut, notTenantName, notExistTenantName, notExistNsName, notSetBacklog)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError, notSetBacklog)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"set-retention",
 		"Set the retention policy for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-retention",
 	)
 
@@ -110,11 +110,11 @@ func setRetention(vc *cmdutils.VerbCmd) {
 func doSetRetention(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	sizeLimit, err := validateSizeString(data.LimitStr)
+	sizeLimit, err := utils.ValidateSizeString(data.LimitStr)
 	if err != nil {
 		return err
 	}
-	retentionTimeInSecond, err := parseRelativeTimeInSeconds(data.RetentionTimeStr)
+	retentionTimeInSecond, err := utils.ParseRelativeTimeInSeconds(data.RetentionTimeStr)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,6 @@ func doSetRetention(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	)
 
 	if retentionTimeInSecond != -1 {
-		fmt.Println("retentionTimeInSecond: ", retentionTimeInSecond)
 		retentionTimeInMin = int(retentionTimeInSecond.Minutes())
 	} else {
 		retentionTimeInMin = -1

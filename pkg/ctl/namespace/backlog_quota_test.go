@@ -19,38 +19,47 @@ package namespace
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBacklogQuota(t *testing.T) {
-	args := []string{"set-backlog-quota", "public/default", "--limit", "12M", "--policy", "consumer_backlog_eviction"}
+	args := []string{"create", "public/test-backlog-namespace"}
+	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Equal(t, createOut.String(), "Created public/test-backlog-namespace successfully")
+
+	args = []string{"set-backlog-quota", "public/test-backlog-namespace",
+		"--limit", "2G", "--policy", "producer_request_hold"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set backlog quota successfully for [public/default]")
+	assert.Equal(t, setOut.String(), "Set backlog quota successfully for [public/test-backlog-namespace]")
 
-	getArgs := []string{"get-backlog-quotas", "public/default"}
+	getArgs := []string{"get-backlog-quotas", "public/test-backlog-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getBacklogQuota, getArgs)
 	assert.Nil(t, execErr)
 	var backlogQuotaMap map[pulsar.BacklogQuotaType]pulsar.BacklogQuota
-	err := json.Unmarshal(getOut.Bytes(), &backlogQuotaMap)
+	err = json.Unmarshal(getOut.Bytes(), &backlogQuotaMap)
 	assert.Nil(t, err)
 
 	for key, value := range backlogQuotaMap {
 		assert.Equal(t, key, pulsar.DestinationStorage)
-		assert.Equal(t, value.Limit, int64(12582912))
-		assert.Equal(t, value.Policy, pulsar.ConsumerBacklogEviction)
+		assert.Equal(t, value.Limit, int64(2147483648))
+		assert.Equal(t, value.Policy, pulsar.ProducerRequestHold)
 	}
 
-	delArgs := []string{"remove-backlog-quota", "public/default"}
+	delArgs := []string{"remove-backlog-quota", "public/test-backlog-namespace"}
 	delOut, execErr, _, _ := TestNamespaceCommands(removeBacklogQuota, delArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, delOut.String(), "Remove backlog quota successfully for [public/default]")
+	assert.Equal(t, delOut.String(), "Remove backlog quota successfully for [public/test-backlog-namespace]")
 }
 
 func TestFailureBacklogQuota(t *testing.T) {
-	args := []string{"set-backlog-quota", "public/default", "--limit", "12M", "--policy", "no-support-policy"}
+	args := []string{"set-backlog-quota", "public/test-backlog-namespace",
+		"--limit", "12M", "--policy", "no-support-policy"}
 	_, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "invalid retention policy type: no-support-policy")

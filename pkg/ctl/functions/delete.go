@@ -18,9 +18,10 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +36,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Functions>",
+			"\t--name (the name of Pulsar Functions)",
 	}
 	examples = append(examples, del)
 
@@ -44,7 +45,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Functions> \n" +
+			"\t--name (the name of Pulsar Functions) \n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, delWithInstanceID)
@@ -80,6 +81,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a Pulsar Function that is running on a Pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 
@@ -124,7 +126,7 @@ func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	err = admin.Functions().DeleteFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		return err

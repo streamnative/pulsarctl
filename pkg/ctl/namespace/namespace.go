@@ -18,8 +18,9 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
+	"github.com/spf13/cobra"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -48,6 +49,29 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetMaxConsumersPerTopicCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetMaxProducersPerTopicCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetMaxProducersPerTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteAntiAffinityGroup)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAntiAffinityNamespaces)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getPersistence)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setPersistence)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setDeduplication)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setReplicationClusters)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getReplicationClusters)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, unload)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, splitBundle)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, ClearBacklogCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetEncryptionRequiredCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetReplicatorDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetReplicatorDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSubscribeRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscribeRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetSubscriptionDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionDispatchRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UnsubscribeCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionAuthModeCmd)
 
 	return resourceCmd
 }

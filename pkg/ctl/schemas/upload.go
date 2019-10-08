@@ -19,10 +19,12 @@ package schemas
 
 import (
 	"encoding/json"
-	"github.com/spf13/pflag"
+	"io/ioutil"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"io/ioutil"
+
+	"github.com/spf13/pflag"
 )
 
 func uploadSchema(vc *cmdutils.VerbCmd) {
@@ -35,8 +37,8 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 	upload := pulsar.Example{
 		Desc: "Update the schema for a topic",
 		Command: "pulsarctl schemas upload \n" +
-			"<topic name> \n " +
-			"--filename <the file path of schema>",
+			"(topic name) \n " +
+			"--filename (the file path of schema)",
 	}
 
 	examples = append(examples, upload)
@@ -45,7 +47,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Upload <topic name> successfully",
+		Out:  "Upload (topic name) successfully",
 	}
 
 	notTopicName := pulsar.Output{
@@ -55,7 +57,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 
 	filePathNotExist := pulsar.Output{
 		Desc: "no such file or directory",
-		Out:  "[✖]  open <file path>: no such file or directory",
+		Out:  "[✖]  open (file path): no such file or directory",
 	}
 
 	out = append(out, successOut, notTopicName, filePathNotExist)
@@ -65,6 +67,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 		"upload",
 		"Update the schema for a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"upload",
 	)
 	schemaData := &pulsar.SchemaData{}

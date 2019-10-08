@@ -1,28 +1,46 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package cluster
 
 import (
-	"errors"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 )
 
 func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for creating a failure domain of the <cluster-name>."
+	desc.CommandUsedFor = "This command is used for creating a failure domain of the (cluster-name)."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
 		Desc:    "create the failure domain",
-		Command: "pulsarctl clusters create-failure-domain <cluster-name> <domain-name>",
+		Command: "pulsarctl clusters create-failure-domain (cluster-name) (domain-name)",
 	}
 	examples = append(examples, create)
 
 	createWithBrokers := pulsar.Example{
 		Desc: "create the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain" +
-			" -b <broker-ip>:<broker-port> -b <broker-ip>:<broker-port> <cluster-name> <domain-name>",
+			" -b (broker-ip):(broker-port) -b (broker-ip):(broker-port) (cluster-name) (domain-name)",
 	}
 	examples = append(examples, createWithBrokers)
 	desc.CommandExamples = examples
@@ -30,12 +48,12 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Create failure domain <domain-name> for cluster <cluster-name> succeed",
+		Out:  "Create failure domain (domain-name) for cluster (cluster-name) succeed",
 	}
 	out = append(out, successOut)
 
 	argsErrorOut := pulsar.Output{
-		Desc: "the args need to be specified as <cluster-name> <domain-name>",
+		Desc: "the args need to be specified as (cluster-name) (domain-name)",
 		Out:  "[✖]  need specified two names for cluster and failure domain",
 	}
 	out = append(out, argsErrorOut)
@@ -46,6 +64,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 		"create-failure-domain",
 		"Create a failure domain",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"cfd")
 
 	var failureDomainData pulsar.FailureDomainData

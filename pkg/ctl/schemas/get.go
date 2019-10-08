@@ -18,9 +18,10 @@
 package schemas
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getSchema(vc *cmdutils.VerbCmd) {
@@ -38,12 +39,12 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	del := pulsar.Example{
 		Desc:    "Get the schema for a topic",
-		Command: "pulsarctl schemas get <topic name>",
+		Command: "pulsarctl schemas get (topic name)",
 	}
 
 	delWithVersion := pulsar.Example{
 		Desc: "Get the schema for a topic with version",
-		Command: "pulsarctl schemas get <topic name> \n" +
+		Command: "pulsarctl schemas get (topic name) \n" +
 			"\t--version 2",
 	}
 
@@ -93,6 +94,14 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, failOut, notTopicName)
 	desc.CommandOutput = out
 
+	vc.SetDescription(
+		"get",
+		"Get the schema for a topic",
+		desc.ToString(),
+		desc.ExampleToString(),
+		"get",
+	)
+
 	schemaData := &pulsar.SchemaData{}
 
 	vc.SetRunFuncWithNameArg(func() error {
@@ -121,7 +130,7 @@ func doGetSchema(vc *cmdutils.VerbCmd, schemaData *pulsar.SchemaData) error {
 	}
 	info, err := admin.Schemas().GetSchemaInfoByVersion(topic, schemaData.Version)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), info)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
 	}
 
 	return err

@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func getTopics(vc *cmdutils.VerbCmd) {
@@ -32,7 +33,7 @@ func getTopics(vc *cmdutils.VerbCmd) {
 
 	topics := pulsar.Example{
 		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+		Command: "pulsarctl namespaces topics (tenant/namespace)",
 	}
 
 	examples = append(examples, topics)
@@ -47,27 +48,29 @@ func getTopics(vc *cmdutils.VerbCmd) {
 			"+-------------+",
 	}
 
-	notTenantName := pulsar.Output{
+	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  only one argument is allowed to be used as a name",
 	}
 
-	notExistTenantName := pulsar.Output{
-		Desc: "the tenant name not exist, please check the tenant name",
+	tenantNotExistError := pulsar.Output{
+		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	notExistNsName := pulsar.Output{
-		Desc: "the namespace name not exist, please check the namespace name",
-		Out:  "[✖]  code: 404 reason: Namespace does not exist",
+	nsNotExistError := pulsar.Output{
+		Desc: "the namespace does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	out = append(out, successOut, notTenantName, notExistNsName, notExistTenantName)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
+	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"topics",
 		"Get the list of topics for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"topics",
 	)
 
