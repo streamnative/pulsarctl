@@ -19,12 +19,11 @@ package info
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-var normalOutput =
-`{
+var normalOutput = `{
   "version": 1,
   "creationDate": "",
   "modificationData": "",
@@ -57,37 +56,40 @@ var normalOutput =
 }
 `
 
-func GetInternalInfoCmd(vc *cmdutils.VerbCmd)  {
-	var desc LongDescription
+func GetInternalInfoCmd(vc *cmdutils.VerbCmd) {
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the internal info of a topic " +
 		"which has messages or subscriptions."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	get := Example{
-		Desc: "Get the internal info of a topic <topic-name>",
+	var examples []pulsar.Example
+	get := pulsar.Example{
+		Desc:    "Get the internal info of a topic <topic-name>",
 		Command: "pulsarctl topic internal-info <topic-name>",
 	}
-	desc.CommandExamples = append(examples, get)
+	examples = append(examples, get)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: normalOutput,
+		Out:  normalOutput,
 	}
 
-	failOut := Output{
+	failOut := pulsar.Output{
 		Desc: "the specified topic does not exist",
-		Out: "[✖]  code: 500 reason: Unknown pulsar error",
+		Out:  "[✖]  code: 500 reason: Unknown pulsar error",
 	}
-	out = append(out, successOut, ArgError, failOut)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError, failOut)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
-	
+
 	vc.SetDescription("internal-info",
 		"Get the topic internal info",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString(),
+	)
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetInternalInfo(vc)
@@ -100,7 +102,7 @@ func doGetInternalInfo(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -108,7 +110,7 @@ func doGetInternalInfo(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	info, err := admin.Topics().GetInternalInfo(*topic)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), info)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
 	}
 
 	return err

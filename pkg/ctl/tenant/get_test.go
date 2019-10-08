@@ -19,9 +19,11 @@ package tenant
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetTenantCmd(t *testing.T) {
@@ -49,7 +51,7 @@ func TestGetTenantArgsError(t *testing.T) {
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
-func TestGetNonExistTenant(t *testing.T)  {
+func TestGetNonExistTenant(t *testing.T) {
 	args := []string{"get", "non-existent-tenant"}
 	_, execErr, _, _ := TestTenantCommands(getTenantCmd, args)
 	assert.NotNil(t, execErr)

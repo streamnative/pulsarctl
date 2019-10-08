@@ -17,10 +17,12 @@
 
 package pulsar
 
-import "strings"
+import (
+	"strings"
+)
 
 var SPACES = "    "
-var USED_FOR = "USED FOR:"
+var USEDFOR = "USED FOR:"
 var PERMISSION = "REQUIRED PERMISSION:"
 var EXAMPLES = "EXAMPLES:"
 var OUTPUT = "OUTPUT:"
@@ -43,17 +45,15 @@ type Output struct {
 }
 
 func (desc *LongDescription) ToString() string {
-	return USED_FOR + "\n" +
+	return USEDFOR + "\n" +
 		SPACES + desc.CommandUsedFor + "\n\n" +
 		PERMISSION + "\n" +
 		SPACES + desc.CommandPermission + "\n\n" +
-		EXAMPLES + "\n" +
-		desc.exampleToString() +
 		OUTPUT + "\n" +
 		desc.outputToString()
 }
 
-func (desc *LongDescription) exampleToString() string {
+func (desc *LongDescription) ExampleToString() string {
 	var result string
 	for _, v := range desc.CommandExamples {
 		result += SPACES + "#" + v.Desc + "\n" + SPACES + v.Command + "\n\n"

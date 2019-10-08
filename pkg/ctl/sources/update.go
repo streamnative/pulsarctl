@@ -18,10 +18,11 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updateSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -47,14 +48,14 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Update a Pulsar IO source connector with schema type",
 		Command: "pulsarctl source create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	updateWithParallelism := pulsar.Example{
 		Desc: "Update a Pulsar IO source connector with parallelism",
 		Command: "pulsarctl source create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	updateWithResource := pulsar.Example{
@@ -63,28 +64,29 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
 	updateWithSourceConfig := pulsar.Example{
 		Desc: "Update a Pulsar IO source connector with source config",
 		Command: "pulsarctl source create \n" +
 			"\t--source-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other source parameters ",
+			"\t// Other source parameters ",
 	}
 
-	examples = append(examples, update, updateWithSourceConfig, updateWithResource, updateWithParallelism, updateWithSchema)
+	examples = append(examples, update, updateWithSourceConfig,
+		updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Updated <the name of a Pulsar Source> successfully",
+		Out:  "Updated (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -94,6 +96,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a Pulsar IO source connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update",
 	)
 
@@ -152,8 +155,8 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.SchemaType,
 			"schema-type",
 			"",
-			"The schema type (either a builtin schema like 'avro', 'json', etc.. \n"+
-				"or custom Schema class name to be used to encode messages emitted from the source")
+			"The schema type (either a builtin schema like 'avro', 'json', etc.. or custom "+
+				"Schema class name to be used to encode messages emitted from the source")
 
 		flagSet.IntVar(
 			&sourceData.Parallelism,
@@ -166,7 +169,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"archive",
 			"a",
 			"",
-			"The path to the NAR archive for the Source. It also supports url-path [http/https/file \n"+
+			"The path to the NAR archive for the Source. It also supports url-path [http/https/file "+
 				"(file protocol assumes that file already exists on worker host)] from which worker can download the package")
 
 		flagSet.StringVar(
@@ -185,22 +188,20 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			&sourceData.CPU,
 			"cpu",
 			0.0,
-			"The CPU (in cores) that needs to be allocated per source instance\n"+
-				" (applicable only to Docker runtime)")
+			"The CPU (in cores) that needs to be allocated per source instance (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sourceData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per source instance \n"+
-				"(applicable only to the process and Docker runtimes)")
+			"The RAM (in bytes) that need to be allocated per source instance (applicable only to the "+
+				"process and Docker runtimes)")
 
 		flagSet.Int64Var(
 			&sourceData.Disk,
 			"disk",
 			0,
-			"The disk (in bytes) that need to be allocated per source instance \n"+
-				" (applicable only to Docker runtime)")
+			"The disk (in bytes) that need to be allocated per source instance (applicable only to Docker runtime)")
 
 		flagSet.StringVar(
 			&sourceData.SourceConfigFile,
@@ -219,17 +220,18 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 
 	checkArgsForUpdate(sourceData.SourceConf)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	updateOptions := pulsar.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sourceData.UpdateAuthData
 
-	if utils.IsPackageUrlSupported(sourceData.Archive) {
-		err = admin.Sources().UpdateSourceWithUrl(sourceData.SourceConf, sourceData.Archive, updateOptions)
+	if utils.IsPackageURLSupported(sourceData.Archive) {
+		err = admin.Sources().UpdateSourceWithURL(sourceData.SourceConf, sourceData.Archive, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully ",
+				sourceData.InstanceID, sourceData.Name)
 		}
 	} else {
 		err = admin.Sources().UpdateSource(sourceData.SourceConf, sourceData.Archive, updateOptions)

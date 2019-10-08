@@ -18,8 +18,9 @@
 package namespace
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
+	"github.com/spf13/cobra"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {

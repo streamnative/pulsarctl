@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
@@ -32,7 +33,7 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 
 	list := pulsar.Example{
 		Desc:    "Get the list of namespaces of a tenant",
-		Command: "pulsarctl namespaces list <tenant name>",
+		Command: "pulsarctl namespaces list (tenant name)",
 	}
 
 	examples = append(examples, list)
@@ -66,6 +67,7 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 		"list",
 		"Get the list of namespaces of a tenant",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"list",
 	)
 

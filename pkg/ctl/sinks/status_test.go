@@ -20,10 +20,12 @@ package sinks
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusSink(t *testing.T) {
@@ -52,7 +54,7 @@ func TestStatusSink(t *testing.T) {
 		"--name", "test-sink-status",
 	}
 
-	outStatus := new(bytes.Buffer)
+	var outStatus *bytes.Buffer
 	var status pulsar.SinkStatus
 
 	for {

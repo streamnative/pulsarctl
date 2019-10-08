@@ -18,10 +18,11 @@
 package sinks
 
 import (
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
 )
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
@@ -57,6 +58,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"Get the list of all the running Pulsar IO sink connectors",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"list",
 	)
 
@@ -86,7 +88,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 func doListSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 	processNamespaceCmd(sinkData)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

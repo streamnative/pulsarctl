@@ -19,9 +19,11 @@ package cluster
 
 import (
 	"encoding/json"
-	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func getClusterDataCmd(vc *cmdutils.VerbCmd) {
@@ -31,8 +33,8 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "getting the <cluster-name> data",
-		Command: "pulsarctl clusters get <cluster-name>",
+		Desc:    "getting the (cluster-name) data",
+		Command: "pulsarctl clusters get (cluster-name)",
 	}
 	examples = append(examples, get)
 
@@ -58,6 +60,7 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Get the configuration data for the specified cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get")
 
 	vc.SetRunFuncWithNameArg(func() error {

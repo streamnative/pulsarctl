@@ -18,10 +18,11 @@
 package cluster
 
 import (
-	"errors"
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 )
 
 var argsError = pulsar.Output{
@@ -31,7 +32,7 @@ var argsError = pulsar.Output{
 
 var clusterNonExist = pulsar.Output{
 	Desc: "the specified cluster does not exist in the broker",
-	Out:  "[✖]  code: 412 reason: Cluster <cluster-name> does not exist.",
+	Out:  "[✖]  code: 412 reason: Cluster (cluster-name) does not exist.",
 }
 
 var failureDomainArgsError = pulsar.Output{

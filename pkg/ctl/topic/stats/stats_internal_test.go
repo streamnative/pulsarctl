@@ -19,20 +19,22 @@ package stats
 
 import (
 	"encoding/json"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetInternalStatsCmd(t *testing.T) {
 	args := []string{"create", "test-topic-internal-stats", "0"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"internal-stats", "test-topic-internal-stats"}
-	out, execErr, _, _ := TestTopicCommands(GetInternalStatsCmd, args)
+	out, execErr, _, _ := test.TestTopicCommands(GetInternalStatsCmd, args)
 	assert.Nil(t, execErr)
 
 	var stats pulsar.PersistentTopicInternalStats
@@ -64,25 +66,25 @@ func TestGetInternalStatsCmd(t *testing.T) {
 
 func TestGetPartitionedTopicInternalStatsError(t *testing.T) {
 	args := []string{"create", "test-partitioned-topic-internal-stats-error", "2"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(crud.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"internal-stats", "test-partitioned-topic-internal-stats-error"}
-	_, execErr, _, _ = TestTopicCommands(GetInternalStatsCmd, args)
+	_, execErr, _, _ = test.TestTopicCommands(GetInternalStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }
 
 func TestGetInternalStatsArgsError(t *testing.T) {
 	args := []string{"internal-stats"}
-	_, _, nameErr, _ := TestTopicCommands(GetInternalStatsCmd, args)
+	_, _, nameErr, _ := test.TestTopicCommands(GetInternalStatsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
 func TestGetNonExistingTopic(t *testing.T) {
 	args := []string{"internal-stats", "non-existing-topic"}
-	_, execErr, _, _ := TestTopicCommands(GetInternalStatsCmd, args)
+	_, execErr, _, _ := test.TestTopicCommands(GetInternalStatsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

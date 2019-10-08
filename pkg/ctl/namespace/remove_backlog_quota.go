@@ -53,7 +53,7 @@ func removeBacklogQuota(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -63,6 +63,7 @@ func removeBacklogQuota(vc *cmdutils.VerbCmd) {
 		"remove-backlog-quota",
 		"Remove a backlog quota policy from a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"remove-backlog-quota",
 	)
 
