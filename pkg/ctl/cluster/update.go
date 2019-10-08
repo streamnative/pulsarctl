@@ -1,45 +1,63 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
-func updateClusterCmd(vc *cmdutils.VerbCmd) {
+func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the cluster data of the specified cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
 
-	updateUrl := pulsar.Example{
-		Desc:    "updating the web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --url http://example:8080 <cluster-name>",
+	updateURL := pulsar.Example{
+		Desc:    "updating the web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --url http://example:8080 (cluster-name)",
 	}
-	examples = append(examples, updateUrl)
+	examples = append(examples, updateURL)
 
-	updateUrlTls := pulsar.Example{
-		Desc:    "updating the tls secured web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --url-tls https://example:8080 <cluster-name>",
+	updateURLTLS := pulsar.Example{
+		Desc:    "updating the tls secured web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --url-tls https://example:8080 (cluster-name)",
 	}
-	examples = append(examples, updateUrlTls)
+	examples = append(examples, updateURLTLS)
 
-	updateBrokerUrl := pulsar.Example{
-		Desc:    "updating the broker service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 <cluster-name>",
+	updateBrokerURL := pulsar.Example{
+		Desc:    "updating the broker service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 (cluster-name)",
 	}
-	examples = append(examples, updateBrokerUrl)
+	examples = append(examples, updateBrokerURL)
 
-	updateBrokerUrlTls := pulsar.Example{
-		Desc:    "updating the tls secured web service url of the <cluster-name>",
-		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 <cluster-name>",
+	updateBrokerURLTLS := pulsar.Example{
+		Desc:    "updating the tls secured web service url of the (cluster-name)",
+		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 (cluster-name)",
 	}
-	examples = append(examples, updateBrokerUrlTls)
+	examples = append(examples, updateBrokerURLTLS)
 
 	updatePeerCluster := pulsar.Example{
-		Desc:    "registered as a peer-cluster of the <cluster-name> clusters",
-		Command: "pulsarctl clusters update -p <cluster-a> -p <cluster-b> <cluster>",
+		Desc:    "registered as a peer-cluster of the (cluster-name) clusters",
+		Command: "pulsarctl clusters update -p (cluster-a) -p (cluster-b) (cluster)",
 	}
 	examples = append(examples, updatePeerCluster)
 
@@ -48,7 +66,7 @@ func updateClusterCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Cluster <cluster-name> updated",
+		Out:  "Cluster (cluster-name) updated",
 	}
 	out = append(out, successOut)
 	out = append(out, argsError)
@@ -59,6 +77,7 @@ func updateClusterCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update")
 
 	clusterData := &pulsar.ClusterData{}

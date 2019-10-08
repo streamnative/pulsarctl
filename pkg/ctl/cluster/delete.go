@@ -1,3 +1,20 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package cluster
 
 import (
@@ -12,8 +29,8 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	delete := pulsar.Example{
-		Desc:    "deleting the cluster named <cluster-name>",
-		Command: "pulsarctl clusters delete <cluster-name>",
+		Desc:    "deleting the cluster named (cluster-name)",
+		Command: "pulsarctl clusters delete (cluster-name)",
 	}
 	examples = append(examples, delete)
 	desc.CommandExamples = examples
@@ -21,7 +38,7 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Cluster <cluster-name> delete successfully.",
+		Out:  "Cluster (cluster-name) delete successfully.",
 	}
 	out = append(out, successOut)
 	out = append(out, argsError)
@@ -32,6 +49,7 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete an existing cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete")
 
 	vc.SetRunFuncWithNameArg(func() error {

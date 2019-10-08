@@ -18,10 +18,12 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +37,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 	examples = append(examples, status)
 
@@ -82,7 +84,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	failOutWithWrongInstanceID := pulsar.Output{
@@ -97,6 +99,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Check the current status of a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 
@@ -147,23 +150,24 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {
 			return err
 		}
-		functionInstanceStatusData, err := admin.Functions().GetFunctionStatusWithInstanceID(funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
+		functionInstanceStatusData, err := admin.Functions().GetFunctionStatusWithInstanceID(
+			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionInstanceStatusData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionInstanceStatusData)
 	} else {
 		functionStatus, err := admin.Functions().GetFunctionStatus(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionStatus)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionStatus)
 	}
 
 	return err

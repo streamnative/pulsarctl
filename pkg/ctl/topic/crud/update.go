@@ -1,50 +1,71 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package crud
 
 import (
-	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 	"strconv"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the partition number of an exist topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
-	var examples []Example
-	updateTopic := Example{
+	var examples []pulsar.Example
+	updateTopic := pulsar.Example{
 		Desc:    "",
-		Command: "pulsarctl topics update <topic-name> <partition-num>",
+		Command: "pulsarctl topics update (topic-name) (partition-num)",
 	}
-	desc.CommandExamples = append(examples, updateTopic)
+	examples = append(examples, updateTopic)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Update topic <topic-name> with <partition-num> partitions successfully",
+		Out:  "Update topic (topic-name) with (partition-num) partitions successfully",
 	}
 
-	topicNotExist := Output{
+	topicNotExist := pulsar.Output{
 		Desc: "the topic is not exist",
 		Out:  "[✖]  code: 409 reason: Topic is not partitioned topic",
 	}
-	out = append(out, successOut, ArgsError, InvalidPartitionsNumberError, topicNotExist)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgsError, e.InvalidPartitionsNumberError, topicNotExist)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"update",
 		"Update partitioned topic partitions",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"up")
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doUpdateTopic(vc)
-	}, CheckTopicNameTwoArgs)
+	}, args.CheckTopicNameTwoArgs)
 }
 
 func doUpdateTopic(vc *cmdutils.VerbCmd) error {
@@ -53,7 +74,7 @@ func doUpdateTopic(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArgs[0])
+	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

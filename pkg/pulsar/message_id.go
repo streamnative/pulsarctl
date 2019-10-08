@@ -1,3 +1,19 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
 package pulsar
 
 import (
@@ -7,16 +23,16 @@ import (
 	"github.com/pkg/errors"
 )
 
-type MessageId struct {
-	LedgerId       int64 `json:"ledgerId"`
-	EntryId        int64 `json:"entryId"`
-	PartitionIndex int   `json:"partitionIndex"`
+type MessageID struct {
+	LedgerID         int64 `json:"ledgerId"`
+	EntryID          int64 `json:"entryId"`
+	PartitionedIndex int   `json:"partitionedIndex"`
 }
 
-var Latest = MessageId{0x7fffffffffffffff, 0x7fffffffffffffff, -1}
-var Earliest = MessageId{-1, -1, -1}
+var Latest = MessageID{0x7fffffffffffffff, 0x7fffffffffffffff, -1}
+var Earliest = MessageID{-1, -1, -1}
 
-func ParseMessageId(str string) (*MessageId, error) {
+func ParseMessageId(str string) (*MessageID, error) {
 	s := strings.Split(str, ":")
 	if len(s) != 2 {
 		return nil, errors.Errorf("Invalid message id string. %s", str)
@@ -32,5 +48,5 @@ func ParseMessageId(str string) (*MessageId, error) {
 		return nil, errors.Errorf("Invalid entry id string. %s", str)
 	}
 
-	return &MessageId{LedgerId: ledgerId, EntryId: entryId, PartitionIndex: -1}, nil
+	return &MessageID{LedgerID: ledgerId, EntryID: entryId, PartitionIndex: -1}, nil
 }
