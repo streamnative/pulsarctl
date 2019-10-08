@@ -22,41 +22,44 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for clearing backlog for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	clear := Example{
+	var examples []pulsar.Example
+	clear := pulsar.Example{
 		Desc:    "Clear backlog for all topics of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces clear-backlog <namespace-name>",
 	}
 
-	clearWithBundle := Example{
+	clearWithBundle := pulsar.Example{
 		Desc:    "Clear backlog for all topic of the namespace <namespace-name> with a bundle range <bundle>",
 		Command: "pulsarctl namespaces clear-backlog --bundle <bundle> <namespace-name>",
 	}
 
-	clearWithSubName := Example{
+	clearWithSubName := pulsar.Example{
 		Desc: "Clear the specified subscription <subscription-name> backlog for all topics of the " +
 			"namespace <namespace-name>",
 		Command: "pulsarctl namespaces clear-backlog --subscription <subscription-name> <namespace-name>",
 	}
-	desc.CommandExamples = append(examples, clear, clearWithBundle, clearWithSubName)
+	examples = append(examples, clear, clearWithBundle, clearWithSubName)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Successfully clear backlog for all topics of the namespace <namespace-name>",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
-	out = append(out, NsNotExistError)
+	out = append(out, NsErrors...)
+	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"clear-backlog",
@@ -85,19 +88,23 @@ func doClearBacklog(vc *cmdutils.VerbCmd, sName, bundle string, force bool) (err
 			return nil
 		}
 	}
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	if sName != "" && bundle != "" {
-		err = admin.Namespaces().ClearNamespaceBundleBacklogForSubscription(*ns, bundle, sName)
-	} else if sName != "" {
-		err = admin.Namespaces().ClearNamespaceBacklogForSubscription(*ns, sName)
-	} else if bundle != "" {
+
+	switch {
+	case sName != "":
+		if bundle != "" {
+			err = admin.Namespaces().ClearNamespaceBundleBacklogForSubscription(*ns, bundle, sName)
+		} else {
+			err = admin.Namespaces().ClearNamespaceBacklogForSubscription(*ns, sName)
+		}
+	case bundle != "":
 		err = admin.Namespaces().ClearNamespaceBundleBacklog(*ns, bundle)
-	} else {
+	default:
 		err = admin.Namespaces().ClearNamespaceBacklog(*ns)
 	}
 

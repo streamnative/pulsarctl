@@ -18,27 +18,29 @@
 package namespace
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscription auth mode of a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
-	var examples []Example
-	set := Example{
+	var examples []pulsar.Example
+	set := pulsar.Example{
 		Desc:    "Set the default subscription auth mode <mode> of the namespace <namespace-name>",
 		Command: "pulsarctl namespaces set-subscription-auth-mode --mode <mode> <namespace-name>",
 	}
-	desc.CommandExamples = append(examples, set)
+	examples = append(examples, set)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the default subscription auth mode of namespace <namespace-name> to <mode>",
 	}
@@ -65,12 +67,12 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSubscriptionAuthMode(vc *cmdutils.VerbCmd, mode string) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
-	m, err := ParseSubscriptionAuthMode(mode)
+	m, err := pulsar.ParseSubscriptionAuthMode(mode)
 	if err != nil {
 		return err
 	}

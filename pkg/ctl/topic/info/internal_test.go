@@ -31,7 +31,7 @@ func TestGetInternalInfoArgError(t *testing.T) {
 	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
-func TestGetNonExistingTopicInternalInfo(t *testing.T)  {
+func TestGetNonExistingTopicInternalInfo(t *testing.T) {
 	args := []string{"internal-info", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetInternalInfoCmd, args)
 	assert.NotNil(t, execErr)

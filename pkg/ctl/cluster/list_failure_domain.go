@@ -38,7 +38,7 @@ func listFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "output example",
-		Out:  "{\n" +
+		Out: "{\n" +
 			"  \"failure-domain\": {\n" +
 			"    \"brokers\": [\n" +
 			"      \"failure-broker-A\",\n" +
@@ -74,7 +74,7 @@ func doListFailureDomain(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	domainData, err := admin.Clusters().ListFailureDomains(clusterName)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), domainData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), domainData)
 	}
 	return err
 }

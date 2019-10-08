@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteNsCmd(t *testing.T) {

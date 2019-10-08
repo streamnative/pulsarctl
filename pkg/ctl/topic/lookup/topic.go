@@ -19,24 +19,25 @@ package lookup
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func LookupTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+func TopicCmd(vc *cmdutils.VerbCmd) {
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for looking up the owner broker of a topic."
 	desc.CommandPermission = "This command does not require permissions. "
 
-	var examples []Example
-	lookup := Example{
+	var examples []pulsar.Example
+	lookup := pulsar.Example{
 		Desc:    "Lookup the owner broker of the topic <topic-name>",
 		Command: "pulsarctl topic lookup <topic-name>",
 	}
-	desc.CommandExamples = append(examples, lookup)
+	examples = append(examples, lookup)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "",
 		Out: "{\n" +
 			"  \"brokerUlr\": \"\",\n" +
@@ -45,9 +46,9 @@ func LookupTopicCmd(vc *cmdutils.VerbCmd) {
 			"  \"httpUrlTls\": \"\",\n" +
 			"}",
 	}
-	out = append(out, successOut, ArgError)
-	out = append(out, TopicNameErrors...)
-	out  = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -67,7 +68,7 @@ func doLookupTopic(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -75,7 +76,7 @@ func doLookupTopic(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	lookup, err := admin.Topics().Lookup(*topic)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), lookup)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), lookup)
 	}
 	return err
 }
