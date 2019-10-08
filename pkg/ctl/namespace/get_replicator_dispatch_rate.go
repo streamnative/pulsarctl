@@ -29,8 +29,8 @@ func GetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "Get the default replicator message dispatch rate of the namespace <namespace-name>",
-		Command: "pulsarctl namespaces get-replicator-dispatch-rate <namespace>",
+		Desc:    "Get the default replicator message dispatch rate of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-replicator-dispatch-rate (namespace)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -51,7 +51,8 @@ func GetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"get-replicator-dispatch-rate",
 		"Get the default replicator message dispatch rate of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetReplicatorDispatchRate(vc)

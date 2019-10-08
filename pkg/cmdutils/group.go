@@ -96,6 +96,11 @@ func (g *FlagGrouping) Usage(cmd *cobra.Command) error {
 		}
 	}
 
+	if cmd.HasExample() {
+		usage = append(usage, "\nExamples:")
+		usage = append(usage, cmd.Example)
+	}
+
 	if len(cmd.Aliases) > 0 {
 		usage = append(usage, "\nAliases: "+cmd.NameAndAliases())
 	}

@@ -36,7 +36,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Functions>",
+			"\t--name (the name of Pulsar Functions)",
 	}
 	examples = append(examples, del)
 
@@ -45,7 +45,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Functions> \n" +
+			"\t--name (the name of Pulsar Functions) \n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, delWithInstanceID)
@@ -81,6 +81,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a Pulsar Function that is running on a Pulsar cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

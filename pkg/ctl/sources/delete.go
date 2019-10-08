@@ -36,7 +36,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source delete \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
@@ -44,12 +44,12 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Deleted <the name of a Pulsar Source> successfully",
+		Out:  "Deleted (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -59,6 +59,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete a Pulsar IO source connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete",
 	)
 

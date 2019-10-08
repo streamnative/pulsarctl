@@ -37,7 +37,7 @@ func unload(vc *cmdutils.VerbCmd) {
 
 	unloadWithBundle := pulsar.Example{
 		Desc:    "Unload a namespace with bundle from the current serving broker",
-		Command: "pulsarctl namespaces unload tenant/namespace --bundle <{start-boundary}_{end-boundary}>",
+		Command: "pulsarctl namespaces unload tenant/namespace --bundle ({start-boundary}_{end-boundary})",
 	}
 	examples = append(examples, unload, unloadWithBundle)
 	desc.CommandExamples = examples
@@ -45,7 +45,7 @@ func unload(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Unload namespace <tenant/namespace> (with bundle <{start-boundary}_{end-boundary}>) successfully ",
+		Out:  "Unload namespace (tenant/namespace) (with bundle ({start-boundary}_{end-boundary})) successfully ",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -60,7 +60,7 @@ func unload(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -70,6 +70,7 @@ func unload(vc *cmdutils.VerbCmd) {
 		"unload",
 		"Unload a namespace from the current serving broker",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"unload",
 	)
 

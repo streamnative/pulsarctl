@@ -30,8 +30,8 @@ func TopicCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	lookup := pulsar.Example{
-		Desc:    "Lookup the owner broker of the topic <topic-name>",
-		Command: "pulsarctl topic lookup <topic-name>",
+		Desc:    "Lookup the owner broker of the topic (topic-name)",
+		Command: "pulsarctl topic lookup (topic-name)",
 	}
 	examples = append(examples, lookup)
 	desc.CommandExamples = examples
@@ -55,6 +55,7 @@ func TopicCmd(vc *cmdutils.VerbCmd) {
 		"lookup",
 		"Look up a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"")
 
 	vc.SetRunFuncWithNameArg(func() error {

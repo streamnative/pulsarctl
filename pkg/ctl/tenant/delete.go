@@ -30,8 +30,8 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	deleteExample := pulsar.Example{
-		Desc:    "delete a tenant named <tenant-name>",
-		Command: "pulsarctl tenants delete <tenant-name>",
+		Desc:    "delete a tenant named (tenant-name)",
+		Command: "pulsarctl tenants delete (tenant-name)",
 	}
 	examples = append(examples, deleteExample)
 	desc.CommandExamples = examples
@@ -44,7 +44,7 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut)
 
 	NonEmptyError := pulsar.Output{
-		Desc: "there has namespace(s) under the tenant <tenant-name>",
+		Desc: "there has namespace(s) under the tenant (tenant-name)",
 		Out:  "code: 409 reason: The tenant still has active namespaces",
 	}
 	out = append(out, tenantNameArgsError, tenantNotExistError, NonEmptyError)
@@ -54,6 +54,7 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"d",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"")
 
 	vc.SetRunFuncWithNameArg(func() error {

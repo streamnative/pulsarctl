@@ -87,7 +87,9 @@ func GetInternalInfoCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription("internal-info",
 		"Get the topic internal info",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString(),
+	)
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetInternalInfo(vc)

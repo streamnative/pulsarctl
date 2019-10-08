@@ -33,8 +33,8 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	set := pulsar.Example{
-		Desc:    "Set the default subscription auth mode <mode> of the namespace <namespace-name>",
-		Command: "pulsarctl namespaces set-subscription-auth-mode --mode <mode> <namespace-name>",
+		Desc:    "Set the default subscription auth mode (mode) of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces set-subscription-auth-mode --mode (mode) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
@@ -51,7 +51,8 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"set-subscription-auth-mode",
 		"Set the default subscription auth mode of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	var mode string
 

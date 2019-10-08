@@ -53,7 +53,7 @@ func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -63,6 +63,7 @@ func deleteAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 		"delete-anti-affinity-group",
 		"Delete an anti-affinity group of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete-anti-affinity-group",
 	)
 

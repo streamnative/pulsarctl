@@ -30,8 +30,8 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
-		Desc:    "Get the permissions of a topic <topic-name>",
-		Command: "pulsarctl topic get-permissions <topic-name>",
+		Desc:    "Get the permissions of a topic (topic-name)",
+		Command: "pulsarctl topic get-permissions (topic-name)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -53,7 +53,9 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"get-permissions",
 		"Get the permissions of a topic",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString(),
+	)
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)

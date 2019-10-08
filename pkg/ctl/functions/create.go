@@ -36,7 +36,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Functions> \n" +
+			"\t--name (the name of Pulsar Functions>) \n" +
 			"\t--inputs test-input-topic  \n" +
 			"\t--output persistent://public/default/test-output-topic \n" +
 			"\t--classname org.apache.pulsar.functions.api.examples.ExclamationFunction \n" +
@@ -47,8 +47,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	createWithConf := pulsar.Example{
 		Desc: "Create a Pulsar Function use function config yaml file",
 		Command: "pulsarctl functions create \n" +
-			"\t--function-config-file <the path of function config yaml file> \n" +
-			"\t--jar <the path of user code jar>",
+			"\t--function-config-file (the path of function config yaml file) \n" +
+			"\t--jar (the path of user code jar)",
 	}
 	examples = append(examples, createWithConf)
 
@@ -57,7 +57,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions create \n" +
 			"\t--tenant public \n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Functions> \n" +
+			"\t--name (the name of Pulsar Functions) \n" +
 			"\t--inputs test-input-topic  \n" +
 			"\t--output persistent://public/default/test-output-topic \n" +
 			"\t--classname org.apache.pulsar.functions.api.examples.ExclamationFunction \n" +
@@ -69,7 +69,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with log topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithLogTopic)
 
@@ -78,7 +78,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions create \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
 			"\t--max-message-retries 10\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithDeadLetterTopic)
 
@@ -86,7 +86,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with auto ack",
 		Command: "pulsarctl functions create \n" +
 			"\t--auto-ack \n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithAutoAck)
 
@@ -94,7 +94,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with FQFN",
 		Command: "pulsarctl functions create \n" +
 			"\t--fqfn tenant/namespace/name eg:public/default/test-fqfn-function\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithFQFN)
 
@@ -102,7 +102,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with topics pattern",
 		Command: "pulsarctl functions create \n" +
 			"\t--topics-pattern persistent://tenant/ns/topicPattern*\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithTopicsPattern)
 
@@ -110,7 +110,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with user config",
 		Command: "pulsarctl functions create \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithUserConfig)
 
@@ -118,7 +118,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with retain ordering",
 		Command: "pulsarctl functions create \n" +
 			"\t--retain-ordering \n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithRetainOrdering)
 
@@ -126,7 +126,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with custom schema for inputs topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithCustomSchemasInputs)
 
@@ -134,7 +134,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with schema type for output topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithSchema)
 
@@ -142,7 +142,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Create a Pulsar Function in cluster mode with parallelism",
 		Command: "pulsarctl functions create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithParallelism)
 
@@ -152,7 +152,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithResource)
 
@@ -163,7 +163,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--window-length-duration-ms 1000\n" +
 			"\t--sliding-interval-count 3\n" +
 			"\t--sliding-interval-duration-ms 1000\n" +
-			"\t# Other function parameters ",
+			"\t// Other function parameters ",
 	}
 	examples = append(examples, createWithWindowFunctions)
 
@@ -172,7 +172,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Created <the name of a Pulsar Function> successfully",
+		Out:  "Created (the name of a Pulsar Function) successfully",
 	}
 
 	out = append(out, successOut)
@@ -182,6 +182,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"create",
 		"",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"create",
 	)
 
@@ -228,39 +229,36 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.Jar,
 			"jar",
 			"",
-			"Path to the JAR file for the function (if the function is written in Java). \n"+
-				"It also supports URL path [http/https/file (file protocol assumes that file \n"+
+			"Path to the JAR file for the function (if the function is written in Java) "+
+				"It also supports URL path [http/https/file (file protocol assumes that file "+
 				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVar(
 			&functionData.Py,
 			"py",
 			"",
-			"Path to the main Python file/Python Wheel file for the function\n"+
-				" (if the function is written in Python)")
+			"Path to the main Python file/Python Wheel file for the function (if the function is written in Python)")
 
 		flagSet.StringVar(
 			&functionData.Go,
 			"go",
 			"",
-			"Path to the main Go executable binary for the function \n"+
-				"(if the function is written in Go)")
+			"Path to the main Go executable binary for the function (if the function is written in Go)")
 
 		flagSet.StringVarP(
 			&functionData.Inputs,
 			"inputs",
 			"i",
 			"",
-			"The input topic or topics (multiple topics can be specified as a comma-separated list) \n"+
-				"of a Pulsar Function")
+			"The input topic or topics (multiple topics can be specified as a comma-separated list) of a Pulsar Function")
 
 		flagSet.StringVar(
 			&functionData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"The topic pattern to consume from list of topics under a namespace that match the pattern. \n"+
-				"[--input] and [--topic-pattern] are mutually exclusive. Add SerDe class name for a pattern in \n"+
-				"--custom-serde-inputs (supported for java fun only)")
+			"The topic pattern to consume from list of topics under a namespace "+
+				"that match the pattern. [--input] and [--topic-pattern] are mutually exclusive. "+
+				"Add SerDe class name for a pattern in --custom-serde-inputs (supported for java fun only)")
 
 		flagSet.StringVarP(
 			&functionData.Output,
@@ -280,8 +278,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"schema-type",
 			"t",
 			"",
-			"The builtin schema type or custom schema class name to be used for \n"+
-				"messages output by the function")
+			"The builtin schema type or custom schema class name to be used for messages output by the function")
 
 		flagSet.StringVar(
 			&functionData.CustomSerDeInputs,
@@ -305,8 +302,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.FunctionConfigFile,
 			"function-config-file",
 			"",
-			"The path to a YAML config file that specifies the configuration \n"+
-				"of a Pulsar Function")
+			"The path to a YAML config file that specifies the configuration of a Pulsar Function")
 
 		flagSet.StringVar(
 			&functionData.ProcessingGuarantees,
@@ -330,8 +326,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.SubsName,
 			"subs-name",
 			"",
-			"Pulsar source subscription name if user wants a specific subscription-name \n"+
-				"for input-topic consumer")
+			"Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
 
 		flagSet.IntVar(
 			&functionData.Parallelism,
@@ -349,13 +344,15 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.RAM,
 			"ram",
 			0,
-			"The ram in bytes that need to be allocated per function instance(applicable only to process/docker runtime)")
+			"The ram in bytes that need to be allocated per function instance"+
+				"(applicable only to process/docker runtime)")
 
 		flagSet.Int64Var(
 			&functionData.Disk,
 			"disk",
 			0,
-			"The disk in bytes that need to be allocated per function instance(applicable only to docker runtime)")
+			"The disk in bytes that need to be allocated per function instance"+
+				"(applicable only to docker runtime)")
 
 		flagSet.IntVar(
 			&functionData.WindowLengthCount,

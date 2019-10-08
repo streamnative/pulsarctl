@@ -38,7 +38,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions start \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 	examples = append(examples, start)
 
@@ -47,7 +47,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions start \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Function>\n" +
+			"\t--name (the name of Pulsar Function)\n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, startWithInstanceID)
@@ -88,6 +88,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"start",
 		"Starts a stopped function instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"start",
 	)
 

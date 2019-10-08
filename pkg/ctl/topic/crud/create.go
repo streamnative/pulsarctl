@@ -35,14 +35,14 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	createNonPartitions := pulsar.Example{
-		Desc:    "Create a non-partitioned topic <topic-name>",
-		Command: "pulsarctl topics create <topic-name> 0",
+		Desc:    "Create a non-partitioned topic (topic-name)",
+		Command: "pulsarctl topics create (topic-name) 0",
 	}
 	examples = append(examples, createNonPartitions)
 
 	create := pulsar.Example{
-		Desc:    "Create a partitioned topic <topic-name> with <partitions-num> partitions",
-		Command: "pulsarctl topics create <topic-name> <partition-num>",
+		Desc:    "Create a partitioned topic (topic-name) with (partitions-num) partitions",
+		Command: "pulsarctl topics create (topic-name) (partition-num)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
@@ -50,7 +50,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Create topic <topic-name> with <partition-num> partitions successfully",
+		Out:  "Create topic (topic-name) with (partition-num) partitions successfully",
 	}
 	out = append(out, successOut, e.ArgsError, e.TopicAlreadyExistError)
 	out = append(out, e.TopicNameErrors...)
@@ -61,6 +61,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 		"create",
 		"Create a topic with n partitions",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"c")
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {

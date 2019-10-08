@@ -30,7 +30,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	police := pulsar.Example{
 		Desc:    "Get the configuration policies of a namespace",
-		Command: "pulsarctl namespaces policies <tenant/namespace>",
+		Command: "pulsarctl namespaces policies (tenant/namespace)",
 	}
 	examples = append(examples, police)
 	desc.CommandExamples = examples
@@ -112,7 +112,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -122,6 +122,7 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 		"policies",
 		"Get the configuration policies of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"policies",
 	)
 
