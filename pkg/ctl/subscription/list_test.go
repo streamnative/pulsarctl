@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package pulsar
+package subscription
 
 import (
 	"testing"
@@ -23,25 +23,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseMessageId(t *testing.T) {
-	id, err := ParseMessageID("1:1")
-	assert.Nil(t, err)
-	assert.Equal(t, MessageID{LedgerID: 1, EntryID: 1, PartitionedIndex: -1}, *id)
+func TestListArgError(t *testing.T) {
+	args := []string{"list"}
+	_, _, nameErr, _ := TestSubCommands(ListCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
 
-func TestParseMessageIdErrors(t *testing.T) {
-	id, err := ParseMessageID("1;1")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid message id string. 1;1", err.Error())
-
-	id, err = ParseMessageID("a:1")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid ledger id string. a:1", err.Error())
-
-	id, err = ParseMessageID("1:a")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid entry id string. 1:a", err.Error())
+func TestListNonExistingTopicSub(t *testing.T) {
+	args := []string{"list", "non-existing-topic"}
+	_, execErr, _, _ := TestSubCommands(ListCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

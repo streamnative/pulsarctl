@@ -1,28 +1,45 @@
-package errors
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
-import . "github.com/streamnative/pulsarctl/pkg/pulsar"
+package subscription
 
-var ArgError = Output{
+import "github.com/streamnative/pulsarctl/pkg/pulsar"
+
+var ArgError = pulsar.Output{
 	Desc: "the topic name is not specified",
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
-var ArgsError = Output{
+var ArgsError = pulsar.Output{
 	Desc: "the topic name and(or) the subscription name is not specified",
 	Out:  "[✖]  need to specified the topic name and the subscription name",
 }
 
-var TopicNotFoundError = Output{
-	Desc: "the specified topic is not exist",
+var TopicNotFoundError = pulsar.Output{
+	Desc: "the specified topic does not exist",
 	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
-var SubNotFoundError = Output{
-	Desc: "the specified subscription is not exist",
+var SubNotFoundError = pulsar.Output{
+	Desc: "the specified subscription does not exist",
 	Out:  "[✖]  code: 404 reason: Subscription not found",
 }
 
-var TopicNameErrors = []Output{
+var TopicNameErrors = []pulsar.Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
 		Out: "[✖]  Invalid short topic name '<topic-name>', it should be " +
@@ -40,7 +57,7 @@ var TopicNameErrors = []Output{
 	},
 }
 
-var NamespaceErrors = []Output{
+var NamespaceErrors = []pulsar.Output{
 	{
 		Desc: "the namespace name is not in the format of <tenant>/<namespace>",
 		Out:  "[✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name>",
@@ -61,7 +78,7 @@ var NamespaceErrors = []Output{
 	},
 }
 
-var MessageIdErrors = []Output{
+var MessageIDErrors = []pulsar.Output{
 	{
 		Desc: "the split of message id is not valid",
 		Out:  "[✖]  Invalid message id string. <message-id>",

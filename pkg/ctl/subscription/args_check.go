@@ -15,33 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package pulsar
+package subscription
 
-import (
-	"testing"
+import "github.com/pkg/errors"
 
-	"github.com/stretchr/testify/assert"
-)
+func CheckSubscriptionNameTwoArgs(args []string) error {
+	if len(args) != 2 {
+		return errors.New("need to specified the topic name and the subscription name")
+	}
 
-func TestParseMessageId(t *testing.T) {
-	id, err := ParseMessageID("1:1")
-	assert.Nil(t, err)
-	assert.Equal(t, MessageID{LedgerID: 1, EntryID: 1, PartitionedIndex: -1}, *id)
-}
-
-func TestParseMessageIdErrors(t *testing.T) {
-	id, err := ParseMessageID("1;1")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid message id string. 1;1", err.Error())
-
-	id, err = ParseMessageID("a:1")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid ledger id string. a:1", err.Error())
-
-	id, err = ParseMessageID("1:a")
-	assert.Nil(t, id)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Invalid entry id string. 1:a", err.Error())
+	return nil
 }

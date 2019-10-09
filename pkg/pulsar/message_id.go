@@ -14,6 +14,7 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
 package pulsar
 
 import (
@@ -32,21 +33,21 @@ type MessageID struct {
 var Latest = MessageID{0x7fffffffffffffff, 0x7fffffffffffffff, -1}
 var Earliest = MessageID{-1, -1, -1}
 
-func ParseMessageId(str string) (*MessageID, error) {
+func ParseMessageID(str string) (*MessageID, error) {
 	s := strings.Split(str, ":")
 	if len(s) != 2 {
 		return nil, errors.Errorf("Invalid message id string. %s", str)
 	}
 
-	ledgerId, err := strconv.ParseInt(s[0], 10, 64)
+	ledgerID, err := strconv.ParseInt(s[0], 10, 64)
 	if err != nil {
 		return nil, errors.Errorf("Invalid ledger id string. %s", str)
 	}
 
-	entryId, err := strconv.ParseInt(s[1], 10, 64)
+	entryID, err := strconv.ParseInt(s[1], 10, 64)
 	if err != nil {
 		return nil, errors.Errorf("Invalid entry id string. %s", str)
 	}
 
-	return &MessageID{LedgerID: ledgerId, EntryID: entryId, PartitionIndex: -1}, nil
+	return &MessageID{LedgerID: ledgerID, EntryID: entryID, PartitionedIndex: -1}, nil
 }

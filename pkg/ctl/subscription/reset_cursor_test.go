@@ -1,11 +1,25 @@
-package messages
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+package subscription
 
 import (
 	"testing"
-	"time"
 
-	. "github.com/streamnative/pulsarctl/pkg/ctl/subscription/crud"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/subscription/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,12 +31,14 @@ func TestResetCursorCmd(t *testing.T) {
 	args = []string{"reset-cursor", "--time", "1m", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Reset the cursor to 1m successfully", out.String())
+	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to 1m successfully",
+		out.String())
 
 	args = []string{"reset-cursor", "--message-id", "-1:-1", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Reset the cursor to -1:-1 successfully", out.String())
+	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to -1:-1 successfully",
+		out.String())
 }
 
 func TestResetCursorArgsError(t *testing.T) {
@@ -36,7 +52,7 @@ func TestResetCursorFlagError(t *testing.T) {
 	args := []string{"reset-cursor", "test-reset-cursor-flag-topic", "flag-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "The reset position must be specified", execErr.Error())
+	assert.Equal(t, "either timestamp or message-id should be specified", execErr.Error())
 }
 
 func TestResetCursorNonExistingTopic(t *testing.T) {
@@ -57,30 +73,4 @@ func TestResetCursorNonExistingSub(t *testing.T) {
 	_, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
-}
-
-func TestParseTime(t *testing.T) {
-	d, err := parseRelativeTimeInSeconds("1s")
-	assert.Nil(t, err)
-	assert.Equal(t, 1*time.Second, d)
-
-	d, err = parseRelativeTimeInSeconds("1m")
-	assert.Nil(t, err)
-	assert.Equal(t, 1*time.Minute, d)
-
-	d, err = parseRelativeTimeInSeconds("1h")
-	assert.Nil(t, err)
-	assert.Equal(t, 1*time.Hour, d)
-
-	d, err = parseRelativeTimeInSeconds("1d")
-	assert.Nil(t, err)
-	assert.Equal(t, 24*time.Hour, d)
-
-	d, err = parseRelativeTimeInSeconds("1w")
-	assert.Nil(t, err)
-	assert.Equal(t, 7*24*time.Hour, d)
-
-	d, err = parseRelativeTimeInSeconds("1y")
-	assert.Nil(t, err)
-	assert.Equal(t, 365*7*24*time.Hour, d)
 }
