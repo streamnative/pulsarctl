@@ -58,7 +58,7 @@ func getBacklogQuota(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -68,6 +68,7 @@ func getBacklogQuota(vc *cmdutils.VerbCmd) {
 		"get-backlog-quotas",
 		"Get the backlog quota policy of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-backlog-quotas",
 	)
 
@@ -81,7 +82,7 @@ func doGetBacklogQuotas(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	backlogQuotasMap, err := admin.Namespaces().GetBacklogQuotaMap(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &backlogQuotasMap)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &backlogQuotasMap)
 	}
 	return err
 }

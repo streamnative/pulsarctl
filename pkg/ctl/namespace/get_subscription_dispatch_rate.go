@@ -19,25 +19,30 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func GetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the default subscription message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []Example
-	get := Example{
-		Desc:    "Get the default subscription message dispatch rate of namespace <namespace-name>",
-		Command: "pulsarctl namespaces get-subscription-dispatch-rate <namespace-name>",
+	var examples []pulsar.Example
+	get := pulsar.Example{
+		Desc:    "Get the default subscription message dispatch rate of namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-subscription-dispatch-rate (namespace-name)",
 	}
-	desc.CommandExamples = append(examples, get)
+	examples = append(examples, get)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "{\n  \"dispatchThrottlingRateInMsg\" : 0,\n  \"dispatchThrottlingRateInByte\" : 0,\n  \"ratePeriodInSecond\" : 1\n}",
+		Out: "{\n" +
+			"  \"dispatchThrottlingRateInMsg\" : 0,\n" +
+			"  \"dispatchThrottlingRateInByte\" : 0,\n" +
+			"  \"ratePeriodInSecond\" : 1\n" +
+			"}",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
@@ -46,7 +51,8 @@ func GetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	vc.SetDescription(
 		"get-subscription-dispatch-rate",
 		"Get the default subscription message dispatch rate of a namespace",
-		desc.ToString())
+		desc.ToString(),
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSubscriptionDispatchRate(vc)
@@ -54,7 +60,7 @@ func GetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetSubscriptionDispatchRate(vc *cmdutils.VerbCmd) error {
-	ns, err := GetNamespaceName(vc.NameArg)
+	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -62,7 +68,7 @@ func doGetSubscriptionDispatchRate(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	rate, err := admin.Namespaces().GetSubscriptionDispatchRate(*ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), rate)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), rate)
 	}
 
 	return err

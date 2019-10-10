@@ -18,12 +18,14 @@
 package crud
 
 import (
-	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"strconv"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/args"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
@@ -33,14 +35,14 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	createNonPartitions := pulsar.Example{
-		Desc:    "Create a non-partitioned topic <topic-name>",
-		Command: "pulsarctl topics create <topic-name> 0",
+		Desc:    "Create a non-partitioned topic (topic-name)",
+		Command: "pulsarctl topics create (topic-name) 0",
 	}
 	examples = append(examples, createNonPartitions)
 
 	create := pulsar.Example{
-		Desc:    "Create a partitioned topic <topic-name> with <partitions-num> partitions",
-		Command: "pulsarctl topics create <topic-name> <partition-num>",
+		Desc:    "Create a partitioned topic (topic-name) with (partitions-num) partitions",
+		Command: "pulsarctl topics create (topic-name) (partition-num)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
@@ -48,22 +50,23 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Create topic <topic-name> with <partition-num> partitions successfully",
+		Out:  "Create topic (topic-name) with (partition-num) partitions successfully",
 	}
-	out = append(out, successOut, ArgsError, TopicAlreadyExistError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgsError, e.TopicAlreadyExistError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"create",
 		"Create a topic with n partitions",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"c")
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doCreateTopic(vc)
-	}, CheckTopicNameTwoArgs)
+	}, args.CheckTopicNameTwoArgs)
 }
 
 func doCreateTopic(vc *cmdutils.VerbCmd) error {

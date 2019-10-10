@@ -24,6 +24,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
 	topic "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+
 	"github.com/stretchr/testify/assert"
 )
 

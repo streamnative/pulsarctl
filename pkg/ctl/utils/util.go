@@ -19,12 +19,14 @@ package utils
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -36,9 +38,9 @@ const (
 	DefaultNamespace = "default"
 )
 
-func IsPackageUrlSupported(functionPkgUrl string) bool {
-	return functionPkgUrl != "" && strings.HasPrefix(functionPkgUrl, HTTP) ||
-		strings.HasPrefix(functionPkgUrl, FILE)
+func IsPackageURLSupported(functionPkgURL string) bool {
+	return functionPkgURL != "" && strings.HasPrefix(functionPkgURL, HTTP) ||
+		strings.HasPrefix(functionPkgURL, FILE)
 }
 
 func InferMissingFunctionName(funcConf *pulsar.FunctionConfig) {
@@ -128,14 +130,14 @@ func ValidateSizeString(s string) (int64, error) {
 
 func ParseRelativeTimeInSeconds(relativeTime string) (time.Duration, error) {
 	if relativeTime == "" {
-		return -1, errors.New("Time can not be empty.")
+		return -1, errors.New("time can not be empty")
 	}
 
 	unitTime := relativeTime[len(relativeTime)-1:]
 	t := relativeTime[:len(relativeTime)-1]
 	timeValue, err := strconv.ParseInt(t, 10, 64)
 	if err != nil {
-		return -1, errors.Errorf("Invalid time '%s'", t)
+		return -1, errors.Errorf("invalid time '%s'", t)
 	}
 
 	switch strings.ToLower(unitTime) {
@@ -152,6 +154,6 @@ func ParseRelativeTimeInSeconds(relativeTime string) (time.Duration, error) {
 	case "y":
 		return time.Duration(timeValue) * time.Hour * 24 * 7 * 365, nil
 	default:
-		return -1, errors.Errorf("Invalid time unit '%s'", unitTime)
+		return -1, errors.Errorf("invalid time unit '%s'", unitTime)
 	}
 }

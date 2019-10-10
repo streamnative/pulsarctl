@@ -18,16 +18,17 @@
 package completion
 
 import (
+	"os"
+
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func Command(rootCmd *cobra.Command) *cobra.Command {
 	var bashCompletionCmd = &cobra.Command{
-		Use:	"bash",
-		Short:	"Generates bash completion scripts",
-		Long: 	`To load completion run
+		Use:   "bash",
+		Short: "Generates bash completion scripts",
+		Long: `To load completion run
 
 . <(pulsarctl completion bash)
 
@@ -46,9 +47,9 @@ source /dev/stdin <<<"$(pulsarctl completion bash)"
 	}
 
 	var zshCompletionCmd = &cobra.Command{
-		Use: 	"zsh",
-		Short: 	"Generates zsh completion scripts",
-		Long: 	`To configure your zsh shell, run:
+		Use:   "zsh",
+		Short: "Generates zsh completion scripts",
+		Long: `To configure your zsh shell, run:
 
 mkdir -p ~/.zsh/completion/
 pulsarctl completion zsh > ~/.zsh/completion/_pulsarctl
@@ -63,8 +64,8 @@ fpath=($fpath ~/.zsh/completion)
 	}
 
 	cmd := &cobra.Command{
-		Use: 	"completion",
-		Short: 	"Generates shell completion scripts",
+		Use:   "completion",
+		Short: "Generates shell completion scripts",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())

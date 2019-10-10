@@ -18,9 +18,10 @@
 package tenant
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func listTenantCmd(vc *cmdutils.VerbCmd) {
@@ -53,6 +54,7 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 		"list",
 		"List all exist tenants",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"l")
 
 	vc.SetRunFunc(func() error {

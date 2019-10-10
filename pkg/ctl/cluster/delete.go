@@ -29,8 +29,8 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	delete := pulsar.Example{
-		Desc:    "deleting the cluster named <cluster-name>",
-		Command: "pulsarctl clusters delete <cluster-name>",
+		Desc:    "deleting the cluster named (cluster-name)",
+		Command: "pulsarctl clusters delete (cluster-name)",
 	}
 	examples = append(examples, delete)
 	desc.CommandExamples = examples
@@ -38,7 +38,7 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Cluster <cluster-name> delete successfully.",
+		Out:  "Cluster (cluster-name) delete successfully.",
 	}
 	out = append(out, successOut)
 	out = append(out, argsError)
@@ -49,6 +49,7 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 		"Delete an existing cluster",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"delete")
 
 	vc.SetRunFuncWithNameArg(func() error {

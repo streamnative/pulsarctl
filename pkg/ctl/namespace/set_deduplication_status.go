@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func setDeduplication(vc *cmdutils.VerbCmd) {
@@ -55,7 +56,7 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -65,6 +66,7 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 		"set-deduplication",
 		"Enable or disable deduplication for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"set-deduplication",
 	)
 

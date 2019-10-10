@@ -55,6 +55,7 @@ func TestStatusSink(t *testing.T) {
 		"--name", "test-sink-status",
 	}
 
+	var outStatus *bytes.Buffer
 	var status pulsar.SinkStatus
 
 	task := func(args []string, obj interface{}) (bool, error) {
