@@ -40,6 +40,9 @@ type Topics interface {
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 	Offload(TopicName, MessageID) error
 	OffloadStatus(TopicName) (OffloadProcessStatus, error)
+	Unload(TopicName) error
+	Compact(TopicName) error
+	CompactStatus(TopicName) (LongRunningProcessStatus, error)
 }
 
 type topics struct {
@@ -215,6 +218,23 @@ func (t *topics) Offload(topic TopicName, messageID MessageID) error {
 func (t *topics) OffloadStatus(topic TopicName) (OffloadProcessStatus, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
 	var status OffloadProcessStatus
-	err := t.client.get(endpoint, &status)
+  err := t.client.get(endpoint, &status)
+	return status, err
+}
+
+func (t *topics) Unload(topic TopicName) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "unload")
+	return t.client.put(endpoint, "")
+}
+
+func (t *topics) Compact(topic TopicName) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	return t.client.put(endpoint, "")
+}
+
+func (t *topics) CompactStatus(topic TopicName) (LongRunningProcessStatus, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	var status LongRunningProcessStatus
+  err := t.client.get(endpoint, &status)
 	return status, err
 }
