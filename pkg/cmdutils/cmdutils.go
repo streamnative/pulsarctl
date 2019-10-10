@@ -28,8 +28,6 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 )
@@ -108,25 +106,22 @@ func PrintError(w io.Writer, err error) {
 	fmt.Fprintln(w, "error:", msg)
 }
 
-func RunFuncWithTimeout(task func([]string, interface{}) (bool, error), condition bool, timeout time.Duration,
+func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, timeout time.Duration,
 	args []string, obj interface{}) error {
 
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
 	result := !condition
-	var err error
 
 	for condition != result {
 		select {
 		case <-time.After(timeout):
 			return errors.New("task timeout")
 		case <-ticker.C:
-			result, err = task(args, obj)
-			if err != nil {
-				return err
-			}
+			result = task(args, obj)
 		}
 	}
+
 	return nil
 }

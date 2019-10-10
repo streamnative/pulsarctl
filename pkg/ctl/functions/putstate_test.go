@@ -61,13 +61,13 @@ func TestStateFunctions(t *testing.T) {
 		"pulsar", "-", "hello",
 	}
 
-	task := func(args []string, obj interface{}) (bool, error) {
+	task := func(args []string, obj interface{}) bool {
 		out, execErr, _ := TestFunctionsCommands(putstateFunctionsCmd, args)
 		if execErr != nil {
-			return false, execErr
+			return false
 		}
 
-		return strings.Contains(out.String(), "successfully"), nil
+		return strings.Contains(out.String(), "successfully")
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)
@@ -89,7 +89,6 @@ func TestStateFunctions(t *testing.T) {
 	_, execErrMsg, _ := TestFunctionsCommands(putstateFunctionsCmd, failureStateArgs)
 	assert.NotNil(t, execErrMsg)
 	exceptMsg := "'not-exist' is not found"
-	t.Logf("error message:%s", execErrMsg.Error())
 	assert.True(t, strings.Contains(execErrMsg.Error(), exceptMsg))
 
 	_, errMsg, _ := TestFunctionsCommands(putstateFunctionsCmd, stateArgsErrInFormat)
@@ -108,7 +107,6 @@ func TestStateFunctions(t *testing.T) {
 
 	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
 	assert.Nil(t, err)
-	t.Logf("outQueryState:%s", outQueryState.String())
 
 	var state pulsar.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
@@ -175,13 +173,12 @@ func TestByteValue(t *testing.T) {
 		"pulsar", "=", file.Name(),
 	}
 
-	task := func(args []string, obj interface{}) (bool, error) {
+	task := func(args []string, obj interface{}) bool {
 		out, execErr, _ := TestFunctionsCommands(putstateFunctionsCmd, args)
 		if execErr != nil {
-			return false, execErr
+			return false
 		}
-
-		return strings.Contains(out.String(), "successfully"), nil
+		return strings.Contains(out.String(), "successfully")
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)

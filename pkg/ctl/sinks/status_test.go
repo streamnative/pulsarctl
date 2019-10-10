@@ -55,22 +55,21 @@ func TestStatusSink(t *testing.T) {
 		"--name", "test-sink-status",
 	}
 
-	var outStatus *bytes.Buffer
 	var status pulsar.SinkStatus
 
-	task := func(args []string, obj interface{}) (bool, error) {
+	task := func(args []string, obj interface{}) bool {
 		outStatus, execErr, _ := TestSinksCommands(statusSinksCmd, args)
 		if execErr != nil {
-			return false, execErr
+			return false
 		}
 
 		err = json.Unmarshal(outStatus.Bytes(), &obj)
 		if err != nil {
-			return false, err
+			return false
 		}
 
 		s := obj.(*pulsar.SinkStatus)
-		return len(s.Instances) == 1 && s.Instances[0].Status.Running == true, nil
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)

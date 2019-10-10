@@ -58,19 +58,17 @@ func TestStatusSource(t *testing.T) {
 
 	var status pulsar.SourceStatus
 
-	task := func(args []string, obj interface{}) (bool, error) {
+	task := func(args []string, obj interface{}) bool {
 		outStatus, execErr, _ := TestSourcesCommands(statusSourcesCmd, args)
 		if execErr != nil {
-			return false, execErr
+			return false
 		}
-
 		err = json.Unmarshal(outStatus.Bytes(), &obj)
 		if err != nil {
-			return false, err
+			return false
 		}
-
 		s := obj.(*pulsar.SourceStatus)
-		return len(s.Instances) == 1 && s.Instances[0].Status.Running == true, nil
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)
