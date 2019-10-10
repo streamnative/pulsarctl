@@ -35,7 +35,7 @@ var TopicAlreadyExistError = pulsar.Output{
 }
 
 var TopicNotFoundError = pulsar.Output{
-	Desc: "the specified topic is not found",
+	Desc: "the specified topic does not exist",
 	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
