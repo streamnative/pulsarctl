@@ -37,7 +37,7 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 
 	disable := pulsar.Example{
 		Desc:    "Disable schema validation enforced",
-		Command: "pulsarctl namespace set-schema-validation-enforced --disable <namespace-name>",
+		Command: "pulsarctl namespaces set-schema-validation-enforced --disable <namespace-name>",
 	}
 	examples = append(examples, enable, disable)
 	desc.CommandExamples = examples

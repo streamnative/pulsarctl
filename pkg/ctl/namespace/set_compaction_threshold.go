@@ -34,7 +34,7 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	set := pulsar.Example{
 		Desc:    "Set the compaction size threshold of the namespace (namespace-name) to (size)",
-		Command: "pulsarctl namespace set-compaction-threshold --size (size) (namespace-name)",
+		Command: "pulsarctl namespaces set-compaction-threshold --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
