@@ -39,6 +39,8 @@ type Topics interface {
 	GetInternalStats(TopicName) (PersistentTopicInternalStats, error)
 	GetPartitionedStats(TopicName, bool) (PartitionedTopicStats, error)
 	Unload(TopicName) error
+	Compact(TopicName) error
+	CompactStatus(TopicName) (LongRunningProcessStatus, error)
 }
 
 type topics struct {
@@ -209,4 +211,15 @@ func (t *topics) GetPartitionedStats(topic TopicName, perPartition bool) (Partit
 func (t *topics) Unload(topic TopicName) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "unload")
 	return t.client.put(endpoint, "")
+}
+func (t *topics) Compact(topic TopicName) error {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	return t.client.put(endpoint, "")
+}
+
+func (t *topics) CompactStatus(topic TopicName) (LongRunningProcessStatus, error) {
+	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
+	var status LongRunningProcessStatus
+	err := t.client.get(endpoint, &status)
+	return status, err
 }

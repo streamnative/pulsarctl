@@ -19,6 +19,7 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/compact"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/info"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
@@ -38,6 +39,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 
 	commands := []func(*cmdutils.VerbCmd){
 		unload.TopicUnloadCmd,
+		compact.StatusCmd,
 		crud.CreateTopicCmd,
 		crud.DeleteTopicCmd,
 		crud.GetTopicCmd,
