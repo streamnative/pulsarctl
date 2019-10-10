@@ -34,7 +34,7 @@ func CreateCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []pulsar.Example
 	create := pulsar.Example{
-		Desc:    "Create a subscription (subscription-name) on a topic (topic-name) from latest",
+		Desc:    "Create a subscription (subscription-name) on a topic (topic-name) from latest position",
 		Command: "pulsarctl subscriptions create (topic-name) (subscription-name)",
 	}
 
@@ -72,7 +72,7 @@ func CreateCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Create Subscription", func(set *pflag.FlagSet) {
 		set.StringVarP(&ID, "messageId", "m", "latest",
 			"message id where the subscription starts from. It can be either 'latest', "+
-				"'earliest or (ledgerId:entryId)")
+				"'earliest' or (ledgerId:entryId)")
 	})
 }
 
