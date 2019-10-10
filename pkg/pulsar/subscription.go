@@ -18,8 +18,16 @@
 package pulsar
 
 import (
+	"bytes"
+	"encoding/binary"
+	"io"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
+
+	"github.com/golang/protobuf/proto"
 )
 
 type Subscriptions interface {
@@ -32,6 +40,7 @@ type Subscriptions interface {
 	SkipMessages(TopicName, string, int64) error
 	ExpireMessages(TopicName, string, int64) error
 	ExpireAllMessages(TopicName, int64) error
+	PeekMessages(TopicName, string, int) ([]*Message, error)
 }
 
 type subscriptions struct {
@@ -101,4 +110,137 @@ func (s *subscriptions) ExpireAllMessages(topic TopicName, expire int64) error {
 		s.basePath, topic.GetRestPath(), "all_subscription",
 		"expireMessages", strconv.FormatInt(expire, 10))
 	return s.client.post(endpoint, "")
+}
+
+func (s *subscriptions) PeekMessages(topic TopicName, sName string, n int) ([]*Message, error) {
+	var msgs []*Message
+
+	count := 1
+	for n > 0 {
+		m, err := s.peekNthMessage(topic, sName, count)
+		if err != nil {
+			return nil, err
+		}
+		msgs = append(msgs, m...)
+		n -= len(m)
+		count++
+	}
+
+	return msgs, nil
+}
+
+func (s *subscriptions) peekNthMessage(topic TopicName, sName string, pos int) ([]*Message, error) {
+	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscription", url.QueryEscape(sName),
+		"position", strconv.Itoa(pos))
+	req, err := s.client.newRequest(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := checkSuccessful(s.client.doRequest(req))
+	if err != nil {
+		return nil, err
+	}
+	defer safeRespClose(resp)
+
+	return handleResp(topic, resp)
+}
+
+const (
+	PublishTimeHeader = "X-Pulsar-Publish-Time"
+	BatchHeader       = "X-Pulsar-Num-Batch-Message"
+	PropertyPrefix    = "X-Pulsar-PROPERTY-"
+)
+
+func handleResp(topic TopicName, resp *http.Response) ([]*Message, error) {
+	msgID := resp.Header.Get("X-Pulsar-Message-ID")
+	ID, err := ParseMessageID(msgID)
+	if err != nil {
+		return nil, err
+	}
+
+	// read data
+	payload, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	properties := make(map[string]string)
+	for k := range resp.Header {
+		switch {
+		case k == PublishTimeHeader:
+			h := resp.Header.Get(k)
+			if h != "" {
+				properties["publish-time"] = h
+			}
+		case k == BatchHeader:
+			h := resp.Header.Get(k)
+			if h != "" {
+				properties[BatchHeader] = h
+			}
+			return getIndividualMsgsFromBatch(topic, ID, payload, properties)
+		case strings.Contains(k, PropertyPrefix):
+			key := strings.TrimPrefix(k, PropertyPrefix)
+			properties[key] = resp.Header.Get(k)
+		}
+	}
+
+	return []*Message{NewMessage(topic.String(), *ID, payload, properties)}, nil
+}
+
+func getIndividualMsgsFromBatch(topic TopicName, msgID *MessageID, data []byte,
+	properties map[string]string) ([]*Message, error) {
+
+	batchSize, err := strconv.Atoi(properties[BatchHeader])
+	if err != nil {
+		return nil, nil
+	}
+
+	msgs := make([]*Message, 0, batchSize)
+
+	// read all messages in batch
+	buf32 := make([]byte, 4)
+	rdBuf := bytes.NewReader(data)
+	for i := 0; i < batchSize; i++ {
+		msgID.BatchIndex = i
+		// singleMetaSize
+		if _, err := io.ReadFull(rdBuf, buf32); err != nil {
+			return nil, err
+		}
+		singleMetaSize := binary.BigEndian.Uint32(buf32)
+
+		// singleMeta
+		singleMetaBuf := make([]byte, singleMetaSize)
+		if _, err := io.ReadFull(rdBuf, singleMetaBuf); err != nil {
+			return nil, err
+		}
+
+		singleMeta := new(SingleMessageMetadata)
+		if err := proto.Unmarshal(singleMetaBuf, singleMeta); err != nil {
+			return nil, err
+		}
+
+		if len(singleMeta.Properties) > 0 {
+			for _, v := range singleMeta.Properties {
+				k := *v.Key
+				property := *v.Value
+				properties[k] = property
+			}
+		}
+
+		//payload
+		singlePayload := make([]byte, singleMeta.GetPayloadSize())
+		if _, err := io.ReadFull(rdBuf, singlePayload); err != nil {
+			return nil, err
+		}
+
+		msgs = append(msgs, &Message{
+			topic:      topic.String(),
+			messageID:  *msgID,
+			payload:    singlePayload,
+			properties: properties,
+		})
+	}
+
+	return msgs, nil
 }

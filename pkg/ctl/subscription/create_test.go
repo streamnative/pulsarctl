@@ -46,7 +46,7 @@ func TestCreateCmd(t *testing.T) {
 	args = []string{"create", "--messageId", "-1", "test-sub-topic", "test-sub-invalid-messageId"}
 	_, execErr, _, _ = TestSubCommands(CreateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "Invalid message id string. -1", execErr.Error())
+	assert.Equal(t, "invalid position value : -1", execErr.Error())
 
 	args = []string{"list", "test-sub-topic"}
 	out, execErr, _, _ = TestSubCommands(ListCmd, args)

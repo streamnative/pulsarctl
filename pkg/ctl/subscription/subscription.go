@@ -37,6 +37,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		ExpireCmd,
 		ResetCursorCmd,
 		SkipCmd,
+		PeekCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, command...)

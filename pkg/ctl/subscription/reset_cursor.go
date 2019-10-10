@@ -18,6 +18,7 @@
 package subscription
 
 import (
+	"strings"
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -122,6 +123,9 @@ func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {
 
 		return err
 	case mID != "":
+		if len(strings.Split(mID, ":")) != 2 {
+			return errors.Errorf("invalid position value : %s", mID)
+		}
 		id, err := pulsar.ParseMessageID(mID)
 		if err != nil {
 			return err

@@ -18,6 +18,9 @@
 package subscription
 
 import (
+	"strings"
+
+	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
@@ -93,6 +96,10 @@ func doCreate(vc *cmdutils.VerbCmd, id string) error {
 	case "earliest":
 		messageID = pulsar.Earliest
 	default:
+		s := strings.Split(id, ":")
+		if len(s) != 2 {
+			return errors.Errorf("invalid position value : %s", id)
+		}
 		i, err := pulsar.ParseMessageID(id)
 		if err != nil {
 			return err
