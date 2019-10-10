@@ -125,6 +125,6 @@ func TestGrantPermissionArgError(t *testing.T) {
 	}
 	_, execErr, _, _ = test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "The auth action  only can be specified as 'produce', "+
+	assert.Equal(t, "The auth action only can be specified as 'produce', "+
 		"'consume', or 'functions'. Invalid auth action 'args-error-action'", execErr.Error())
 }
