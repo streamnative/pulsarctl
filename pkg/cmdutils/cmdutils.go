@@ -24,6 +24,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
@@ -103,4 +104,24 @@ func PrintError(w io.Writer, err error) {
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)
+}
+
+func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, timeout time.Duration,
+	args []string, obj interface{}) error {
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	result := !condition
+
+	for condition != result {
+		select {
+		case <-time.After(timeout):
+			return errors.New("task timeout")
+		case <-ticker.C:
+			result = task(args, obj)
+		}
+	}
+
+	return nil
 }

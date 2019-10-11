@@ -24,6 +24,11 @@ var ArgError = pulsar.Output{
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
+var AuthNotEnable = pulsar.Output{
+	Desc: "the authorization is not enabled",
+	Out:  "[✖]  code: 501 reason: Authorization is not enabled",
+}
+
 var NsNotExistError = pulsar.Output{
 	Desc: "the specified namespace name does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",

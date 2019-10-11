@@ -15,32 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package pulsar
+package namespace
 
-import "github.com/pkg/errors"
+import (
+	"testing"
 
-type AuthAction string
-
-const (
-	produce       AuthAction = "produce"
-	consume       AuthAction = "consume"
-	functionsAuth AuthAction = "functions"
+	"github.com/stretchr/testify/assert"
 )
 
-func ParseAuthAction(action string) (AuthAction, error) {
-	switch action {
-	case "produce":
-		return produce, nil
-	case "consume":
-		return consume, nil
-	case "functions":
-		return functionsAuth, nil
-	default:
-		return "", errors.Errorf("The auth action only can be specified as 'produce', "+
-			"'consume', or 'functions'. Invalid auth action '%s'", action)
-	}
-}
+func TestRevokePermissionsArgsError(t *testing.T) {
+	ns := "public/revoke-permissions-args-tests"
 
-func (a AuthAction) String() string {
-	return string(a)
+	args := []string{"revoke-permission", ns}
+	_, _, _, err := TestNamespaceCommands(RevokePermissionsCmd, args)
+	assert.NotNil(t, err)
+	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
+
+	args = []string{"revoke-permission", "--role", "test-role"}
+	_, _, nameErr, _ := TestNamespaceCommands(RevokePermissionsCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
