@@ -21,7 +21,7 @@
 
 # 如何添加一个新命令
 
-Pulsarctl 是使用 go 语言编写的一个命令行工具，可以帮助管理员和用户管理 clusters、tenants、namespaces、topics、schemas、source、sink、functions 等相关的命令。  
+pulsarctl 是使用 go 语言编写的一个命令行工具，可以帮助管理员和用户管理 clusters、tenants、namespaces、topics、schemas、source、sink、functions 等相关的命令。  
 
 ## 工程结构
 
@@ -46,22 +46,22 @@ Pulsarctl 是使用 go 语言编写的一个命令行工具，可以帮助管理
 └── test
 ```
 
-- `pkg` 用来存放 Pulsarctl 相关的 libraries, 有四个子目录, 详情如下：
+- `pkg` 用来存放 pulsarctl 相关的 libraries, 有四个子目录, 详情如下：
     - `auth` 用来存储加密相关的代码
     - `cmdutils` 对 cobra 进行了简单封装，
-    - `ctl` 用来存放 Pulsarctl 相关的命令
-    - `pulsar` 是 Pulsarctl 的公共包
+    - `ctl` 用来存放 pulsarctl 相关的命令
+    - `pulsar` 是 pulsarctl 的公共包
 - `test` 用来存放和 test 相关的资源
-- `site` 是 Pulsarctl 的 website 相关的 code，方便用户查看和快速定位相关命令的使用和注意事项等
-- `docs` 用来存放 Pulsarctl 相关的文档内容
+- `site` 是 pulsarctl 的 website 相关的 code，方便用户查看和快速定位相关命令的使用和注意事项等
+- `docs` 用来存放 pulsarctl 相关的文档内容
 
 > 为了避免循环引用, 其中 `auth` 和 `cmdutils` 是两个独立的包, 不会引用 `ctl` 和 `pulsar` 这两个包, 彼此之间也不会相互引用。 
 `pulsar` 作为公共的包，会引用到 `auth`, 但是不会引用到 `ctl` 和 `cmdutils`。 
-`ctl` 作为实现 Pulsarctl 的核心 pkg, 会同时引用到 `auth`, `cmdutils`, `pulsar` 这三个包, 但是其它包不会引用到它。
+`ctl` 作为实现 pulsarctl 的核心 pkg, 会同时引用到 `auth`, `cmdutils`, `pulsar` 这三个包, 但是其它包不会引用到它。
 
 ## 添加一个新命令
 
-Pulsarctl 使用的命令格式如下：
+pulsarctl 使用的命令格式如下：
 
 ```bash
 pulsarctl [commands] [sub commands] [flags]
@@ -74,7 +74,7 @@ pulsarctl [commands] [sub commands] [flags]
 请在该 command 的目录下创建一个 `sub-command-name.go` 的文件，添加你相关的代码逻辑。在完成代码的编写之后，请为你的代码添加相关的测试代码，
 确保该测试可以覆盖到你的代码逻辑。
 
-下面，以 `pulsarctl topics create (topic name) 0` 为例，详细阐述如何快速为 Pulsarctl 添加一个新的 command。
+下面，以 `pulsarctl topics create (topic name) 0` 为例，详细阐述如何快速为 pulsarctl 添加一个新的 command。
 
 1. 在 ctl 目录下创建一个名字为 topic 的文件夹
 
@@ -147,14 +147,14 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
     - CommandExamples // 描述该命令的所有使用示例
     - CommandOutput // 描述该命令的输出信息，包括正确输出与错误输出
 
-- 参数信息 (Pulsarctl 支持如下两种形式的 command：)
+- 参数信息 (pulsarctl 支持如下两种形式的 command：)
 
     - `Pulsarctl command sub-command name-arg-1 name-arg-2 ...`
-        - 针对该场景，Pulsarctl 提供了如下函数：
+        - 针对该场景，pulsarctl 提供了如下函数：
             - SetRunFuncWithMultiNameArgs // 设置多个 name args
             - SetRunFuncWithNameArg // 设置单个 name arg
-    - `Pulsarctl command sub-command --flag xxx --flag yyy ...`
-        - 针对该场景，Pulsarctl 提供了如下函数：
+    - `pulsarctl command sub-command --flag xxx --flag yyy ...`
+        - 针对该场景，pulsarctl 提供了如下函数：
             - SetRunFunc // 不设置 name args
         - 当有 flag 需要指定时，你可以在 `pulsar/data.go` 文件下，创建 `TopicData` 的结构体，在该结构体中添加你需要的参数列表。
         
@@ -180,7 +180,7 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 
 1) 创建 pulsar client
 
-Pulsar 目前支持三种版本的 Api 接口, 你可参照该命令目前在 Pulsar broker 中使用的版本信息，选择具体的版本号，为此 Pulsarctl 提供了如下函数：
+Pulsar 目前支持三种版本的 Api 接口, 你可参照该命令目前在 Pulsar broker 中使用的版本信息，选择具体的版本号，为此，pulsarctl 提供了如下函数：
 
 - NewPulsarClient() // 默认情况，使用 V2 版本
 - NewPulsarClientWithApiVersion(version pulsar.ApiVersion) // 自定义版本号
@@ -212,7 +212,7 @@ func (t *topics) Create(topic TopicName, partitions int) error {
 }
 ```
 
-根据不同的请求类型，Pulsarctl 封装了如下请求方法：
+根据不同的请求类型，pulsarctl 封装了如下请求方法：
 
 - put
 - get
@@ -281,4 +281,3 @@ cmdutils.ExecErrorHandler = func(err error) {
 ```
 
 在进行测试时，你需要 mock 一个 test runner，如果该 test 有需要用到相关的辅助函数，请将该文件命名为 `test_help.go`，并在该文件中编写相关的代码。
-

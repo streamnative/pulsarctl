@@ -29,7 +29,7 @@ In this project, use `go mod` as the package management tool, please make sure y
 
 ## Fork
 
-Before contributing, you need to fork [pulsarcli](https://github.com/streamnative/pulsarcli) to your github repository.
+Before contributing, you need to fork [pulsarctl](https://github.com/streamnative/pulsarcli) to your github repository.
 
 ## Contribution flow
 
@@ -50,7 +50,7 @@ $ git push origin your_branch
 
 ## Configure GoLand
 
-Apache Pulsar Manager uses lombok, so make sure your IDE enable `Go Modules(vgo)`.
+The `pulsarctl` uses `go mod` to manage dependencies, so make sure your IDE enable `Go Modules(vgo)`.
 
 To configure annotation processing in GoLand, follow the steps below.
 
@@ -62,7 +62,7 @@ To configure annotation processing in GoLand, follow the steps below.
 
 ## Code style
 
-The coding style suggested by the Golang community is used in `Pulsarcli`. For details, refer to [style doc](https://github.com/golang/go/wiki/CodeReviewComments).
+The coding style suggested by the Golang community is used in `pulsarctl`. For details, refer to [style doc](https://github.com/golang/go/wiki/CodeReviewComments).
 Follow the style, make your pull request easy to review, maintain and develop.
 
 ## Create new files
@@ -72,4 +72,4 @@ add the license at the beginning of each file. The location of the header file: 
 
 ## Update dependencies
 
-The `Pulsarcli` uses [Go 1.11 module](https://github.com/golang/go/wiki/Modules) to manage dependencies. To add or update a dependency, use the `go mod edit` command to change the dependency.
+The `pulsarctl` uses [Go 1.11 module](https://github.com/golang/go/wiki/Modules) to manage dependencies. To add or update a dependency, use the `go mod edit` command to change the dependency.
