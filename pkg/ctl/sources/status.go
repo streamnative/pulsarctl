@@ -18,10 +18,12 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func statusSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +37,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, status)
 	desc.CommandExamples = examples
@@ -72,7 +74,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Source doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Source <your source name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Source (your source name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -82,6 +84,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Check the current status of a Pulsar Source",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 
@@ -125,23 +128,24 @@ func doStatusSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {
 			return err
 		}
-		sourceInstanceStatusData, err := admin.Sources().GetSourceStatusWithID(sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
+		sourceInstanceStatusData, err := admin.Sources().GetSourceStatusWithID(
+			sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceInstanceStatusData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceInstanceStatusData)
 	} else {
 		sourceStatus, err := admin.Sources().GetSourceStatus(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sourceStatus)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceStatus)
 	}
 
 	return err

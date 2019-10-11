@@ -18,9 +18,10 @@
 package cluster
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
@@ -31,7 +32,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	update := pulsar.Example{
 		Desc:    "updating the <cluster-name> peer clusters",
-		Command: "pulsarctl clusters update-peer-clusters -p cluster-a -p cluster-b <cluster-name>",
+		Command: "pulsarctl clusters update-peer-clusters -p cluster-a -p cluster-b (cluster-name)",
 	}
 	examples = append(examples, update)
 	desc.CommandExamples = examples
@@ -39,7 +40,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "output example",
-		Out:  "<cluster-name> peer clusters updated",
+		Out:  "(cluster-name) peer clusters updated",
 	}
 	out = append(out, successOut)
 	out = append(out, argsError)
@@ -50,6 +51,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 		"update-peer-clusters",
 		"Update the peer clusters",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"upc")
 
 	clusterData := &pulsar.ClusterData{}

@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 func getTopics(vc *cmdutils.VerbCmd) {
@@ -32,7 +33,7 @@ func getTopics(vc *cmdutils.VerbCmd) {
 
 	topics := pulsar.Example{
 		Desc:    "Get the list of topics for a namespace",
-		Command: "pulsarctl namespaces topics <tenant/namespace>",
+		Command: "pulsarctl namespaces topics (tenant/namespace)",
 	}
 
 	examples = append(examples, topics)
@@ -59,7 +60,7 @@ func getTopics(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -69,6 +70,7 @@ func getTopics(vc *cmdutils.VerbCmd) {
 		"topics",
 		"Get the list of topics for a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"topics",
 	)
 

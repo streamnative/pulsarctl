@@ -18,10 +18,11 @@
 package functions
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStartFunctions(t *testing.T) {

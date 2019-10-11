@@ -20,10 +20,12 @@ package sinks
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdateSink(t *testing.T) {

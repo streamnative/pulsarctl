@@ -24,10 +24,12 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 const IncompatibleFlags = "cannot be used at the same time"
@@ -82,17 +84,17 @@ func NewPulsarClient() pulsar.Client {
 	return PulsarCtlConfig.Client(pulsar.V2)
 }
 
-func NewPulsarClientWithApiVersion(version pulsar.ApiVersion) pulsar.Client {
+func NewPulsarClientWithAPIVersion(version pulsar.APIVersion) pulsar.Client {
 	return PulsarCtlConfig.Client(version)
 }
 
-func PrintJson(w io.Writer, obj interface{}) {
+func PrintJSON(w io.Writer, obj interface{}) {
 	b, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {
-		fmt.Fprintf(w, "unexpected response type: %v\n", err)
+		_, _ = fmt.Fprintf(w, "unexpected response type: %v\n", err)
 		return
 	}
-	fmt.Fprintln(w, string(b))
+	_, _ = fmt.Fprintln(w, string(b))
 }
 
 func PrintError(w io.Writer, err error) {
@@ -102,4 +104,24 @@ func PrintError(w io.Writer, err error) {
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)
+}
+
+func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, timeout time.Duration,
+	args []string, obj interface{}) error {
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	result := !condition
+
+	for condition != result {
+		select {
+		case <-time.After(timeout):
+			return errors.New("task timeout")
+		case <-ticker.C:
+			result = task(args, obj)
+		}
+	}
+
+	return nil
 }

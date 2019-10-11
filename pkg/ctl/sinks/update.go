@@ -18,10 +18,11 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func updateSinksCmd(vc *cmdutils.VerbCmd) {
@@ -47,14 +48,14 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 		Desc: "Update a Pulsar IO sink connector with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithParallelism := pulsar.Example{
 		Desc: "Update a Pulsar IO sink connector with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithResource := pulsar.Example{
@@ -63,14 +64,14 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--ram 5656565656\n" +
 			"\t--disk 8080808080808080\n" +
 			"\t--cpu 5.0\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	updateWithSinkConfig := pulsar.Example{
 		Desc: "Update a Pulsar IO sink connector with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
-			"\t# Other sink parameters ",
+			"\t// Other sink parameters ",
 	}
 
 	examples = append(examples, update, updateWithSinkConfig, updateWithResource, updateWithParallelism, updateWithSchema)
@@ -79,12 +80,12 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Updated <the name of a Pulsar Sink> successfully",
+		Out:  "Updated (the name of a Pulsar Sink) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "sink doesn't exist",
-		Out:  "code: 404 reason: Sink <the name of a Pulsar Sink> doesn't exist",
+		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
 
 	out = append(out, successOut, nameNotExistOut)
@@ -94,6 +95,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 		"update",
 		"Update a Pulsar IO sink connector",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"update",
 	)
 
@@ -141,9 +143,9 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.TopicsPattern,
 			"topics-pattern",
 			"",
-			"TopicsPattern to consume from list of topics under a namespace that match the pattern.\n"+
-				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern \n"+
-				"in --customSerdeInputs  (supported for java fun only)")
+			"TopicsPattern to consume from list of topics under a namespace that match the pattern."+
+				" [--input] and [--topicsPattern] are mutually exclusive. Add SerDe class name for a pattern"+
+				" in --customSerdeInputs  (supported for java fun only)")
 
 		flagSet.StringVar(
 			&sinkData.SubsName,
@@ -185,8 +187,8 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.Archive,
 			"archive",
 			"",
-			"Path to the archive file for the sink. It also supports url-path \n"+
-				"[http/https/file (file protocol assumes that file already exists on worker host)] \n"+
+			"Path to the archive file for the sink. It also supports url-path "+
+				"[http/https/file (file protocol assumes that file already exists on worker host)] "+
 				"from which worker can download the package.")
 
 		flagSet.StringVar(
@@ -205,21 +207,21 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			&sinkData.CPU,
 			"cpu",
 			0,
-			"The CPU (in cores) that needs to be allocated per sink instance\n"+
+			"The CPU (in cores) that needs to be allocated per sink instance"+
 				" (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sinkData.Disk,
 			"disk",
 			0,
-			"The disk (in bytes) that need to be allocated per sink instance\n"+
+			"The disk (in bytes) that need to be allocated per sink instance"+
 				" (applicable only to Docker runtime)")
 
 		flagSet.Int64Var(
 			&sinkData.RAM,
 			"ram",
 			0,
-			"The RAM (in bytes) that need to be allocated per sink instance\n"+
+			"The RAM (in bytes) that need to be allocated per sink instance"+
 				" (applicable only to the process and Docker runtimes)")
 
 		flagSet.StringVar(
@@ -251,13 +253,13 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 
 	checkArgsForUpdate(sinkData.SinkConf)
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 
 	updateOptions := pulsar.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sinkData.UpdateAuthData
 
-	if utils.IsPackageUrlSupported(sinkData.Archive) {
-		err = admin.Sinks().UpdateSinkWithUrl(sinkData.SinkConf, sinkData.Archive, updateOptions)
+	if utils.IsPackageURLSupported(sinkData.Archive) {
+		err = admin.Sinks().UpdateSinkWithURL(sinkData.SinkConf, sinkData.Archive, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {

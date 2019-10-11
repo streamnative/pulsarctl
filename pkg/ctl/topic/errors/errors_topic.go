@@ -17,39 +17,44 @@
 
 package errors
 
-import . "github.com/streamnative/pulsarctl/pkg/pulsar"
+import "github.com/streamnative/pulsarctl/pkg/pulsar"
 
-var ArgError = Output{
+var ArgError = pulsar.Output{
 	Desc: "the topic name is not specified",
 	Out:  "[✖]  only one argument is allowed to be used as a name",
 }
 
-var ArgsError = Output{
+var ArgsError = pulsar.Output{
 	Desc: "the topic name and(or) the partitions is not specified",
 	Out:  "[✖]  need to specified the topic name and the partitions",
 }
 
-var TopicAlreadyExistError = Output{
+var TopicAlreadyExistError = pulsar.Output{
 	Desc: "the topic has been created",
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
 }
 
-var TenantNotExistError = Output{
-	Desc: "the tenant of the namespace is not exist",
+var TopicNotFoundError = pulsar.Output{
+	Desc: "the specified topic does not exist",
+	Out:  "[✖]  code: 404 reason: Topic not found",
+}
+
+var TenantNotExistError = pulsar.Output{
+	Desc: "the tenant of the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",
 }
 
-var NamespaceNotExistError = Output{
-	Desc: "the namespace is not exist",
+var NamespaceNotExistError = pulsar.Output{
+	Desc: "the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
-var InvalidPartitionsNumberError = Output{
+var InvalidPartitionsNumberError = pulsar.Output{
 	Desc: "the partitions number is invalid",
 	Out:  "[✖]  invalid partition number '<number>'",
 }
 
-var TopicNameErrors = []Output{
+var TopicNameErrors = []pulsar.Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
 		Out: "[✖]  Invalid short topic name '<topic-name>', it should be " +
@@ -67,7 +72,7 @@ var TopicNameErrors = []Output{
 	},
 }
 
-var NamespaceErrors = []Output{
+var NamespaceErrors = []pulsar.Output{
 	{
 		Desc: "the namespace name is not in the format of <tenant>/<namespace>",
 		Out:  "[✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name>",

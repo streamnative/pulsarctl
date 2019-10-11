@@ -21,10 +21,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
+	"io"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"io"
+
+	"github.com/spf13/cobra"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -45,24 +47,24 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 func PrintSchema(w io.Writer, schema *pulsar.SchemaInfoWithVersion) {
 	name, err := json.MarshalIndent(schema.SchemaInfo.Name, "", "  ")
 	if err != nil {
-		fmt.Fprintf(w, "unexpected response type: %v\n", err)
+		_, _ = fmt.Fprintf(w, "unexpected response type: %v\n", err)
 		return
 	}
 
 	schemaType, err := json.MarshalIndent(schema.SchemaInfo.Type, "", "  ")
 	if err != nil {
-		fmt.Fprintf(w, "unexpected response type: %v\n", err)
+		_, _ = fmt.Fprintf(w, "unexpected response type: %v\n", err)
 		return
 	}
 
 	properties, err := json.MarshalIndent(schema.SchemaInfo.Properties, "", "  ")
 	if err != nil {
-		fmt.Fprintf(w, "unexpected response type: %v\n", err)
+		_, _ = fmt.Fprintf(w, "unexpected response type: %v\n", err)
 		return
 	}
-	s, err := prettyPrint(schema.SchemaInfo.Schema)
-	fmt.Fprintf(w, "{\n  name: %s \n  schema: %s\n  type: %s \n  properties: %s\n}", string(name), string(s),
-		string(schemaType), string(properties))
+	s, _ := prettyPrint(schema.SchemaInfo.Schema)
+	_, _ = fmt.Fprintf(w, "{\n  name: %s \n  schema: %s\n  type: %s \n  properties: %s\n}",
+		string(name), string(s), string(schemaType), string(properties))
 }
 
 func prettyPrint(b []byte) ([]byte, error) {
