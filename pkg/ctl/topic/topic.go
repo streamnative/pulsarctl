@@ -26,6 +26,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stop"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic/unload"
 
 	"github.com/spf13/cobra"
@@ -39,6 +40,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"topic")
 
 	commands := []func(*cmdutils.VerbCmd){
+		stop.TopicTerminateCmd,
 		offload.TopicOffloadCmd,
 		offload.TopicOffloadStatusCmd,
 		unload.TopicUnloadCmd,
