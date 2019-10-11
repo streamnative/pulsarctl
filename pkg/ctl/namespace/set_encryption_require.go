@@ -62,7 +62,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetEncryptionRequired(vc, d)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Messages Encryption", func(set *pflag.FlagSet) {
 		set.BoolVar(&d, "disable", false, "Disable messages encryption")

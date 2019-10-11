@@ -69,7 +69,7 @@ func TestUpdateArgsError(t *testing.T) {
 	args := []string{"update"}
 	_, _, nameErr, _ := TestTenantCommands(UpdateTenantCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the tenant name is not specified or the tenant name is specified more than one", nameErr.Error())
 }
 
 func TestUpdateNonExistTenantError(t *testing.T) {

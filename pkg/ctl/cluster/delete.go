@@ -54,7 +54,7 @@ func deleteClusterCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doDeleteCluster(vc)
-	})
+	}, "the cluster-name is not specified")
 }
 
 func doDeleteCluster(vc *cmdutils.VerbCmd) error {

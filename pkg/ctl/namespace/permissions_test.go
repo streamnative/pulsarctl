@@ -52,5 +52,6 @@ func TestGetPermissionsArgsError(t *testing.T) {
 	args := []string{"permissions"}
 	_, _, nameErr, _ := TestNamespaceCommands(GetPermissionsCmd, args)
 	assert.NotNil(t, nameErr.Error())
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
+		nameErr.Error())
 }

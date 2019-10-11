@@ -56,7 +56,7 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetPermissions(vc *cmdutils.VerbCmd) error {

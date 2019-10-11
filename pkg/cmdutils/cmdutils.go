@@ -56,10 +56,10 @@ var defaultNameArgsError = func(err error) {
 }
 
 // GetNameArg tests to ensure there is only 1 name argument
-func GetNameArg(args []string) (string, error) {
+func GetNameArg(args []string, errMsg string) (string, error) {
 	if len(args) > 1 || len(args) == 0 {
-		logger.Critical("only one argument is allowed to be used as a name")
-		err := errors.New("only one argument is allowed to be used as a name")
+		logger.Critical(errMsg)
+		err := errors.New(errMsg)
 		CheckNameArgError(err)
 		return "", err
 	}

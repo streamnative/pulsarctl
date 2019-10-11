@@ -51,7 +51,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 
 	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
+		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
 	tenantNotExistError := pulsar.Output{
@@ -84,7 +84,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetBacklogQuota(vc, namespaceData)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(

@@ -84,7 +84,7 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUpdateCluster(vc, clusterData)
-	})
+	}, "the cluster-name is not specified")
 
 	// register the params
 	vc.FlagSetGroup.InFlagSet("ClusterData", func(flagSet *pflag.FlagSet) {

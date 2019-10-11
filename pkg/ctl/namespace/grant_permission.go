@@ -65,7 +65,7 @@ func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGrantPermissions(vc, role, actions)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Grant Permissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "",

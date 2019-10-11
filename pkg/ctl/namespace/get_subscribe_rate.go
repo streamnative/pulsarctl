@@ -52,7 +52,7 @@ func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSubscribeRate(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetSubscribeRate(vc *cmdutils.VerbCmd) error {
