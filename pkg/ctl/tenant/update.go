@@ -80,7 +80,7 @@ func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUpdateTenant(vc, &data)
-	})
+	}, "the tenant name is not specified or the tenant name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("TenantData", func(set *pflag.FlagSet) {
 		set.StringSliceVarP(

@@ -66,7 +66,7 @@ func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetDispatchRate(vc, rate)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Dispatch Rate", func(set *pflag.FlagSet) {
 		set.IntVarP(&(rate.DispatchThrottlingRateInMsg), "msg-rate", "m", -1,

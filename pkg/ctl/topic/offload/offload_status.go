@@ -82,7 +82,7 @@ func TopicOffloadStatusCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doOffloadStatus(vc, wait)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("OffloadStatus", func(set *pflag.FlagSet) {
 		set.BoolVarP(&wait, "wait", "w", false, "Wait for offloading to complete")

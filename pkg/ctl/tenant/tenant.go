@@ -26,7 +26,7 @@ import (
 
 var tenantNameArgsError = pulsar.Output{
 	Desc: "the tenant name is not specified or the tenant name is specified more than one",
-	Out:  "[✖]  only one argument is allowed to be used as a name",
+	Out:  "[✖]  the tenant name is not specified or the tenant name is specified more than one",
 }
 
 var tenantNotExistError = pulsar.Output{

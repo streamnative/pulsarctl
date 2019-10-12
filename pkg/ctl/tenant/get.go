@@ -62,7 +62,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTenant(vc)
-	})
+	}, "the tenant name is not specified or the tenant name is specified more than one")
 }
 
 func doGetTenant(vc *cmdutils.VerbCmd) error {

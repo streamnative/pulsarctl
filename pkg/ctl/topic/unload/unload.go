@@ -54,7 +54,7 @@ func TopicUnloadCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUnloadCmd(vc)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 func doUnloadCmd(vc *cmdutils.VerbCmd) error {

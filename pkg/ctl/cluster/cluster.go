@@ -27,7 +27,7 @@ import (
 
 var argsError = pulsar.Output{
 	Desc: "the cluster name is not specified or the cluster name is specified more than one",
-	Out:  "[✖]  only one argument is allowed to be used as a name",
+	Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
 }
 
 var clusterNonExist = pulsar.Output{

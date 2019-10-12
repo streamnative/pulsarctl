@@ -57,7 +57,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTopic(vc)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 func doGetTopic(vc *cmdutils.VerbCmd) error {

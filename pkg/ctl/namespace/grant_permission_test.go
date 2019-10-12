@@ -48,7 +48,8 @@ func TestGrantPermissionsArgsError(t *testing.T) {
 	args = []string{"grant-permission", "--role", "test-role", "--actions", "consume"}
 	_, _, nameErr, _ := TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
+		nameErr.Error())
 
 	args = []string{"grant-permission", "--role", "test-role", "--actions", "fail", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GrantPermissionsCmd, args)

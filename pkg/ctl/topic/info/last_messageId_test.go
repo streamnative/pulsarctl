@@ -30,7 +30,7 @@ func TestGetLastMessageIdArgsError(t *testing.T) {
 	args := []string{"last-message-id"}
 	_, _, nameErr, _ := test.TestTopicCommands(GetLastMessageIDCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 }
 
 func TestGetLastMessageIdTopicNotExistError(t *testing.T) {
