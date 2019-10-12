@@ -58,7 +58,7 @@ func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUpdatePeerClusters(vc, clusterData)
-	})
+	}, "the cluster name is not specified or the cluster name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Update peer clusters", func(set *pflag.FlagSet) {
 		set.StringSliceVarP(

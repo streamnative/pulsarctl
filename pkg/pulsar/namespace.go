@@ -107,6 +107,24 @@ type Namespaces interface {
 	// Get the compactionThreshold for a namespace
 	GetCompactionThreshold(namespace NameSpaceName) (int64, error)
 
+  // Set maxConsumersPerSubscription for a namespace.
+	SetMaxConsumersPerSubscription(namespace NameSpaceName, max int) error
+
+	// Get the maxConsumersPerSubscription for a namespace.
+	GetMaxConsumersPerSubscription(namespace NameSpaceName) (int, error)
+
+	// Set maxConsumersPerTopic for a namespace.
+	SetMaxConsumersPerTopic(namespace NameSpaceName, max int) error
+
+	// Get the maxProducersPerTopic for a namespace.
+	GetMaxConsumersPerTopic(namespace NameSpaceName) (int, error)
+
+	// Set maxProducersPerTopic for a namespace.
+	SetMaxProducersPerTopic(namespace NameSpaceName, max int) error
+
+	// Get the maxProducersPerTopic for a namespace.
+	GetMaxProducersPerTopic(namespace NameSpaceName) (int, error)
+
 	// Get the replication clusters for a namespace
 	GetNamespaceReplicationClusters(namespace string) ([]string, error)
 
@@ -153,6 +171,12 @@ type Namespaces interface {
 
 	// Split namespace bundle
 	SplitNamespaceBundle(namespace, bundle string, unloadSplitBundles bool) error
+
+	GetNamespacePermissions(namespace NameSpaceName) (map[string][]AuthAction, error)
+	GrantNamespacePermission(namespace NameSpaceName, role string, action []AuthAction) error
+	RevokeNamespacePermission(namespace NameSpaceName, role string) error
+	GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error
+	RevokeSubPermission(namespace NameSpaceName, sName, role string) error
 
 	// Set the given subscription auth mode on all topics on a namespace
 	SetSubscriptionAuthMode(namespace NameSpaceName, mode SubscriptionAuthMode) error
@@ -420,10 +444,19 @@ func (n *namespaces) SetOffloadDeleteLag(namespace NameSpaceName, timeMs int64) 
 
 func (n *namespaces) GetOffloadDeleteLag(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+  b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
+}
+
+func (n *namespaces) SetMaxConsumersPerSubscription(namespace NameSpaceName, max int) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
+	return n.client.post(endpoint, max)
+}
+
+func (n *namespaces) GetMaxConsumersPerSubscription(namespace NameSpaceName) (int, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
 	return strconv.ParseInt(string(b), 10, 64)
 }
 
@@ -434,6 +467,16 @@ func (n *namespaces) SetOffloadThreshold(namespace NameSpaceName, threshold int6
 
 func (n *namespaces) GetOffloadThreshold(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
+	return strconv.Atoi(string(b))
+}
+
+func (n *namespaces) SetMaxConsumersPerTopic(namespace NameSpaceName, max int) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
+	return n.client.post(endpoint, max)
+}
+
+func (n *namespaces) GetMaxConsumersPerTopic(namespace NameSpaceName) (int, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
 	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
@@ -448,11 +491,21 @@ func (n *namespaces) SetCompactionThreshold(namespace NameSpaceName, threshold i
 
 func (n *namespaces) GetCompactionThreshold(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
+	return strconv.Atoi(string(b))
+}
+
+func (n *namespaces) SetMaxProducersPerTopic(namespace NameSpaceName, max int) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
+	return n.client.post(endpoint, max)
+}
+
+func (n *namespaces) GetMaxProducersPerTopic(namespace NameSpaceName) (int, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
 	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
-	return strconv.ParseInt(string(b), 10, 64)
+	return strconv.Atoi(string(b))
 }
 
 func (n *namespaces) GetNamespaceReplicationClusters(namespace string) ([]string, error) {
@@ -599,6 +652,39 @@ func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitB
 		"unload": strconv.FormatBool(unloadSplitBundles),
 	}
 	return n.client.putWithQueryParams(endpoint, "", nil, params)
+}
+
+func (n *namespaces) GetNamespacePermissions(namespace NameSpaceName) (map[string][]AuthAction, error) {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions")
+	var permissions map[string][]AuthAction
+	err := n.client.get(endpoint, &permissions)
+	return permissions, err
+}
+
+func (n *namespaces) GrantNamespacePermission(namespace NameSpaceName, role string, action []AuthAction) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
+	s := make([]string, 0)
+	for _, v := range action {
+		s = append(s, v.String())
+	}
+	return n.client.post(endpoint, s)
+}
+
+func (n *namespaces) RevokeNamespacePermission(namespace NameSpaceName, role string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
+	return n.client.delete(endpoint)
+}
+
+func (n *namespaces) GrantSubPermission(namespace NameSpaceName, sName string, roles []string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
+		"subscription", sName)
+	return n.client.post(endpoint, roles)
+}
+
+func (n *namespaces) RevokeSubPermission(namespace NameSpaceName, sName, role string) error {
+	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
+		"subscription", sName, role)
+	return n.client.delete(endpoint)
 }
 
 func (n *namespaces) SetSubscriptionAuthMode(namespace NameSpaceName, mode SubscriptionAuthMode) error {

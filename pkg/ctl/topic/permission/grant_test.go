@@ -106,7 +106,7 @@ func TestGrantPermissionArgError(t *testing.T) {
 	args := []string{"grant-permissions", "--role", "test-arg-error-role", "--actions", "produce"}
 	_, _, nameErr, _ := test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 
 	args = []string{"grant-permissions", "args-error-topic"}
 	_, _, _, err := test.TestTopicCommands(GrantPermissionCmd, args)
@@ -125,6 +125,6 @@ func TestGrantPermissionArgError(t *testing.T) {
 	}
 	_, execErr, _, _ = test.TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "The auth action  only can be specified as 'produce', "+
+	assert.Equal(t, "The auth action only can be specified as 'produce', "+
 		"'consume', or 'functions'. Invalid auth action 'args-error-action'", execErr.Error())
 }

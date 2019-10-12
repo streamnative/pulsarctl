@@ -144,7 +144,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	var perPartition bool
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetStats(vc, partition, perPartition)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Stats", func(set *pflag.FlagSet) {
 		set.BoolVarP(&partition, "partitioned-topic", "p", false,

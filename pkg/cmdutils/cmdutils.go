@@ -24,6 +24,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
@@ -55,10 +56,10 @@ var defaultNameArgsError = func(err error) {
 }
 
 // GetNameArg tests to ensure there is only 1 name argument
-func GetNameArg(args []string) (string, error) {
+func GetNameArg(args []string, errMsg string) (string, error) {
 	if len(args) > 1 || len(args) == 0 {
-		logger.Critical("only one argument is allowed to be used as a name")
-		err := errors.New("only one argument is allowed to be used as a name")
+		logger.Critical(errMsg)
+		err := errors.New(errMsg)
 		CheckNameArgError(err)
 		return "", err
 	}
@@ -103,4 +104,24 @@ func PrintError(w io.Writer, err error) {
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)
+}
+
+func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, timeout time.Duration,
+	args []string, obj interface{}) error {
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	result := !condition
+
+	for condition != result {
+		select {
+		case <-time.After(timeout):
+			return errors.New("task timeout")
+		case <-ticker.C:
+			result = task(args, obj)
+		}
+	}
+
+	return nil
 }

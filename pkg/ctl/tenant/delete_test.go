@@ -45,7 +45,7 @@ func TestDeleteTenantCmd(t *testing.T) {
 func TestDeleteTenantArgsError(t *testing.T) {
 	args := []string{"delete"}
 	_, _, nameErr, _ := TestTenantCommands(deleteTenantCmd, args)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the tenant name is not specified or the tenant name is specified more than one", nameErr.Error())
 }
 
 func TestDeleteNonExistTenant(t *testing.T) {

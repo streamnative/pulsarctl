@@ -65,7 +65,7 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetClusterData(vc)
-	})
+	}, "the cluster name is not specified or the cluster name is specified more than one")
 }
 
 func doGetClusterData(vc *cmdutils.VerbCmd) error {

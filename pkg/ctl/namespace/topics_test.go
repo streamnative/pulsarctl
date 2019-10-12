@@ -38,7 +38,8 @@ func TestListTopicArgError(t *testing.T) {
 	args := []string{"topics"}
 	_, _, nameErr, _ := TestNamespaceCommands(getTopics, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is "+
+		"specified more than one", nameErr.Error())
 }
 
 func TestListNonExistNamespace(t *testing.T) {

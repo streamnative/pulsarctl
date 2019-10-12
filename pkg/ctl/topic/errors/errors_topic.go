@@ -20,8 +20,8 @@ package errors
 import "github.com/streamnative/pulsarctl/pkg/pulsar"
 
 var ArgError = pulsar.Output{
-	Desc: "the topic name is not specified",
-	Out:  "[✖]  only one argument is allowed to be used as a name",
+	Desc: "the topic name is not specified or the topic name is specified more than one",
+	Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 }
 
 var ArgsError = pulsar.Output{
@@ -34,13 +34,18 @@ var TopicAlreadyExistError = pulsar.Output{
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
 }
 
+var TopicNotFoundError = pulsar.Output{
+	Desc: "the specified topic does not exist",
+	Out:  "[✖]  code: 404 reason: Topic not found",
+}
+
 var TenantNotExistError = pulsar.Output{
-	Desc: "the tenant of the namespace is not exist",
+	Desc: "the tenant of the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",
 }
 
 var NamespaceNotExistError = pulsar.Output{
-	Desc: "the namespace is not exist",
+	Desc: "the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 

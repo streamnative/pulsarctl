@@ -88,7 +88,7 @@ func getSchema(vc *cmdutils.VerbCmd) {
 
 	notTopicName := pulsar.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
+		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}
 
 	out = append(out, successOut, failOut, notTopicName)
@@ -106,7 +106,7 @@ func getSchema(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSchema(vc, schemaData)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
 		flagSet.Int64Var(

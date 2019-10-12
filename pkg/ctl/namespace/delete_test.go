@@ -42,7 +42,8 @@ func TestDeleteNsCmd(t *testing.T) {
 func TestDeleteNsArgsError(t *testing.T) {
 	args := []string{"delete"}
 	_, _, nameErr, _ := TestNamespaceCommands(deleteNs, args)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is "+
+		"specified more than one", nameErr.Error())
 }
 
 func TestDeleteNonExistentTenant(t *testing.T) {

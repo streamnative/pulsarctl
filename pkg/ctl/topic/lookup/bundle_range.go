@@ -55,7 +55,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetBundleRange(vc)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 func doGetBundleRange(vc *cmdutils.VerbCmd) error {
