@@ -1,52 +1,72 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 package permission
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	e "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	. "github.com/streamnative/pulsarctl/pkg/ctl/topic/errors"
-	. "github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
-	var desc LongDescription
+	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []Example
-	grant := Example{
-		Desc:    "Grant permissions to a client on a single topic <topic-name>",
-		Command: "pulsarctl topic grant-permissions --role <role> --actions <action-1> --actions <action-2> <topic-name>",
+	var examples []pulsar.Example
+	grant := pulsar.Example{
+		Desc:    "Grant permissions to a client on a single topic (topic-name)",
+		Command: "pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)",
 	}
-	desc.CommandExamples = append(examples, grant)
+	examples = append(examples, grant)
+	desc.CommandExamples = examples
 
-	var out []Output
-	successOut := Output{
+	var out []pulsar.Output
+	successOut := pulsar.Output{
 		Desc: "normal output",
 		Out:  "Grant role %s and actions %v to the topic %s successfully",
 	}
 
-	flagError := Output{
+	flagError := pulsar.Output{
 		Desc: "the specified role is empty",
 		Out:  "Invalid role name",
 	}
 
-	actionsError := Output{
+	actionsError := pulsar.Output{
 		Desc: "the specified actions is not allowed.",
 		Out: "The auth action  only can be specified as 'produce', " +
-			"'consume', or 'functions'. Invalid auth action '<actions>'",
+			"'consume', or 'functions'. Invalid auth action '(actions)'",
 	}
-	out = append(out, successOut, ArgError, flagError, actionsError)
-	out = append(out, TopicNameErrors...)
-	out = append(out, NamespaceErrors...)
+	out = append(out, successOut, e.ArgError, flagError, actionsError)
+	out = append(out, e.TopicNameErrors...)
+	out = append(out, e.NamespaceErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"grant-permissions",
 		"Grant permissions to a client on a topic",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"grant")
 
 	var role string
@@ -72,7 +92,7 @@ func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) erro
 		return vc.NameError
 	}
 
-	topic, err := GetTopicName(vc.NameArg)
+	topic, err := pulsar.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -97,10 +117,10 @@ func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) erro
 	return err
 }
 
-func getAuthActions(actions []string) ([]AuthAction, error) {
-	var authActions []AuthAction
+func getAuthActions(actions []string) ([]pulsar.AuthAction, error) {
+	authActions := make([]pulsar.AuthAction, 0)
 	for _, v := range actions {
-		a, err := ParseAuthAction(v)
+		a, err := pulsar.ParseAuthAction(v)
 		if err != nil {
 			return nil, err
 		}

@@ -18,10 +18,12 @@
 package sources
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func startSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -36,7 +38,7 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source start \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>",
+			"\t--name (the name of Pulsar Source)",
 	}
 	examples = append(examples, start)
 
@@ -45,7 +47,7 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl source start \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Source>\n" +
+			"\t--name (the name of Pulsar Source)\n" +
 			"\t--instance-id 1",
 	}
 	examples = append(examples, startWithInstanceID)
@@ -53,12 +55,12 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "Started <the name of a Pulsar Source> successfully",
+		Out:  "Started (the name of a Pulsar Source) successfully",
 	}
 
 	nameNotExistOut := pulsar.Output{
 		Desc: "source doesn't exist",
-		Out:  "code: 404 reason: Source <the name of a Pulsar Source> doesn't exist",
+		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
 	out = append(out, successOut, nameNotExistOut)
 	desc.CommandOutput = out
@@ -67,6 +69,7 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 		"start",
 		"Start source instance",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"start",
 	)
 
@@ -112,7 +115,7 @@ func doStartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {

@@ -18,10 +18,12 @@
 package sinks
 
 import (
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"strconv"
+
+	"github.com/spf13/pflag"
 )
 
 func statusSinksCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +37,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl sink status \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default\n" +
-			"\t--name <the name of Pulsar Sink>",
+			"\t--name (the name of Pulsar Sink)",
 	}
 	examples = append(examples, status)
 	desc.CommandExamples = examples
@@ -72,7 +74,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Sink doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Sink <your sink name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Sink (your sink name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -82,6 +84,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 		"status",
 		"Get the current status of a Pulsar Sink",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"getstatus",
 	)
 
@@ -125,23 +128,24 @@ func doStatusSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	if sinkData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sinkData.InstanceID)
 		if err != nil {
 			return err
 		}
-		sinkInstanceStatusData, err := admin.Sinks().GetSinkStatusWithID(sinkData.Tenant, sinkData.Namespace, sinkData.Name, instanceID)
+		sinkInstanceStatusData, err := admin.Sinks().GetSinkStatusWithID(
+			sinkData.Tenant, sinkData.Namespace, sinkData.Name, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sinkInstanceStatusData)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkInstanceStatusData)
 	} else {
 		sinkStatus, err := admin.Sinks().GetSinkStatus(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		}
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), sinkStatus)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkStatus)
 	}
 
 	return err

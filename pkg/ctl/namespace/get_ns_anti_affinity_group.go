@@ -38,7 +38,7 @@ func getAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "<Anti-affinity group name>",
+		Out:  "(Anti-affinity group name)",
 	}
 
 	noNamespaceName := pulsar.Output{
@@ -53,7 +53,7 @@ func getAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -63,6 +63,7 @@ func getAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 		"get-anti-affinity-group",
 		"Get the anti-affinity group of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-anti-affinity-group",
 	)
 

@@ -19,10 +19,12 @@ package sources
 
 import (
 	"encoding/json"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdateSource(t *testing.T) {

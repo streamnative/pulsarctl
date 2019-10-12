@@ -38,7 +38,7 @@ func getReplicationClusters(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "<cluster name>",
+		Out:  "(cluster name)",
 	}
 	noNamespaceName := pulsar.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
@@ -52,7 +52,7 @@ func getReplicationClusters(vc *cmdutils.VerbCmd) {
 
 	nsNotExistError := pulsar.Output{
 		Desc: "the namespace does not exist",
-		Out:  "[✖]  code: 404 reason: Namespace <tenant/namespace> does not exist",
+		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
@@ -62,6 +62,7 @@ func getReplicationClusters(vc *cmdutils.VerbCmd) {
 		"get-clusters",
 		"Get the replicated clusters of a namespace",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get-clusters",
 	)
 
@@ -75,7 +76,7 @@ func doGetReplicationClusters(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	clusters, err := admin.Namespaces().GetNamespaceReplicationClusters(ns)
 	if err == nil {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), &clusters)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), &clusters)
 	}
 	return err
 }

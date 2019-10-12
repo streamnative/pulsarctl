@@ -18,9 +18,10 @@
 package functions
 
 import (
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/pflag"
 )
 
 func getFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -35,7 +36,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl functions get \n" +
 			"\t--tenant public\n" +
 			"\t--namespace default \n" +
-			"\t--name <the name of Pulsar Function>",
+			"\t--name (the name of Pulsar Function)",
 	}
 
 	getWithFqfn := pulsar.Example{
@@ -74,7 +75,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	failOutWithNameNotExist := pulsar.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
-		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
+		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
 	out = append(out, successOut, failOut, failOutWithNameNotExist)
@@ -84,6 +85,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"get",
 		"Fetch information about a Pulsar Function",
 		desc.ToString(),
+		desc.ExampleToString(),
 		"get",
 	)
 
@@ -129,12 +131,12 @@ func doGetFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithApiVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
 	functionConfig, err := admin.Functions().GetFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJson(vc.Command.OutOrStdout(), functionConfig)
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionConfig)
 	}
 
 	return err

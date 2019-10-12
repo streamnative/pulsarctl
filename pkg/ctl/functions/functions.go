@@ -18,9 +18,11 @@
 package functions
 
 import (
-	`errors`
-	"github.com/spf13/cobra"
+	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
+	"github.com/spf13/cobra"
 )
 
 var checkPutStateArgs = func(args []string) error {
