@@ -62,6 +62,19 @@ export GO111MODULE=on
 go build -o pulsarctl main.go
 ```
 
+## Project Status
+
+The following is an incomplete list of features that are not yet implemented:
+
+- pulsar-admin broker-stats subcommand
+- pulsar-admin brokers subcommand
+- pulsar-admin ns-isolation-policy subcommand
+- pulsar-admin resource-quotas subcommand
+- pulsar-admin functions localrun options
+- pulsar-admin sources localrun options
+- pulsar-admin sinks localrun options
+- pulsar-admin schemas extract options
+
 ## Contributing
 
 Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details on submitting patches and the contribution workflow.

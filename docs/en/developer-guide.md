@@ -50,7 +50,7 @@ The `pulsarctl` is a command-line tool written in the go language that helps adm
     - `auth` is used to store encryption-related code
     - `cmdutils` has a simple wrapper for cobra
     - `ctl` is used to store pulsarctl related commands
-    - `pulsarct is a public package of pulsarctl
+    - `pulsar` is a public package of pulsarctl
 - `test` is used to store resources related to test
 - `site` is the website related code of pulsarctl, which is convenient for users to view and quickly locate the usage and precautions of related commands.
 - `docs` is used to store pulsarctl related document content
