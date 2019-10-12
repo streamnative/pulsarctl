@@ -72,7 +72,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGrantPermission(vc, role, actions)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("GrantPermissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "",

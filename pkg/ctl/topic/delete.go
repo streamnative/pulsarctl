@@ -37,7 +37,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 
 	deleteNonPartitionedTopic := pulsar.Example{
 		Desc:    "Delete a non-partitioned topic (topic-name)",
-		Command: "pulsarctl topics delete --non-partitioned <topic-name>",
+		Command: "pulsarctl topics delete --non-partitioned (topic-name)",
 	}
 
 	examples = append(examples, deleteTopic, deleteNonPartitionedTopic)
@@ -85,7 +85,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doDeleteTopic(vc, force, deleteSchema, nonPartitioned)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 // TODO add delete schema

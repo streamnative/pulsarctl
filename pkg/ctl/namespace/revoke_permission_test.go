@@ -34,5 +34,6 @@ func TestRevokePermissionsArgsError(t *testing.T) {
 	args = []string{"revoke-permission", "--role", "test-role"}
 	_, _, nameErr, _ := TestNamespaceCommands(RevokePermissionsCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
+		nameErr.Error())
 }

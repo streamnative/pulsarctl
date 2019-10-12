@@ -27,7 +27,7 @@ func TestCompactStatusArgsError(t *testing.T) {
 	args := []string{"compact-status"}
 	_, _, nameErr, _ := TestTopicCommands(StatusCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 }
 
 func TestCompactStatusNonExistingTopicError(t *testing.T) {

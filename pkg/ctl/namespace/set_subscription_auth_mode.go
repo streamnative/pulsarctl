@@ -58,7 +58,7 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSubscriptionAuthMode(vc, mode)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Subscription Auth Mode", func(set *pflag.FlagSet) {
 		set.StringVarP(&mode, "mode", "m", "",

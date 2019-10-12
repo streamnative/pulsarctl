@@ -20,51 +20,66 @@ package namespace
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
-func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
+func SetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the default subscribe rate per consumer of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used for setting the max consumers per subscription of a namespace."
+	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
 	var examples []pulsar.Example
-	get := pulsar.Example{
-		Desc:    "Get the default subscribe rate per consumer of a namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-subscribe-rate (namespace)",
+	set := pulsar.Example{
+		Desc:    "Set the max consumers per subscription of the namespace (namespace-name) to (size)",
+		Command: "pulsarctl namespaces set-max-consumers-per-subscription --size (size) (namespace-name)",
 	}
-	examples = append(examples, get)
+	examples = append(examples, set)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "{\n  \"subscribeThrottlingRatePerConsumer\" : 0,\n  \"ratePeriodInSecond\" : 30\n}",
+		Out:  "Successfully set the max consumers per subscription of the namespace (namespace-name) to (size)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-subscribe-rate",
-		"Get the default subscribe rate per consumer of a namespace",
+		"set-max-consumers-per-subscription",
+		"Set the max consumers per subscription of a namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
+	var num int
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetSubscribeRate(vc)
-	}, "the namespace name is not specified or the namespace name is specified more than one")
+		return doSetMaxConsumersPerSubscription(vc, num)
+	})
+
+	vc.FlagSetGroup.InFlagSet("Max Consumers Per Subscription", func(set *pflag.FlagSet) {
+		set.IntVar(&num, "size", -1, "max consumers per subscription")
+		cobra.MarkFlagRequired(set, "size")
+	})
 }
 
-func doGetSubscribeRate(vc *cmdutils.VerbCmd) error {
+func doSetMaxConsumersPerSubscription(vc *cmdutils.VerbCmd, max int) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
+	if max < 0 {
+		return errors.New("the specified consumers value must bigger than 0")
+	}
+
 	admin := cmdutils.NewPulsarClient()
-	rate, err := admin.Namespaces().GetSubscribeRate(*ns)
+	err = admin.Namespaces().SetMaxConsumersPerSubscription(*ns, max)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), rate)
+		vc.Command.Printf("Successfully set the max consumers per subscription of the namespace %s to %d", ns.String(), max)
 	}
 
 	return err

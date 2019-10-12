@@ -65,7 +65,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doRevokePermissions(vc, role)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("RevokePermissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "", "Client role to which revoke permissions")

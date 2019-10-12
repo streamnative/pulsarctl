@@ -69,7 +69,7 @@ func TerminateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doTerminate(vc, partition)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Terminate", func(set *pflag.FlagSet) {
 		set.IntVarP(&partition, "partition", "p", -1,

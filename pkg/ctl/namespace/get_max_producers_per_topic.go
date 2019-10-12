@@ -22,49 +22,49 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
+func GetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the default subscribe rate per consumer of a namespace."
+	desc.CommandUsedFor = "This command is used for getting the max producers per topic of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
-	get := pulsar.Example{
-		Desc:    "Get the default subscribe rate per consumer of a namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-subscribe-rate (namespace)",
+	set := pulsar.Example{
+		Desc:    "Get the max producers per topic of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-max-producers-per-topic (namespace-name)",
 	}
-	examples = append(examples, get)
+	examples = append(examples, set)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "{\n  \"subscribeThrottlingRatePerConsumer\" : 0,\n  \"ratePeriodInSecond\" : 30\n}",
+		Out:  "The max producers per topic of the namespace (namespace-name) is (size)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-subscribe-rate",
-		"Get the default subscribe rate per consumer of a namespace",
+		"get-max-producers-per-topic",
+		"Get the max producers per topic of namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetSubscribeRate(vc)
-	}, "the namespace name is not specified or the namespace name is specified more than one")
+		return doGetMaxProducersPerTopic(vc)
+	})
 }
 
-func doGetSubscribeRate(vc *cmdutils.VerbCmd) error {
+func doGetMaxProducersPerTopic(vc *cmdutils.VerbCmd) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	rate, err := admin.Namespaces().GetSubscribeRate(*ns)
+	max, err := admin.Namespaces().GetMaxProducersPerTopic(*ns)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), rate)
+		vc.Command.Printf("The max producers per topic of the namespace %s is %d", ns.String(), max)
 	}
 
 	return err

@@ -52,7 +52,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 
 	notTopicName := pulsar.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
+		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}
 
 	filePathNotExist := pulsar.Output{
@@ -74,7 +74,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUploadSchema(vc, schemaData)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(

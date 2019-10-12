@@ -52,7 +52,7 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 
 	notTenantName := pulsar.Output{
 		Desc: "you must specify a tenant name, please check if the tenant name is provided",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
+		Out:  "[✖]  the tenant name is not specified or the tenant name is specified more than one",
 	}
 
 	tenantNotExistError := pulsar.Output{
@@ -73,7 +73,7 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListNamespaces(vc)
-	})
+	}, "the tenant name is not specified or the tenant name is specified more than one")
 }
 
 func doListNamespaces(vc *cmdutils.VerbCmd) error {

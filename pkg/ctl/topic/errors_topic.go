@@ -20,8 +20,8 @@ package topic
 import "github.com/streamnative/pulsarctl/pkg/pulsar"
 
 var ArgError = pulsar.Output{
-	Desc: "the topic name is not specified",
-	Out:  "[✖]  only one argument is allowed to be used as a name",
+	Desc: "the topic name is not specified or the topic name is specified more than one",
+	Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 }
 
 var ArgsError = pulsar.Output{

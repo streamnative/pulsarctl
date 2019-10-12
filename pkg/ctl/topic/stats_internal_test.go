@@ -77,7 +77,7 @@ func TestGetInternalStatsArgsError(t *testing.T) {
 	args := []string{"internal-stats"}
 	_, _, nameErr, _ := TestTopicCommands(GetInternalStatsCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 }
 
 func TestGetNonExistingTopic(t *testing.T) {

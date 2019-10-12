@@ -58,7 +58,7 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 func doGetPermissions(vc *cmdutils.VerbCmd) error {

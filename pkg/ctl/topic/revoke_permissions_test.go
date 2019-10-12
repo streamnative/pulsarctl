@@ -83,7 +83,7 @@ func TestRevokePermissionsArgError(t *testing.T) {
 	args := []string{"revoke-permissions", "--role", "args-error-role"}
 	_, _, nameErr, _ := TestTopicCommands(RevokePermissions, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 
 	args = []string{"revoke-permissions", "--role", "", "empty-role-topic"}
 	_, execErr, _, _ := TestTopicCommands(RevokePermissions, args)

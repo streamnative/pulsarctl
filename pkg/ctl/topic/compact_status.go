@@ -82,7 +82,7 @@ func StatusCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doCompactStatus(vc, wait, partition)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Compact Status", func(set *pflag.FlagSet) {
 		set.BoolVarP(&wait, "wait", "w", false, "Wait for compacting to complete")
