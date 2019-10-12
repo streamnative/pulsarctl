@@ -47,7 +47,7 @@ type Output struct {
 }
 
 func (desc *LongDescription) ToString() string {
-	return USEDFOR + "\n" +
+	out := USEDFOR + "\n" +
 		SPACES + desc.CommandUsedFor + "\n\n" +
 		PERMISSION + "\n" +
 		SPACES + desc.CommandPermission + "\n\n" +

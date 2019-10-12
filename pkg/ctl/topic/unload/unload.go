@@ -27,6 +27,7 @@ func TopicUnloadCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for unloading a topic."
 	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
 	var examples []pulsar.Example
 	unload := pulsar.Example{

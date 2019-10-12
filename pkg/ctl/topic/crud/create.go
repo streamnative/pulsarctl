@@ -48,7 +48,6 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 	vc.Command.Example = "#example \n command"
-	//vc.Command.Example = desc.ExampleToString()
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{

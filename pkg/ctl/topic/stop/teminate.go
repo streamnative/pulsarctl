@@ -31,6 +31,7 @@ func TopicTerminateCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandUsedFor = "This command is used for terminating a non-partitioned topic or a partition of " +
 		"a partitioned topic. Upon termination, no more messages are allowed to published to it."
 	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
 	var examples []pulsar.Example
 	terminate := pulsar.Example{

@@ -61,6 +61,7 @@ func GetInternalInfoCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandUsedFor = "This command is used for getting the internal info of a topic " +
 		"which has messages or subscriptions."
 	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandScope = "non-partitioned topic"
 
 	var examples []pulsar.Example
 	get := pulsar.Example{

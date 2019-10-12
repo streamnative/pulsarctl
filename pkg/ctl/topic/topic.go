@@ -58,6 +58,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		info.GetLastMessageIDCmd,
 		stats.GetStatsCmd,
 		stats.GetInternalStatsCmd,
+		info.GetInternalInfoCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

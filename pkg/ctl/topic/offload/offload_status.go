@@ -33,6 +33,7 @@ func TopicOffloadStatusCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandUsedFor = "This command is used for checking the status of offloading data" +
 		" from a persistent topic to a long-term storage."
 	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
 	var examples []pulsar.Example
 	offloadStatus := pulsar.Example{

@@ -28,7 +28,7 @@ import (
 func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the last message id of a topic (partition)."
-	desc.CommandPermission= "This command requires tenant admin permissions."
+	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
 	var examples []pulsar.Example
