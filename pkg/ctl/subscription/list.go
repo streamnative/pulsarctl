@@ -61,7 +61,7 @@ func ListCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doList(vc)
-	})
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
 func doList(vc *cmdutils.VerbCmd) error {
