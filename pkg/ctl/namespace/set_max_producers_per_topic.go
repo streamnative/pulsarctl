@@ -58,7 +58,7 @@ func SetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetMaxProducersPerTopic(vc, num)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Max Producers Per Topic", func(set *pflag.FlagSet) {
 		set.IntVar(&num, "size", -1, "max producers per topic")

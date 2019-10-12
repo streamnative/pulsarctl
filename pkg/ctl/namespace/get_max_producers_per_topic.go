@@ -52,7 +52,7 @@ func GetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetMaxProducersPerTopic(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetMaxProducersPerTopic(vc *cmdutils.VerbCmd) error {
