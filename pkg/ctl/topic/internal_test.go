@@ -18,40 +18,21 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
-		"",
-		"topic")
+func TestGetInternalInfoArgError(t *testing.T) {
+	args := []string{"internal-info"}
+	_, _, nameErr, _ := TestTopicCommands(GetInternalInfoCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+}
 
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+func TestGetNonExistingTopicInternalInfo(t *testing.T) {
+	args := []string{"internal-info", "non-existing-topic"}
+	_, execErr, _, _ := TestTopicCommands(GetInternalInfoCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 500 reason: Unknown pulsar error", execErr.Error())
 }

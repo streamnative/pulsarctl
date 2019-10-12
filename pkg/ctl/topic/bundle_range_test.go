@@ -18,40 +18,26 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
-		"",
-		"topic")
+func TestGetBundleRangeCmd(t *testing.T) {
+	args := []string{"create", "test-get-topic-bundle-range", "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
 
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
-	}
+	args = []string{"bundle-range", "test-get-topic-bundle-range"}
+	out, execErr, _, _ := TestTopicCommands(GetBundleRangeCmd, args)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "The bundle range of the topic "+
+		"persistent://public/default/test-get-topic-bundle-range is: 0xc0000000_0xffffffff", out.String())
+}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+func TestGetBundleRangeArgError(t *testing.T) {
+	args := []string{"bundle-range"}
+	_, _, nameErr, _ := TestTopicCommands(GetBundleRangeCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
 }
