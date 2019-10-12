@@ -22,49 +22,49 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
+func ClearOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max consumers per subscription of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used for clearing offload deletion lag of a namespace."
+	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
 	var examples []pulsar.Example
-	set := pulsar.Example{
-		Desc:    "Get the max consumers per subscription of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-consumers-per-subscription (namespace-name)",
+	clear := pulsar.Example{
+		Desc:    "Clear offload deletion lag of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces clear-offload-deletion-lag (namespace-name)",
 	}
-	examples = append(examples, set)
+	examples = append(examples, clear)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The max consumers per subscription of the namespace (namespace-name) is (size)",
+		Out:  "Successfully clear the offload deletion lag of the namespace (namespace-name)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-consumers-per-subscription",
-		"Get the max consumers per subscription of a namespace",
+		"clear-offload-deletion-lag",
+		"Clear offload deletion lag of a namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxConsumerPerSubscription(vc)
+		return doClearOffloadDeletionLag(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {
+func doClearOffloadDeletionLag(vc *cmdutils.VerbCmd) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxConsumersPerSubscription(*ns)
+	err = admin.Namespaces().ClearOffloadDeleteLag(*ns)
 	if err == nil {
-		vc.Command.Printf("The max consumers per subscription of the namespace %s is %d", ns.String(), max)
+		vc.Command.Printf("Successfully clear the offload deletion lag of the namespace %s\n", ns.String())
 	}
 
 	return err

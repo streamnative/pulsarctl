@@ -22,15 +22,15 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
+func GetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max consumers per subscription of a namespace."
+	desc.CommandUsedFor = "This command is used for getting compaction threshold of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []pulsar.Example
 	set := pulsar.Example{
-		Desc:    "Get the max consumers per subscription of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-consumers-per-subscription (namespace-name)",
+		Desc:    "Get compaction threshold of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-compaction-threshold (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
@@ -38,33 +38,34 @@ func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The max consumers per subscription of the namespace (namespace-name) is (size)",
+		Out:  "The compaction size threshold of the namespace (namespace-name) is (size) byte(s)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-consumers-per-subscription",
-		"Get the max consumers per subscription of a namespace",
+		"get-compaction-threshold",
+		"Get compaction threshold of a namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxConsumerPerSubscription(vc)
+		return doGetCompactionThreshold(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {
+func doGetCompactionThreshold(vc *cmdutils.VerbCmd) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxConsumersPerSubscription(*ns)
+	threshold, err := admin.Namespaces().GetCompactionThreshold(*ns)
 	if err == nil {
-		vc.Command.Printf("The max consumers per subscription of the namespace %s is %d", ns.String(), max)
+		vc.Command.Printf("The compaction size threshold of the namespace %s is %d byte(s)\n",
+			ns.String(), threshold)
 	}
 
 	return err

@@ -19,18 +19,22 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
-func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
+func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max consumers per subscription of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used for setting the offload threshold of a namespace."
+	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
 	var examples []pulsar.Example
 	set := pulsar.Example{
-		Desc:    "Get the max consumers per subscription of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-consumers-per-subscription (namespace-name)",
+		Desc:    "Set the offload threshold of the namespace (namespace-name) to (size)",
+		Command: "pulsarctl namespaces set-offload-threshold --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
@@ -38,33 +42,50 @@ func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The max consumers per subscription of the namespace (namespace-name) is (size)",
+		Out:  "Successfully set the offload threshold of the namespace (namespace-name) to (size)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-consumers-per-subscription",
-		"Get the max consumers per subscription of a namespace",
+		"set-offload-threshold",
+		"Set the offload threshold of a namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
+	var threshold string
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxConsumerPerSubscription(vc)
+		return doSetOffloadThreshold(vc, threshold)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.FlagSetGroup.InFlagSet("Offload Threshold", func(set *pflag.FlagSet) {
+		set.StringVar(&threshold, "size", "-1",
+			"Maximum number of bytes stored in the pulsar cluster for a topic before data will  "+
+				"start being automatically offloaded to longterm  storage (e.g. 10m, 16g, 3t, 100)\n"+
+				"Negative values disable automatic offload.\n"+
+				"0 triggers offloading as soon as possible.")
+		cobra.MarkFlagRequired(set, "size")
+	})
 }
 
-func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {
+func doSetOffloadThreshold(vc *cmdutils.VerbCmd, threshold string) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
+	size, err := utils.ValidateSizeString(threshold)
+	if err != nil {
+		return err
+	}
+
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxConsumersPerSubscription(*ns)
+	err = admin.Namespaces().SetOffloadThreshold(*ns, size)
 	if err == nil {
-		vc.Command.Printf("The max consumers per subscription of the namespace %s is %d", ns.String(), max)
+		vc.Command.Printf("Successfully set the offload threshold of the namespace %s to %s\n",
+			ns.String(), threshold)
 	}
 
 	return err

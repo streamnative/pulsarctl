@@ -22,49 +22,49 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
+func GetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max consumers per subscription of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used for getting the schema auto-update strategy of a namespace."
+	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
 	var examples []pulsar.Example
-	set := pulsar.Example{
-		Desc:    "Get the max consumers per subscription of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-consumers-per-subscription (namespace-name)",
+	get := pulsar.Example{
+		Desc:    "Get the schema auto-update strategy of the namespace (namespace-name)",
+		Command: "pulsarctl namespaces get-schema-autoupdate-strategy (namespace-name)",
 	}
-	examples = append(examples, set)
+	examples = append(examples, get)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The max consumers per subscription of the namespace (namespace-name) is (size)",
+		Out:  "The schema auto-update strategy of the namespace (namespace-name) is (strategy)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-consumers-per-subscription",
-		"Get the max consumers per subscription of a namespace",
+		"get-schema-autoupdate-strategy",
+		"Get the schema auto-update strategy of a namespace",
 		desc.ToString(),
 		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxConsumerPerSubscription(vc)
+		return doGetSchemaAutoUpdateStrategy(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {
+func doGetSchemaAutoUpdateStrategy(vc *cmdutils.VerbCmd) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxConsumersPerSubscription(*ns)
+	s, err := admin.Namespaces().GetSchemaAutoUpdateCompatibilityStrategy(*ns)
 	if err == nil {
-		vc.Command.Printf("The max consumers per subscription of the namespace %s is %d", ns.String(), max)
+		vc.Command.Printf("The schema auto-update strategy of the namespace %s is %s\n", ns.String(), s.String())
 	}
 
 	return err

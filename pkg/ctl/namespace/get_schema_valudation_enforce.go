@@ -22,49 +22,55 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
+func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max consumers per subscription of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used for getting the schema validation enforced."
+	desc.CommandPermission = "This command requires super-user and tenant admin permissions."
 
 	var examples []pulsar.Example
-	set := pulsar.Example{
-		Desc:    "Get the max consumers per subscription of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-consumers-per-subscription (namespace-name)",
+	get := pulsar.Example{
+		Desc:    "Get schema validation status",
+		Command: "pulsarctl namespaces get-schema-validation-enforced <namespace-name>",
 	}
-	examples = append(examples, set)
+	examples = append(examples, get)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out:  "The max consumers per subscription of the namespace (namespace-name) is (size)",
+		Out:  "Schema validation enforced is enabled/disabled",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-consumers-per-subscription",
-		"Get the max consumers per subscription of a namespace",
+		"get-schema-validation-enforced",
+		"Enable/Disable schema validation enforced",
 		desc.ToString(),
 		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxConsumerPerSubscription(vc)
+		return doGetSchemaValidationEnforced(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {
+func doGetSchemaValidationEnforced(vc *cmdutils.VerbCmd) error {
 	ns, err := pulsar.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxConsumersPerSubscription(*ns)
+	s, err := admin.Namespaces().GetSchemaValidationEnforced(*ns)
 	if err == nil {
-		vc.Command.Printf("The max consumers per subscription of the namespace %s is %d", ns.String(), max)
+		out := "Namespace %s schema validation enforced is "
+		if s {
+			out += "enabled\n"
+		} else {
+			out += "disabled\n"
+		}
+		vc.Command.Printf(out, ns.String())
 	}
 
 	return err
