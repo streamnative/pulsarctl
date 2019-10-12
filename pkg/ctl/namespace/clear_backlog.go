@@ -72,7 +72,7 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doClearBacklog(vc, sName, bundle, force)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Clear Backlog", func(set *pflag.FlagSet) {
 		set.StringVar(&sName, "sub", "", "subscription name")

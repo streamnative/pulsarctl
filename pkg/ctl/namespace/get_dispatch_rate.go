@@ -56,7 +56,7 @@ func GetDispatchRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetDispatchRate(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetDispatchRate(vc *cmdutils.VerbCmd) error {

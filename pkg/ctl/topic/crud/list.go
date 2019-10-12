@@ -47,7 +47,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 
 	argError := pulsar.Output{
 		Desc: "the namespace is not specified",
-		Out:  "[✖]  only one argument is allowed to be used as a name",
+		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 	out = append(out, successOut, argError, e.TenantNotExistError, e.NamespaceNotExistError)
 	out = append(out, e.NamespaceErrors...)
@@ -62,7 +62,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListTopics(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {

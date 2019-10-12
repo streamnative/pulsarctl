@@ -61,7 +61,7 @@ func CreateClusterCmd(vc *cmdutils.VerbCmd) {
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
 		return doCreateCluster(vc, clusterData)
-	})
+	}, "the cluster name is not specified or the cluster name is specified more than one")
 
 	// register the params
 	vc.FlagSetGroup.InFlagSet("ClusterData", func(flagSet *pflag.FlagSet) {

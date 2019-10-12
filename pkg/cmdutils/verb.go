@@ -69,9 +69,9 @@ func (vc *VerbCmd) SetRunFunc(cmd func() error) {
 }
 
 // SetRunFuncWithNameArg registers a command function with an optional name argument
-func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error) {
+func (vc *VerbCmd) SetRunFuncWithNameArg(cmd func() error, errMsg string) {
 	vc.Command.Run = func(_ *cobra.Command, args []string) {
-		vc.NameArg, vc.NameError = GetNameArg(args)
+		vc.NameArg, vc.NameError = GetNameArg(args, errMsg)
 		run(cmd)
 	}
 }

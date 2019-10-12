@@ -39,7 +39,7 @@ func TestCreateTenantArgsError(t *testing.T) {
 	args := []string{"create"}
 	_, _, nameErr, _ := TestTenantCommands(createTenantCmd, args)
 
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the tenant name is not specified or the tenant name is specified more than one", nameErr.Error())
 }
 
 func TestCreateTenantAlreadyExistError(t *testing.T) {

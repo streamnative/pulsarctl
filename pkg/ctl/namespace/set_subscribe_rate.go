@@ -61,7 +61,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSubscribeRate(vc, rate)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Subscription Rate", func(set *pflag.FlagSet) {
 		set.IntVarP(&(rate.SubscribeThrottlingRatePerConsumer), "subscribe-rate", "m", -1,

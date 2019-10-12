@@ -61,7 +61,7 @@ func listFailureDomainCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListFailureDomain(vc)
-	})
+	}, "the cluster name is not specified or the cluster name is specified more than one")
 }
 
 func doListFailureDomain(vc *cmdutils.VerbCmd) error {
