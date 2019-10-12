@@ -53,7 +53,7 @@ type Namespaces interface {
 	// Set the messages Time to Live for all the topics within a namespace
 	SetNamespaceMessageTTL(namespace string, ttlInSeconds int) error
 
-	// Get the Message TTL for a namespace
+	// Get the message TTL for a namespace
 	GetNamespaceMessageTTL(namespace string) (int, error)
 
 	// Get the retention configuration for a namespace
