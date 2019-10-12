@@ -107,7 +107,7 @@ type Namespaces interface {
 	// Get the compactionThreshold for a namespace
 	GetCompactionThreshold(namespace NameSpaceName) (int64, error)
 
-  // Set maxConsumersPerSubscription for a namespace.
+	// Set maxConsumersPerSubscription for a namespace.
 	SetMaxConsumersPerSubscription(namespace NameSpaceName, max int) error
 
 	// Get the maxConsumersPerSubscription for a namespace.
@@ -444,10 +444,11 @@ func (n *namespaces) SetOffloadDeleteLag(namespace NameSpaceName, timeMs int64) 
 
 func (n *namespaces) GetOffloadDeleteLag(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
-  b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
+	return strconv.ParseInt(string(b), 10, 64)
 }
 
 func (n *namespaces) SetMaxConsumersPerSubscription(namespace NameSpaceName, max int) error {
@@ -457,7 +458,11 @@ func (n *namespaces) SetMaxConsumersPerSubscription(namespace NameSpaceName, max
 
 func (n *namespaces) GetMaxConsumersPerSubscription(namespace NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
-	return strconv.ParseInt(string(b), 10, 64)
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.Atoi(string(b))
 }
 
 func (n *namespaces) SetOffloadThreshold(namespace NameSpaceName, threshold int64) error {
@@ -467,7 +472,11 @@ func (n *namespaces) SetOffloadThreshold(namespace NameSpaceName, threshold int6
 
 func (n *namespaces) GetOffloadThreshold(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
-	return strconv.Atoi(string(b))
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.ParseInt(string(b), 10, 64)
 }
 
 func (n *namespaces) SetMaxConsumersPerTopic(namespace NameSpaceName, max int) error {
@@ -481,7 +490,7 @@ func (n *namespaces) GetMaxConsumersPerTopic(namespace NameSpaceName) (int, erro
 	if err != nil {
 		return -1, err
 	}
-	return strconv.ParseInt(string(b), 10, 64)
+	return strconv.Atoi(string(b))
 }
 
 func (n *namespaces) SetCompactionThreshold(namespace NameSpaceName, threshold int64) error {
@@ -491,7 +500,11 @@ func (n *namespaces) SetCompactionThreshold(namespace NameSpaceName, threshold i
 
 func (n *namespaces) GetCompactionThreshold(namespace NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
-	return strconv.Atoi(string(b))
+	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.ParseInt(string(b), 10, 64)
 }
 
 func (n *namespaces) SetMaxProducersPerTopic(namespace NameSpaceName, max int) error {

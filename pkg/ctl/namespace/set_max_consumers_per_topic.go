@@ -58,7 +58,7 @@ func SetMaxConsumersPerTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetMaxConsumersPerTopic(vc, num)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Max Consumers Per Topic", func(set *pflag.FlagSet) {
 		set.IntVar(&num, "size", -1, "max consumers per topic")

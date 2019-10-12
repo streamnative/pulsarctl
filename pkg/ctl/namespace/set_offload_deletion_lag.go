@@ -59,7 +59,7 @@ func SetOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetOffloadDeletionLag(vc, d)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Offload Deletion Lag", func(set *pflag.FlagSet) {
 		set.StringVarP(&d, "lag", "l", "",

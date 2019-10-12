@@ -61,7 +61,7 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSchemaValidationEnforced(vc, d)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Schema Validation Enforced", func(set *pflag.FlagSet) {
 		set.BoolVarP(&d, "disable", "d", false,

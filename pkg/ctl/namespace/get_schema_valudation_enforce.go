@@ -52,7 +52,7 @@ func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSchemaValidationEnforced(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetSchemaValidationEnforced(vc *cmdutils.VerbCmd) error {

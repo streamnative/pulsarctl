@@ -56,7 +56,7 @@ func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSchemaAutoUpdateStrategy(vc, s)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Schema Auto Update Strategy", func(set *pflag.FlagSet) {
 		set.StringVarP(&s, "compatibility", "c", "",

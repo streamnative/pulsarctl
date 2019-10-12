@@ -52,7 +52,7 @@ func ClearOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doClearOffloadDeletionLag(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doClearOffloadDeletionLag(vc *cmdutils.VerbCmd) error {

@@ -52,7 +52,7 @@ func GetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetMaxConsumerPerSubscription(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetMaxConsumerPerSubscription(vc *cmdutils.VerbCmd) error {

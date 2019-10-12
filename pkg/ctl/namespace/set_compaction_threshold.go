@@ -58,7 +58,7 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetCompactionThreshold(vc, threshold)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Compaction Threshold", func(set *pflag.FlagSet) {
 		set.StringVar(&threshold, "size", "0",

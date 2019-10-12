@@ -52,7 +52,7 @@ func GetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSchemaAutoUpdateStrategy(vc)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doGetSchemaAutoUpdateStrategy(vc *cmdutils.VerbCmd) error {
