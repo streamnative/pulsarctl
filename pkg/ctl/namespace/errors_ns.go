@@ -20,8 +20,8 @@ package namespace
 import "github.com/streamnative/pulsarctl/pkg/pulsar"
 
 var ArgError = pulsar.Output{
-	Desc: "the namespace name is not specified",
-	Out:  "[✖]  only one argument is allowed to be used as a name",
+	Desc: "the namespace name is not specified or the namespace name is specified more than one",
+	Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 }
 
 var AuthNotEnable = pulsar.Output{

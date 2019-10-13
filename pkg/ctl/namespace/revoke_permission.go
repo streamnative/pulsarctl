@@ -58,7 +58,7 @@ func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doRevokePermissions(vc, role)
-	})
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Revoke Permissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "",

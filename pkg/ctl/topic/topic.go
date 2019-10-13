@@ -19,15 +19,6 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/compact"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/info"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/offload"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/permission"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stats"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/stop"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/unload"
 
 	"github.com/spf13/cobra"
 )
@@ -40,25 +31,25 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"topic")
 
 	commands := []func(*cmdutils.VerbCmd){
-		stop.TopicTerminateCmd,
-		offload.TopicOffloadCmd,
-		offload.TopicOffloadStatusCmd,
-		unload.TopicUnloadCmd,
-		compact.StatusCmd,
-		crud.CreateTopicCmd,
-		crud.DeleteTopicCmd,
-		crud.GetTopicCmd,
-		crud.ListTopicsCmd,
-		crud.UpdateTopicCmd,
-		permission.GrantPermissionCmd,
-		permission.RevokePermissions,
-		permission.GetPermissionsCmd,
-		lookup.TopicCmd,
-		lookup.GetBundleRangeCmd,
-		info.GetLastMessageIDCmd,
-		stats.GetStatsCmd,
-		stats.GetInternalStatsCmd,
-		info.GetInternalInfoCmd,
+		TerminateCmd,
+		OffloadCmd,
+		OffloadStatusCmd,
+		UnloadCmd,
+		StatusCmd,
+		CreateTopicCmd,
+		DeleteTopicCmd,
+		GetTopicCmd,
+		ListTopicsCmd,
+		UpdateTopicCmd,
+		GrantPermissionCmd,
+		RevokePermissions,
+		GetPermissionsCmd,
+		LookUpTopicCmd,
+		GetBundleRangeCmd,
+		GetLastMessageIDCmd,
+		GetStatsCmd,
+		GetInternalStatsCmd,
+		GetInternalInfoCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

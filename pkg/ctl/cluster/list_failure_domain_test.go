@@ -67,5 +67,6 @@ func TestListFailureArgsError(t *testing.T) {
 	args := []string{"list-failure-domains"}
 	_, _, nameErr, _ := TestClusterCommands(listFailureDomainCmd, args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "only one argument is allowed to be used as a name", nameErr.Error())
+	assert.Equal(t, "the cluster name is not specified or the cluster name is specified more than one",
+		nameErr.Error())
 }
