@@ -14,28 +14,25 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+//
 
-package pulsar
+package bookie
 
-type APIVersion int
-
-const (
-	V1 APIVersion = iota
-	V2
-	V3
+import (
+	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/bookie/ledger"
 )
 
-const DefaultAPIVersion = "v2"
+func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+	resourceCmd := cmdutils.NewResourceCmd(
+		"bookies",
+		"Operations about bookies",
+		"",
+		"bookie",
+	)
 
-func (v APIVersion) String() string {
-	switch v {
-	case V1:
-		return "v1"
-	case V2:
-		return "v2"
-	case V3:
-		return "v3"
-	}
+	resourceCmd.AddCommand(ledger.Command(flagGrouping))
 
-	return DefaultAPIVersion
+	return resourceCmd
 }

@@ -21,6 +21,6 @@ import (
 	"fmt"
 )
 
-func makeHTTPPath(apiVersion string, componentPath string) string {
-	return fmt.Sprintf("/admin/%s%s", apiVersion, componentPath)
+func makeHTTPPath(service, apiVersion string, componentPath string) string {
+	return fmt.Sprintf("/%s/%s%s", service, apiVersion, componentPath)
 }

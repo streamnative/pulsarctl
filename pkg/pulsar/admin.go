@@ -35,7 +35,8 @@ import (
 )
 
 const (
-	DefaultWebServiceURL = "http://localhost:8080"
+	DefaultWebServiceURL       = "http://localhost:8080"
+	DefaultBookieWebServiceURL = "http://localhost:8081"
 )
 
 // Config is used to configure the admin client
@@ -47,6 +48,9 @@ type Config struct {
 	Auth       *auth.TLSAuthProvider
 	AuthParams string
 	TLSOptions *TLSOptions
+
+	BookieWebServiceURL string
+	BookieAPIVersion    APIVersion
 }
 
 type TLSOptions struct {
@@ -63,6 +67,9 @@ func DefaultConfig() *Config {
 		TLSOptions: &TLSOptions{
 			AllowInsecureConnection: false,
 		},
+
+		BookieWebServiceURL: DefaultBookieWebServiceURL,
+		BookieAPIVersion:    V1,
 	}
 	return config
 }
@@ -79,16 +86,30 @@ type Client interface {
 	Schemas() Schema
 }
 
+// BookieClient provides a client to the BookKeeper Restful API
+type BookieClient interface {
+	Ledger() Ledger
+}
+
 type client struct {
 	webServiceURL string
-	apiVersion    string
 	httpClient    *http.Client
+	transport     *http.Transport
+}
+
+type pulsarClient struct {
+	client     *client
+	apiVersion string
 
 	// TLS config
 	auth       *auth.TLSAuthProvider
 	authParams string
 	tlsOptions *TLSOptions
-	transport  *http.Transport
+}
+
+type bookieClient struct {
+	client     *client
+	apiVersion string
 }
 
 // New returns a new client
@@ -97,12 +118,14 @@ func New(config *Config) (Client, error) {
 		config.WebServiceURL = DefaultWebServiceURL
 	}
 
-	c := &client{
-		apiVersion:    config.APIVersion.String(),
-		webServiceURL: config.WebServiceURL,
+	c := &pulsarClient{
+		apiVersion: config.APIVersion.String(),
+		client: &client{
+			webServiceURL: config.WebServiceURL,
+		},
 	}
 
-	if strings.HasPrefix(c.webServiceURL, "https://") {
+	if strings.HasPrefix(c.client.webServiceURL, "https://") {
 		c.authParams = config.AuthParams
 		c.tlsOptions = config.TLSOptions
 		mapAuthParams := make(map[string]string)
@@ -118,7 +141,7 @@ func New(config *Config) (Client, error) {
 			return nil, err
 		}
 
-		c.transport = &http.Transport{
+		c.client.transport = &http.Transport{
 			MaxIdleConnsPerHost: 10,
 			TLSClientConfig:     tlsConf,
 		}
@@ -127,7 +150,22 @@ func New(config *Config) (Client, error) {
 	return c, nil
 }
 
-func (c *client) getTLSConfig() (*tls.Config, error) {
+func NewBookieClient(config *Config) BookieClient {
+	if len(config.WebServiceURL) == 0 {
+		config.WebServiceURL = DefaultWebServiceURL
+	}
+
+	c := &bookieClient{
+		apiVersion: config.BookieAPIVersion.String(),
+		client: &client{
+			webServiceURL: config.WebServiceURL,
+		},
+	}
+
+	return c
+}
+
+func (c *pulsarClient) getTLSConfig() (*tls.Config, error) {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: c.tlsOptions.AllowInsecureConnection,
 	}
@@ -157,8 +195,12 @@ func (c *client) getTLSConfig() (*tls.Config, error) {
 	return tlsConfig, nil
 }
 
-func (c *client) endpoint(componentPath string, parts ...string) string {
-	return path.Join(makeHTTPPath(c.apiVersion, componentPath), endpoint(parts...))
+func (c *pulsarClient) endpoint(componentPath string, parts ...string) string {
+	return path.Join(makeHTTPPath("admin", c.apiVersion, componentPath), endpoint(parts...))
+}
+
+func (c *bookieClient) bookieEndpoint(componentPath string, parts ...string) string {
+	return path.Join(makeHTTPPath("api", c.apiVersion, componentPath), endpoint(parts...))
 }
 
 // get is used to do a GET request against an endpoint

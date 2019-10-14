@@ -26,42 +26,44 @@ type Tenants interface {
 }
 
 type tenants struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 }
 
-func (c *client) Tenants() Tenants {
+func (c *pulsarClient) Tenants() Tenants {
 	return &tenants{
 		client:   c,
+		request:  c.client,
 		basePath: "/tenants",
 	}
 }
 
 func (c *tenants) Create(data TenantData) error {
 	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.client.put(endpoint, &data)
+	return c.request.put(endpoint, &data)
 }
 
 func (c *tenants) Delete(name string) error {
 	endpoint := c.client.endpoint(c.basePath, name)
-	return c.client.delete(endpoint)
+	return c.request.delete(endpoint)
 }
 
 func (c *tenants) Update(data TenantData) error {
 	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.client.post(endpoint, &data)
+	return c.request.post(endpoint, &data)
 }
 
 func (c *tenants) List() ([]string, error) {
 	var tenantList []string
 	endpoint := c.client.endpoint(c.basePath, "")
-	err := c.client.get(endpoint, &tenantList)
+	err := c.request.get(endpoint, &tenantList)
 	return tenantList, err
 }
 
 func (c *tenants) Get(name string) (TenantData, error) {
 	var data TenantData
 	endpoint := c.client.endpoint(c.basePath, name)
-	err := c.client.get(endpoint, &data)
+	err := c.request.get(endpoint, &data)
 	return data, err
 }

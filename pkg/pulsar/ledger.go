@@ -14,28 +14,37 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+//
 
 package pulsar
 
-type APIVersion int
-
-const (
-	V1 APIVersion = iota
-	V2
-	V3
+import (
+	"strconv"
 )
 
-const DefaultAPIVersion = "v2"
+type Ledger interface {
+	// Delete the specified ledger
+	DeleteLedger(int64) error
+}
 
-func (v APIVersion) String() string {
-	switch v {
-	case V1:
-		return "v1"
-	case V2:
-		return "v2"
-	case V3:
-		return "v3"
+type ledger struct {
+	client   *bookieClient
+	request  *client
+	basePath string
+	params   map[string]string
+}
+
+func (c *bookieClient) Ledger() Ledger {
+	return &ledger{
+		client:   c,
+		request:  c.client,
+		basePath: "/delete",
+		params:   make(map[string]string),
 	}
+}
 
-	return DefaultAPIVersion
+func (c *ledger) DeleteLedger(ledgerID int64) error {
+	endpoint := c.client.bookieEndpoint(c.basePath)
+	c.params["ledger_id"] = strconv.FormatInt(ledgerID, 10)
+	return c.request.deleteWithQueryParams(endpoint, nil, c.params)
 }

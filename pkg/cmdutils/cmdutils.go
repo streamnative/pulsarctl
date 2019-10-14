@@ -88,6 +88,10 @@ func NewPulsarClientWithAPIVersion(version pulsar.APIVersion) pulsar.Client {
 	return PulsarCtlConfig.Client(version)
 }
 
+func NewBookieClient() pulsar.BookieClient {
+	return PulsarCtlConfig.BookieClient()
+}
+
 func PrintJSON(w io.Writer, obj interface{}) {
 	b, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {

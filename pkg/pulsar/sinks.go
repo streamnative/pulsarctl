@@ -83,13 +83,15 @@ type Sinks interface {
 }
 
 type sinks struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 }
 
-func (c *client) Sinks() Sinks {
+func (c *pulsarClient) Sinks() Sinks {
 	return &sinks{
 		client:   c,
+		request:  c.client,
 		basePath: "/sinks",
 	}
 }
@@ -111,14 +113,14 @@ func (s *sinks) createTextFromFiled(w *multipart.Writer, value string) (io.Write
 func (s *sinks) ListSinks(tenant, namespace string) ([]string, error) {
 	var sinks []string
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace)
-	err := s.client.get(endpoint, &sinks)
+	err := s.request.get(endpoint, &sinks)
 	return sinks, err
 }
 
 func (s *sinks) GetSink(tenant, namespace, sink string) (SinkConfig, error) {
 	var sinkConfig SinkConfig
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	err := s.client.get(endpoint, &sinkConfig)
+	err := s.request.get(endpoint, &sinkConfig)
 	return sinkConfig, err
 }
 
@@ -172,7 +174,7 @@ func (s *sinks) CreateSink(config *SinkConfig, fileName string) error {
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = s.client.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = s.request.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -217,7 +219,7 @@ func (s *sinks) CreateSinkWithURL(config *SinkConfig, pkgURL string) error {
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = s.client.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = s.request.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -292,7 +294,7 @@ func (s *sinks) UpdateSink(config *SinkConfig, fileName string, updateOptions *U
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = s.client.putWithMultiPart(endpoint, bodyBuf, contentType)
+	err = s.request.putWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -356,7 +358,7 @@ func (s *sinks) UpdateSinkWithURL(config *SinkConfig, pkgURL string, updateOptio
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = s.client.putWithMultiPart(endpoint, bodyBuf, contentType)
+	err = s.request.putWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -366,13 +368,13 @@ func (s *sinks) UpdateSinkWithURL(config *SinkConfig, pkgURL string, updateOptio
 
 func (s *sinks) DeleteSink(tenant, namespace, sink string) error {
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	return s.client.delete(endpoint)
+	return s.request.delete(endpoint)
 }
 
 func (s *sinks) GetSinkStatus(tenant, namespace, sink string) (SinkStatus, error) {
 	var sinkStatus SinkStatus
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	err := s.client.get(endpoint+"/status", &sinkStatus)
+	err := s.request.get(endpoint+"/status", &sinkStatus)
 	return sinkStatus, err
 }
 
@@ -380,54 +382,54 @@ func (s *sinks) GetSinkStatusWithID(tenant, namespace, sink string, id int) (Sin
 	var sinkInstanceStatusData SinkInstanceStatusData
 	instanceID := fmt.Sprintf("%d", id)
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink, instanceID)
-	err := s.client.get(endpoint+"/status", &sinkInstanceStatusData)
+	err := s.request.get(endpoint+"/status", &sinkInstanceStatusData)
 	return sinkInstanceStatusData, err
 }
 
 func (s *sinks) RestartSink(tenant, namespace, sink string) error {
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	return s.client.post(endpoint+"/restart", "")
+	return s.request.post(endpoint+"/restart", "")
 }
 
 func (s *sinks) RestartSinkWithID(tenant, namespace, sink string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink, id)
 
-	return s.client.post(endpoint+"/restart", "")
+	return s.request.post(endpoint+"/restart", "")
 }
 
 func (s *sinks) StopSink(tenant, namespace, sink string) error {
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	return s.client.post(endpoint+"/stop", "")
+	return s.request.post(endpoint+"/stop", "")
 }
 
 func (s *sinks) StopSinkWithID(tenant, namespace, sink string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink, id)
 
-	return s.client.post(endpoint+"/stop", "")
+	return s.request.post(endpoint+"/stop", "")
 }
 
 func (s *sinks) StartSink(tenant, namespace, sink string) error {
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink)
-	return s.client.post(endpoint+"/start", "")
+	return s.request.post(endpoint+"/start", "")
 }
 
 func (s *sinks) StartSinkWithID(tenant, namespace, sink string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := s.client.endpoint(s.basePath, tenant, namespace, sink, id)
 
-	return s.client.post(endpoint+"/start", "")
+	return s.request.post(endpoint+"/start", "")
 }
 
 func (s *sinks) GetBuiltInSinks() ([]*ConnectorDefinition, error) {
 	var connectorDefinition []*ConnectorDefinition
 	endpoint := s.client.endpoint(s.basePath, "builtinSinks")
-	err := s.client.get(endpoint, &connectorDefinition)
+	err := s.request.get(endpoint, &connectorDefinition)
 	return connectorDefinition, err
 }
 
 func (s *sinks) ReloadBuiltInSinks() error {
 	endpoint := s.client.endpoint(s.basePath, "reloadBuiltInSinks")
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }

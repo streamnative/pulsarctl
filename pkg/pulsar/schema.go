@@ -40,13 +40,15 @@ type Schema interface {
 }
 
 type schemas struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 }
 
-func (c *client) Schemas() Schema {
+func (c *pulsarClient) Schemas() Schema {
 	return &schemas{
 		client:   c,
+		request:  c.client,
 		basePath: "/schemas",
 	}
 }
@@ -59,7 +61,7 @@ func (s *schemas) GetSchemaInfo(topic string) (*SchemaInfo, error) {
 	var response GetSchemaResponse
 	endpoint := s.client.endpoint(s.basePath, topicName.tenant, topicName.namespace, topicName.GetEncodedTopic(), "schema")
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +79,7 @@ func (s *schemas) GetSchemaInfoWithVersion(topic string) (*SchemaInfoWithVersion
 	endpoint := s.client.endpoint(s.basePath, topicName.tenant, topicName.namespace,
 		topicName.GetEncodedTopic(), "schema")
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.get(endpoint, &response)
 	if err != nil {
 		fmt.Println("err:", err.Error())
 		return nil, err
@@ -97,7 +99,7 @@ func (s *schemas) GetSchemaInfoByVersion(topic string, version int64) (*SchemaIn
 	endpoint := s.client.endpoint(s.basePath, topicName.tenant, topicName.namespace, topicName.GetEncodedTopic(),
 		"schema", strconv.FormatInt(version, 10))
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +119,7 @@ func (s *schemas) DeleteSchema(topic string) error {
 
 	fmt.Println(endpoint)
 
-	return s.client.delete(endpoint)
+	return s.request.delete(endpoint)
 }
 
 func (s *schemas) CreateSchemaByPayload(topic string, schemaPayload PostSchemaPayload) error {
@@ -129,5 +131,5 @@ func (s *schemas) CreateSchemaByPayload(topic string, schemaPayload PostSchemaPa
 	endpoint := s.client.endpoint(s.basePath, topicName.tenant, topicName.namespace,
 		topicName.GetEncodedTopic(), "schema")
 
-	return s.client.post(endpoint, &schemaPayload)
+	return s.request.post(endpoint, &schemaPayload)
 }

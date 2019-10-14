@@ -37,6 +37,9 @@ type ClusterConfig struct {
 	TLSAllowInsecureConnection bool
 
 	AuthParams string
+
+	// the bookkeeper web service url that pulsarctl connects to.
+	BookieWebServiceURL string
 }
 
 func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
@@ -70,6 +73,13 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"",
 		"Allow TLS trust cert file path")
 
+	flags.StringVar(
+		&c.BookieWebServiceURL,
+		"bookie-service-url",
+		pulsar.DefaultBookieWebServiceURL,
+		"The bookie web service url that pulsarctl connects to.",
+	)
+
 	return flags
 }
 
@@ -99,4 +109,13 @@ func (c *ClusterConfig) Client(version pulsar.APIVersion) pulsar.Client {
 		log.Fatalf("create pulsar client error: %s", err.Error())
 	}
 	return client
+}
+
+func (c *ClusterConfig) BookieClient() pulsar.BookieClient {
+	config := pulsar.DefaultConfig()
+	if len(c.BookieWebServiceURL) > 0 && c.WebServiceURL != config.BookieWebServiceURL {
+		config.BookieWebServiceURL = c.BookieWebServiceURL
+	}
+
+	return pulsar.NewBookieClient(config)
 }

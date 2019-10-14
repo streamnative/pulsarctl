@@ -108,13 +108,15 @@ type Functions interface {
 }
 
 type functions struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 }
 
-func (c *client) Functions() Functions {
+func (c *pulsarClient) Functions() Functions {
 	return &functions{
 		client:   c,
+		request:  c.client,
 		basePath: "/functions",
 	}
 }
@@ -184,7 +186,7 @@ func (f *functions) CreateFunc(funcConf *FunctionConfig, fileName string) error 
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.client.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.request.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -229,7 +231,7 @@ func (f *functions) CreateFuncWithURL(funcConf *FunctionConfig, pkgURL string) e
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.client.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.request.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -239,56 +241,56 @@ func (f *functions) CreateFuncWithURL(funcConf *FunctionConfig, pkgURL string) e
 
 func (f *functions) StopFunction(tenant, namespace, name string) error {
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.client.post(endpoint+"/stop", "")
+	return f.request.post(endpoint+"/stop", "")
 }
 
 func (f *functions) StopFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.client.post(endpoint+"/stop", "")
+	return f.request.post(endpoint+"/stop", "")
 }
 
 func (f *functions) DeleteFunction(tenant, namespace, name string) error {
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.client.delete(endpoint)
+	return f.request.delete(endpoint)
 }
 
 func (f *functions) StartFunction(tenant, namespace, name string) error {
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.client.post(endpoint+"/start", "")
+	return f.request.post(endpoint+"/start", "")
 }
 
 func (f *functions) StartFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.client.post(endpoint+"/start", "")
+	return f.request.post(endpoint+"/start", "")
 }
 
 func (f *functions) RestartFunction(tenant, namespace, name string) error {
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.client.post(endpoint+"/restart", "")
+	return f.request.post(endpoint+"/restart", "")
 }
 
 func (f *functions) RestartFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.client.post(endpoint+"/restart", "")
+	return f.request.post(endpoint+"/restart", "")
 }
 
 func (f *functions) GetFunctions(tenant, namespace string) ([]string, error) {
 	var functions []string
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace)
-	err := f.client.get(endpoint, &functions)
+	err := f.request.get(endpoint, &functions)
 	return functions, err
 }
 
 func (f *functions) GetFunction(tenant, namespace, name string) (FunctionConfig, error) {
 	var functionConfig FunctionConfig
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.client.get(endpoint, &functionConfig)
+	err := f.request.get(endpoint, &functionConfig)
 	return functionConfig, err
 }
 
@@ -360,7 +362,7 @@ func (f *functions) UpdateFunction(functionConfig *FunctionConfig, fileName stri
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.client.putWithMultiPart(endpoint, bodyBuf, contentType)
+	err = f.request.putWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -425,7 +427,7 @@ func (f *functions) UpdateFunctionWithURL(functionConfig *FunctionConfig, pkgURL
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.client.putWithMultiPart(endpoint, bodyBuf, contentType)
+	err = f.request.putWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -436,7 +438,7 @@ func (f *functions) UpdateFunctionWithURL(functionConfig *FunctionConfig, pkgURL
 func (f *functions) GetFunctionStatus(tenant, namespace, name string) (FunctionStatus, error) {
 	var functionStatus FunctionStatus
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.client.get(endpoint+"/status", &functionStatus)
+	err := f.request.get(endpoint+"/status", &functionStatus)
 	return functionStatus, err
 }
 
@@ -445,14 +447,14 @@ func (f *functions) GetFunctionStatusWithInstanceID(tenant, namespace, name stri
 	var functionInstanceStatusData FunctionInstanceStatusData
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
-	err := f.client.get(endpoint+"/status", &functionInstanceStatusData)
+	err := f.request.get(endpoint+"/status", &functionInstanceStatusData)
 	return functionInstanceStatusData, err
 }
 
 func (f *functions) GetFunctionStats(tenant, namespace, name string) (FunctionStats, error) {
 	var functionStats FunctionStats
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.client.get(endpoint+"/stats", &functionStats)
+	err := f.request.get(endpoint+"/stats", &functionStats)
 	return functionStats, err
 }
 
@@ -461,14 +463,14 @@ func (f *functions) GetFunctionStatsWithInstanceID(tenant, namespace, name strin
 	var functionInstanceStatsData FunctionInstanceStatsData
 	id := fmt.Sprintf("%d", instanceID)
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
-	err := f.client.get(endpoint+"/stats", &functionInstanceStatsData)
+	err := f.request.get(endpoint+"/stats", &functionInstanceStatsData)
 	return functionInstanceStatsData, err
 }
 
 func (f *functions) GetFunctionState(tenant, namespace, name, key string) (FunctionState, error) {
 	var functionState FunctionState
 	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, "state", key)
-	err := f.client.get(endpoint, &functionState)
+	err := f.request.get(endpoint, &functionState)
 	return functionState, err
 }
 
@@ -505,7 +507,7 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state Funct
 
 	contentType := multiPartWriter.FormDataContentType()
 
-	err = f.client.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.request.postWithMultiPart(endpoint, nil, bodyBuf, contentType)
 
 	if err != nil {
 		return err
@@ -574,7 +576,7 @@ func (f *functions) TriggerFunction(tenant, namespace, name, topic, triggerValue
 
 	contentType := multiPartWriter.FormDataContentType()
 	var str string
-	err := f.client.postWithMultiPart(endpoint, &str, bodyBuf, contentType)
+	err := f.request.postWithMultiPart(endpoint, &str, bodyBuf, contentType)
 	if err != nil {
 		return "", err
 	}
