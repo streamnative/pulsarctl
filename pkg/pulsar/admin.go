@@ -77,6 +77,7 @@ type Client interface {
 	Sinks() Sinks
 	Namespaces() Namespaces
 	Schemas() Schema
+	BrokerStats() BrokerStats
 }
 
 type client struct {
