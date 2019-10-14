@@ -23,6 +23,7 @@ const (
 	V1 APIVersion = iota
 	V2
 	V3
+	BV1
 )
 
 const DefaultAPIVersion = "v2"
@@ -30,11 +31,13 @@ const DefaultAPIVersion = "v2"
 func (v APIVersion) String() string {
 	switch v {
 	case V1:
-		return "v1"
+		return ""
 	case V2:
 		return "v2"
 	case V3:
 		return "v3"
+	case BV1:
+		return "v1"
 	}
 
 	return DefaultAPIVersion

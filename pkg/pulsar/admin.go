@@ -69,7 +69,7 @@ func DefaultConfig() *Config {
 		},
 
 		BookieWebServiceURL: DefaultBookieWebServiceURL,
-		BookieAPIVersion:    V1,
+		BookieAPIVersion:    BV1,
 	}
 	return config
 }
@@ -151,14 +151,14 @@ func New(config *Config) (Client, error) {
 }
 
 func NewBookieClient(config *Config) BookieClient {
-	if len(config.WebServiceURL) == 0 {
-		config.WebServiceURL = DefaultWebServiceURL
+	if len(config.BookieWebServiceURL) == 0 {
+		config.BookieWebServiceURL = DefaultBookieWebServiceURL
 	}
 
 	c := &bookieClient{
 		apiVersion: config.BookieAPIVersion.String(),
 		client: &client{
-			webServiceURL: config.WebServiceURL,
+			webServiceURL: config.BookieWebServiceURL,
 		},
 	}
 
@@ -200,7 +200,7 @@ func (c *pulsarClient) endpoint(componentPath string, parts ...string) string {
 }
 
 func (c *bookieClient) bookieEndpoint(componentPath string, parts ...string) string {
-	return path.Join(makeHTTPPath("api", c.apiVersion, componentPath), endpoint(parts...))
+	return path.Join(makeHTTPPath("api", c.apiVersion, componentPath+"/"), endpoint(parts...))
 }
 
 // get is used to do a GET request against an endpoint
@@ -283,10 +283,10 @@ func (c *client) putWithQueryParams(endpoint string, in, obj interface{}, params
 }
 
 func (c *client) delete(endpoint string) error {
-	return c.deleteWithQueryParams(endpoint, nil, nil)
+	return c.deleteWithQueryParams(endpoint, nil)
 }
 
-func (c *client) deleteWithQueryParams(endpoint string, obj interface{}, params map[string]string) error {
+func (c *client) deleteWithQueryParams(endpoint string, params map[string]string) error {
 	req, err := c.newRequest(http.MethodDelete, endpoint)
 	if err != nil {
 		return err
@@ -300,17 +300,12 @@ func (c *client) deleteWithQueryParams(endpoint string, obj interface{}, params 
 		req.params = query
 	}
 
+	// nolint
 	resp, err := checkSuccessful(c.doRequest(req))
 	if err != nil {
 		return err
 	}
 	defer safeRespClose(resp)
-
-	if obj != nil {
-		if err := decodeJSONBody(resp, &obj); err != nil {
-			return err
-		}
-	}
 
 	return nil
 }

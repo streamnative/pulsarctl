@@ -14,7 +14,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 package pulsar
 
@@ -24,7 +23,16 @@ import (
 
 type Ledger interface {
 	// Delete the specified ledger
-	DeleteLedger(int64) error
+	Delete(int64) error
+
+	// List all the ledgers and get the metadata
+	List(bool) (map[int64]string, error)
+
+	// Get the metadata of a ledger
+	Get(int64) (map[int64]LedgerMetadata, error)
+
+	// Read a range of entries from a ledger
+	Read(int64, int64, int64) (map[string]string, error)
 }
 
 type ledger struct {
@@ -38,13 +46,43 @@ func (c *bookieClient) Ledger() Ledger {
 	return &ledger{
 		client:   c,
 		request:  c.client,
-		basePath: "/delete",
+		basePath: "/ledger",
 		params:   make(map[string]string),
 	}
 }
 
-func (c *ledger) DeleteLedger(ledgerID int64) error {
-	endpoint := c.client.bookieEndpoint(c.basePath)
+func (c *ledger) Delete(ledgerID int64) error {
+	endpoint := c.client.bookieEndpoint(c.basePath, "/delete")
 	c.params["ledger_id"] = strconv.FormatInt(ledgerID, 10)
-	return c.request.deleteWithQueryParams(endpoint, nil, c.params)
+	return c.request.deleteWithQueryParams(endpoint, c.params)
+}
+
+func (c *ledger) List(showMeta bool) (map[int64]string, error) {
+	endpoint := c.client.bookieEndpoint(c.basePath, "list")
+	c.params["print_metadata"] = strconv.FormatBool(showMeta)
+	var metadata map[int64]string
+	_, err := c.request.getWithQueryParams(endpoint, &metadata, c.params, true)
+	return metadata, err
+}
+
+func (c *ledger) Get(ledgerID int64) (map[int64]LedgerMetadata, error) {
+	endpoint := c.client.bookieEndpoint(c.basePath, "metadata")
+	c.params["ledger_id"] = strconv.FormatInt(ledgerID, 10)
+	var metadata map[int64]LedgerMetadata
+	_, err := c.request.getWithQueryParams(endpoint, &metadata, c.params, true)
+	return metadata, err
+}
+
+func (c *ledger) Read(ledgerID int64, start int64, end int64) (map[string]string, error) {
+	endpoint := c.client.bookieEndpoint(c.basePath, "read")
+	c.params["ledger_id"] = strconv.FormatInt(ledgerID, 10)
+	if start >= 0 {
+		c.params["start_entry_id"] = strconv.FormatInt(start, 10)
+	}
+	if end >= 0 {
+		c.params["end_entry_id"] = strconv.FormatInt(end, 10)
+	}
+	info := make(map[string]string)
+	_, err := c.request.getWithQueryParams(endpoint, &info, c.params, true)
+	return info, err
 }

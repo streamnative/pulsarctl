@@ -14,19 +14,19 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 package ledger
 
 import (
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
+	"strconv"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
 )
 
-func DeleteLedgerCmd(vc *cmdutils.VerbCmd) {
+func DeleteCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting a ledger."
 	desc.CommandPermission = "none"
@@ -44,37 +44,30 @@ func DeleteLedgerCmd(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Successfully delete the ledger (ledger-id)",
 	}
-	out = append(out, successOut)
+	out = append(out, successOut, argError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"delete",
-		"d",
+		"Delete a ledger",
 		desc.ToString(),
 		desc.ExampleToString())
 
-	var id int64
-
 	vc.SetRunFuncWithNameArg(func() error {
-		return doDeleteLedgerCmd(vc, id)
+		return doDeleteCmd(vc)
 	}, "the ledger id is not specified or the ledger id is specified more than one")
-
-	vc.FlagSetGroup.InFlagSet("Ledger", func(set *pflag.FlagSet) {
-		set.Int64Var(&id, "ledger-id", -1, "the delete ledger id")
-		cobra.MarkFlagRequired(set, "ledger-id")
-	})
 }
 
-func doDeleteLedgerCmd(vc *cmdutils.VerbCmd, id int64) error {
-
-	if id <= 0 {
-		return errors.Errorf("invalid ledger id %d", id)
+func doDeleteCmd(vc *cmdutils.VerbCmd) error {
+	id, err := strconv.ParseInt(vc.NameArg, 10, 64)
+	if err != nil || id < 0 {
+		return errors.Errorf("invalid ledger id %s", vc.NameArg)
 	}
 
 	admin := cmdutils.NewBookieClient()
-	err := admin.Ledger().DeleteLedger(id)
+	err = admin.Ledger().Delete(id)
 	if err == nil {
-		vc.Command.Println("Successfully delete the ledger %d", id)
+		vc.Command.Printf("Successfully delete the ledger %d", id)
 	}
 
 	return err

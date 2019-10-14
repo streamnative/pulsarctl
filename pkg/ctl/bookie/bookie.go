@@ -14,14 +14,14 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 package bookie
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/bookie/ledger"
+
+	"github.com/spf13/cobra"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {

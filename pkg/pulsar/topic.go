@@ -82,7 +82,7 @@ func (t *topics) Delete(topic TopicName, force bool, nonPartitioned bool) error 
 	params := map[string]string{
 		"force": strconv.FormatBool(force),
 	}
-	return t.request.deleteWithQueryParams(endpoint, nil, params)
+	return t.request.deleteWithQueryParams(endpoint, params)
 }
 
 func (t *topics) Update(topic TopicName, partitions int) error {

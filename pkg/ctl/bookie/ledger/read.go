@@ -14,6 +14,85 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 package ledger
+
+import (
+	"strconv"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
+)
+
+func ReadCmd(vc *cmdutils.VerbCmd) {
+	var desc pulsar.LongDescription
+	desc.CommandUsedFor = "This command is used for reading a range of entries of a ledger."
+	desc.CommandPermission = "none"
+
+	var examples []pulsar.Example
+	r := pulsar.Example{
+		Desc:    "Read a range of entries of the specified ledger",
+		Command: "pulsar bookies ledger read (ledger-id)",
+	}
+
+	rs := pulsar.Example{
+		Desc:    "Read the entries of the specified ledger started from the given entry id",
+		Command: "pulsar bookies ledger --start (entry-id) (ledger-id)",
+	}
+
+	rse := pulsar.Example{
+		Desc:    "Read the specified range of entries of the specified ledger",
+		Command: "pulsar bookies ledger --start (entry-id) --end (entry-id) (ledger-id)",
+	}
+
+	examples = append(examples, r, rs, rse)
+	desc.CommandExamples = examples
+
+	var out []pulsar.Output
+	successOut := pulsar.Output{
+		Desc: "normal output",
+		Out: `{
+	"ledger-id", "message"
+}`,
+	}
+	out = append(out, successOut, argError)
+	desc.CommandOutput = out
+
+	vc.SetDescription(
+		"read",
+		"read",
+		desc.ToString(),
+		desc.ExampleToString())
+
+	var start int64
+	var end int64
+
+	vc.SetRunFuncWithNameArg(func() error {
+		return doRead(vc, start, end)
+	}, "the ledger is not specified or the ledger is specified more than one")
+
+	vc.FlagSetGroup.InFlagSet("Read Ledger", func(set *pflag.FlagSet) {
+		set.Int64VarP(&start, "start", "b", -1,
+			"")
+		set.Int64VarP(&end, "end", "e", -1, "")
+	})
+
+}
+
+func doRead(vc *cmdutils.VerbCmd, start, end int64) error {
+	id, err := strconv.ParseInt(vc.NameArg, 10, 64)
+	if err != nil {
+		return errors.Errorf("invalid ledger id %s", vc.NameArg)
+	}
+
+	admin := cmdutils.NewBookieClient()
+	info, err := admin.Ledger().Read(id, start, end)
+	if err == nil {
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
+	}
+
+	return err
+}

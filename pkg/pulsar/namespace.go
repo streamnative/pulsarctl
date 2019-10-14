@@ -396,7 +396,7 @@ func (n *namespaces) RemoveBacklogQuota(namespace string) error {
 	params := map[string]string{
 		"backlogQuotaType": string(DestinationStorage),
 	}
-	return n.request.deleteWithQueryParams(endpoint, nil, params)
+	return n.request.deleteWithQueryParams(endpoint, params)
 }
 
 func (n *namespaces) SetSchemaValidationEnforced(namespace NameSpaceName, schemaValidationEnforced bool) error {

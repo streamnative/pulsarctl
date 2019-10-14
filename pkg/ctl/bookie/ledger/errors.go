@@ -17,27 +17,9 @@
 
 package ledger
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/pulsar"
 
-	"github.com/spf13/cobra"
-)
-
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"ledger",
-		"Operations about ledger",
-		"",
-		"")
-
-	commands := []func(*cmdutils.VerbCmd){
-		DeleteCmd,
-		GetCmd,
-		ListCmd,
-		ReadCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+var argError = pulsar.Output{
+	Desc: "the ledger id is not specified or the ledger id is specified more than one",
+	Out:  "[✖]  the ledger id is not specified or the ledger id is specified more than one",
 }

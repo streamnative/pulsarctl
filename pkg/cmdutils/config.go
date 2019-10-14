@@ -113,7 +113,7 @@ func (c *ClusterConfig) Client(version pulsar.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() pulsar.BookieClient {
 	config := pulsar.DefaultConfig()
-	if len(c.BookieWebServiceURL) > 0 && c.WebServiceURL != config.BookieWebServiceURL {
+	if len(c.BookieWebServiceURL) > 0 && c.BookieWebServiceURL != config.BookieWebServiceURL {
 		config.BookieWebServiceURL = c.BookieWebServiceURL
 	}
 
