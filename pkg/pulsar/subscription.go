@@ -44,14 +44,16 @@ type Subscriptions interface {
 }
 
 type subscriptions struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 	SubPath  string
 }
 
-func (c *client) Subscriptions() Subscriptions {
+func (c *pulsarClient) Subscriptions() Subscriptions {
 	return &subscriptions{
 		client:   c,
+		request:  c.client,
 		basePath: "",
 		SubPath:  "subscription",
 	}
@@ -59,57 +61,57 @@ func (c *client) Subscriptions() Subscriptions {
 
 func (s *subscriptions) Create(topic TopicName, sName string, messageID MessageID) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.client.put(endpoint, messageID)
+	return s.request.put(endpoint, messageID)
 }
 
 func (s *subscriptions) Delete(topic TopicName, sName string) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.client.delete(endpoint)
+	return s.request.delete(endpoint)
 }
 
 func (s *subscriptions) List(topic TopicName) ([]string, error) {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscriptions")
 	var list []string
-	return list, s.client.get(endpoint, &list)
+	return list, s.request.get(endpoint, &list)
 }
 
 func (s *subscriptions) ResetCursorToMessageID(topic TopicName, sName string, id MessageID) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "resetcursor")
-	return s.client.post(endpoint, id)
+	return s.request.post(endpoint, id)
 }
 
 func (s *subscriptions) ResetCursorToTimestamp(topic TopicName, sName string, timestamp int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"resetcursor", strconv.FormatInt(timestamp, 10))
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }
 
 func (s *subscriptions) ClearBacklog(topic TopicName, sName string) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "skip_all")
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }
 
 func (s *subscriptions) SkipMessages(topic TopicName, sName string, n int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"skip", strconv.FormatInt(n, 10))
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireMessages(topic TopicName, sName string, expire int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireAllMessages(topic TopicName, expire int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), "all_subscription",
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.client.post(endpoint, "")
+	return s.request.post(endpoint, "")
 }
 
 func (s *subscriptions) PeekMessages(topic TopicName, sName string, n int) ([]*Message, error) {
@@ -132,12 +134,12 @@ func (s *subscriptions) PeekMessages(topic TopicName, sName string, n int) ([]*M
 func (s *subscriptions) peekNthMessage(topic TopicName, sName string, pos int) ([]*Message, error) {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscription", url.QueryEscape(sName),
 		"position", strconv.Itoa(pos))
-	req, err := s.client.newRequest(http.MethodGet, endpoint)
+	req, err := s.request.newRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := checkSuccessful(s.client.doRequest(req))
+	resp, err := checkSuccessful(s.request.doRequest(req))
 	if err != nil {
 		return nil, err
 	}
