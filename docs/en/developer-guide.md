@@ -21,7 +21,7 @@
 
 # How to add a new command
 
-The `pulsarctl` is a command-line tool written in the go language that helps administrators and users manage clusters, tenants, namespaces, topics, schemas, sources, sinks, functions, and more.
+The `pulsarctl` is a command-line tool written in the Go language that helps administrators and users manage clusters, tenants, namespaces, topics, schemas, sources, sinks, functions, and so on.
 
 ## Project structure
 
@@ -46,44 +46,50 @@ The `pulsarctl` is a command-line tool written in the go language that helps adm
 └── test
 ```
 
-- `pkg` is used to store pulsarctl related libraries. There are four subdirectories, as follows:
-    - `auth` is used to store encryption-related code
-    - `cmdutils` has a simple wrapper for cobra
-    - `ctl` is used to store pulsarctl related commands
-    - `pulsar` is a public package of pulsarctl
-- `test` is used to store resources related to test
-- `site` is the website related code of pulsarctl, which is convenient for users to view and quickly locate the usage and precautions of related commands.
-- `docs` is used to store pulsarctl related document content
+- `pkg` is used to store pulsarctl related libraries. There are four subdirectories as follows:
+    - `auth` is used to store encryption related code.
+    - `cmdutils` has a simple wrapper for cobra.
+    - `ctl` is used to store pulsarctl related commands.
+    - `pulsar` is a public package of pulsarctl.
+- `test` is used to store resources related to a test.
+- `site` is used to store website related code of pulsarctl, which is convenient for users to view and quickly locate the usage and precautions of related commands.
+- `docs` is used to store pulsarctl document.
 
-> To avoid circular references, where `auth` and `cmdutils` are two separate packages, the two packages `ctl` and `pulsar` are not referenced and will not be referenced to each other. 
-`pulsar` is a public package that references `auth` but does not reference `ctl` and `cmdutils`. 
-`ctl` as the core pkg that implements pulsarctl, it will refer to the three packages `auth`, `cmdutils`, `pulsar`, but other packages will not reference it.
+> **NOTE:**
+> * To avoid circular references, where `auth` and `cmdutils` are two separate packages, the two packages `ctl` and `pulsar` are not referenced and will not be referenced to each other. 
+> * `pulsar` is a public package that references `auth` but does not reference `ctl` and `cmdutils`. 
+> * `ctl`, as the core package implementing pulsarctl, it will references `auth`, `cmdutils` and `pulsar` packages but it is not referenced by other packages.
 
 ## Add a new command
 
-The command format used by pulsarctl is as follows:
+### Usage
 
 ```bash
 pulsarctl [commands] [sub commands] [flags]
 ```
+The contents of `[command]` are consistent with the file directory under the `ctl` directory. 
 
-The contents of `[command]` are consistent with the file directory under `ctl`. When you want to create a new command, create a new folder in the `ctl` directory.
-Name the folder the name of the command. Also create a `command-name.go` file in the `pulsar` directory to write the interface function associated with the command.
+When you create a new command, create a new folder in the `ctl` directory, give that folder a name which is the same to the command name, 
+and create a `command-name.go` file in the `pulsar` directory to write the interface function associated with the command.
 
-`[sub commands]` belongs to the subcommand under `[commands]`, if you want to add a sub command to it under the current existing `[commands]`
-Please create a `sub-command-name.go` file in the command directory and add your relevant code logic. After you've finished writing your code, add the relevant test code to your code.
-Make sure the test can override your code logic.
+`[sub commands]` belongs to `[commands]`. 
 
-Let's take a look at how to quickly add a new command to pulsarctl with `pulsarctl topics create (topic name) 0` as an example.
+If you want to add a subcommand to `[commands]`, create a `sub-command-name.go` file in the command directory and add relevant code logic. 
 
-1. Create a folder named topic under the ctl directory
+After finishing writing code, add the relevant test code and make sure it covers your code logic.
+
+This example illustrates how to add a new command to pulsarctl with `pulsarctl topics create (topic name) 0`.
+
+1. Under the `ctl` directory, create a folder `topic`. 
 
 ```bash
 mkdir topic
 ```
 
-2. Create files named `create.go` and `topic.go` under the topic directory, where `create.go` is used to write create topic related content.
-   `topic.go` is used to store all commands related to topic.
+2. Under the `topic` directory, create the following files:
+
+* `create.go`, which is used to write contents related to create topics.
+* `topic.go`, which is used to store all commands related to topics. 
 
 ```bash
 cd pkg/ctl/topic
@@ -92,7 +98,7 @@ touch create.go topic.go
 
 ### Write create.go
 
-Under normal circumstances, each command file consists of two functions, `CreateTopicCmd` and `doCreateTopic`, as follows:
+In general, each command file consists of two functions, `CreateTopicCmd` and `doCreateTopic`. Details are as follows:
 ```
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
@@ -138,28 +144,29 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 }
 ```
 
-As shown above: in the `CreateTopicCmd` you need to include the following information:
+As shown above, you need to include the following information for `CreateTopicCmd`:
 
 - Description
-    - CommandUsedFor // used to describe the usage scenario of the command
-    - CommandPermission // describe the permission information for the command
-    - CommandExamples // describe all usage examples for this command
-    - CommandOutput // describe the output of the command, including correct output and error output
+    - CommandUsedFor // describe the usage scenario of the command.
+    - CommandPermission // describe the permission information of the command.
+    - CommandExamples // describe all usage examples of the command.
+    - CommandOutput // describe the output of the command, including correct output and error output.
 
-- Args info (pulsarctl supports the following two forms of command:)
+- Args information (pulsarctl supports the following two commands:)
 
     - `Pulsarctl command sub-command name-arg-1 name-arg-2 ...`
         - For this scenario, pulsarctl provides the following functions:
-            - SetRunFuncWithMultiNameArgs // set multiple name args
-            - SetRunFuncWithNameArg // set a single name arg
+            - SetRunFuncWithMultiNameArgs // set multiple name args.
+            - SetRunFuncWithNameArg // set a single name arg.
     - `pulsarctl command sub-command --flag xxx --flag yyy ...`
         - For this scenario, pulsarctl provides the following functions:
-            - SetRunFunc // no need to set name args
-        - When there is a flag to specify, you can create a structure of `TopicData` under the `pulsar/data.go` file, and add the list of parameters you need in the structure.
+            - SetRunFunc // no need to set name args.
+        - If you need to specify a flag, you can create a structure of `TopicData` under the `pulsar/data.go` file and add a list of parameters.
         
-        > To ensure the correctness of the request parameters, use the json tag to format the parameter name. If you want the parameter list to be specified in the yaml file, add a yaml tag to it.
+        > NOTE: To ensure the parameter is correct, use the JSON tag to format the parameter name. 
+        If you want to specify the parameter in the YAML file, add a YAML tag.
         
-        You can use the following example to specify a specific parameter list for the command:
+         To specify a specific parameter list for a command, you can use the following command.
         
         ```
         vc.FlagSetGroup.InFlagSet("Topic", func(set *pflag.FlagSet) {
@@ -173,20 +180,23 @@ As shown above: in the `CreateTopicCmd` you need to include the following inform
         })
         ```
         
-        > If the parameter is a parameter that must be requested, mark it with `cobra.MarkFlagRequired(set, "flag-name")`
+        > NOTE: If a parameter is required, tag it with `cobra.MarkFlagRequired(set, "flag-name")`.
         
-In `doCreateTopic`, write the logic to create a topic, as follows:
+In `doCreateTopic`, write the logic to create a topic as follows:
 
-1) Create pulsar client
+1) Create a pulsar client.
 
-Pulsar currently supports three versions of the Api interface. You can refer to the version information currently used by the command in the Pulsar broker to select the specific version number. To this end, pulsarctl provides the following functions:
+Currently, Pulsar supports three versions of the API interface. 
+
+To get the version number, you can refer to the version information used by a command in a Pulsar broker. 
+Consequently, pulsarctl provides the following functions:
 
 - NewPulsarClient() // default value, use the V2 version
 - NewPulsarClientWithApiVersion(version pulsar.ApiVersion) // custom version 
 
-2) Call interface function
+2) Call an interface function.
 
-In `pulsar/admin.go`, abstract the interface of `Client`. Take the example command as an example. The code is as follows:
+In `pulsar/admin.go`, abstract the interface of `Client`. Here takes `topic command` as an example.
 
 ```
 type Client interface {
@@ -211,16 +221,15 @@ func (t *topics) Create(topic TopicName, partitions int) error {
 }
 ```
 
-Depending on the type of request, pulsarctl encapsulates the following request methods:
+Depending on the type of request, pulsarctl encapsulates the following request methods. 
+You can choose a desired one based on your needs.
 
 - put
 - get
 - delete
 - post
 
-different request types can be selected depending on the situation.
-
-After completing the above call, for the information output to the command terminal, pulsarctl provides the following print forms:
+For the information output to a terminal, pulsarctl provides the following print types:
 
 - PrintJson // print in json format
 - PrintError // when there is an error, output according to the packaged error message
@@ -244,7 +253,7 @@ After completing the above call, for the information output to the command termi
     vc.Command.Printf("Create topic %s with %d partitions successfully\n", topic.String(), partitions)
     ```
 
-### Write `ctl/topic/topic.go`
+### Write ctl/topic/topic.go
 
 ```
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -264,14 +273,14 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 }
 ```
 
-As shown above, in `topic.go`, the main logic is to call `AddVerbCmds` to add the above prepared command.
+As shown above, in `topic.go`, the main logic is to call `AddVerbCmds` to add commands prepared before.
 
-After the above operation is completed, add the relevant command group in `main.go`.
+After finishing the steps above, add the relevant command group in `main.go`.
 
-### Write test
+### Write a test
 
-In order to facilitate the test, pulsarctl intercepts the error information. By default, when an error is encountered, the program will call `os.Exit(1)` to release the process resource.
-You can redirect the error to the specified location output when writing the test, as follows:
+To simplify testing, pulsarctl intercepts the error information. By default, when an error is triggered, the program calls `os.Exit(1)` to release process resource.
+You can specify an output location for an error when writing a test as follows:
 
 ```
 var execError error
@@ -280,4 +289,5 @@ cmdutils.ExecErrorHandler = func(err error) {
 }
 ```
 
-When writing test case, you need to mock a test runner. If the test needs to use the associated helper function, name the file `test_help.go` and write the relevant code in the file.
+When writing a test case, you need to mock a test runner. If the test needs to use an associated function, 
+name the file as `test_help.go` and write relevant code in this file.

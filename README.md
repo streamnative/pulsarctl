@@ -26,9 +26,9 @@
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
-## Requirements
+## Requirement
 
-- Go 1.11+
+- Go 1.11 +
 
 ## Usage
 
@@ -40,19 +40,19 @@ Since the `go mod` package management tool is used in this project, **Go 1.11 or
 
 ### Install
 
-- Use github to clone the project to the local
+1. Clone the project from GitHub to your local.
 
 ```bash
 git clone https://github.com/streamnative/pulsarctl.git
 ```
 
-- Use `go mod` to get the dependencies needed for the project
+2. Use `go mod` to get the dependencies needed for the project.
 
 ```bash
 go mod download
 ```
 
-If some libs cannot be downloaded when you enter the `go mod download` command, download them by referring to the proxy provided by [GOPROXY.io](https://goproxy.io/).
+After entering the `go mod download` command, if some libs can not be downloaded, then you can download them by referring to the proxy provided by [GOPROXY.io](https://goproxy.io/).
 
 ### Build
 
@@ -75,10 +75,11 @@ The following is an incomplete list of features that are not yet implemented:
 - pulsar-admin sinks localrun options
 - pulsar-admin schemas extract options
 
-## Contributing
+## Contribute
 
-Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+Contributions are welcomed and greatly appreciated. 
+For more information about how to submit a patch and the contribution workflow, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0

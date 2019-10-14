@@ -25,24 +25,24 @@ If you would like to contribute code to this project, fork the repository and se
 
 ## Prerequisite
 
-In this project, use `go mod` as the package management tool, please make sure your go version is `go1.11+`.
+In this project, use `go mod` as the package management tool and make sure your Go version is `Go 1.11 +`.
 
 ## Fork
 
-Before contributing, you need to fork [pulsarctl](https://github.com/streamnative/pulsarcli) to your github repository.
+Before contributing, you need to fork [pulsarctl](https://github.com/streamnative/pulsarcli) to your GitHub repository.
 
 ## Contribution flow
 
 ```bash
 $ git remote add streamnative https://github.com/streamnative/pulsarctl.git
-// sync with remote master
+# sync with the remote master
 $ git checkout master
 $ git fetch streamnative
 $ git rebase streamnative/master
 $ git push origin master
-// create PR branch
+# create a PR branch
 $ git checkout -b your_branch   
-# do your work, and then
+# do something
 $ git add [your change files]
 $ git commit -sm "xxx"
 $ git push origin your_branch
@@ -50,11 +50,11 @@ $ git push origin your_branch
 
 ## Configure GoLand
 
-The `pulsarctl` uses `go mod` to manage dependencies, so make sure your IDE enable `Go Modules(vgo)`.
+The `pulsarctl` uses `go mod` to manage dependencies, so make sure your IDE enables `Go Modules(vgo)`.
 
 To configure annotation processing in GoLand, follow the steps below.
 
-1. In GoLand, click **Preferences** > **Go** > **Go Modules(vgo)** to open the **Go Modules Settings** window.
+1. To open the **Go Modules Settings** window, in GoLand, click **Preferences** > **Go** > **Go Modules(vgo)**.
 
 2. Tick the checkboxes of **Enable Go Modules(vgo) integration**.
 
@@ -62,10 +62,12 @@ To configure annotation processing in GoLand, follow the steps below.
 
 ## Code style
 
-The coding style suggested by the Golang community is used in `pulsarctl`. For details, refer to [style doc](https://github.com/golang/go/wiki/CodeReviewComments).
-Follow the style, make your pull request easy to review, maintain and develop.
+The code style suggested by the Golang community is used in `pulsarctl`. 
+For more information, see [Go Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments).
 
-## Create new files
+To make your pull request easy to review, maintain and develop, follow this style.
+
+## Create a new file
 
 The project uses the open source protocol of Apache License 2.0. If you need to create a new file when developing new features, 
 add the license at the beginning of each file. The location of the header file: [header file](.header).
