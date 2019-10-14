@@ -15,43 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package topic
+package subscription
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
-		"",
-		"topic")
+func TestListArgError(t *testing.T) {
+	args := []string{"list"}
+	_, _, nameErr, _ := TestSubCommands(ListCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one",
+		nameErr.Error())
+}
 
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+func TestListNonExistingTopicSub(t *testing.T) {
+	args := []string{"list", "non-existing-topic"}
+	_, execErr, _, _ := TestSubCommands(ListCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 }

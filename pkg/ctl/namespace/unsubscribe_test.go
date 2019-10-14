@@ -22,9 +22,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/crud"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic/lookup"
-	topic "github.com/streamnative/pulsarctl/pkg/ctl/topic/test"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,11 +43,11 @@ func TestUnsubscribeCmd(t *testing.T) {
 		out.String())
 
 	args = []string{"create", ns + "/test-unsubscribe-with-bundle", "0"}
-	_, execErr, _, _ = topic.TestTopicCommands(crud.CreateTopicCmd, args)
+	_, execErr, _, _ = topic.TestTopicCommands(topic.CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
 	args = []string{"bundle-range", ns + "/test-unsubscribe-with-bundle"}
-	out, execErr, _, _ = topic.TestTopicCommands(lookup.GetBundleRangeCmd, args)
+	out, execErr, _, _ = topic.TestTopicCommands(topic.GetBundleRangeCmd, args)
 	assert.Nil(t, execErr)
 	t.Logf(out.String())
 	bundle := strings.Split(out.String(), ":")[2]

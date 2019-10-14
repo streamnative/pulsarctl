@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package topic
+package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -25,33 +25,22 @@ import (
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
+		"subscriptions",
+		"Operations about subscription(s)",
 		"",
-		"topic")
+		"subscription", "subs", "sub")
 
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
+	command := []func(cmd *cmdutils.VerbCmd){
+		CreateCmd,
+		DeleteCmd,
+		ListCmd,
+		ExpireCmd,
+		ResetCursorCmd,
+		SkipCmd,
+		PeekCmd,
 	}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, command...)
 
 	return resourceCmd
 }
