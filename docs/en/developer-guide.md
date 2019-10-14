@@ -58,7 +58,7 @@ The `pulsarctl` is a command-line tool written in the Go language that helps adm
 > **NOTE:**
 > * To avoid circular references, where `auth` and `cmdutils` are two separate packages, the two packages `ctl` and `pulsar` are not referenced and will not be referenced to each other. 
 > * `pulsar` is a public package that references `auth` but does not reference `ctl` and `cmdutils`. 
-> * `ctl`, as the core package implementing pulsarctl, it will references `auth`, `cmdutils` and `pulsar` packages but it is not referenced by other packages.
+> * `ctl`, as the core package implementing pulsarctl, will reference `auth`, `cmdutils` and `pulsar` packages; however, it is not referenced by other packages.
 
 ## Add a new command
 
@@ -80,7 +80,7 @@ After finishing writing code, add the relevant test code and make sure it covers
 
 This example illustrates how to add a new command to pulsarctl with `pulsarctl topics create (topic name) 0`.
 
-1. Under the `ctl` directory, create a folder `topic`. 
+1. Under the `ctl` directory, create a `topic` folder. 
 
 ```bash
 mkdir topic
@@ -184,7 +184,7 @@ As shown above, you need to include the following information for `CreateTopicCm
         
 In `doCreateTopic`, write the logic to create a topic as follows:
 
-1) Create a pulsar client.
+1) Create a Pulsar client.
 
 Currently, Pulsar supports three versions of the API interface. 
 
@@ -204,7 +204,7 @@ type Client interface {
 }
 ```
 
-To unify the topic related sub commands, you can create a `topic.go` file in the pulsar directory as follows:
+To unify the topic related sub commands, you can create a `topic.go` file in the `pulsar` directory as follows:
 
 ```
 type Topics interface {
@@ -229,7 +229,7 @@ You can choose a desired one based on your needs.
 - delete
 - post
 
-For the information output to a terminal, pulsarctl provides the following print types:
+For information printed to a terminal, `pulsarctl` provides the following ways:
 
 - PrintJson // print in json format
 - PrintError // when there is an error, output according to the packaged error message

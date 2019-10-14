@@ -25,7 +25,7 @@ If you would like to contribute code to this project, fork the repository and se
 
 ## Prerequisite
 
-In this project, use `go mod` as the package management tool and make sure your Go version is `Go 1.11 +`.
+In this project, use `go mod` as the package management tool and make sure your Go version is higher then `Go 1.11`.
 
 ## Fork
 
@@ -56,7 +56,7 @@ To configure annotation processing in GoLand, follow the steps below.
 
 1. To open the **Go Modules Settings** window, in GoLand, click **Preferences** > **Go** > **Go Modules(vgo)**.
 
-2. Tick the checkboxes of **Enable Go Modules(vgo) integration**.
+2. Select the **Enable Go Modules(vgo) integration** checkbox.
 
 3. Click **Apply** and **OK**.
 
