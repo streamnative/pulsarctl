@@ -40,7 +40,12 @@ func dumpAllocatorStats(vc *cmdutils.VerbCmd) {
 		Desc: "normal output",
 		Out:  "Print allocator stats info",
 	}
-	out = append(out, successOut)
+
+	failOut := pulsar.Output{
+		Desc: "the namespace name is not specified or the namespace name is specified more than one",
+		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
+	}
+	out = append(out, successOut, failOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
