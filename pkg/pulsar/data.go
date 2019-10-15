@@ -330,3 +330,9 @@ type LookupData struct {
 	HTTPURL      string `json:"httpUrl"`
 	HTTPURLTLS   string `json:"httpUrlTls"`
 }
+
+type BrokerData struct {
+	URL         string `json:"brokerUrl"`
+	ConfigName  string `json:"configName"`
+	ConfigValue string `json:"configValue"`
+}
