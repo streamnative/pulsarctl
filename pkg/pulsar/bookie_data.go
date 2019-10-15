@@ -40,3 +40,24 @@ type LedgerMetadata struct {
 	Password              []byte                          `json:"password"`
 	CustomMetadata        map[string][]byte               `json:"customMetadata"`
 }
+
+type GCStatus struct {
+	// whether the GC thread is in force GC
+	ForceCompacting bool `json:"forceCompacting"`
+	// whether the GC thread is in major compacting
+	MajorCompacting bool `json:"majorCompacting"`
+	//whether the GC thread is in minor compacting
+	MinorCompacting bool `json:"minorCompacting"`
+
+	LastMajorCompactionTime int64 `json:"lastMajorCompactionTime"`
+	LastMinorCompactionTime int64 `json:"lastMinorCompactionTime"`
+	MajorCompactionCounter  int64 `json:"majorCompactionCounter"`
+	MinorCompactionCounter  int64 `json:"minorCompactionCounter"`
+}
+
+type State struct {
+	Running                        bool `json:"running"`
+	ReadOnly                       bool `json:"readOnly"`
+	ShuttingDown                   bool `json:"shuttingDown"`
+	AvailableForHighPriorityWrites bool `json:"availableForHighPriorityWrites"`
+}

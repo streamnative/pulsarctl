@@ -90,6 +90,7 @@ type Client interface {
 // BookieClient provides a client to the BookKeeper Restful API
 type BookieClient interface {
 	Ledger() Ledger
+	Bookie() Bookie
 }
 
 type client struct {

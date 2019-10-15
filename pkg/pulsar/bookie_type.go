@@ -15,26 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bk
+package pulsar
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/bk/bookie"
-	"github.com/streamnative/pulsarctl/pkg/ctl/bk/ledger"
+	"strings"
 
-	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bk",
-		"Operations about bookKeeper",
-		"",
-		"",
-	)
+type BookieType string
 
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
+const (
+	rw BookieType = "rw"
+	ro BookieType = "ro"
+)
 
-	return resourceCmd
+func ParseBookieType(t string) (BookieType, error) {
+	switch strings.ToLower(t) {
+	case rw.String():
+		return rw, nil
+	case ro.String():
+		return ro, nil
+	default:
+		return "", errors.Errorf("invalid bookie type %s. the bookie type only can "+
+			"be specified as 'rw' or 'ro'", t)
+	}
+}
+
+func (t BookieType) String() string {
+	return string(t)
 }
