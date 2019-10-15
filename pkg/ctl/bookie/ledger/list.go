@@ -54,7 +54,7 @@ func ListCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"list",
-		"list",
+		"list all the ledgers",
 		desc.ToString(),
 		desc.ExampleToString())
 

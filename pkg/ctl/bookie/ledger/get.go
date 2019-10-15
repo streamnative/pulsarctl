@@ -91,7 +91,7 @@ func GetCmd(vc *cmdutils.VerbCmd) {
 
 func doGet(vc *cmdutils.VerbCmd) error {
 	id, err := strconv.ParseInt(vc.NameArg, 10, 64)
-	if err != nil {
+	if err != nil || id < 0 {
 		return errors.Errorf("invalid ledger id %s", vc.NameArg)
 	}
 

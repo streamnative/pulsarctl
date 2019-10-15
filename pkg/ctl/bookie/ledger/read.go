@@ -63,7 +63,7 @@ func ReadCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"read",
-		"read",
+		"Read a range of entries of a ledger",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -72,7 +72,7 @@ func ReadCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doRead(vc, start, end)
-	}, "the ledger is not specified or the ledger is specified more than one")
+	}, "the ledger id is not specified or the ledger id is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Read Ledger", func(set *pflag.FlagSet) {
 		set.Int64VarP(&start, "start", "b", -1,
@@ -84,8 +84,16 @@ func ReadCmd(vc *cmdutils.VerbCmd) {
 
 func doRead(vc *cmdutils.VerbCmd, start, end int64) error {
 	id, err := strconv.ParseInt(vc.NameArg, 10, 64)
-	if err != nil {
+	if err != nil || id < 0 {
 		return errors.Errorf("invalid ledger id %s", vc.NameArg)
+	}
+
+	if start != -1 && start < 0 {
+		return errors.Errorf("invalid start ledger id %d", start)
+	}
+
+	if end != -1 && end < 0 {
+		return errors.Errorf("invalid end ledger id %d", end)
 	}
 
 	admin := cmdutils.NewBookieClient()
