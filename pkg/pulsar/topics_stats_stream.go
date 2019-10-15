@@ -20,6 +20,5 @@ package pulsar
 //var TopicsMap map[string]map[string]map[string]TopicStats
 
 type TopicStatsStream struct {
-   TopicsMap map[string]map[string]map[string]TopicStats `json:"topicStatsBuf"`
+	TopicsMap map[string]map[string]map[string]TopicStats `json:"topicStatsBuf"`
 }
-

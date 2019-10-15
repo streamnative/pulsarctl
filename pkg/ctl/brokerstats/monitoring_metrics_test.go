@@ -36,8 +36,8 @@ func TestDumpMonitoringMetrics(t *testing.T) {
 
 	var value string
 	for i := 0; i < len(out); i++ {
-		value = out[i].Dimensions["broker"]
+		value = out[i].Dimensions["cluster"]
 	}
 
-	assert.Equal(t, "127.0.0.1", value)
+	assert.Equal(t, "standalone", value)
 }

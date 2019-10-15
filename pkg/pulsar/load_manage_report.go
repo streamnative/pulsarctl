@@ -23,10 +23,10 @@ import (
 
 type LocalBrokerData struct {
 	// URLs to satisfy contract of ServiceLookupData (used by NamespaceService).
-	WebServiceUrl              string `json:"webServiceUrl"`
-	WebServiceUrlTls           string `json:"webServiceUrlTls"`
-	PulsarServiceUrl           string `json:"pulsarServiceUrl"`
-	PulsarServiceUrlTls        string `json:"pulsarServiceUrlTls"`
+	WebServiceURL              string `json:"webServiceUrl"`
+	WebServiceURLTLS           string `json:"webServiceUrlTls"`
+	PulsarServiceURL           string `json:"pulsarServiceUrl"`
+	PulsarServiceURLTLS        string `json:"pulsarServiceUrlTls"`
 	PersistentTopicsEnabled    bool   `json:"persistentTopicsEnabled"`
 	NonPersistentTopicsEnabled bool   `json:"nonPersistentTopicsEnabled"`
 

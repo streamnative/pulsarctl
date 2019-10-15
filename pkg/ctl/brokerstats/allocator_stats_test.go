@@ -41,5 +41,4 @@ func TestDumpAllocatorStats(t *testing.T) {
 	assert.Equal(t, 512, allocatorStats.TinyCacheSize)
 	assert.Equal(t, 256, allocatorStats.SmallCacheSize)
 	assert.Equal(t, 64, allocatorStats.NormalCacheSize)
-	assert.Equal(t, 24, allocatorStats.NumDirectArenas)
 }

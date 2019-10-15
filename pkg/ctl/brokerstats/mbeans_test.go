@@ -18,11 +18,11 @@
 package brokerstats
 
 import (
-    "encoding/json"
-    "testing"
+	"encoding/json"
+	"testing"
 
-    "github.com/streamnative/pulsarctl/pkg/pulsar"
-    "github.com/stretchr/testify/assert"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDumpMBeans(t *testing.T) {
