@@ -78,6 +78,7 @@ type Client interface {
 	Sinks() Sinks
 	Namespaces() Namespaces
 	Schemas() Schema
+	NsIsolationPolicy() NsIsolationPolicy
 }
 
 type client struct {

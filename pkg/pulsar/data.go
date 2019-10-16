@@ -330,3 +330,12 @@ type LookupData struct {
 	HTTPURL      string `json:"httpUrl"`
 	HTTPURLTLS   string `json:"httpUrlTls"`
 }
+
+type NsIsolationPoliciesData struct {
+	Broker                     string            `json:"broker"`
+	Namespaces                 []string          `json:"namespaces"`
+	Primary                    []string          `json:"primary"`
+	Secondary                  []string          `json:"secondary"`
+	AutoFailoverPolicyTypeName string            `json:"autoFailoverPolicyTypeName"`
+	AutoFailoverPolicyParams   string `json:"autoFailoverPolicyParams"`
+}
