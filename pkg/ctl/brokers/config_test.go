@@ -51,7 +51,6 @@ func TestGetRuntimeConfig(t *testing.T) {
 
 	assert.Equal(t, "false", runtimeConf["authenticateOriginalAuthData"])
 	assert.Equal(t, "true", runtimeConf["backlogQuotaCheckEnabled"])
-	assert.Equal(t, "127.0.0.1", runtimeConf["advertisedAddress"])
 	assert.Equal(t, "0.0.0.0", runtimeConf["bindAddress"])
 	assert.Equal(t, "CRC32", runtimeConf["managedLedgerDigestType"])
 	assert.Equal(t, "127.0.0.1:2181", runtimeConf["zookeeperServers"])
