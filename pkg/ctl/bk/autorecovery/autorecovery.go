@@ -15,26 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bk
+package autorecovery
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/bk/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/ctl/bk/ledger"
 
 	"github.com/spf13/cobra"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+func Commands(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
-		"bk",
-		"Operations about bookKeeper",
+		"auto-recovery",
+		"Operations about ledger",
 		"",
-		"",
-	)
+		"")
 
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Commands(flagGrouping))
+	commands := []func(*cmdutils.VerbCmd){
+		RecoverBookieCmd,
+		ListUnderReplicatedLedgerCmd,
+		WhoIsAuditorCmd,
+		TriggerAuditCmd,
+		SetLostBookieRecoveryDelayCmd,
+		GetLostBookieRecoveryDelayCmd,
+		DecommissionCmd,
+	}
+
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
 
 	return resourceCmd
 }

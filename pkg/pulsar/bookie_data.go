@@ -40,3 +40,16 @@ type LedgerMetadata struct {
 	Password              []byte                          `json:"password"`
 	CustomMetadata        map[string][]byte               `json:"customMetadata"`
 }
+
+type RecoveryRequest struct {
+	BookieSrc    []string `json:"bookie_src"`
+	DeleteCookie bool     `json:"delete_cookie"`
+}
+
+type LostBookieRecoverDelayRequest struct {
+	DelaySeconds int `json:"delay_seconds"`
+}
+
+type DecommissionRequest struct {
+	BookieSrc string `json:"bookie_src"`
+}
