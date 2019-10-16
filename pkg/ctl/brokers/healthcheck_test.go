@@ -18,10 +18,10 @@
 package brokers
 
 import (
-    "strings"
-    "testing"
+	"strings"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHealthCheck(t *testing.T) {

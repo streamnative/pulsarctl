@@ -19,10 +19,10 @@ package brokers
 
 import (
 	"encoding/json"
-    "testing"
+	"testing"
 
-    "github.com/streamnative/pulsarctl/pkg/pulsar"
-    "github.com/stretchr/testify/assert"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetInternalConfig(t *testing.T) {
