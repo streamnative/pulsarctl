@@ -28,7 +28,7 @@ func TestListBrokers(t *testing.T) {
 	args := []string{"list", "standalone"}
 	listOut, execErr, _, _ := TestBrokersCommands(getBrokerListCmd, args)
 	assert.Nil(t, execErr)
-	assert.True(t, strings.Contains( listOut.String(), "8080"))
+	assert.True(t, strings.Contains(listOut.String(), "8080"))
 
 	failArgs := []string{"list"}
 	_, _, nameErr, _ := TestBrokersCommands(getBrokerListCmd, failArgs)
