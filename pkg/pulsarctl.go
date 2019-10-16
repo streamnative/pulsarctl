@@ -19,9 +19,11 @@ package pkg
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/brokerstats"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
 	"github.com/streamnative/pulsarctl/pkg/ctl/namespace"
+	"github.com/streamnative/pulsarctl/pkg/ctl/subscription"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 
@@ -86,6 +88,8 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(topic.Command(flagGrouping))
 	rootCmd.AddCommand(namespace.Command(flagGrouping))
 	rootCmd.AddCommand(schema.Command(flagGrouping))
+	rootCmd.AddCommand(subscription.Command(flagGrouping))
+	rootCmd.AddCommand(brokerstats.Command(flagGrouping))
 
 	return rootCmd
 }
