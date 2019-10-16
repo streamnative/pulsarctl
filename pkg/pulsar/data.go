@@ -336,3 +336,7 @@ type BrokerData struct {
 	ConfigName  string `json:"configName"`
 	ConfigValue string `json:"configValue"`
 }
+
+type BrokerStatsData struct {
+	Indent bool `json:"indent"`
+}
