@@ -15,70 +15,55 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
-	"github.com/olekukonko/tablewriter"
 )
 
-func listClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "List the existing clusters"
+func getAllDynamicConfigsCmd(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "Get all overridden dynamic-configuration values"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
-	create := pulsar.Example{
-		Desc:    "List the existing clusters",
-		Command: "pulsarctl clusters list",
+	list := pulsar.Example{
+		Desc:    "Get all overridden dynamic-configuration values",
+		Command: "pulsarctl brokers get-all-dynamic-config",
 	}
-	examples = append(examples, create)
+	examples = append(examples, list)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+--------------+\n" +
-			"| CLUSTER NAME |\n" +
-			"+--------------+\n" +
-			"| standalone   |\n" +
-			"| test-a       |\n" +
-			"+--------------+",
+		Out: "{\n" +
+			"  \"dispatchThrottlingRatePerTopicInMsg\": \"true\"\n" +
+			"}",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
-	// update the description
 	vc.SetDescription(
-		"list",
-		"List the available pulsar clusters",
-		"This command is used for listing the list of available pulsar clusters.",
+		"get-all-dynamic-config",
+		"Get all overridden dynamic-configuration values",
+		desc.ToString(),
 		desc.ExampleToString(),
-		"",
-	)
+		"get-all-dynamic-config")
 
-	// set the run function
 	vc.SetRunFunc(func() error {
-		return doListClusters(vc)
+		return doGetAllDynamicConfigs(vc)
 	})
 }
 
-func doListClusters(vc *cmdutils.VerbCmd) error {
+func doGetAllDynamicConfigs(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
-	clusters, err := admin.Clusters().List()
+	brokersData, err := admin.Brokers().GetAllDynamicConfigurations()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Cluster Name"})
-
-		for _, c := range clusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), brokersData)
 	}
 	return err
 }

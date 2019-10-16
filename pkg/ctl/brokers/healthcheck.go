@@ -15,70 +15,53 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
-	"github.com/olekukonko/tablewriter"
 )
 
-func listClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "List the existing clusters"
+func healthCheckCmd(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "Run a health check against the broker"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
-	create := pulsar.Example{
-		Desc:    "List the existing clusters",
-		Command: "pulsarctl clusters list",
+	list := pulsar.Example{
+		Desc:    "Run a health check against the broker",
+		Command: "pulsarctl brokers healthcheck",
 	}
-	examples = append(examples, create)
+	examples = append(examples, list)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+--------------+\n" +
-			"| CLUSTER NAME |\n" +
-			"+--------------+\n" +
-			"| standalone   |\n" +
-			"| test-a       |\n" +
-			"+--------------+",
+		Out:  "ok",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
-	// update the description
 	vc.SetDescription(
-		"list",
-		"List the available pulsar clusters",
-		"This command is used for listing the list of available pulsar clusters.",
+		"healthcheck",
+		"Run a health check against the broker",
+		desc.ToString(),
 		desc.ExampleToString(),
-		"",
-	)
+		"healthcheck")
 
-	// set the run function
 	vc.SetRunFunc(func() error {
-		return doListClusters(vc)
+		return doHealthCheck(vc)
 	})
 }
 
-func doListClusters(vc *cmdutils.VerbCmd) error {
+func doHealthCheck(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
-	clusters, err := admin.Clusters().List()
+	err := admin.Brokers().HealthCheck()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Cluster Name"})
-
-		for _, c := range clusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		vc.Command.Println("ok")
 	}
 	return err
 }
