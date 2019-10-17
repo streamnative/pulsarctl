@@ -419,8 +419,11 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 
 	hc := c.httpClient
 	if hc == nil {
-		hc = http.DefaultClient
+		hc = &http.Client{
+			Timeout: 10 * time.Second,
+		}
 	}
+
 	if c.transport != nil {
 		hc.Transport = c.transport
 	}
