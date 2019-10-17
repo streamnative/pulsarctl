@@ -33,13 +33,15 @@ type BrokerStats interface {
 }
 
 type brokerStats struct {
-	client   *client
+	client   *pulsarClient
+	request  *client
 	basePath string
 }
 
-func (c *client) BrokerStats() BrokerStats {
+func (c *pulsarClient) BrokerStats() BrokerStats {
 	return &brokerStats{
 		client:   c,
+		request:  c.client,
 		basePath: "/broker-stats",
 	}
 }
@@ -47,7 +49,7 @@ func (c *client) BrokerStats() BrokerStats {
 func (bs *brokerStats) GetMetrics() ([]Metrics, error) {
 	endpoint := bs.client.endpoint(bs.basePath, "/metrics")
 	var response []Metrics
-	err := bs.client.get(endpoint, &response)
+	err := bs.request.get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +60,7 @@ func (bs *brokerStats) GetMetrics() ([]Metrics, error) {
 func (bs *brokerStats) GetMBeans() ([]Metrics, error) {
 	endpoint := bs.client.endpoint(bs.basePath, "/mbeans")
 	var response []Metrics
-	err := bs.client.get(endpoint, &response)
+	err := bs.request.get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +70,7 @@ func (bs *brokerStats) GetMBeans() ([]Metrics, error) {
 
 func (bs *brokerStats) GetTopics() (string, error) {
 	endpoint := bs.client.endpoint(bs.basePath, "/topics")
-	buf, err := bs.client.getWithQueryParams(endpoint, nil, nil, false)
+	buf, err := bs.request.getWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return "", err
 	}
@@ -79,7 +81,7 @@ func (bs *brokerStats) GetTopics() (string, error) {
 func (bs *brokerStats) GetLoadReport() (*LocalBrokerData, error) {
 	endpoint := bs.client.endpoint(bs.basePath, "/load-report")
 	response := NewLocalBrokerData()
-	err := bs.client.get(endpoint, &response)
+	err := bs.request.get(endpoint, &response)
 	if err != nil {
 		return nil, nil
 	}
@@ -89,7 +91,7 @@ func (bs *brokerStats) GetLoadReport() (*LocalBrokerData, error) {
 func (bs *brokerStats) GetAllocatorStats(allocatorName string) (*AllocatorStats, error) {
 	endpoint := bs.client.endpoint(bs.basePath, "/allocator-stats", allocatorName)
 	var allocatorStats AllocatorStats
-	err := bs.client.get(endpoint, &allocatorStats)
+	err := bs.request.get(endpoint, &allocatorStats)
 	if err != nil {
 		return nil, err
 	}
