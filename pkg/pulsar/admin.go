@@ -85,6 +85,8 @@ type Client interface {
 	Sinks() Sinks
 	Namespaces() Namespaces
 	Schemas() Schema
+	Brokers() Brokers
+	BrokerStats() BrokerStats
 }
 
 // BookieClient provides a client to the BookKeeper Restful API

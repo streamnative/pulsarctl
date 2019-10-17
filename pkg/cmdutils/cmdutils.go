@@ -117,10 +117,11 @@ func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, t
 	defer ticker.Stop()
 
 	result := !condition
+	timer := time.After(timeout)
 
 	for condition != result {
 		select {
-		case <-time.After(timeout):
+		case <-timer:
 			return errors.New("task timeout")
 		case <-ticker.C:
 			result = task(args, obj)
