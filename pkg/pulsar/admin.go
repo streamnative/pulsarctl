@@ -79,6 +79,7 @@ type Client interface {
 	Namespaces() Namespaces
 	Schemas() Schema
 	BrokerStats() BrokerStats
+	ResourceQuotas() ResourceQuotas
 }
 
 type client struct {
