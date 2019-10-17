@@ -24,7 +24,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func listClustersCmd(vc *cmdutils.VerbCmd) {
+func ListClustersCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "List the existing clusters"
 	desc.CommandPermission = "This command requires super-user permissions."

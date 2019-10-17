@@ -1,0 +1,26 @@
+name: Token_Test
+on: [pull_request]
+jobs:
+
+  token-build:
+    name: Token tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go 1.12
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.12
+        id: go
+
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Get dependencies
+        run: |
+          docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}/test/token/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test apachepulsar/pulsar bin/pulsar standalone          sleep 10
+
+      - name: Test TLS
+        run: |
+          docker ps
+          go test -v ./pkg/auth/token.go ./pkg/auth/token_test.go
