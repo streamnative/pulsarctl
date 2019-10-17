@@ -23,7 +23,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -43,6 +42,7 @@ type Config struct {
 	WebServiceURL string
 	HTTPClient    *http.Client
 	APIVersion    APIVersion
+	VersionInfo   string
 
 	Auth       *auth.TLSAuthProvider
 	AuthParams string
@@ -59,6 +59,7 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceURL: DefaultWebServiceURL,
 		HTTPClient:    http.DefaultClient,
+		VersionInfo:   "pulsarctl (Go) v0.0.1",
 
 		TLSOptions: &TLSOptions{
 			AllowInsecureConnection: false,
@@ -86,6 +87,7 @@ type client struct {
 	webServiceURL string
 	apiVersion    string
 	httpClient    *http.Client
+	versionInfo   string
 
 	// TLS config
 	auth       *auth.TLSAuthProvider
@@ -103,6 +105,7 @@ func New(config *Config) (Client, error) {
 	c := &client{
 		apiVersion:    config.APIVersion.String(),
 		webServiceURL: config.WebServiceURL,
+		versionInfo:   config.VersionInfo,
 	}
 
 	if strings.HasPrefix(c.webServiceURL, "https://") {
@@ -392,9 +395,8 @@ func (c *client) newRequest(method, path string) (*request, error) {
 	return req, nil
 }
 
-// TODO: add pulsarctl version
 func (c *client) useragent() string {
-	return fmt.Sprintf("pulsarctl (go)")
+	return c.versionInfo
 }
 
 func (c *client) doRequest(r *request) (*http.Response, error) {
