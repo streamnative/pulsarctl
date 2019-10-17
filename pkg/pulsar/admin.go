@@ -80,6 +80,7 @@ type Client interface {
 	Schemas() Schema
 	Brokers() Brokers
 	BrokerStats() BrokerStats
+	FunctionsWorker() FunctionsWorker
 }
 
 type client struct {
