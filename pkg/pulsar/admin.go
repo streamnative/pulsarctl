@@ -30,6 +30,7 @@ import (
 	"net/url"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/auth"
 )
@@ -58,7 +59,9 @@ type TLSOptions struct {
 func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceURL: DefaultWebServiceURL,
-		HTTPClient:    http.DefaultClient,
+		HTTPClient: &http.Client{
+			Timeout: 10 * time.Second,
+		},
 
 		TLSOptions: &TLSOptions{
 			AllowInsecureConnection: false,
@@ -122,6 +125,7 @@ func New(config *Config) (Client, error) {
 		}
 
 		c.transport = &http.Transport{
+			TLSHandshakeTimeout: 5 * time.Second,
 			MaxIdleConnsPerHost: 10,
 			TLSClientConfig:     tlsConf,
 		}
