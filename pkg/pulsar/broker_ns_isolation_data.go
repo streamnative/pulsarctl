@@ -18,8 +18,8 @@
 package pulsar
 
 type BrokerNamespaceIsolationData struct {
-    BrokerName     string   `json:"brokerName"`
-    PolicyName     string   `json:"policyName"`
-    IsPrimary      bool     `json:"isPrimary"`
-    NamespaceRegex []string `json:"namespaceRegex"`
+	BrokerName     string   `json:"brokerName"`
+	PolicyName     string   `json:"policyName"`
+	IsPrimary      bool     `json:"isPrimary"`
+	NamespaceRegex []string `json:"namespaceRegex"`
 }
