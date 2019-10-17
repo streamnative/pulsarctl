@@ -15,70 +15,59 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokerstats
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
-	"github.com/olekukonko/tablewriter"
 )
 
-func listClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "List the existing clusters"
+func dumpAllocatorStats(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "Dump the allocator stats"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
-	create := pulsar.Example{
-		Desc:    "List the existing clusters",
-		Command: "pulsarctl clusters list",
+	get := pulsar.Example{
+		Desc:    "Dump the allocator stats",
+		Command: "pulsarctl broker-stats allocator-stats",
 	}
-	examples = append(examples, create)
+	examples = append(examples, get)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+--------------+\n" +
-			"| CLUSTER NAME |\n" +
-			"+--------------+\n" +
-			"| standalone   |\n" +
-			"| test-a       |\n" +
-			"+--------------+",
+		Out:  "Print allocator stats info",
 	}
-	out = append(out, successOut)
+
+	failOut := pulsar.Output{
+		Desc: "the namespace name is not specified or the namespace name is specified more than one",
+		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
+	}
+	out = append(out, successOut, failOut)
 	desc.CommandOutput = out
 
-	// update the description
 	vc.SetDescription(
-		"list",
-		"List the available pulsar clusters",
-		"This command is used for listing the list of available pulsar clusters.",
+		"allocator-stats",
+		"Dump the allocator stats",
+		desc.ToString(),
 		desc.ExampleToString(),
-		"",
-	)
+		"allocator-stats")
 
-	// set the run function
-	vc.SetRunFunc(func() error {
-		return doListClusters(vc)
-	})
+	vc.SetRunFuncWithNameArg(func() error {
+		return doDumpAllocatorStats(vc)
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doListClusters(vc *cmdutils.VerbCmd) error {
+func doDumpAllocatorStats(vc *cmdutils.VerbCmd) error {
+	allocatorName := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	clusters, err := admin.Clusters().List()
+	stats, err := admin.BrokerStats().GetAllocatorStats(allocatorName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Cluster Name"})
-
-		for _, c := range clusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		cmdutils.PrintJSON(vc.Command.OutOrStdout(), stats)
 	}
 	return err
 }

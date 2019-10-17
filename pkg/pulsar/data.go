@@ -332,10 +332,20 @@ type LookupData struct {
 }
 
 type NsIsolationPoliciesData struct {
-	Broker                     string            `json:"broker"`
-	Namespaces                 []string          `json:"namespaces"`
-	Primary                    []string          `json:"primary"`
-	Secondary                  []string          `json:"secondary"`
-	AutoFailoverPolicyTypeName string            `json:"autoFailoverPolicyTypeName"`
-	AutoFailoverPolicyParams   string `json:"autoFailoverPolicyParams"`
+	Broker                     string   `json:"broker"`
+	Namespaces                 []string `json:"namespaces"`
+	Primary                    []string `json:"primary"`
+	Secondary                  []string `json:"secondary"`
+	AutoFailoverPolicyTypeName string   `json:"autoFailoverPolicyTypeName"`
+	AutoFailoverPolicyParams   string   `json:"autoFailoverPolicyParams"`
+}
+
+type BrokerData struct {
+	URL         string `json:"brokerUrl"`
+	ConfigName  string `json:"configName"`
+	ConfigValue string `json:"configValue"`
+}
+
+type BrokerStatsData struct {
+	Indent bool `json:"indent"`
 }

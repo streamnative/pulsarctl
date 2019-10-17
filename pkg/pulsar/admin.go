@@ -79,6 +79,8 @@ type Client interface {
 	Namespaces() Namespaces
 	Schemas() Schema
 	NsIsolationPolicy() NsIsolationPolicy
+	Brokers() Brokers
+	BrokerStats() BrokerStats
 }
 
 type client struct {
