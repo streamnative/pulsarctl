@@ -23,7 +23,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -39,6 +38,8 @@ const (
 	DefaultBookieWebServiceURL = "http://localhost:8081"
 )
 
+var ReleaseVersion = "None"
+
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceURL string
@@ -51,6 +52,8 @@ type Config struct {
 
 	BookieWebServiceURL string
 	BookieAPIVersion    APIVersion
+
+  TokenAuth  *auth.TokenAuthProvider
 }
 
 type TLSOptions struct {
@@ -103,6 +106,7 @@ type client struct {
 type pulsarClient struct {
 	client     *client
 	apiVersion string
+	versionInfo   string
 
 	// TLS config
 	auth       *auth.TLSAuthProvider
@@ -113,6 +117,9 @@ type pulsarClient struct {
 type bookieClient struct {
 	client     *client
 	apiVersion string
+	transport  *http.Transport
+
+	tokenAuth *auth.TokenAuthProvider
 }
 
 // New returns a new client
@@ -126,6 +133,8 @@ func New(config *Config) (Client, error) {
 		client: &client{
 			webServiceURL: config.WebServiceURL,
 		},
+		versionInfo:   ReleaseVersion,
+		tokenAuth:     config.TokenAuth,
 	}
 
 	if strings.HasPrefix(c.client.webServiceURL, "https://") {
@@ -429,9 +438,8 @@ func (c *client) newRequest(method, path string) (*request, error) {
 	return req, nil
 }
 
-// TODO: add pulsarctl version
 func (c *client) useragent() string {
-	return fmt.Sprintf("pulsarctl (go)")
+	return c.versionInfo
 }
 
 func (c *client) doRequest(r *request) (*http.Response, error) {
@@ -446,6 +454,11 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 		// add default headers
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Accept", "application/json")
+	}
+
+	if c.tokenAuth != nil {
+		data, _ := c.tokenAuth.GetData()
+		req.Header.Set("Authorization", "Bearer "+string(data))
 	}
 
 	req.Header.Set("User-Agent", c.useragent())

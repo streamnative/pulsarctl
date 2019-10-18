@@ -19,9 +19,12 @@ package cmdutils
 
 import (
 	"log"
+	"os"
 
+	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
+	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
 )
 
@@ -40,6 +43,10 @@ type ClusterConfig struct {
 
 	// the bookkeeper web service url that pulsarctl connects to.
 	BookieWebServiceURL string
+
+  // Token and TokenFile is used to config the pulsarctl using token to authentication
+	Token     string
+	TokenFile string
 }
 
 func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
@@ -80,6 +87,18 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"The bookie web service url that pulsarctl connects to.",
 	)
 
+  flags.StringVar(
+		&c.Token,
+		"token",
+		"",
+		"Using the token to authentication")
+
+	flags.StringVar(
+		&c.TokenFile,
+		"token-file",
+		"",
+		"Using the token file to authentication")
+
 	return flags
 }
 
@@ -100,6 +119,35 @@ func (c *ClusterConfig) Client(version pulsar.APIVersion) pulsar.Client {
 
 	if len(c.AuthParams) > 0 && c.AuthParams != config.AuthParams {
 		config.AuthParams = c.AuthParams
+	}
+
+	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
+		logger.Critical("the token and token file can not be specified at the same time")
+		os.Exit(1)
+	}
+
+	if len(c.Token) > 0 || len(c.TokenFile) > 0 {
+		if len(c.TLSTrustCertsFilePath) > 0 {
+			logger.Critical("the token and tls can not be specified at the same time")
+			os.Exit(1)
+		}
+
+		tokenParams := make(map[string]string)
+		if len(c.Token) > 0 {
+			tokenParams["token"] = c.Token
+		}
+
+		if len(c.TokenFile) > 0 {
+			tokenParams["file"] = c.TokenFile
+		}
+
+		tokenAuth, err := auth.NewAuthenticationTokenWithParams(tokenParams)
+		if err != nil {
+			logger.Critical("%s\n", err.Error())
+			os.Exit(1)
+		}
+
+		config.TokenAuth = tokenAuth
 	}
 
 	config.APIVersion = version
