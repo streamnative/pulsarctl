@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
 	"strings"
@@ -24,24 +24,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeleteClusterCmd(t *testing.T) {
-	args := []string{"add", "delete-test"}
-	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
-	assert.Nil(t, err)
+func TestListBrokers(t *testing.T) {
+	args := []string{"list", "standalone"}
+	listOut, execErr, _, _ := TestBrokersCommands(getBrokerListCmd, args)
+	assert.Nil(t, execErr)
+	assert.True(t, strings.Contains(listOut.String(), "8080"))
 
-	args = []string{"list"}
-	out, _, _, err := TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters := out.String()
-	assert.True(t, strings.Contains(clusters, "delete-test"))
-
-	args = []string{"delete", "delete-test"}
-	_, _, _, err = TestClusterCommands(deleteClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err = TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters = out.String()
-	assert.False(t, strings.Contains(clusters, "delete-test"))
+	failArgs := []string{"list"}
+	_, _, nameErr, _ := TestBrokersCommands(getBrokerListCmd, failArgs)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the cluster name is not specified or the cluster name is specified more than one",
+		nameErr.Error())
 }

@@ -15,66 +15,70 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"errors"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
-func ListClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "List the existing clusters"
+func getBrokerListCmd(vc *cmdutils.VerbCmd) {
+	desc := pulsar.LongDescription{}
+	desc.CommandUsedFor = "List active brokers of the cluster"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
-	create := pulsar.Example{
-		Desc:    "List the existing clusters",
-		Command: "pulsarctl clusters list",
+	list := pulsar.Example{
+		Desc:    "List active brokers of the cluster",
+		Command: "pulsarctl brokers list (cluster-name)",
 	}
-	examples = append(examples, create)
+	examples = append(examples, list)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "+--------------+\n" +
-			"| CLUSTER NAME |\n" +
-			"+--------------+\n" +
-			"| standalone   |\n" +
-			"| test-a       |\n" +
-			"+--------------+",
+		Out:  "127.0.0.1:8080",
 	}
-	out = append(out, successOut)
+
+	var argsError = pulsar.Output{
+		Desc: "the cluster name is not specified or the cluster name is specified more than one",
+		Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
+	}
+
+	out = append(out, successOut, argsError)
 	desc.CommandOutput = out
 
-	// update the description
 	vc.SetDescription(
 		"list",
-		"List the available pulsar clusters",
-		"This command is used for listing the list of available pulsar clusters.",
+		"List active brokers of the cluster",
+		desc.ToString(),
 		desc.ExampleToString(),
-		"",
-	)
+		"list")
 
-	// set the run function
-	vc.SetRunFunc(func() error {
-		return doListClusters(vc)
-	})
+	vc.SetRunFuncWithNameArg(func() error {
+		return doListCluster(vc)
+	}, "the cluster name is not specified or the cluster name is specified more than one")
 }
 
-func doListClusters(vc *cmdutils.VerbCmd) error {
+func doListCluster(vc *cmdutils.VerbCmd) error {
+	clusterName := vc.NameArg
+	if clusterName == "" {
+		return errors.New("should specified a cluster name")
+	}
+
 	admin := cmdutils.NewPulsarClient()
-	clusters, err := admin.Clusters().List()
+	brokersData, err := admin.Brokers().GetActiveBrokers(clusterName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
 		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Cluster Name"})
+		table.SetHeader([]string{"Brokers List"})
 
-		for _, c := range clusters {
+		for _, c := range brokersData {
 			table.Append([]string{c})
 		}
 

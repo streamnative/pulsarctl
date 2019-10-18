@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package brokerstats
+// +build namespace
+
+package brokers
 
 import (
 	"encoding/json"
@@ -25,15 +27,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDumpMBeans(t *testing.T) {
-	args := []string{"mbeans"}
-	mbeansOut, execErr, _, _ := TestBrokerStatsCommands(dumpMBeans, args)
+func TestGetOwnedNamespaces(t *testing.T) {
+	args := []string{"namespaces", "standalone", "--url", "127.0.0.1:8080"}
+	listOut, execErr, _, _ := TestBrokersCommands(getOwnedNamespacesCmd, args)
 	assert.Nil(t, execErr)
 
-	var out []pulsar.Metrics
-	err := json.Unmarshal(mbeansOut.Bytes(), &out)
+	var tmpMap map[string]pulsar.NamespaceOwnershipStatus
+	err := json.Unmarshal(listOut.Bytes(), &tmpMap)
 	assert.Nil(t, err)
 
-	value := out[0].Dimensions["MBean"]
-	assert.Equal(t, true, len(value) > 0)
+	key := "pulsar/standalone/127.0.0.1:8080/0x00000000_0xffffffff"
+	assert.Equal(t, 2, len(tmpMap))
+	assert.Equal(t, false, tmpMap[key].IsControlled)
+	assert.Equal(t, true, tmpMap[key].IsActive)
+
+	failArgs := []string{"namespaces", "--url", "127.0.0.1:8080"}
+	_, _, nameErr, _ := TestBrokersCommands(getOwnedNamespacesCmd, failArgs)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the cluster name is not specified or the cluster name is specified more than one",
+		nameErr.Error())
 }

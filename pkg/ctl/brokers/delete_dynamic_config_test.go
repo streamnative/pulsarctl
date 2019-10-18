@@ -15,33 +15,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeleteClusterCmd(t *testing.T) {
-	args := []string{"add", "delete-test"}
-	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
-	assert.Nil(t, err)
+func TestDeleteDynamicConfig(t *testing.T) {
+	args := []string{"delete-dynamic-config", "--config", "dispatcherMinReadBatchSize"}
+	delOut, execErr, _, _ := TestBrokersCommands(deleteDynamicConfigCmd, args)
+	assert.Nil(t, execErr)
+	expectedOut := "Deleted dynamic config: dispatcherMinReadBatchSize successful."
+	assert.Equal(t, expectedOut, delOut.String())
 
-	args = []string{"list"}
-	out, _, _, err := TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters := out.String()
-	assert.True(t, strings.Contains(clusters, "delete-test"))
-
-	args = []string{"delete", "delete-test"}
-	_, _, _, err = TestClusterCommands(deleteClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err = TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters = out.String()
-	assert.False(t, strings.Contains(clusters, "delete-test"))
+	failArgs := []string{"delete-dynamic-config", "--config", "errorName"}
+	_, nameErr, _, _ := TestBrokersCommands(deleteDynamicConfigCmd, failArgs)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "code: 412 reason:  Can't update non-dynamic configuration", nameErr.Error())
 }

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package brokers
 
 import (
 	"strings"
@@ -24,24 +24,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeleteClusterCmd(t *testing.T) {
-	args := []string{"add", "delete-test"}
-	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err := TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters := out.String()
-	assert.True(t, strings.Contains(clusters, "delete-test"))
-
-	args = []string{"delete", "delete-test"}
-	_, _, _, err = TestClusterCommands(deleteClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err = TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters = out.String()
-	assert.False(t, strings.Contains(clusters, "delete-test"))
+func TestHealthCheck(t *testing.T) {
+	args := []string{"healthcheck"}
+	checkOut, execErr, _, _ := TestBrokersCommands(healthCheckCmd, args)
+	assert.Nil(t, execErr)
+	str := strings.Replace(checkOut.String(), "\n", "", -1)
+	assert.Equal(t, "ok", str)
 }

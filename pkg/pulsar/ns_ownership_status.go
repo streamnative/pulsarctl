@@ -15,33 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package cluster
+package pulsar
 
-import (
-	"strings"
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-)
-
-func TestDeleteClusterCmd(t *testing.T) {
-	args := []string{"add", "delete-test"}
-	_, _, _, err := TestClusterCommands(CreateClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err := TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters := out.String()
-	assert.True(t, strings.Contains(clusters, "delete-test"))
-
-	args = []string{"delete", "delete-test"}
-	_, _, _, err = TestClusterCommands(deleteClusterCmd, args)
-	assert.Nil(t, err)
-
-	args = []string{"list"}
-	out, _, _, err = TestClusterCommands(ListClustersCmd, args)
-	assert.Nil(t, err)
-	clusters = out.String()
-	assert.False(t, strings.Contains(clusters, "delete-test"))
+type NamespaceOwnershipStatus struct {
+	BrokerAssignment BrokerAssignment `json:"broker_assignment"`
+	IsControlled     bool             `json:"is_controlled"`
+	IsActive         bool             `json:"is_active"`
 }
+
+type BrokerAssignment string
+
+const (
+	Primary   BrokerAssignment = "primary"
+	Secondary BrokerAssignment = "secondary"
+	Shared    BrokerAssignment = "shared"
+)
