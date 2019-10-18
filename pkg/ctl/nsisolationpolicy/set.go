@@ -21,6 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
@@ -119,7 +120,7 @@ func doSetPolicy(vc *cmdutils.VerbCmd, nsData *pulsar.NsIsolationPoliciesData) e
 
 	admin := cmdutils.NewPulsarClient()
 
-	policyParams, err := convert(nsData.AutoFailoverPolicyParams)
+	policyParams, err := utils.Convert(nsData.AutoFailoverPolicyParams)
 	if err != nil {
 		return err
 	}

@@ -18,7 +18,8 @@
 package nsisolationpolicy
 
 import (
-	"github.com/spf13/pflag"
+	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
@@ -31,7 +32,7 @@ func getBrokerWithPolicies(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	create := pulsar.Example{
 		Desc:    "Get broker with namespace-isolation policies attached to it",
-		Command: "pulsarctl ns-isolation-policy broker (cluster-name) --broker (broker address)",
+		Command: "pulsarctl ns-isolation-policy broker (cluster-name) (broker address)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
@@ -66,26 +67,22 @@ func getBrokerWithPolicies(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
-	nsData := &pulsar.NsIsolationPoliciesData{}
-	vc.SetRunFuncWithNameArg(func() error {
-		return doGetBrokerWithPolicies(vc, nsData)
-	}, "the cluster name is not specified or the cluster name is specified more than one")
-
-	vc.FlagSetGroup.InFlagSet("NsIsolationPoliciesData", func(flagSet *pflag.FlagSet) {
-		flagSet.StringVar(
-			&nsData.Broker,
-			"broker",
-			"",
-			"Broker-name to get namespace-isolation policies attached to it")
-	},
-	)
+	vc.SetRunFuncWithMultiNameArgs(func() error {
+		return doGetBrokerWithPolicies(vc)
+	}, func(args []string) error {
+		if len(args) != 2 {
+			return errors.New("need two arguments apply to the command")
+		}
+		return nil
+	})
 }
 
-func doGetBrokerWithPolicies(vc *cmdutils.VerbCmd, nsData *pulsar.NsIsolationPoliciesData) error {
-	clusterName := vc.NameArg
+func doGetBrokerWithPolicies(vc *cmdutils.VerbCmd) error {
+	clusterName := vc.NameArgs[0]
+	broker := vc.NameArgs[1]
 
 	admin := cmdutils.NewPulsarClient()
-	nsIsolationData, err := admin.NsIsolationPolicy().GetBrokerWithNamespaceIsolationPolicy(clusterName, nsData.Broker)
+	nsIsolationData, err := admin.NsIsolationPolicy().GetBrokerWithNamespaceIsolationPolicy(clusterName, broker)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {

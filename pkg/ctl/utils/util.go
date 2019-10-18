@@ -157,3 +157,34 @@ func ParseRelativeTimeInSeconds(relativeTime string) (time.Duration, error) {
 		return -1, errors.Errorf("invalid time unit '%s'", unitTime)
 	}
 }
+
+func Convert(value string) (map[string]string, error) {
+	err := false
+	nvPairs := strings.Split(value, ",")
+
+	tmpMap := make(map[string]string)
+
+	for _, nvPair := range nvPairs {
+		err = true
+		if len(nvPair) != 0 {
+			nv := strings.Split(nvPair, "=")
+			if len(nv) == 2 {
+				nv[0] = strings.TrimSpace(nv[0])
+				nv[1] = strings.TrimSpace(nv[1])
+				if len(nv[0]) != 0 && len(nv[1]) != 0 && !strings.HasPrefix(nv[0], "/") {
+					tmpMap[nv[0]] = nv[1]
+					err = false
+				}
+			}
+		}
+		if err {
+			break
+		}
+	}
+
+	if err {
+		return nil, fmt.Errorf("unable to parse bad name=value parameter list: %v", value)
+	}
+
+	return tmpMap, nil
+}

@@ -332,7 +332,6 @@ type LookupData struct {
 }
 
 type NsIsolationPoliciesData struct {
-	Broker                     string   `json:"broker"`
 	Namespaces                 []string `json:"namespaces"`
 	Primary                    []string `json:"primary"`
 	Secondary                  []string `json:"secondary"`
