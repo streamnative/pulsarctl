@@ -32,7 +32,7 @@ func TestTLS(t *testing.T) {
 	assert.Nil(t, err)
 
 	args = []string{"clusters", "list"}
-	out, err := TestTLSHelp(listClustersCmd, args)
+	out, err := TestTLSHelp(ListClustersCmd, args)
 	assert.Nil(t, err)
 	clusters := out.String()
 	assert.True(t, strings.Contains(clusters, "tls"))
@@ -42,7 +42,7 @@ func TestTLS(t *testing.T) {
 	assert.Nil(t, err)
 
 	args = []string{"clusters", "list"}
-	out, err = TestTLSHelp(listClustersCmd, args)
+	out, err = TestTLSHelp(ListClustersCmd, args)
 	assert.Nil(t, err)
 	clusters = out.String()
 	assert.False(t, strings.Contains(clusters, "tls"))
