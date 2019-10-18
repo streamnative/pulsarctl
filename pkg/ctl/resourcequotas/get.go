@@ -27,8 +27,8 @@ import (
 
 func getResourceQuota(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
-	desc.CommandUsedFor = "Get the resource quota for specified namespace bundle, " +
-		"or default quota if no namespace/bundle specified."
+	desc.CommandUsedFor = "Get the resource quota for a specified namespace bundle, " +
+		"or default quota if no namespace/bundle is specified."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
@@ -37,7 +37,7 @@ func getResourceQuota(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl resource-quotas get",
 	}
 	getWithArgs := pulsar.Example{
-		Desc:    "Get the resource quota for specified namespace bundle",
+		Desc:    "Get the resource quota for a specified namespace bundle",
 		Command: "pulsarctl resource-quotas get --namespace (namespace name) --bundle (bundle range)",
 	}
 	examples = append(examples, get, getWithArgs)
@@ -60,8 +60,8 @@ func getResourceQuota(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"get",
-		"Get the resource quota for specified namespace bundle, "+
-			"or default quota if no namespace/bundle specified.",
+		"Get the resource quota for a specified namespace bundle, "+
+			"or default quota if no namespace/bundle is specified.",
 		desc.ToString(),
 		desc.ExampleToString(),
 		"get")
