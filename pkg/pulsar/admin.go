@@ -37,12 +37,13 @@ const (
 	DefaultWebServiceURL = "http://localhost:8080"
 )
 
+var ReleaseVersion = "None"
+
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceURL string
 	HTTPClient    *http.Client
 	APIVersion    APIVersion
-	VersionInfo   string
 
 	Auth       *auth.TLSAuthProvider
 	AuthParams string
@@ -59,7 +60,6 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceURL: DefaultWebServiceURL,
 		HTTPClient:    http.DefaultClient,
-		VersionInfo:   "pulsarctl (Go) v0.0.1",
 
 		TLSOptions: &TLSOptions{
 			AllowInsecureConnection: false,
@@ -105,7 +105,7 @@ func New(config *Config) (Client, error) {
 	c := &client{
 		apiVersion:    config.APIVersion.String(),
 		webServiceURL: config.WebServiceURL,
-		versionInfo:   config.VersionInfo,
+		versionInfo:   ReleaseVersion,
 	}
 
 	if strings.HasPrefix(c.webServiceURL, "https://") {
