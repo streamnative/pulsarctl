@@ -35,8 +35,6 @@ func TestFunctionsWorker(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, "jvm_metrics", metrics[0].Dimensions["metric"])
-	assert.Equal(t, float64(0), metrics[0].Metrics["jvm_gc_young_count"])
-	assert.Equal(t, float64(0), metrics[0].Metrics["jvm_gc_young_pause"])
 
 	clustersArgs := []string{"get-cluster"}
 	clusterOut, execErr, _, _ := TestFunctionsWorkerCmd(getCluster, clustersArgs)
