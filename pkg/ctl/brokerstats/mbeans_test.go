@@ -34,9 +34,6 @@ func TestDumpMBeans(t *testing.T) {
 	err := json.Unmarshal(mbeansOut.Bytes(), &out)
 	assert.Nil(t, err)
 
-	tmpMap := map[string]string{
-		"MBean": "java.lang:type=MemoryPool,name=Metaspace",
-	}
-
-	assert.Equal(t, tmpMap, out[0].Dimensions)
+	value := out[0].Dimensions["MBean"]
+	assert.Equal(t, true, len(value) > 0)
 }
