@@ -18,25 +18,13 @@
 package brokerstats
 
 import (
-	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDumpMBeans(t *testing.T) {
 	args := []string{"mbeans"}
-	mbeansOut, execErr, _, _ := TestBrokerStatsCommands(dumpMBeans, args)
+	_, execErr, _, _ := TestBrokerStatsCommands(dumpMBeans, args)
 	assert.Nil(t, execErr)
-
-	var out []pulsar.Metrics
-	err := json.Unmarshal(mbeansOut.Bytes(), &out)
-	assert.Nil(t, err)
-
-	tmpMap := map[string]string{
-		"MBean": "java.lang:type=MemoryPool,name=Metaspace",
-	}
-
-	assert.Equal(t, tmpMap, out[0].Dimensions)
 }
