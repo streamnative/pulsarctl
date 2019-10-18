@@ -59,10 +59,7 @@ After the build, there will be generated `pulsarctl` file.
 Publish the package to the GitHub release repo.
 
 ```
-$ mkdir -p pulsarctl-v0.1.X
-$ cd pulsarctl-v0.1.X
-$ cp -r ../* .
-$ tar -zcvf pulsarctl-0.1.X.tar.gz
+curl --data-binary @"${PWD}/pulsarctl" -H "Content-Type: application/octet-stream" -H "Authorization: token ${GH_ACCESS_TOKEN}" https://uploads.github.com/repos/streamnative/pulsarctl/releases/v0.1.0/assets\?name\=pulsarctl
 ```
 
 #### 4. Write a release note
