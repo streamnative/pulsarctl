@@ -53,7 +53,7 @@ type Config struct {
 	BookieWebServiceURL string
 	BookieAPIVersion    APIVersion
 
-  TokenAuth  *auth.TokenAuthProvider
+	TokenAuth *auth.TokenAuthProvider
 }
 
 type TLSOptions struct {
@@ -101,12 +101,13 @@ type client struct {
 	webServiceURL string
 	httpClient    *http.Client
 	transport     *http.Transport
+	versionInfo   string
+	tokenAuth     *auth.TokenAuthProvider
 }
 
 type pulsarClient struct {
 	client     *client
 	apiVersion string
-	versionInfo   string
 
 	// TLS config
 	auth       *auth.TLSAuthProvider
@@ -117,9 +118,6 @@ type pulsarClient struct {
 type bookieClient struct {
 	client     *client
 	apiVersion string
-	transport  *http.Transport
-
-	tokenAuth *auth.TokenAuthProvider
 }
 
 // New returns a new client
@@ -132,9 +130,12 @@ func New(config *Config) (Client, error) {
 		apiVersion: config.APIVersion.String(),
 		client: &client{
 			webServiceURL: config.WebServiceURL,
+			versionInfo:   ReleaseVersion,
 		},
-		versionInfo:   ReleaseVersion,
-		tokenAuth:     config.TokenAuth,
+	}
+
+	if config.TokenAuth != nil {
+		c.client.tokenAuth = config.TokenAuth
 	}
 
 	if strings.HasPrefix(c.client.webServiceURL, "https://") {

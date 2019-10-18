@@ -44,7 +44,7 @@ type ClusterConfig struct {
 	// the bookkeeper web service url that pulsarctl connects to.
 	BookieWebServiceURL string
 
-  // Token and TokenFile is used to config the pulsarctl using token to authentication
+	// Token and TokenFile is used to config the pulsarctl using token to authentication
 	Token     string
 	TokenFile string
 }
@@ -87,7 +87,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"The bookie web service url that pulsarctl connects to.",
 	)
 
-  flags.StringVar(
+	flags.StringVar(
 		&c.Token,
 		"token",
 		"",
