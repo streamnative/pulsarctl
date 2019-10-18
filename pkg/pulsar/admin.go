@@ -60,7 +60,7 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceURL: DefaultWebServiceURL,
 		HTTPClient: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 60 * time.Second,
 		},
 
 		TLSOptions: &TLSOptions{
@@ -420,7 +420,7 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	hc := c.httpClient
 	if hc == nil {
 		hc = &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 60 * time.Second,
 		}
 	}
 
