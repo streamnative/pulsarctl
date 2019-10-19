@@ -38,7 +38,7 @@ func dumpTopics(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Get all stats details of broker.",
+		Out:  "Get all stats details of broker.",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out

@@ -38,7 +38,7 @@ func dumpMonitoringMetrics(vc *cmdutils.VerbCmd) {
 	var out []pulsar.Output
 	successOut := pulsar.Output{
 		Desc: "normal output",
-		Out: "Get all the metrics details for Monitoring",
+		Out:  "Get all the metrics details for Monitoring",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
