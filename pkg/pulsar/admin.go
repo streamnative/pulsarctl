@@ -36,7 +36,7 @@ import (
 
 const (
 	DefaultWebServiceURL       = "http://localhost:8080"
-	DefaultHttpTimeOutDuration = 5 * time.Minute
+	DefaultHTTPTimeOutDuration = 5 * time.Minute
 )
 
 var ReleaseVersion = "None"
@@ -44,7 +44,7 @@ var ReleaseVersion = "None"
 // Config is used to configure the admin client
 type Config struct {
 	WebServiceURL string
-	HttpTimeOut   time.Duration
+	HTTPTimeout   time.Duration
 	HTTPClient    *http.Client
 	APIVersion    APIVersion
 
@@ -64,7 +64,7 @@ func DefaultConfig() *Config {
 	config := &Config{
 		WebServiceURL: DefaultWebServiceURL,
 		HTTPClient: &http.Client{
-			Timeout: DefaultHttpTimeOutDuration,
+			Timeout: DefaultHTTPTimeOutDuration,
 		},
 
 		TLSOptions: &TLSOptions{
@@ -433,7 +433,7 @@ func (c *client) doRequest(r *request) (*http.Response, error) {
 	hc := c.httpClient
 	if hc == nil {
 		hc = &http.Client{
-			Timeout: DefaultHttpTimeOutDuration,
+			Timeout: DefaultHTTPTimeOutDuration,
 		}
 	}
 
