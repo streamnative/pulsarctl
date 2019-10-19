@@ -24,8 +24,8 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
+// nolint
 func Examples() {
-
 	config := &pulsar.Config{
 		WebServiceURL: "http://localhost:8080",
 		HTTPClient:    http.DefaultClient,
@@ -51,6 +51,7 @@ func Examples() {
 	clusters, err := admin.Clusters().List()
 	if err != nil {
 		// handle the error
+		return
 	}
 
 	// handle the result
