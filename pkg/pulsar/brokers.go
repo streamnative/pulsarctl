@@ -25,13 +25,13 @@ import (
 
 // Brokers is admin interface for brokers management
 type Brokers interface {
-	// GetActiveBrokers get the list of active brokers in the cluster.
+	// GetActiveBrokers returns the list of active brokers in the cluster.
 	GetActiveBrokers(cluster string) ([]string, error)
 
-	// GetDynamicConfigurationNames get list of updatable configuration name
+	// GetDynamicConfigurationNames returns list of updatable configuration name
 	GetDynamicConfigurationNames() ([]string, error)
 
-	// GetOwnedNamespaces get the map of owned namespaces and their status from a single broker in the cluster
+	// GetOwnedNamespaces returns the map of owned namespaces and their status from a single broker in the cluster
 	GetOwnedNamespaces(cluster, brokerURL string) (map[string]NamespaceOwnershipStatus, error)
 
 	// UpdateDynamicConfiguration updates dynamic configuration value in to Zk that triggers watch on
@@ -42,13 +42,13 @@ type Brokers interface {
 	// in broker but next time when broker restarts, it applies value from configuration file only.
 	DeleteDynamicConfiguration(configName string) error
 
-	// GetRuntimeConfigurations get values of runtime configuration
+	// GetRuntimeConfigurations returns values of runtime configuration
 	GetRuntimeConfigurations() (map[string]string, error)
 
-	// GetInternalConfigurationData get the internal configuration data
+	// GetInternalConfigurationData returns the internal configuration data
 	GetInternalConfigurationData() (*InternalConfigurationData, error)
 
-	// GetAllDynamicConfigurations get values of all overridden dynamic-configs
+	// GetAllDynamicConfigurations returns values of all overridden dynamic-configs
 	GetAllDynamicConfigurations() (map[string]string, error)
 
 	// HealthCheck run a health check on the broker

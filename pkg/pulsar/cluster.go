@@ -34,25 +34,25 @@ type Clusters interface {
 	// Update the configuration for a cluster
 	Update(ClusterData) error
 
-	// UpdatePeerClusters update peer cluster names.
+	// UpdatePeerClusters updates peer cluster names.
 	UpdatePeerClusters(string, []string) error
 
-	// GetPeerClusters get peer-cluster names
+	// GetPeerClusters returns peer-cluster names
 	GetPeerClusters(string) ([]string, error)
 
-	// CreateFailureDomain create a domain into cluster
+	// CreateFailureDomain creates a domain into cluster
 	CreateFailureDomain(FailureDomainData) error
 
-	// GetFailureDomain get the domain registered into a cluster
+	// GetFailureDomain returns the domain registered into a cluster
 	GetFailureDomain(clusterName, domainName string) (FailureDomainData, error)
 
-	// ListFailureDomains get all registered domains in cluster
+	// ListFailureDomains returns all registered domains in cluster
 	ListFailureDomains(string) (FailureDomainMap, error)
 
-	// DeleteFailureDomain delete a domain in cluster
+	// DeleteFailureDomain deletes a domain in cluster
 	DeleteFailureDomain(FailureDomainData) error
 
-	// UpdateFailureDomain update a domain into cluster
+	// UpdateFailureDomain updates a domain into cluster
 	UpdateFailureDomain(FailureDomainData) error
 }
 
