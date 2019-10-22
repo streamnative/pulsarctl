@@ -1,0 +1,16 @@
+name: test
+on:
+  push:
+    branches:
+      - test-ci
+  pull-request:
+    branches:
+      - test-ci
+jobs:
+  build:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: testEcho
+    run: |
+      echo hello, world
