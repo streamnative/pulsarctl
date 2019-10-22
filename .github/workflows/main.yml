@@ -3,7 +3,7 @@ name: Release
 on:
   pull_request:
     branches: 
-      - test-release
+      - zymap-test-release
     tags:
       - 'v*'
 
