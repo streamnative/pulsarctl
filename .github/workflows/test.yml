@@ -1,16 +1,19 @@
-name: test
+name: test-ci
 on:
   push:
     branches:
       - test-ci
-  pull-request:
+  pull_request:
     branches:
       - test-ci
+
 jobs:
-  build:
-    name: test
+  test:
     runs-on: ubuntu-latest
+
     steps:
-    - name: testEcho
-    run: |
-      echo hello, world
+
+      - name: Set up Go 1.12
+        run: |
+          echo "hello world"
+
