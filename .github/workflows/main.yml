@@ -19,8 +19,7 @@ jobs:
         go-version: 1.12
       id: go
     - name: release
-      run: ./release
-    
+      run: echo hello_world
     - name: release note
       uses: toolmantim/release-drafter@v5.2.0
     
