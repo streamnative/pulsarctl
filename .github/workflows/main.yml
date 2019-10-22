@@ -20,6 +20,7 @@ jobs:
       id: go
     - name: release
       run: go build .
+        | mv pulsarctl .github/build
     - name: release note
       uses: toolmantim/release-drafter@v5.2.0
       env:
