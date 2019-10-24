@@ -8,8 +8,7 @@ The steps for releasing are as follows:
 
 1. Create the release branch
 2. Promote the release
-3. Build and publish the package.
-4. Write a release note
+3. Write a release note
 
 ## Steps in detail
 
@@ -42,27 +41,15 @@ $ git checkout -b branch-0.1.X origin/master
 ```shell
 # Create a tag
 $ git tag -u $USER@streamnative.io v0.1.X -m 'Release v0.1.X'
+# Update VERSION file
+$ echo v0.1.X > VERSION
 
 # Push both the branch and the tag to Github repo
 $ git push origin branch-0.1.X
 $ git push origin v0.1.X
 ```
 
-#### 3. Build and publish the package.
-
-```shell
-$ go build -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-v0.1.X" .
-```
-
-After the build, there will be generated `pulsarctl` file.
-
-Publish the package to the GitHub release repo.
-
-```
-curl --data-binary @"${PWD}/pulsarctl" -H "Content-Type: application/octet-stream" -H "Authorization: token ${GH_ACCESS_TOKEN}" https://uploads.github.com/repos/streamnative/pulsarctl/releases/v0.1.0/assets\?name\=pulsarctl
-```
-
-#### 4. Write a release note
+#### 3. Write a release note
 
 Check the milestone in GitHub associated with the release. 
 
