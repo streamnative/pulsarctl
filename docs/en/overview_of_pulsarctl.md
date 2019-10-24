@@ -21,27 +21,27 @@
 
 # Overview of pulsarctl
 
-Pulsarctl is a command-line tool developed using the Go language based on the Pulsar REST API. It consists of the following two parts:
+`pulsarctl` is a command-line tool developed using the Go language based on the Pulsar REST API. It consists of the following two parts:
 
-- Go admin API, the user can directly call the interface provided by Pulsarctl to perform operations related to pulsar.
-- Command line tools, users can use Pulsarctl to implement functions similar to pulsar-admin.
+- Go admin API, the user can directly call the interface provided by `pulsarctl` to perform operations related to pulsar.
+- Command line tools, users can use `pulsarctl` to implement functions similar to pulsar-admin.
 
 
-This overview covers `pulsarctl` syntax, describes the command operations, and provides common examples.For details about each command, including all the supported flags and subcommands, see the [pulsarctl](link to pulsarctl website) reference documentation.
+This overview covers `pulsarctl` syntax, describes the command operations, and provides common examples. For details about each command, including all the supported flags and subcommands, see the [pulsarctl](link to pulsarctl website) reference documentation.
 
 
 ## Syntax
 
-Use the following syntax to run pulsarctl commands from your terminal window:
+Use the following syntax to run `pulsarctl` commands from your terminal window:
 
 ```
-pulsarctl [command] [sub-command] [NAME] [flags]
+pulsarctl [resource] [command] [NAME] [flags]
 ```
 
 where command, sub-command and options are:
 
-- **command:** Specifies the resources of pulsar, for example clusters, topics, namespaces, functions and so on.
-- **sub-command:** Specifies the operation that you want to perform on one or more resources, for example create, get, delete, update, list.
+- **resource:** Specifies the resources of pulsar, for example clusters, topics, namespaces, functions and so on.
+- **command:** Specifies the operation that you want to perform on one or more resources, for example create, get, delete, update, list.
 - **NAME:** Specifies the name of the resource. Names are case-sensitive. For example:
 
 ```
@@ -86,7 +86,7 @@ resource-quotas |  pulsarctl resource-quotas [sub-command] [NAME] [flags] | Oper
 
 Currently, the encryption methods supported by pulsarctl include the following two methods:
 
-- JWT(Java Web Token)
+- JWT (Java Web Token)
 - TLS
 
 When you run `pulsarctl help` from the terminal window, you can get the following flags information:
@@ -106,6 +106,20 @@ Common flags:
 ```
 
 ### How to enable TLS
+
+#### Config broker
+
+To enable TLS running in broker, you need to set `tlsEnabled` to `true` in the `broker.conf` or `standalone.conf` file. For examples:
+
+```
+# Enable TLS
+
+tlsEnabled=true
+tlsCertificateFilePath=/test/auth/certs/broker-cert.pem
+tlsKeyFilePath=/test/auth/certs/broker-key.pem
+tlsTrustCertsFilePath=/test/auth/certs/cacert.pem
+tlsAllowInsecureConnection=false
+```
 
 #### Config client
 
@@ -129,23 +143,26 @@ pulsarctl \
 	topics list public/default
 ```
 
-#### Config broker
-
-To enable TLS running in broker, you need to set `tlsEnabled` to `true` in the `broker.conf` or `standalone.conf` file. For examples:
-
-```
-# Enable TLS
-
-tlsEnabled=true
-tlsCertificateFilePath=/test/auth/certs/broker-cert.pem
-tlsKeyFilePath=/test/auth/certs/broker-key.pem
-tlsTrustCertsFilePath=/test/auth/certs/cacert.pem
-tlsAllowInsecureConnection=false
-```
-
 For more detailed about TLS, see the [TLS](https://pulsar.apache.org/docs/en/security-tls-transport/) reference documentation.
 
 ### How to enable JWT
+
+#### Config broker
+
+To enable JWT running in broker, you need to set `authenticationEnabled` to `true` in the `broker.conf` or `standalone.conf` file. For examples:
+
+```
+# Enable JWT
+
+# Enable authentication
+authenticationEnabled=true
+
+# Autentication provider name list, which is comma separated list of class names
+authenticationProviders=org.apache.pulsar.broker.authentication.AuthenticationProviderToken
+
+# Configure the secret key to be used to validate auth tokens
+tokenSecretKey=file:///test/auth/token/secret.key
+```
 
 #### Config client
 
@@ -175,28 +192,11 @@ pulsarctl \
     topics list public/default
 ```
 
-#### Config broker
-
-To enable JWT running in broker, you need to set `authenticationEnabled` to `true` in the `broker.conf` or `standalone.conf` file. For examples:
-
-```
-# Enable JWT
-
-# Enable authentication
-authenticationEnabled=true
-
-# Autentication provider name list, which is comma separated list of class names
-authenticationProviders=org.apache.pulsar.broker.authentication.AuthenticationProviderToken
-
-# Configure the secret key to be used to validate auth tokens
-tokenSecretKey=file:///test/auth/token/secret.key
-```
-
 For more detailed about JWT, see the [JWT](https://pulsar.apache.org/docs/en/security-token-admin/) reference documentation.
 
 ## Admin API
 
-The user can directly call the interface provided by Pulsarctl to perform operations related to pulsar.
+You can also use the Go admin API in your go application to perform operations related to pulsar.
 
 ### How to use admin api
 
@@ -209,7 +209,7 @@ The user can directly call the interface provided by Pulsarctl to perform operat
 List() ([]string, error)
 ```
 
-#### Source code example
+#### Code example
 
 ```
 package main
@@ -256,5 +256,3 @@ func main() {
 ```
 
 For more detailed about admin api, see the [Admin API](https://godoc.org/github.com/streamnative/pulsarctl) reference documentation.
-
-
