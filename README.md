@@ -102,10 +102,10 @@ We move the subscription commands from the Topics to the Subscriptions in pulsar
 | ------------ | --------- |
 | bin/pulsar-admin topics create-subscription | pulsarctl subscription create |
 | bin/pulsar-admin topics unsubscribe | pulsarctl subscription delete |
-| bin/pulsar-admin topics skip | pulsarctl subscription skip-messages |
-| bin/pulsar-admin topics expire-messages | pulsarctl subscription expire-messages |
+| bin/pulsar-admin topics skip | pulsarctl subscription skip |
+| bin/pulsar-admin topics expire-messages | pulsarctl subscription expire |
 | bin/pulsar-admin topics peek-messages | pulsarctl subscription peek |
-| bin/pulsar-admin topics reset-cursor | pulsarctl subscription reset-cursor |
+| bin/pulsar-admin topics reset-cursor | pulsarctl subscription seek |
 | bin/pulsar-admin topics subscriptions | pulsarctl subscription list |
 
 ## Contribute
