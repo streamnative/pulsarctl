@@ -30,3 +30,6 @@ categories:
   - sources
   - tenants
   - topics
+  - brokers
+  - broker-stats
+  - subscriptions

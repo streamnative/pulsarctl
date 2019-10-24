@@ -29,6 +29,15 @@
     },
     {
       "filename": "_generated_topics.md"
+    },
+    {
+      "filename": "_generated_brokers.md"
+    },
+    {
+      "filename": "_generated_broker-stats.md"
+    },
+    {
+      "filename": "_generated_subscriptions.md"
     }
   ],
   "title": "Pulsarctl Reference Docs",
