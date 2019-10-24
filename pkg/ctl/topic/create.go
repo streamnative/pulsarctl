@@ -30,6 +30,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for creating topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
 	var examples []pulsar.Example
 	createNonPartitions := pulsar.Example{
@@ -44,6 +45,7 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
+	vc.Command.Example = "#example \n command"
 
 	var out []pulsar.Output
 	successOut := pulsar.Output{

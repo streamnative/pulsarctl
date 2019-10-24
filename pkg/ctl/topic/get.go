@@ -26,6 +26,7 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the metadata of an exist topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, partitioned topic, a partition of a partitioned topic"
 
 	var examples []pulsar.Example
 	getTopic := pulsar.Example{

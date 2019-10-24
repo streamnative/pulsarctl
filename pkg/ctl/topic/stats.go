@@ -30,6 +30,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 		"connected producers and consumers. (All the rates are computed over a 1 minute window " +
 		"and are relative the last completed 1 minute period)"
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
 	var examples []pulsar.Example
 	get := pulsar.Example{
