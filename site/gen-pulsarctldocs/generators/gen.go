@@ -68,7 +68,7 @@ func GenerateFiles() {
 	manifest := &Manifest{}
 	manifest.Title = "Pulsarctl Reference Docs"
 	manifest.Copyright = "<a href=\"https://github.com/streamnative/pulsarctl\">" +
-		"Copyright 2019 The Pulsarctl Authors.</a>"
+		"Copyright 2019 @StreamNative.</a>"
 
 	NormalizeSpec(&spec)
 

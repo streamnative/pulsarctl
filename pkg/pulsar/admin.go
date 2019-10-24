@@ -89,6 +89,7 @@ type Client interface {
 	Brokers() Brokers
 	BrokerStats() BrokerStats
 	ResourceQuotas() ResourceQuotas
+	FunctionsWorker() FunctionsWorker
 }
 
 type client struct {
