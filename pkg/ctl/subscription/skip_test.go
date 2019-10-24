@@ -28,13 +28,13 @@ func TestSkipCmd(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(CreateCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"skip-messages", "--count", "1", "test-skip-messages-topic", "test-skip-messages-sub"}
+	args = []string{"skip", "--count", "1", "test-skip-messages-topic", "test-skip-messages-sub"}
 	out, execErr, _, _ := TestSubCommands(SkipCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "The subscription test-skip-messages-sub skips 1 messages of the topic "+
 		"persistent://public/default/test-skip-messages-topic successfully", out.String())
 
-	args = []string{"skip-messages", "--all", "test-skip-messages-topic", "test-skip-messages-sub"}
+	args = []string{"skip", "--all", "test-skip-messages-topic", "test-skip-messages-sub"}
 	out, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "The subscription test-skip-messages-sub skips -1 messages of the topic "+
@@ -42,25 +42,25 @@ func TestSkipCmd(t *testing.T) {
 }
 
 func TestSkipArgsError(t *testing.T) {
-	args := []string{"skip-messages"}
+	args := []string{"skip"}
 	_, _, nameErr, _ := TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified the topic name and the subscription name", nameErr.Error())
 
-	args = []string{"skip-messages", "test-topic", "test-sub"}
+	args = []string{"skip", "test-topic", "test-sub"}
 	_, execErr, _, _ := TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "the skip message number is not specified", execErr.Error())
 }
 
 func TestSkipNonExistingTopic(t *testing.T) {
-	args := []string{"skip-messages", "--count", "1", "test-skip-messages-non-existing-topic",
+	args := []string{"skip", "--count", "1", "test-skip-messages-non-existing-topic",
 		"test-skip-messages-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
 
-	args = []string{"skip-messages", "--all", "test-skip-messages-non-existing-topic",
+	args = []string{"skip", "--all", "test-skip-messages-non-existing-topic",
 		"test-skip-messages-non-existing-topic-sub"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
@@ -73,13 +73,13 @@ func TestSkipNonExistingSub(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(CreateCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"skip-messages", "--count", "1", "test-skip-messages-non-existing-sub-topic",
+	args = []string{"skip", "--count", "1", "test-skip-messages-non-existing-sub-topic",
 		"test-skip-messages-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
 
-	args = []string{"skip-messages", "--all", "test-skip-messages-non-existing-sub-topic",
+	args = []string{"skip", "--all", "test-skip-messages-non-existing-sub-topic",
 		"test-skip-messages-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
