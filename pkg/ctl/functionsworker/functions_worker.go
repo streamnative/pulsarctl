@@ -27,7 +27,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"functions-worker",
 		"Operations to collect function-worker statistics",
 		"",
-		"functions-worker",
+		"pfw",
 	)
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, functionsStats)
