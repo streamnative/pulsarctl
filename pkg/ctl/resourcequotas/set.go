@@ -33,11 +33,11 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []pulsar.Example
-	get := pulsar.Example{
+	set := pulsar.Example{
 		Desc:    "Set the resource quota use default namespace/bundle",
 		Command: "pulsarctl resource-quotas set",
 	}
-	getWithArgs := pulsar.Example{
+	setWithArgs := pulsar.Example{
 		Desc: "Set the resource quota for specified namespace bundle",
 		Command: "pulsarctl resource-quotas set --namespace (namespace name) --bundle (bundle range)" +
 			"--msgRateIn (msg rate in value)" +
@@ -47,7 +47,7 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 			"--memory (memory)" +
 			"--dynamic",
 	}
-	examples = append(examples, get, getWithArgs)
+	examples = append(examples, set, setWithArgs)
 	desc.CommandExamples = examples
 
 	var out []pulsar.Output

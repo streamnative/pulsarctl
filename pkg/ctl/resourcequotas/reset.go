@@ -18,8 +18,8 @@
 package resourcequotas
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
+	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
@@ -32,7 +32,7 @@ func resetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	reset := pulsar.Example{
 		Desc:    "Reset the specified namespace bundle's resource quota to default value",
-		Command: "pulsarctl resource-quotas get",
+		Command: "pulsarctl resource-quotas reset (namespace name) (bundle range)",
 	}
 
 	examples = append(examples, reset)
@@ -47,45 +47,32 @@ func resetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"reset-namespace-bundle-quota",
+		"reset",
 		"Reset the specified namespace bundle's resource quota to default value.",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"delete")
+		"clear")
 
-	quotaData := &pulsar.ResourceQuotaData{}
-
-	vc.SetRunFunc(func() error {
-		return doResetNamespaceBundleResourceQuota(vc, quotaData)
-	})
-
-	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
-		flagSet.StringVarP(
-			&quotaData.Names,
-			"namespace",
-			"n",
-			"",
-			"cluster/namespace, must be specified together with '--bundle'")
-		flagSet.StringVarP(
-			&quotaData.Bundle,
-			"bundle",
-			"b",
-			"",
-			"{start-boundary}_{end-boundary}, must be specified together with '--namespace'")
-
-		cobra.MarkFlagRequired(flagSet, "namespace")
-		cobra.MarkFlagRequired(flagSet, "bundle")
+	vc.SetRunFuncWithMultiNameArgs(func() error {
+		return doResetNamespaceBundleResourceQuota(vc)
+	}, func(args []string) error {
+		if len(args) != 2 {
+			return errors.New("need two arguments apply to the command")
+		}
+		return nil
 	})
 }
 
-func doResetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd, quotaData *pulsar.ResourceQuotaData) error {
+func doResetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd) error {
+	namespace := vc.NameArgs[0]
+	bundle := vc.NameArgs[1]
 	admin := cmdutils.NewPulsarClient()
 
-	nsName, err := pulsar.GetNamespaceName(quotaData.Names)
+	nsName, err := pulsar.GetNamespaceName(namespace)
 	if err != nil {
 		return err
 	}
-	err = admin.ResourceQuotas().ResetNamespaceBundleResourceQuota(nsName.String(), quotaData.Bundle)
+	err = admin.ResourceQuotas().ResetNamespaceBundleResourceQuota(nsName.String(), bundle)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {

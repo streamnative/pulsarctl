@@ -65,7 +65,7 @@ func TestResourceQuota(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Set resource quota successful\n", setOut.String())
 
-	getArgs := []string{"get", "--namespace", "public/default", "--bundle", "0x80000000_0xc0000000"}
+	getArgs := []string{"get", "public/default", "0x80000000_0xc0000000"}
 	getOut, execErr, _, _ := TestResourceQuotaCommands(getResourceQuota, getArgs)
 	assert.Nil(t, execErr)
 	err = json.Unmarshal(getOut.Bytes(), &quota)
@@ -77,9 +77,9 @@ func TestResourceQuota(t *testing.T) {
 	assert.Equal(t, float64(400), quota.MsgRateIn)
 	assert.Equal(t, float64(500), quota.MsgRateOut)
 
-	resetArgs := []string{"reset-namespace-bundle-quota",
-		"--namespace", "public/default",
-		"--bundle", "0x80000000_0xc0000000"}
+	resetArgs := []string{"reset",
+		"public/default",
+		"0x80000000_0xc0000000"}
 	resetOut, execErr, _, _ := TestResourceQuotaCommands(resetNamespaceBundleResourceQuota, resetArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Reset resource quota successful\n", resetOut.String())

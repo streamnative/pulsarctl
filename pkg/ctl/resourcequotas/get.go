@@ -22,7 +22,6 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 
 	"github.com/pkg/errors"
-	"github.com/spf13/pflag"
 )
 
 func getResourceQuota(vc *cmdutils.VerbCmd) {
@@ -38,7 +37,7 @@ func getResourceQuota(vc *cmdutils.VerbCmd) {
 	}
 	getWithArgs := pulsar.Example{
 		Desc:    "Get the resource quota for a specified namespace bundle",
-		Command: "pulsarctl resource-quotas get --namespace (namespace name) --bundle (bundle range)",
+		Command: "pulsarctl resource-quotas get (namespace name) (bundle range)",
 	}
 	examples = append(examples, get, getWithArgs)
 	desc.CommandExamples = examples
@@ -66,48 +65,41 @@ func getResourceQuota(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"get")
 
-	quotaData := &pulsar.ResourceQuotaData{}
-
-	vc.SetRunFunc(func() error {
-		return doGetResourceQuota(vc, quotaData)
-	})
-
-	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
-		flagSet.StringVarP(
-			&quotaData.Names,
-			"namespace",
-			"n",
-			"",
-			"cluster/namespace, must be specified together with '--bundle'")
-		flagSet.StringVarP(
-			&quotaData.Bundle,
-			"bundle",
-			"b",
-			"",
-			"{start-boundary}_{end-boundary}, must be specified together with '--namespace'")
+	vc.SetRunFuncWithMultiNameArgs(func() error {
+		return doGetResourceQuota(vc)
+	}, func(args []string) error {
+		if len(args) > 2 && len(args) == 1 {
+			return errors.New("need two arguments or zero arguments apply to the command")
+		}
+		return nil
 	})
 }
 
-func doGetResourceQuota(vc *cmdutils.VerbCmd, quotaData *pulsar.ResourceQuotaData) error {
+func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
+	var namespace, bundle string
+	if len(vc.NameArgs) > 0 {
+		namespace = vc.NameArgs[0]
+		bundle = vc.NameArgs[1]
+	}
 	admin := cmdutils.NewPulsarClient()
 
 	var err error
 
 	switch {
-	case quotaData.Bundle == "" && quotaData.Names == "":
+	case bundle == "" && namespace == "":
 		resourceQuotaData, err := admin.ResourceQuotas().GetDefaultResourceQuota()
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
 			cmdutils.PrintJSON(vc.Command.OutOrStdout(), resourceQuotaData)
 		}
-	case quotaData.Bundle != "" && quotaData.Names != "":
-		nsName, err := pulsar.GetNamespaceName(quotaData.Names)
+	case bundle != "" && namespace != "":
+		nsName, err := pulsar.GetNamespaceName(namespace)
 		if err != nil {
 			return err
 		}
 		resourceQuotaData, err := admin.ResourceQuotas().GetNamespaceBundleResourceQuota(
-			nsName.String(), quotaData.Bundle)
+			nsName.String(), bundle)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
