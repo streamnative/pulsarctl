@@ -20,7 +20,7 @@ jobs:
           go build -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
 
       - name: publish
-        uses: skx/github-action-publish-binaries@master
+        uses: skx/github-action-publish-binaries@release-0.11
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
