@@ -21,6 +21,7 @@
 
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
 [![LICENSE](https://img.shields.io/hexpm/l/pulsar.svg)](https://github.com/streamnative/pulsarctl/blob/master/LICENSE)
+[![GoDoc](https://img.shields.io/badge/Godoc-reference-blue.svg)](https://godoc.org/github.com/streamnative/pulsarctl)
 
 # Pulsarctl
 
@@ -65,15 +66,47 @@ go build -o pulsarctl main.go
 ## Project Status
 
 The following is an incomplete list of features that are not yet implemented:
+ 
+#### Functions
+- localrun
 
-- pulsar-admin broker-stats subcommand
-- pulsar-admin brokers subcommand
-- pulsar-admin ns-isolation-policy subcommand
-- pulsar-admin resource-quotas subcommand
-- pulsar-admin functions localrun options
-- pulsar-admin sources localrun options
-- pulsar-admin sinks localrun options
-- pulsar-admin schemas extract options
+#### Sources
+- localrun
+- available-sources
+- reload
+
+#### Sinks
+- localrun
+- available-sources
+- reload
+
+#### Schemas
+- extract
+
+#### Namespaces
+- delete-bookie-affinity-group
+- get-bookie-affinity-group
+- set-bookie-affinity-group 
+
+#### Bookies
+- racks-placement
+- get-bookie-rack
+- delete-bookie-rack
+- set-bookie-rack
+
+## Different With Java Pulsar Admin
+
+We move the subscription commands from the Topics to the Subscriptions in pulsarctl.
+ 
+| pulsar-admin | pulsarctl |
+| ------------ | --------- |
+| bin/pulsar-admin topics create-subscription | pulsarctl subscription create |
+| bin/pulsar-admin topics unsubscribe | pulsarctl subscription delete |
+| bin/pulsar-admin topics skip | pulsarctl subscription skip |
+| bin/pulsar-admin topics expire-messages | pulsarctl subscription expire |
+| bin/pulsar-admin topics peek-messages | pulsarctl subscription peek |
+| bin/pulsar-admin topics reset-cursor | pulsarctl subscription seek |
+| bin/pulsar-admin topics subscriptions | pulsarctl subscription list |
 
 ## Contribute
 

@@ -38,13 +38,13 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 	expire := pulsar.Example{
 		Desc: "Expire messages that older than given expire time (in seconds) for a subscription " +
 			"<subscription-name> under a topic",
-		Command: "pulsarctl subscription expire-messages --expire-time (expire-time) (topic-name) (subscription-name)",
+		Command: "pulsarctl subscription expire --expire-time (expire-time) (topic-name) (subscription-name)",
 	}
 
 	expireAllSub := pulsar.Example{
 		Desc: "Expire message that older than given expire time (in second) for all subscriptions " +
 			"under a topic",
-		Command: "pulsarctl subscriptions expire-messages --all --expire-time (expire-time) (topic-name)",
+		Command: "pulsarctl subscriptions expire --all --expire-time (expire-time) (topic-name)",
 	}
 	examples = append(examples, expire, expireAllSub)
 	desc.CommandExamples = examples
@@ -61,7 +61,7 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"expire-messages",
+		"expire",
 		"Expiring messages that older than given expire time (in seconds)",
 		desc.ToString(),
 		"expire")

@@ -29,8 +29,26 @@
     },
     {
       "filename": "_generated_topics.md"
+    },
+    {
+      "filename": "_generated_brokers.md"
+    },
+    {
+      "filename": "_generated_broker-stats.md"
+    },
+    {
+      "filename": "_generated_subscriptions.md"
+    },
+    {
+      "filename": "_generated_resource-quotas.md"
+    },
+    {
+      "filename": "_generated_functions-worker.md"
+    },
+    {
+      "filename": "_generated_ns-isolation-policy.md"
     }
   ],
   "title": "Pulsarctl Reference Docs",
-  "copyright": "\u003ca href=\"https://github.com/streamnative/pulsarctl\"\u003eCopyright 2019 The Pulsarctl Authors.\u003c/a\u003e"
+  "copyright": "\u003ca href=\"https://github.com/streamnative/pulsarctl\"\u003eCopyright 2019 @StreamNative.\u003c/a\u003e"
 }

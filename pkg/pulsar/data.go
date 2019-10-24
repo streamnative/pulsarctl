@@ -331,6 +331,14 @@ type LookupData struct {
 	HTTPURLTLS   string `json:"httpUrlTls"`
 }
 
+type NsIsolationPoliciesData struct {
+	Namespaces                 []string `json:"namespaces"`
+	Primary                    []string `json:"primary"`
+	Secondary                  []string `json:"secondary"`
+	AutoFailoverPolicyTypeName string   `json:"autoFailoverPolicyTypeName"`
+	AutoFailoverPolicyParams   string   `json:"autoFailoverPolicyParams"`
+}
+
 type BrokerData struct {
 	URL         string `json:"brokerUrl"`
 	ConfigName  string `json:"configName"`
@@ -339,4 +347,15 @@ type BrokerData struct {
 
 type BrokerStatsData struct {
 	Indent bool `json:"indent"`
+}
+
+type ResourceQuotaData struct {
+	Names        string `json:"names"`
+	Bundle       string `json:"bundle"`
+	MsgRateIn    int64  `json:"msgRateIn"`
+	MsgRateOut   int64  `json:"msgRateOut"`
+	BandwidthIn  int64  `json:"bandwidthIn"`
+	BandwidthOut int64  `json:"bandwidthOut"`
+	Memory       int64  `json:"memory"`
+	Dynamic      bool   `json:"dynamic"`
 }

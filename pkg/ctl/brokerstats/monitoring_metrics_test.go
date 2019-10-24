@@ -18,10 +18,9 @@
 package brokerstats
 
 import (
-	"encoding/json"
+	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,15 +28,5 @@ func TestDumpMonitoringMetrics(t *testing.T) {
 	args := []string{"monitoring-metrics"}
 	metricsOut, execErr, _, _ := TestBrokerStatsCommands(dumpMonitoringMetrics, args)
 	assert.Nil(t, execErr)
-
-	var out []pulsar.Metrics
-	err := json.Unmarshal(metricsOut.Bytes(), &out)
-	assert.Nil(t, err)
-
-	var value string
-	for i := 0; i < len(out); i++ {
-		value = out[i].Dimensions["cluster"]
-	}
-
-	assert.Equal(t, "standalone", value)
+	assert.True(t, strings.Contains(metricsOut.String(), "standalone"))
 }

@@ -30,6 +30,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
 	var examples []pulsar.Example
 	grant := pulsar.Example{

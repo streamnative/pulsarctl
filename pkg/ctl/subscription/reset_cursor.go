@@ -38,13 +38,13 @@ func ResetCursorCmd(vc *cmdutils.VerbCmd) {
 	resetCursorTime := pulsar.Example{
 		Desc: "Reset the position of the subscription (subscription-name) to a " +
 			"position that is closest to the provided timestamp (time)",
-		Command: "pulsarctl reset --time (time) (topic-name) (subscription-name)",
+		Command: "pulsarctl seek --time (time) (topic-name) (subscription-name)",
 	}
 
 	resetCursorMessageID := pulsar.Example{
 		Desc: "Reset the position of the subscription <subscription-name> to a " +
 			"position that is closest to the provided message id (message-id)",
-		Command: "pulsarctl reset --message-id (message-id) (topic-name) (subscription-name)",
+		Command: "pulsarctl seek --message-id (message-id) (topic-name) (subscription-name)",
 	}
 	examples = append(examples, resetCursorTime, resetCursorMessageID)
 	desc.CommandExamples = examples
@@ -66,11 +66,11 @@ func ResetCursorCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"reset-cursor",
+		"seek",
 		"Reset the cursor to a position that is closest to the provided timestamp or messageId",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"reset")
+		"seek")
 
 	var t string
 	var mID string
