@@ -26,6 +26,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/functionsworker"
 	"github.com/streamnative/pulsarctl/pkg/ctl/namespace"
 	"github.com/streamnative/pulsarctl/pkg/ctl/nsisolationpolicy"
+	"github.com/streamnative/pulsarctl/pkg/ctl/resourcequotas"
 	"github.com/streamnative/pulsarctl/pkg/ctl/subscription"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
@@ -95,6 +96,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(nsisolationpolicy.Command(flagGrouping))
 	rootCmd.AddCommand(brokers.Command(flagGrouping))
 	rootCmd.AddCommand(brokerstats.Command(flagGrouping))
+	rootCmd.AddCommand(resourcequotas.Command(flagGrouping))
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
 
 	return rootCmd

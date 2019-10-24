@@ -33,3 +33,6 @@ categories:
   - brokers
   - broker-stats
   - subscriptions
+  - resource-quotas
+  - functions-worker
+  - ns-isolation-policy
