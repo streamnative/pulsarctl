@@ -26,6 +26,7 @@ func LookUpTopicCmd(vc *cmdutils.VerbCmd) {
 	var desc pulsar.LongDescription
 	desc.CommandUsedFor = "This command is used for looking up the owner broker of a topic."
 	desc.CommandPermission = "This command does not require permissions. "
+	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
 	var examples []pulsar.Example
 	lookup := pulsar.Example{

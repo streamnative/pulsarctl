@@ -15,44 +15,35 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package topic
+package nsisolationpolicy
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"errors"
 
 	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
+
+var checkNsIsolationPolicyArgs = func(args []string) error {
+	if len(args) != 2 {
+		return errors.New("need to specified the cluster name and the policy name")
+	}
+	return nil
+}
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
+		"ns-isolation-policy",
+		"Operations about namespace isolation policy",
 		"",
-		"topic")
+		"ns-isolation-policy")
 
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
-		GetInternalInfoCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNsIsolationPolicy)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNsIsolationPolicies)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteNsIsolationPolicy)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBrokerWithPolicies)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAllBrokersWithPolicies)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setPolicy)
 
 	return resourceCmd
 }

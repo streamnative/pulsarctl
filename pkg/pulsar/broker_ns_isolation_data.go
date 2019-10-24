@@ -15,44 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package topic
+package pulsar
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/spf13/cobra"
-)
-
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"topics",
-		"Operations about topic(s)",
-		"",
-		"topic")
-
-	commands := []func(*cmdutils.VerbCmd){
-		TerminateCmd,
-		OffloadCmd,
-		OffloadStatusCmd,
-		UnloadCmd,
-		StatusCmd,
-		CreateTopicCmd,
-		DeleteTopicCmd,
-		GetTopicCmd,
-		ListTopicsCmd,
-		UpdateTopicCmd,
-		GrantPermissionCmd,
-		RevokePermissions,
-		GetPermissionsCmd,
-		LookUpTopicCmd,
-		GetBundleRangeCmd,
-		GetLastMessageIDCmd,
-		GetStatsCmd,
-		GetInternalStatsCmd,
-		GetInternalInfoCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+type BrokerNamespaceIsolationData struct {
+	BrokerName     string   `json:"brokerName"`
+	PolicyName     string   `json:"policyName"`
+	IsPrimary      bool     `json:"isPrimary"`
+	NamespaceRegex []string `json:"namespaceRegex"`
 }

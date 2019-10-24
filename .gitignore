@@ -16,7 +16,6 @@ data
 
 site/gen-pulsarctldocs/generators/includes
 site/gen-pulsarctldocs/generators/build/*
-!site/gen-pulsarctldocs/generators/build/index.html
 
 # Test binary, build with `go test -c`
 *.test
