@@ -38,7 +38,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"Interface for managing Pulsar Functions "+
 			"(lightweight, Lambda-style compute processes that work with Pulsar)",
 		"",
-		"functions",
+		"pf",
 	)
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFunctionsCmd)

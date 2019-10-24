@@ -28,13 +28,13 @@ func TestResetCursorCmd(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(CreateCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"reset-cursor", "--time", "1m", "test-reset-cursor-topic", "test-reset-cursor-sub"}
+	args = []string{"seek", "--time", "1m", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to 1m successfully",
 		out.String())
 
-	args = []string{"reset-cursor", "--message-id", "-1:-1", "test-reset-cursor-topic", "test-reset-cursor-sub"}
+	args = []string{"seek", "--message-id", "-1:-1", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to -1:-1 successfully",
@@ -42,21 +42,21 @@ func TestResetCursorCmd(t *testing.T) {
 }
 
 func TestResetCursorArgsError(t *testing.T) {
-	args := []string{"reset-cursor"}
+	args := []string{"seek"}
 	_, _, nameErr, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "need to specified the topic name and the subscription name", nameErr.Error())
 }
 
 func TestResetCursorFlagError(t *testing.T) {
-	args := []string{"reset-cursor", "test-reset-cursor-flag-topic", "flag-sub"}
+	args := []string{"seek", "test-reset-cursor-flag-topic", "flag-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "either timestamp or message-id should be specified", execErr.Error())
 }
 
 func TestResetCursorNonExistingTopic(t *testing.T) {
-	args := []string{"reset-cursor", "--time", "1m", "test-reset-cursor-non-existing-topic",
+	args := []string{"seek", "--time", "1m", "test-reset-cursor-non-existing-topic",
 		"test-reset-cursor-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
@@ -68,7 +68,7 @@ func TestResetCursorNonExistingSub(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(CreateCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"reset-cursor", "--time", "1m", "test-reset-cursor-non-existing-sub-topic",
+	args = []string{"seek", "--time", "1m", "test-reset-cursor-non-existing-sub-topic",
 		"test-reset-cursor-non-existing-sub"}
 	_, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)

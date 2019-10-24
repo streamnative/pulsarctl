@@ -33,12 +33,12 @@ func SkipCmd(vc *cmdutils.VerbCmd) {
 	var examples []pulsar.Example
 	skip := pulsar.Example{
 		Desc:    "Skip (n) messages for the subscription (subscription-name) of the topic (topic-name)",
-		Command: "pulsarctl subscription skip-messages --count (n) (topic-name) (subscription-name)",
+		Command: "pulsarctl subscription skip --count (n) (topic-name) (subscription-name)",
 	}
 
 	skipAll := pulsar.Example{
 		Desc:    "Skip all messages for the subscription (subscription-name) under the topic (topic-name) (clear-backlog)",
-		Command: "pulsarctl subscription skip-messages --all (topic-name) (subscription-name)",
+		Command: "pulsarctl subscription skip --all (topic-name) (subscription-name)",
 	}
 	examples = append(examples, skip, skipAll)
 	desc.CommandExamples = examples
@@ -54,7 +54,7 @@ func SkipCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"skip-messages",
+		"skip",
 		"Skip messages for the subscription of a topic",
 		desc.ToString(),
 		desc.ExampleToString(),
