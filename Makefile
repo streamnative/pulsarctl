@@ -15,3 +15,4 @@ cli: cleancli
 	go run site/gen-pulsarctldocs/main.go --pulsar-version v1_$(MINOR_VERSION)
 	docker run -v ${PWD}/site/gen-pulsarctldocs/generators/includes:/source -v ${PWD}/site/gen-pulsarctldocs/generators/build:/build -v ${PWD}/site/gen-pulsarctldocs/generators/:/manifest pwittrock/brodocs
 	tar -czvf ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz -C ${PWD}/site/gen-pulsarctldocs/generators/build/ .
+	mv ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz ${PWD}/pulsarctl-site-${VERSION}.tar.gz
