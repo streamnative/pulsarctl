@@ -27,6 +27,12 @@
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
+## Available Releases
+
+| Version | Reference |
+| --------| --------- |
+| [0.1.0](https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) | 
+
 ## Requirement
 
 - Go 1.11 +
