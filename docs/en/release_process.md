@@ -49,10 +49,12 @@ $ git push origin branch-0.1.X
 $ git push origin v0.1.X
 ```
 
-#### 3. Write a release note
+#### 3. Publish a release note
 
 Check the milestone in GitHub associated with the release. 
 
 In the released item, add the list of the most important changes that happened in the release and a link to the associated milestone, with the complete list of all the changes. 
 
-Add the release notes to [the release homepage of pulsarctl](https://github.com/streamnative/pulsarctl/releases)
+Update the release draft at [the release homepage of pulsarctl](https://github.com/streamnative/pulsarctl/releases)
+
+Then publish the release draft, the binary and commands doc will auto publish to that release
