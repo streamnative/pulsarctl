@@ -17,8 +17,9 @@ jobs:
       - name: build
         run: |
           version=`cat VERSION`
-          go build -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-
+          go build -o pulsarctl.sh -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
       - name: build-site
         run: |
           make cli
