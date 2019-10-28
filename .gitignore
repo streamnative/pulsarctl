@@ -25,3 +25,6 @@ site/gen-pulsarctldocs/generators/build/*
 
 # Intellij
 .idea
+
+# Binary distribution
+pulsarctl-site-*.tar.gz
