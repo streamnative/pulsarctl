@@ -368,7 +368,7 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Functions[%s] successfully ",
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Functions[%s] successfully\n",
 				funcData.InstanceID, funcData.FuncName)
 		}
 	} else {
@@ -376,7 +376,7 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated %s successfully", funcData.FuncName)
+			vc.Command.Printf("Updated %s successfully\n", funcData.FuncName)
 		}
 	}
 

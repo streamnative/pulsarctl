@@ -132,6 +132,6 @@ func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		return err
 	}
 
-	vc.Command.Printf("Deleted successfully")
+	vc.Command.Println("Deleted successfully")
 	return nil
 }

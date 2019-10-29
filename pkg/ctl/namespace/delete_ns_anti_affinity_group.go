@@ -77,7 +77,7 @@ func doDeleteAntiAffinityGroup(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().DeleteNamespaceAntiAffinityGroup(ns)
 	if err == nil {
-		vc.Command.Printf("Delete the anti-affinity group successfully for [%s]", ns)
+		vc.Command.Printf("Delete the anti-affinity group successfully for [%s]\n", ns)
 	}
 	return err
 }

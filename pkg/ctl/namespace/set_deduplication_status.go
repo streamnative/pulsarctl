@@ -92,7 +92,7 @@ func doSetDeduplication(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error 
 
 	err := admin.Namespaces().SetDeduplicationStatus(ns, data.Enable)
 	if err == nil {
-		vc.Command.Printf("Set deduplication is [%v] successfully for %s", data.Enable, ns)
+		vc.Command.Printf("Set deduplication is [%v] successfully for %s\n", data.Enable, ns)
 	}
 
 	return err

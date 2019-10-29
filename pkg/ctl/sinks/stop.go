@@ -125,14 +125,14 @@ func doStopSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Stopped instanceID[%s] of Pulsar Sinks[%s] successfully ", sinkData.InstanceID, sinkData.Name)
+		vc.Command.Printf("Stopped instanceID[%s] of Pulsar Sinks[%s] successfully\n", sinkData.InstanceID, sinkData.Name)
 	} else {
 		err = admin.Sinks().StopSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 		if err != nil {
 			return err
 		}
 
-		vc.Command.Printf("Stopped %s successfully", sinkData.Name)
+		vc.Command.Printf("Stopped %s successfully\n", sinkData.Name)
 	}
 
 	return nil

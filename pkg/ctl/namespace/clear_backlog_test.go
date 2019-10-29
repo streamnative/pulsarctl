@@ -38,14 +38,14 @@ func TestClearBacklogCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(ClearBacklogCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s", ns),
+		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s\n", ns),
 		out.String())
 
 	args = []string{"clear-backlog", "-f", "--sub", "test-clear-sub", ns}
 	out, execErr, _, _ = TestNamespaceCommands(ClearBacklogCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s", ns),
+		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s\n", ns),
 		out.String())
 
 	args = []string{"create", ns + "/test-clear-with-bundle", "0"}
@@ -64,7 +64,7 @@ func TestClearBacklogCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(ClearBacklogCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s", ns),
+		fmt.Sprintf("Successfully clear backlog for all topics of the namespace %s\n", ns),
 		out.String())
 }
 

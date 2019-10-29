@@ -89,7 +89,7 @@ func doUpdateDynamic(vc *cmdutils.VerbCmd, brokerData *pulsar.BrokerData) error 
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		vc.Command.Printf("Update dynamic config: %s successful.", brokerData.ConfigName)
+		vc.Command.Printf("Update dynamic config: %s successful\n", brokerData.ConfigName)
 	}
 	return err
 }

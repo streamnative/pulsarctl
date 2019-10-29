@@ -45,7 +45,7 @@ func TestCreateSinks(t *testing.T) {
 	out, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
 	fmt.Println(out.String())
-	assert.Equal(t, out.String(), "Created test-sink-create successfully")
+	assert.Equal(t, out.String(), "Created test-sink-create successfully\n")
 }
 
 func TestFailureCreateSinks(t *testing.T) {

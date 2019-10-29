@@ -110,13 +110,13 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 	ledgers[len(ledgers)-1].Size = stats.CurrentLedgerSize
 	messageID := findFirstLedgerWithinThreshold(ledgers, size)
 	if messageID == nil {
-		vc.Command.Printf("Nothing to offload")
+		vc.Command.Printf("Nothing to offload\n")
 		return nil
 	}
 
 	err = admin.Topics().Offload(*topic, *messageID)
 	if err == nil {
-		vc.Command.Printf("Trigger offloading the data before the message %+v of the topic %s successfully",
+		vc.Command.Printf("Trigger offloading the data before the message %+v of the topic %s successfully\n",
 			messageID, topic.String())
 	}
 

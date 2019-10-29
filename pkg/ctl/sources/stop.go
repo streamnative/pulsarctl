@@ -125,14 +125,15 @@ func doStopSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Stopped instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
+		vc.Command.Printf("Stopped instanceID[%s] of Pulsar Source[%s] successfully\n",
+			sourceData.InstanceID, sourceData.Name)
 	} else {
 		err = admin.Sources().StopSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
 			return err
 		}
 
-		vc.Command.Printf("Stopped %s successfully", sourceData.Name)
+		vc.Command.Printf("Stopped %s successfully\n", sourceData.Name)
 	}
 
 	return nil

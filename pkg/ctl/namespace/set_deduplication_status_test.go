@@ -27,15 +27,15 @@ func TestDeduplicationStatus(t *testing.T) {
 	args := []string{"create", "public/test-dedup-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-dedup-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-dedup-namespace successfully\n")
 
 	args = []string{"set-deduplication", "public/test-dedup-namespace"}
 	out, execErr, _, _ := TestNamespaceCommands(setDeduplication, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(), "Set deduplication is [false] successfully for public/test-dedup-namespace")
+	assert.Equal(t, out.String(), "Set deduplication is [false] successfully for public/test-dedup-namespace\n")
 
 	args = []string{"set-deduplication", "public/test-dedup-namespace", "--enable"}
 	out, execErr, _, _ = TestNamespaceCommands(setDeduplication, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(), "Set deduplication is [true] successfully for public/test-dedup-namespace")
+	assert.Equal(t, out.String(), "Set deduplication is [true] successfully for public/test-dedup-namespace\n")
 }

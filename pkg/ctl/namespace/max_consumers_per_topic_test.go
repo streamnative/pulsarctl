@@ -34,21 +34,21 @@ func TestMaxConsumersPerTopicCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetMaxConsumersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max consumers per topic of the namespace %s is %d", ns, 0),
+		fmt.Sprintf("The max consumers per topic of the namespace %s is %d\n", ns, 0),
 		out.String())
 
 	args = []string{"set-max-consumers-per-topic", "--size", "10", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetMaxConsumersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully set the max consumers per topic of the namespace %s to %d", ns, 10),
+		fmt.Sprintf("Successfully set the max consumers per topic of the namespace %s to %d\n", ns, 10),
 		out.String())
 
 	args = []string{"get-max-consumers-per-topic", ns}
 	out, execErr, _, _ = TestNamespaceCommands(GetMaxConsumersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max consumers per topic of the namespace %s is %d", ns, 10),
+		fmt.Sprintf("The max consumers per topic of the namespace %s is %d\n", ns, 10),
 		out.String())
 }
 

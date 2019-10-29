@@ -149,14 +149,14 @@ func doRestartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Restarted %s successfully", funcData.FuncName)
+		vc.Command.Printf("Restarted %s successfully\n", funcData.FuncName)
 	} else {
 		err = admin.Functions().RestartFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			return err
 		}
 
-		vc.Command.Printf("Restarted %s successfully", funcData.FuncName)
+		vc.Command.Printf("Restarted %s successfully\n", funcData.FuncName)
 	}
 
 	return nil

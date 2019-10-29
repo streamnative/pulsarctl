@@ -113,7 +113,7 @@ func doSplitBundle(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().SplitNamespaceBundle(ns, data.Bundle, data.Unload)
 	if err == nil {
-		vc.Command.Printf("Split a namespace bundle: %s successfully", data.Bundle)
+		vc.Command.Printf("Split a namespace bundle: %s successfully\n", data.Bundle)
 	}
 	return err
 }

@@ -104,6 +104,6 @@ func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		return err
 	}
 
-	vc.Command.Printf("Deleted %s successfully", sourceData.Name)
+	vc.Command.Printf("Deleted %s successfully\n", sourceData.Name)
 	return nil
 }

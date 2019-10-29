@@ -53,7 +53,7 @@ func TestDispatchRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default message dispatch rate "+
-			"of the namespace %s to %+v", ns,
+			"of the namespace %s to %+v\n", ns,
 			pulsar.DispatchRate{
 				DispatchThrottlingRateInMsg:  -1,
 				DispatchThrottlingRateInByte: -1,
@@ -76,7 +76,7 @@ func TestDispatchRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default message dispatch rate "+
-			"of the namespace %s to %+v", ns,
+			"of the namespace %s to %+v\n", ns,
 			pulsar.DispatchRate{
 				DispatchThrottlingRateInMsg:  10,
 				DispatchThrottlingRateInByte: 10,

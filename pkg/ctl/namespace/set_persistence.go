@@ -129,7 +129,7 @@ func doSetPersistence(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 		data.BookkeeperAckQuorum, data.ManagedLedgerMaxMarkDeleteRate)
 	err := admin.Namespaces().SetPersistence(ns, persistencePolicies)
 	if err == nil {
-		vc.Command.Printf("Set the persistence policies successfully for [%s]", ns)
+		vc.Command.Printf("Set the persistence policies successfully for [%s]\n", ns)
 	}
 	return err
 }

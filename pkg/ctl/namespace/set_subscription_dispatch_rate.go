@@ -88,7 +88,7 @@ func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, rate pulsar.DispatchRat
 	err = admin.Namespaces().SetSubscriptionDispatchRate(*ns, rate)
 	if err == nil {
 		vc.Command.Printf("Success set the default subscription message dispatch rate "+
-			"of the namespace %s to %+v", ns.String(), rate)
+			"of the namespace %s to %+v\n", ns.String(), rate)
 	}
 
 	return err

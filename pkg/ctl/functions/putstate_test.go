@@ -52,7 +52,7 @@ func TestStateFunctions(t *testing.T) {
 	if execErr != nil {
 		t.Errorf("create functions error value: %s", execErr.Error())
 	}
-	assert.Equal(t, out.String(), "Created test-functions-putstate successfully")
+	assert.Equal(t, out.String(), "Created test-functions-putstate successfully\n")
 
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
@@ -67,7 +67,7 @@ func TestStateFunctions(t *testing.T) {
 			return false
 		}
 
-		return strings.Contains(out.String(), "successfully")
+		return strings.Contains(out.String(), "successfully\n")
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)
@@ -118,7 +118,7 @@ func TestStateFunctions(t *testing.T) {
 	// put state again
 	outPutStateAgain, _, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
 	assert.Nil(t, err)
-	assert.True(t, strings.Contains(outPutStateAgain.String(), "successfully"))
+	assert.True(t, strings.Contains(outPutStateAgain.String(), "successfully\n"))
 
 	// query state again
 	outQueryStateAgain, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
@@ -152,7 +152,7 @@ func TestByteValue(t *testing.T) {
 	if execErr != nil {
 		t.Errorf("create functions error value: %s", execErr.Error())
 	}
-	assert.Equal(t, out.String(), "Created test-functions-putstate-byte-value successfully")
+	assert.Equal(t, out.String(), "Created test-functions-putstate-byte-value successfully\n")
 
 	buf := "hello pulsar!"
 	file, err := ioutil.TempFile("", "tmpfile")
@@ -178,7 +178,7 @@ func TestByteValue(t *testing.T) {
 		if execErr != nil {
 			return false
 		}
-		return strings.Contains(out.String(), "successfully")
+		return strings.Contains(out.String(), "successfully\n")
 	}
 
 	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, putstateArgs, nil)

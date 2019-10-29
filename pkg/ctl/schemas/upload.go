@@ -102,7 +102,7 @@ func doUploadSchema(vc *cmdutils.VerbCmd, schemaData *pulsar.SchemaData) error {
 
 	err = admin.Schemas().CreateSchemaByPayload(topic, payload)
 	if err == nil {
-		vc.Command.Printf("Upload %s successfully", topic)
+		vc.Command.Printf("Upload %s successfully\n", topic)
 	}
 
 	return err

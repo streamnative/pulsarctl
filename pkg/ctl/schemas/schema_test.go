@@ -47,7 +47,7 @@ func TestSchema(t *testing.T) {
 	args := []string{"upload", "test-schema", "-f", fileName}
 	out, _, err := TestSchemasCommands(uploadSchema, args)
 	assert.Nil(t, err)
-	assert.Equal(t, "Upload test-schema successfully", out.String())
+	assert.Equal(t, "Upload test-schema successfully\n", out.String())
 
 	getArgs := []string{"get", "test-schema"}
 	getOut, _, err := TestSchemasCommands(getSchema, getArgs)
@@ -60,7 +60,7 @@ func TestSchema(t *testing.T) {
 	delArgs := []string{"delete", "test-schema"}
 	delOut, _, err := TestSchemasCommands(deleteSchema, delArgs)
 	assert.Nil(t, err)
-	assert.Equal(t, delOut.String(), "Deleted test-schema successfully")
+	assert.Equal(t, delOut.String(), "Deleted test-schema successfully\n")
 }
 
 func TestFailSchema(t *testing.T) {

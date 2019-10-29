@@ -99,7 +99,7 @@ func doSkip(vc *cmdutils.VerbCmd, count int64, all bool) error {
 	}
 
 	if err == nil {
-		vc.Command.Printf("The subscription %s skips %d messages of the topic %s successfully",
+		vc.Command.Printf("The subscription %s skips %d messages of the topic %s successfully\n",
 			sName, count, topic.String())
 	}
 

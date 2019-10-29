@@ -124,7 +124,7 @@ func doUpdateCluster(vc *cmdutils.VerbCmd, clusterData *pulsar.ClusterData) erro
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().Update(*clusterData)
 	if err == nil {
-		vc.Command.Printf("Cluster %s updated", clusterData.Name)
+		vc.Command.Printf("Cluster %s updated\n", clusterData.Name)
 	}
 	return err
 }

@@ -424,14 +424,14 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) erro
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created %s successfully", funcData.FuncName)
+			vc.Command.Printf("Created %s successfully\n", funcData.FuncName)
 		}
 	} else {
 		err = admin.Functions().CreateFunc(funcData.FuncConf, funcData.UserCodeFile)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created %s successfully", funcData.FuncName)
+			vc.Command.Printf("Created %s successfully\n", funcData.FuncName)
 		}
 	}
 

@@ -118,7 +118,7 @@ func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {
 		resetTime := time.Now().Add(-d).UnixNano() / 1e6
 		err = admin.Subscriptions().ResetCursorToTimestamp(*topic, sName, resetTime)
 		if err == nil {
-			vc.Command.Printf("Reset the cursor of the subscription %s to %s successfully", sName, t)
+			vc.Command.Printf("Reset the cursor of the subscription %s to %s successfully\n", sName, t)
 		}
 
 		return err
@@ -132,7 +132,7 @@ func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {
 		}
 		err = admin.Subscriptions().ResetCursorToMessageID(*topic, sName, *id)
 		if err == nil {
-			vc.Command.Printf("Reset the cursor of the subscription %s to %s successfully", sName, mID)
+			vc.Command.Printf("Reset the cursor of the subscription %s to %s successfully\n", sName, mID)
 		}
 		return err
 	default:

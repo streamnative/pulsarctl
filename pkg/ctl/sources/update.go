@@ -230,7 +230,7 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully ",
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Source[%s] successfully\n",
 				sourceData.InstanceID, sourceData.Name)
 		}
 	} else {
@@ -238,7 +238,7 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated %s successfully", sourceData.Name)
+			vc.Command.Printf("Updated %s successfully\n", sourceData.Name)
 		}
 	}
 
