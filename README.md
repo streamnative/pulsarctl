@@ -23,13 +23,18 @@
 [![LICENSE](https://img.shields.io/hexpm/l/pulsar.svg)](https://github.com/streamnative/pulsarctl/blob/master/LICENSE)
 [![GoDoc](https://img.shields.io/badge/Godoc-reference-blue.svg)](https://godoc.org/github.com/streamnative/pulsarctl)
 
-# Pulsarctl
+## Pulsarctl
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
-## Usage
+## Available Releases
 
-### Install
+| Version | Reference |
+| --------| --------- |
+| [0.1.0](https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) | 
+
+
+## Install
 
 #### Install pulsarctl binary with curl on Linux
 
