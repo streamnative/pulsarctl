@@ -23,7 +23,7 @@ type SourceConfig struct {
 	Name      string `json:"name" yaml:"name"`
 	ClassName string `json:"className" yaml:"className"`
 
-	TopicName      string `json:"TopicName" yaml:"TopicName"`
+	TopicName      string `json:"topicName" yaml:"topicName"`
 	SerdeClassName string `json:"serdeClassName" yaml:"serdeClassName"`
 	SchemaType     string `json:"schemaType" yaml:"schemaType"`
 
