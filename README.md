@@ -27,19 +27,39 @@
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
-## Requirement
-
-- Go 1.11 +
-
 ## Usage
 
+### Install
+
+#### Install pulsarctl binary with curl on Linux
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
+```
+
+#### Install pulsarctl binary with curl on macOS
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
+```
+
+#### Install pulsarctl binary on Windows
+
+``` bash
+curl -LO https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl.exe
+```
+
+## Install by code
+
 ### Prerequisite
+
+- Go 1.11 +
 
 If you have not installed Go, install it according to the [installation instruction](http://golang.org/doc/install).
 
 Since the `go mod` package management tool is used in this project, **Go 1.11 or higher** version is required.
 
-### Install
+### Download Code
 
 1. Clone the project from GitHub to your local.
 
