@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
@@ -81,10 +82,10 @@ func GetNameArgs(args []string, check func(args []string) error) ([]string, erro
 }
 
 func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client(pulsar.V2)
+	return PulsarCtlConfig.Client(common.V2)
 }
 
-func NewPulsarClientWithAPIVersion(version pulsar.APIVersion) pulsar.Client {
+func NewPulsarClientWithAPIVersion(version common.APIVersion) pulsar.Client {
 	return PulsarCtlConfig.Client(version)
 }
 
@@ -99,8 +100,8 @@ func PrintJSON(w io.Writer, obj interface{}) {
 
 func PrintError(w io.Writer, err error) {
 	msg := err.Error()
-	if pulsar.IsAdminError(err) {
-		ae, _ := err.(pulsar.Error)
+	if common.IsAdminError(err) {
+		ae, _ := err.(common.Error)
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)

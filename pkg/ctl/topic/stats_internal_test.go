@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,13 +34,13 @@ func TestGetInternalStatsCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetInternalStatsCmd, args)
 	assert.Nil(t, execErr)
 
-	var stats pulsar.PersistentTopicInternalStats
+	var stats utils.PersistentTopicInternalStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	defaultStats := pulsar.PersistentTopicInternalStats{
+	defaultStats := utils.PersistentTopicInternalStats{
 		EntriesAddedCounter:    0,
 		NumberOfEntries:        0,
 		TotalSize:              0,

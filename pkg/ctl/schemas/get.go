@@ -19,13 +19,14 @@ package schemas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func getSchema(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the schema for a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
@@ -36,13 +37,13 @@ func getSchema(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	var examples []pulsar.Example
-	del := pulsar.Example{
+	var examples []common.Example
+	del := common.Example{
 		Desc:    "Get the schema for a topic",
 		Command: "pulsarctl schemas get (topic name)",
 	}
 
-	delWithVersion := pulsar.Example{
+	delWithVersion := common.Example{
 		Desc: "Get the schema for a topic with version",
 		Command: "pulsarctl schemas get (topic name) \n" +
 			"\t--version 2",
@@ -51,8 +52,8 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	examples = append(examples, del, delWithVersion)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"name\": \"test-schema\",\n" +
@@ -81,12 +82,12 @@ func getSchema(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "HTTP 404 Not Found, please check if the topic name you entered is correct",
 		Out:  "[✖]  code: 404 reason: Not Found",
 	}
 
-	notTopicName := pulsar.Output{
+	notTopicName := common.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
 		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}
@@ -102,7 +103,7 @@ func getSchema(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	schemaData := &pulsar.SchemaData{}
+	schemaData := &utils.SchemaData{}
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetSchema(vc, schemaData)
@@ -117,7 +118,7 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doGetSchema(vc *cmdutils.VerbCmd, schemaData *pulsar.SchemaData) error {
+func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
 	topic := vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()

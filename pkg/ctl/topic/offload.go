@@ -20,20 +20,21 @@ package topic
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 )
 
 func OffloadCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for triggering offloading the messages of a topic " +
 		"to a long-term storage (e.g. Amazon S3)"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []pulsar.Example
-	offload := pulsar.Example{
+	var examples []common.Example
+	offload := common.Example{
 		Desc: "Trigger offloading the messages of a topic (topic-name) to a long-term storage and " +
 			"keep the configured amount of data in BookKeeper only (e.g. 10M, 5G, " +
 			"the unit is byte if the specified value without the unit.)",
@@ -42,18 +43,18 @@ func OffloadCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, offload)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Trigger offloading the data before the message (messageId) of the topic (topic-name) successfully",
 	}
 
-	nothingOut := pulsar.Output{
+	nothingOut := common.Output{
 		Desc: "noting to offload",
 		Out:  "Nothing to offload",
 	}
 
-	argsError := pulsar.Output{
+	argsError := common.Output{
 		Desc: "the topic name is not specified or the offload threshold is not specified",
 		Out:  "[✖]  only two arguments are allowed to be used as names",
 	}
@@ -85,7 +86,7 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := util.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}
@@ -123,13 +124,13 @@ func doOffload(vc *cmdutils.VerbCmd) error {
 	return err
 }
 
-func findFirstLedgerWithinThreshold(ledgers []pulsar.LedgerInfo, sizeThreshold int64) *pulsar.MessageID {
+func findFirstLedgerWithinThreshold(ledgers []util.LedgerInfo, sizeThreshold int64) *util.MessageID {
 	var suffixSize int64
 	previousLedger := ledgers[len(ledgers)-1].LedgerID
 	for i := len(ledgers) - 1; i >= 0; i-- {
 		suffixSize += ledgers[i].Size
 		if suffixSize > sizeThreshold {
-			return &pulsar.MessageID{
+			return &util.MessageID{
 				LedgerID:         previousLedger,
 				EntryID:          0,
 				PartitionedIndex: -1,

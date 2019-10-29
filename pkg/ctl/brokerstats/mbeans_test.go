@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +30,7 @@ func TestDumpMBeans(t *testing.T) {
 	mbeansOut, execErr, _, _ := TestBrokerStatsCommands(dumpMBeans, args)
 	assert.Nil(t, execErr)
 
-	var out []pulsar.Metrics
+	var out []utils.Metrics
 	err := json.Unmarshal(mbeansOut.Bytes(), &out)
 	assert.Nil(t, err)
 

@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +35,7 @@ func TestUpdateTenantCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	t.Log(out.String())
-	var tenantData pulsar.TenantData
+	var tenantData utils.TenantData
 	err := json.Unmarshal(out.Bytes(), &tenantData)
 	if err != nil {
 		t.Fatal(err)

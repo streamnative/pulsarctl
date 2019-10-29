@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ClearOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for clearing offload deletion lag of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []pulsar.Example
-	clear := pulsar.Example{
+	var examples []common.Example
+	clear := common.Example{
 		Desc:    "Clear offload deletion lag of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces clear-offload-deletion-lag (namespace-name)",
 	}
 	examples = append(examples, clear)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Successfully clear the offload deletion lag of the namespace (namespace-name)",
 	}
@@ -56,7 +57,7 @@ func ClearOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doClearOffloadDeletionLag(vc *cmdutils.VerbCmd) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

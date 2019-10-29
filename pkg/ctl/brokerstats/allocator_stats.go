@@ -19,29 +19,29 @@ package brokerstats
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func dumpAllocatorStats(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Dump the allocator stats"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Dump the allocator stats",
 		Command: "pulsarctl broker-stats allocator-stats",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Print allocator stats info",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "the namespace name is not specified or the namespace name is specified more than one",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}

@@ -19,7 +19,8 @@ package resourcequotas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,17 +28,17 @@ import (
 )
 
 func setResourceQuota(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "Set the resource quota for specified namespace bundle, " +
 		"or default quota if no namespace/bundle specified."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	set := pulsar.Example{
+	var examples []common.Example
+	set := common.Example{
 		Desc:    "Set the resource quota use default namespace/bundle",
 		Command: "pulsarctl resource-quotas set",
 	}
-	setWithArgs := pulsar.Example{
+	setWithArgs := common.Example{
 		Desc: "Set the resource quota for specified namespace bundle",
 		Command: "pulsarctl resource-quotas set --namespace (namespace name) --bundle (bundle range)" +
 			"--msgRateIn (msg rate in value)" +
@@ -50,8 +51,8 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 	examples = append(examples, set, setWithArgs)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Set (default) resource quota successful",
 	}
@@ -66,7 +67,7 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"set")
 
-	quotaData := &pulsar.ResourceQuotaData{}
+	quotaData := &utils.ResourceQuotaData{}
 
 	vc.SetRunFunc(func() error {
 		return doSetResourceQuota(vc, quotaData)
@@ -123,11 +124,11 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetResourceQuota(vc *cmdutils.VerbCmd, quotaData *pulsar.ResourceQuotaData) error {
+func doSetResourceQuota(vc *cmdutils.VerbCmd, quotaData *utils.ResourceQuotaData) error {
 	var err error
 	admin := cmdutils.NewPulsarClient()
 
-	quota := pulsar.NewResourceQuota()
+	quota := utils.NewResourceQuota()
 	quota.MsgRateIn = float64(quotaData.MsgRateIn)
 	quota.MsgRateOut = float64(quotaData.MsgRateOut)
 	quota.BandwidthIn = float64(quotaData.BandwidthIn)

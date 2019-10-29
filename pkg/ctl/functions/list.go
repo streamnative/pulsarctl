@@ -19,20 +19,21 @@ package functions
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "List all Pulsar Functions running under a specific tenant and namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	list := pulsar.Example{
+	list := common.Example{
 		Desc: "List all Pulsar Functions running under a specific tenant and namespace",
 		Command: "pulsarctl functions list \n" +
 			"\t--tenant public\n" +
@@ -41,8 +42,8 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Function Name    |\n" +
@@ -62,7 +63,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"list",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -85,10 +86,10 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doListFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	processNamespaceCmd(funcData)
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	functions, err := admin.Functions().GetFunctions(funcData.Tenant, funcData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

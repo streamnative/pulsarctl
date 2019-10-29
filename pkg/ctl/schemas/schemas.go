@@ -23,10 +23,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -44,7 +43,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	return resourceCmd
 }
 
-func PrintSchema(w io.Writer, schema *pulsar.SchemaInfoWithVersion) {
+func PrintSchema(w io.Writer, schema *utils.SchemaInfoWithVersion) {
 	name, err := json.MarshalIndent(schema.SchemaInfo.Name, "", "  ")
 	if err != nil {
 		_, _ = fmt.Fprintf(w, "unexpected response type: %v\n", err)

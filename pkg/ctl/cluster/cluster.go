@@ -19,23 +19,23 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var argsError = pulsar.Output{
+var argsError = common.Output{
 	Desc: "the cluster name is not specified or the cluster name is specified more than one",
 	Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
 }
 
-var clusterNonExist = pulsar.Output{
+var clusterNonExist = common.Output{
 	Desc: "the specified cluster does not exist in the broker",
 	Out:  "[✖]  code: 412 reason: Cluster (cluster-name) does not exist.",
 }
 
-var failureDomainArgsError = pulsar.Output{
+var failureDomainArgsError = common.Output{
 	Desc: "the cluster name and(or) failure domain name is not specified or the name is specified more than one",
 	Out:  "[✖]  need to specified the cluster name and the failure domain name",
 }

@@ -19,32 +19,33 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the last message id of a topic (partition)."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Get the last message id of a topic (persistent-topic-name)",
 		Command: "pulsarctl topic last-message-id (persistent-topic-name)",
 	}
 
-	getPartitionedTopic := pulsar.Example{
+	getPartitionedTopic := common.Example{
 		Desc:    "Get the last message id of a partition of a partitioned topic (topic-name)",
 		Command: "pulsarctl topic last-message-id --partition (partition) (topic-name)",
 	}
 	examples = append(examples, get, getPartitionedTopic)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"LedgerID\": 0,\n" +
@@ -54,13 +55,13 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut, ArgError)
 
-	topicNotFoundError := pulsar.Output{
+	topicNotFoundError := common.Output{
 		Desc: "the topic (persistent-topic-name) does not exist in the cluster",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
 
-	notAllowedError := pulsar.Output{
+	notAllowedError := common.Output{
 		Desc: "the topic (persistent-topic-name) does not a persistent topic",
 		Out:  "[✖]  code: 405 reason: GetLastMessageId on a non-persistent topic is not allowed",
 	}
@@ -94,7 +95,7 @@ func doGetLastMessageID(vc *cmdutils.VerbCmd, partition int) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

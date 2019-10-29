@@ -21,20 +21,20 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Put a key/value pair to the state associated with a Pulsar Function."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	putstate := pulsar.Example{
+	var examples []common.Example
+	putstate := common.Example{
 		Desc: "Put a key/(string value) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
@@ -44,7 +44,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, putstate)
 
-	putstateWithByte := pulsar.Example{
+	putstateWithByte := common.Example{
 		Desc: "Put a key/(file path) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
@@ -54,7 +54,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, putstateWithByte)
 
-	putstateWithFQFN := pulsar.Example{
+	putstateWithFQFN := common.Example{
 		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
@@ -63,28 +63,28 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, putstateWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Put state (the function state) successfully",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the `--name` arg",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithKeyOrValueNotExist := pulsar.Output{
+	failOutWithKeyOrValueNotExist := common.Output{
 		Desc: "The state key and state value not specified, please check your input format",
 		Out:  "[✖]  need to specified the state key and state value",
 	}
 
-	fileOutErrInputFormat := pulsar.Output{
+	fileOutErrInputFormat := common.Output{
 		Desc: "The format of the input is incorrect, please check.",
 		Out:  "[✖]  error input format",
 	}
@@ -100,7 +100,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"putstate",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFuncWithMultiNameArgs(func() error {
@@ -135,15 +135,15 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
-	var state pulsar.FunctionState
+	var state utils.FunctionState
 
 	state.Key = vc.NameArgs[0]
 	value := vc.NameArgs[1]

@@ -19,25 +19,26 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
 func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for unsubscribing the specified " +
 		"subscription for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	unsub := pulsar.Example{
+	var examples []common.Example
+	unsub := common.Example{
 		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces unsubscribe (namespace-name) (subscription-name)",
 	}
 
-	unsubWithBundle := pulsar.Example{
+	unsubWithBundle := common.Example{
 		Desc: "Unsubscribe the specified subscription (subscription-name) for all topic of the namespace (namespace-name) " +
 			"with bundle range <bundle>",
 		Command: "pulsarctl namespaces unsubscribe --bundle (bundle) (namespace-name) (subscription-name)",
@@ -45,14 +46,14 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, unsub, unsubWithBundle)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "Successfully unsubscribe the subscription (subscription-name) " +
 			"for all topics of the namespace (namespace-name)",
 	}
 
-	argsError := pulsar.Output{
+	argsError := common.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need two arguments apply to the command",
 	}
@@ -84,7 +85,7 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doUnsubscribe(vc *cmdutils.VerbCmd, bundle string) (err error) {
-	ns, err := pulsar.GetNamespaceName(vc.NameArgs[0])
+	ns, err := utils.GetNamespaceName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

@@ -20,19 +20,20 @@ package sinks
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func updateSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar IO sink connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	update := pulsar.Example{
+	update := common.Example{
 		Desc: "Update a Pulsar IO sink connector",
 		Command: "pulsarctl sink update \n" +
 			"\t--tenant public \n" +
@@ -44,21 +45,21 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--cpu 2",
 	}
 
-	updateWithSchema := pulsar.Example{
+	updateWithSchema := common.Example{
 		Desc: "Update a Pulsar IO sink connector with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other sink parameters ",
 	}
 
-	updateWithParallelism := pulsar.Example{
+	updateWithParallelism := common.Example{
 		Desc: "Update a Pulsar IO sink connector with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other sink parameters ",
 	}
 
-	updateWithResource := pulsar.Example{
+	updateWithResource := common.Example{
 		Desc: "Update a Pulsar IO sink connector with resource",
 		Command: "pulsarctl sink create \n" +
 			"\t--ram 5656565656\n" +
@@ -67,7 +68,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other sink parameters ",
 	}
 
-	updateWithSinkConfig := pulsar.Example{
+	updateWithSinkConfig := common.Example{
 		Desc: "Update a Pulsar IO sink connector with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -77,13 +78,13 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, update, updateWithSinkConfig, updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Updated (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
@@ -99,7 +100,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 		"update",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &util.SinkData{}
 	// set the run sink
 	vc.SetRunFunc(func() error {
 		return doUpdateSink(vc, sinkData)
@@ -244,7 +245,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	err := processArguments(sinkData)
 	if err != nil {
 		vc.Command.Help()
@@ -253,9 +254,9 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 
 	checkArgsForUpdate(sinkData.SinkConf)
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
-	updateOptions := pulsar.NewUpdateOptions()
+	updateOptions := util.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sinkData.UpdateAuthData
 
 	if utils.IsPackageURLSupported(sinkData.Archive) {

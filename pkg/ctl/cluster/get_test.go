@@ -22,8 +22,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +32,7 @@ func TestGetClusterData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	c := pulsar.ClusterData{}
+	c := utils.ClusterData{}
 	err = json.Unmarshal(out.Bytes(), &c)
 	if err != nil {
 		t.Error(err)

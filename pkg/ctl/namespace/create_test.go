@@ -24,8 +24,7 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,7 +42,7 @@ func TestCreateNs(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Policies
+	var police utils.Policies
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 
@@ -64,7 +63,7 @@ func TestCreateNsForBundles(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Policies
+	var police utils.Policies
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 	assert.Equal(t, 4, police.Bundles.NumBundles)
@@ -88,7 +87,7 @@ func TestCreateNsForPositiveBundles(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Policies
+	var police utils.Policies
 	err := json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 	assert.Equal(t, 12, police.Bundles.NumBundles)
@@ -125,7 +124,7 @@ func TestCreateNsForCluster(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Policies
+	var police utils.Policies
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 	assert.Equal(t, "test-cluster", police.ReplicationClusters[0])

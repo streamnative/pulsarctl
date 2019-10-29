@@ -19,26 +19,27 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the schema auto-update strategy of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []pulsar.Example
-	set := pulsar.Example{
+	var examples []common.Example
+	set := common.Example{
 		Desc:    "Set the schema auto-update strategy to (strategy)",
 		Command: "pulsarctl namespaces set-schema-autoupdate-strategy --compatibility (strategy) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the schema auto-update strategy of the namespace (namespace-name) to (strategy)",
 	}
@@ -67,14 +68,14 @@ func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSchemaAutoUpdateStrategy(vc *cmdutils.VerbCmd, strategy string) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
-	s := pulsar.AutoUpdateDisabled
+	s := utils.AutoUpdateDisabled
 	if strategy != "" {
-		s, err = pulsar.ParseSchemaAutoUpdateCompatibilityStrategy(strategy)
+		s, err = utils.ParseSchemaAutoUpdateCompatibilityStrategy(strategy)
 		if err != nil {
 			return err
 		}

@@ -26,8 +26,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -108,7 +107,7 @@ func TestStateFunctions(t *testing.T) {
 	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
 	assert.Nil(t, err)
 
-	var state pulsar.FunctionState
+	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
 	assert.Nil(t, err)
 
@@ -124,7 +123,7 @@ func TestStateFunctions(t *testing.T) {
 	outQueryStateAgain, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
 	assert.Nil(t, err)
 
-	var stateAgain pulsar.FunctionState
+	var stateAgain utils.FunctionState
 	err = json.Unmarshal(outQueryStateAgain.Bytes(), &stateAgain)
 	assert.Nil(t, err)
 
@@ -198,7 +197,7 @@ func TestByteValue(t *testing.T) {
 	assert.Nil(t, err)
 	t.Logf("outQueryState:%s", outQueryState.String())
 
-	var state pulsar.FunctionState
+	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
 	assert.Nil(t, err)
 

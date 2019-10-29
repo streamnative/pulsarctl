@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,7 +33,7 @@ func TestUpdateTopicCmd(t *testing.T) {
 	args = []string{"get", "test-update-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
-	var partitions pulsar.PartitionedTopicMetadata
+	var partitions utils.PartitionedTopicMetadata
 	err := json.Unmarshal(out.Bytes(), &partitions)
 	if err != nil {
 		t.Fatal(err)

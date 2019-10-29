@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,14 +35,14 @@ func TestPolicesCommand(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.Nil(t, execErr)
 
-	var police pulsar.Policies
+	var police utils.Policies
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 
 	assert.Equal(t, police.DeduplicationEnabled, false)
 	assert.Equal(t, police.Deleted, false)
 	for key, value := range police.ClusterSubscribeRate {
-		exceptedValue := pulsar.SubscribeRate{
+		exceptedValue := utils.SubscribeRate{
 			SubscribeThrottlingRatePerConsumer: 0,
 			RatePeriodInSecond:                 30,
 		}

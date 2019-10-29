@@ -19,47 +19,48 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func setMessageTTL(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Set Message TTL for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	setMsgTTL := pulsar.Example{
+	var examples []common.Example
+	setMsgTTL := common.Example{
 		Desc:    "Set Message TTL for a namespace",
 		Command: "pulsarctl namespaces set-message-ttl tenant/namespace -ttl 10",
 	}
 	examples = append(examples, setMsgTTL)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Set message TTL successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "Invalid value for message TTL, please check -ttl arg",
 		Out:  "code: 412 reason: Invalid value for message TTL",
 	}
@@ -74,7 +75,7 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 		"set-message-ttl",
 	)
 
-	var namespaceData pulsar.NamespacesData
+	var namespaceData utils.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetMessageTTL(vc, namespaceData)
@@ -91,7 +92,7 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetMessageTTL(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doSetMessageTTL(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().SetNamespaceMessageTTL(ns, data.MessageTTL)

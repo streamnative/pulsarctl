@@ -19,19 +19,20 @@ package sinks
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func getSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the information about a Pulsar IO sink connector"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	get := pulsar.Example{
+	get := common.Example{
 		Desc: "Get the information about a Pulsar IO sink connector",
 		Command: "pulsarctl sink get \n" +
 			"\t--tenant public\n" +
@@ -42,8 +43,8 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			" \"tenant\": \"public\",\n" +
@@ -68,7 +69,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
@@ -83,7 +84,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &utils.SinkData{}
 	// set the run sink
 	vc.SetRunFunc(func() error {
 		return doGetSinks(vc, sinkData)
@@ -111,14 +112,14 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doGetSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doGetSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sinkConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +46,7 @@ func TestUpdateCluster(t *testing.T) {
 	out, execErr, _, _ := TestClusterCommands(getClusterDataCmd, args)
 	assert.Nil(t, execErr)
 
-	var data pulsar.ClusterData
+	var data utils.ClusterData
 	err = json.Unmarshal(out.Bytes(), &data)
 	if err != nil {
 		t.Error(err)

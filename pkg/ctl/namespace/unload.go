@@ -19,46 +19,47 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func unload(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Unload a namespace from the current serving broker"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	unload := pulsar.Example{
+	var examples []common.Example
+	unload := common.Example{
 		Desc:    "Unload a namespace from the current serving broker",
 		Command: "pulsarctl namespaces unload tenant/namespace",
 	}
 
-	unloadWithBundle := pulsar.Example{
+	unloadWithBundle := common.Example{
 		Desc:    "Unload a namespace with bundle from the current serving broker",
 		Command: "pulsarctl namespaces unload tenant/namespace --bundle ({start-boundary}_{end-boundary})",
 	}
 	examples = append(examples, unload, unloadWithBundle)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Unload namespace (tenant/namespace) (with bundle ({start-boundary}_{end-boundary})) successfully ",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
@@ -74,7 +75,7 @@ func unload(vc *cmdutils.VerbCmd) {
 		"unload",
 	)
 
-	var data pulsar.NamespacesData
+	var data utils.NamespacesData
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUnload(vc, data)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
@@ -89,7 +90,7 @@ func unload(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUnload(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doUnload(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	if data.Bundle == "" {

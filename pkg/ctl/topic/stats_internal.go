@@ -19,33 +19,34 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the internal stats for a non-partitioned topic or a " +
 		"partition of a partitioned topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Get internal stats for an existing non-partitioned-topic (topic-name)",
 		Command: "pulsarctl topic internal-stats (topic-name)",
 	}
 
-	getPartition := pulsar.Example{
+	getPartition := common.Example{
 		Desc:    "Get internal stats for a partition of a partitioned topic",
 		Command: "pulsarctl topic internal-stats --partition (partition) (topic-name)",
 	}
 	examples = append(examples, get, getPartition)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: `{
   "entriesAddedCounter": 0,
@@ -72,7 +73,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut, ArgError)
 
-	partitionedTopicInternalStatsError := pulsar.Output{
+	partitionedTopicInternalStatsError := common.Output{
 		Desc: "the specified topic is not exist or the specified topic is a partitioned topic",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
@@ -106,7 +107,7 @@ func doGetInternalStats(vc *cmdutils.VerbCmd, partition int) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

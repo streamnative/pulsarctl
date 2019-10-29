@@ -19,41 +19,42 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default replicator message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	setByMsg := pulsar.Example{
+	var examples []common.Example
+	setByMsg := common.Example{
 		Desc:    "Set the default replicator message dispatch rate by message of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --msg-rate (rate) (namespace)",
 	}
 
-	setByByte := pulsar.Example{
+	setByByte := common.Example{
 		Desc:    "Set the default replicator message dispatch rate by byte of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --byte-rate (rate) (namespace)",
 	}
 
-	setByTime := pulsar.Example{
+	setByTime := common.Example{
 		Desc:    "Set the default replicator message dispatch rate by time of the namespace (namespace-name) to (period)",
 		Command: "pulsarctl namespaces set-replicator-dispatch-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setByMsg, setByByte, setByTime)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Success set the default replicator message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
 
-	notConfigured := pulsar.Output{
+	notConfigured := common.Output{
 		Desc: "the replicator-dispatch-rate is not configured",
 		Out:  "[✖]  code: 404 reason: replicator-Dispatch-rate is not configured for cluster standalone",
 	}
@@ -68,7 +69,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
-	var rate pulsar.DispatchRate
+	var rate utils.DispatchRate
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetReplicatorDispatchRate(vc, rate)
@@ -84,8 +85,8 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetReplicatorDispatchRate(vc *cmdutils.VerbCmd, rate pulsar.DispatchRate) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+func doSetReplicatorDispatchRate(vc *cmdutils.VerbCmd, rate utils.DispatchRate) error {
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

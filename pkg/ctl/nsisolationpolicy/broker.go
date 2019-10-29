@@ -21,24 +21,24 @@ import (
 	"errors"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getBrokerWithPolicies(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "Get broker with namespace-isolation policies attached to it."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "Get broker with namespace-isolation policies attached to it",
 		Command: "pulsarctl ns-isolation-policy broker (cluster-name) (broker address)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"brokerName\": \"127.0.0.1:8080\",\n" +
@@ -48,12 +48,12 @@ func getBrokerWithPolicies(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	clusterNameErr := pulsar.Output{
+	clusterNameErr := common.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	paramsErr := pulsar.Output{
+	paramsErr := common.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one, " +
 			"please check cluster name",
 		Out: "the cluster name is not specified or the cluster name is specified more than one",

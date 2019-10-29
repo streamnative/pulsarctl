@@ -24,8 +24,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -58,7 +57,7 @@ func TestStatusFunctions(t *testing.T) {
 	outGet, _, _ := TestFunctionsCommands(getFunctionsCmd, getArgs)
 	assert.Nil(t, err)
 
-	var functionConfig pulsar.FunctionConfig
+	var functionConfig utils.FunctionConfig
 	err = json.Unmarshal(outGet.Bytes(), &functionConfig)
 	assert.Nil(t, err)
 
@@ -72,7 +71,7 @@ func TestStatusFunctions(t *testing.T) {
 		"--name", "test-functions-status",
 	}
 
-	var status pulsar.FunctionStatus
+	var status utils.FunctionStatus
 
 	task := func(args []string, obj interface{}) bool {
 		outStatus, execErr, _ := TestFunctionsCommands(statusFunctionsCmd, args)
@@ -85,7 +84,7 @@ func TestStatusFunctions(t *testing.T) {
 			return false
 		}
 
-		s := obj.(*pulsar.FunctionStatus)
+		s := obj.(*utils.FunctionStatus)
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 

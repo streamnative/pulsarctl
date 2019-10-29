@@ -27,18 +27,19 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
 
-func processArguments(sourceData *pulsar.SourceData) error {
+func processArguments(sourceData *util.SourceData) error {
 	// Initialize config builder either from a supplied YAML config file or from scratch
 	if sourceData.SourceConf != nil {
 		// no-op
 	} else {
-		sourceData.SourceConf = new(pulsar.SourceConfig)
+		sourceData.SourceConf = new(util.SourceConfig)
 	}
 
 	if sourceData.SourceConfigFile != "" {
@@ -105,7 +106,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 
 	if sourceData.CPU != 0 {
 		if sourceData.SourceConf.Resources == nil {
-			sourceData.SourceConf.Resources = pulsar.NewDefaultResources()
+			sourceData.SourceConf.Resources = util.NewDefaultResources()
 		}
 
 		sourceData.SourceConf.Resources.CPU = sourceData.CPU
@@ -113,7 +114,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 
 	if sourceData.Disk != 0 {
 		if sourceData.SourceConf.Resources == nil {
-			sourceData.SourceConf.Resources = pulsar.NewDefaultResources()
+			sourceData.SourceConf.Resources = util.NewDefaultResources()
 		}
 
 		sourceData.SourceConf.Resources.Disk = sourceData.Disk
@@ -121,7 +122,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 
 	if sourceData.RAM != 0 {
 		if sourceData.SourceConf.Resources == nil {
-			sourceData.SourceConf.Resources = pulsar.NewDefaultResources()
+			sourceData.SourceConf.Resources = util.NewDefaultResources()
 		}
 
 		sourceData.SourceConf.Resources.RAM = sourceData.RAM
@@ -136,7 +137,7 @@ func processArguments(sourceData *pulsar.SourceData) error {
 
 func validateSourceType(sourceType string) string {
 	availableSources := make([]string, 0, 10)
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	connectorDefinition, err := admin.Sources().GetBuiltInSources()
 	if err != nil {
 		log.Printf("get builtin sources error: %s", err.Error())
@@ -168,7 +169,7 @@ func parseConfigs(str string) map[string]interface{} {
 	return resMap
 }
 
-func validateSourceConfigs(sourceConfig *pulsar.SourceConfig) error {
+func validateSourceConfigs(sourceConfig *util.SourceConfig) error {
 	if sourceConfig.Archive == "" {
 		return errors.New("Source archive not specified")
 	}
@@ -187,7 +188,7 @@ func validateSourceConfigs(sourceConfig *pulsar.SourceConfig) error {
 	return nil
 }
 
-func checkArgsForUpdate(sourceConfig *pulsar.SourceConfig) {
+func checkArgsForUpdate(sourceConfig *util.SourceConfig) {
 	if sourceConfig.Tenant == "" {
 		sourceConfig.Tenant = utils.PublicTenant
 	}
@@ -197,14 +198,14 @@ func checkArgsForUpdate(sourceConfig *pulsar.SourceConfig) {
 	}
 }
 
-func processNamespaceCmd(sourceData *pulsar.SourceData) {
+func processNamespaceCmd(sourceData *util.SourceData) {
 	if sourceData.Tenant == "" || sourceData.Namespace == "" {
 		sourceData.Tenant = utils.PublicTenant
 		sourceData.Namespace = utils.DefaultNamespace
 	}
 }
 
-func processBaseArguments(sourceData *pulsar.SourceData) error {
+func processBaseArguments(sourceData *util.SourceData) error {
 	processNamespaceCmd(sourceData)
 
 	if sourceData.Name == "" {

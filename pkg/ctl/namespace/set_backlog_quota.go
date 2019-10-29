@@ -20,21 +20,21 @@ package namespace
 import (
 	"fmt"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func setBacklogQuota(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Set a backlog quota policy for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	setBacklog := pulsar.Example{
+	var examples []common.Example
+	setBacklog := common.Example{
 		Desc: "Set a backlog quota policy for a namespace",
 		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
 			"\t--limit 2G \n" +
@@ -43,28 +43,28 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Set backlog quota successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	noSupportPolicyType := pulsar.Output{
+	noSupportPolicyType := common.Output{
 		Desc: "invalid retention policy type, please check --policy arg",
 		Out:  "invalid retention policy type: (policy type)",
 	}
@@ -80,7 +80,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		"set-backlog-quota",
 	)
 
-	var namespaceData pulsar.NamespacesData
+	var namespaceData util.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetBacklogQuota(vc, namespaceData)
@@ -106,7 +106,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetBacklogQuota(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
@@ -115,19 +115,19 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 		return err
 	}
 
-	var policy pulsar.RetentionPolicy
+	var policy util.RetentionPolicy
 	switch data.PolicyStr {
 	case "producer_request_hold":
-		policy = pulsar.ProducerRequestHold
+		policy = util.ProducerRequestHold
 	case "producer_exception":
-		policy = pulsar.ProducerException
+		policy = util.ProducerException
 	case "consumer_backlog_eviction":
-		policy = pulsar.ConsumerBacklogEviction
+		policy = util.ConsumerBacklogEviction
 	default:
 		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
 	}
 
-	err = admin.Namespaces().SetBacklogQuota(ns, pulsar.NewBacklogQuota(sizeLimit, policy))
+	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, policy))
 	if err == nil {
 		vc.Command.Printf("Set backlog quota successfully for [%s]", ns)
 	}

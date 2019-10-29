@@ -21,19 +21,20 @@ import (
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func startSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for starting a stopped sink instance."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	start := pulsar.Example{
+	start := common.Example{
 		Desc: "Start sink instance",
 		Command: "pulsarctl sink start \n" +
 			"\t--tenant public\n" +
@@ -42,7 +43,7 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, start)
 
-	startWithInstanceID := pulsar.Example{
+	startWithInstanceID := common.Example{
 		Desc: "Starts a stopped sink instance with instance ID",
 		Command: "pulsarctl sink start \n" +
 			"\t--tenant public\n" +
@@ -52,13 +53,13 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, startWithInstanceID)
 	desc.CommandExamples = examples
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Started (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
@@ -73,7 +74,7 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 		"start",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &utils.SinkData{}
 
 	// set the run sink
 	vc.SetRunFunc(func() error {
@@ -108,14 +109,14 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doStartSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doStartSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if sinkData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sinkData.InstanceID)
 		if err != nil {

@@ -19,42 +19,43 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting an existing topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
-	var examples []pulsar.Example
-	deleteTopic := pulsar.Example{
+	var examples []common.Example
+	deleteTopic := common.Example{
 		Desc:    "Delete a partitioned topic (topic-name)",
 		Command: "pulsarctl topics delete (topic-name)",
 	}
 
-	deleteNonPartitionedTopic := pulsar.Example{
+	deleteNonPartitionedTopic := common.Example{
 		Desc:    "Delete a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topics delete --non-partitioned (topic-name)",
 	}
 
 	examples = append(examples, deleteTopic, deleteNonPartitionedTopic)
 	desc.CommandExamples = examples
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Delete topic (topic-name) successfully",
 	}
 
-	partitionedTopicNotExistError := pulsar.Output{
+	partitionedTopicNotExistError := common.Output{
 		Desc: "the partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Partitioned topic does not exist",
 	}
 
-	nonPartitionedTopicNotExistError := pulsar.Output{
+	nonPartitionedTopicNotExistError := common.Output{
 		Desc: "the non-partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
@@ -97,7 +98,7 @@ func doDeleteTopic(vc *cmdutils.VerbCmd, force, deleteSchema, nonPartitioned boo
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

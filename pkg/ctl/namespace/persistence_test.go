@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,7 +41,7 @@ func TestPersistence(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set the persistence policies successfully for [public/test-persistent-namespace]")
 
-	var persistence pulsar.PersistencePolicies
+	var persistence utils.PersistencePolicies
 
 	getArgs := []string{"get-persistence", "public/test-persistent-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getPersistence, getArgs)

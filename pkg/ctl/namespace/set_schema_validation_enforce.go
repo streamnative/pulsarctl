@@ -19,31 +19,32 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the schema whether open schema validation enforced."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []pulsar.Example
-	enable := pulsar.Example{
+	var examples []common.Example
+	enable := common.Example{
 		Desc:    "Enable schema validation enforced",
 		Command: "pulsarctl namespaces set-schema-validation-enforced <namespace-name>",
 	}
 
-	disable := pulsar.Example{
+	disable := common.Example{
 		Desc:    "Disable schema validation enforced",
 		Command: "pulsarctl namespaces set-schema-validation-enforced --disable <namespace-name>",
 	}
 	examples = append(examples, enable, disable)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Enable/Disable schema validation enforced",
 	}
@@ -70,7 +71,7 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetSchemaValidationEnforced(vc *cmdutils.VerbCmd, disable bool) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

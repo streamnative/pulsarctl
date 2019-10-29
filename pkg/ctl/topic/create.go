@@ -21,25 +21,26 @@ import (
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 )
 
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for creating topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
-	var examples []pulsar.Example
-	createNonPartitions := pulsar.Example{
+	var examples []common.Example
+	createNonPartitions := common.Example{
 		Desc:    "Create a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topics create (topic-name) 0",
 	}
 	examples = append(examples, createNonPartitions)
 
-	create := pulsar.Example{
+	create := common.Example{
 		Desc:    "Create a partitioned topic (topic-name) with (partitions-num) partitions",
 		Command: "pulsarctl topics create (topic-name) (partition-num)",
 	}
@@ -47,8 +48,8 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandExamples = examples
 	vc.Command.Example = "#example \n command"
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Create topic (topic-name) with (partition-num) partitions successfully",
 	}
@@ -75,7 +76,7 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

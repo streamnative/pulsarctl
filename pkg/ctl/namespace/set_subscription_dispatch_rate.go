@@ -19,36 +19,37 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscription message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	setByMsg := pulsar.Example{
+	var examples []common.Example
+	setByMsg := common.Example{
 		Desc:    "Set the default subscription message dispatch rate by message of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --msg-rate <rate> <namespace",
 	}
 
-	setByByte := pulsar.Example{
+	setByByte := common.Example{
 		Desc:    "Set the default subscription message dispatch rate by byte of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --byte-rate (rate) (namespace)",
 	}
 
-	setByTime := pulsar.Example{
+	setByTime := common.Example{
 		Desc:    "Set the default subscriptions message dispatch rate by time of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-subscription-dispatch-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setByMsg, setByByte, setByTime)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Success set the default subscription message dispatch rate of the namespace (namespace-name) to (rate)",
 	}
@@ -62,7 +63,7 @@ func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
-	var rate pulsar.DispatchRate
+	var rate utils.DispatchRate
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSubscriptionDispatchRate(vc, rate)
@@ -78,8 +79,8 @@ func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, rate pulsar.DispatchRate) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, rate utils.DispatchRate) error {
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role to access a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	grant := pulsar.Example{
+	var examples []common.Example
+	grant := common.Example{
 		Desc:    "Grant permission (action) to the client role (role-name) to access the namespace (namespace-name)",
 		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action) (namespace-name)",
 	}
 
-	grantActions := pulsar.Example{
+	grantActions := common.Example{
 		Desc: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)",
 		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action-1) --actions (action-2) " +
 			"(namespace-name)",
@@ -44,8 +45,8 @@ func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, grant, grantActions)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)" +
 			" successfully",
@@ -83,7 +84,7 @@ func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) err
 		return vc.NameError
 	}
 
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -103,10 +104,10 @@ func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) err
 	return err
 }
 
-func parseActions(actions []string) ([]pulsar.AuthAction, error) {
-	r := make([]pulsar.AuthAction, 0)
+func parseActions(actions []string) ([]common.AuthAction, error) {
+	r := make([]common.AuthAction, 0)
 	for _, v := range actions {
-		a, err := pulsar.ParseAuthAction(v)
+		a, err := common.ParseAuthAction(v)
 		if err != nil {
 			return nil, err
 		}

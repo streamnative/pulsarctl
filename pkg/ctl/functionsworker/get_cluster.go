@@ -19,24 +19,24 @@ package functionsworker
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getCluster(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get all workers belonging to this cluster"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	stats := pulsar.Example{
+	var examples []common.Example
+	stats := common.Example{
 		Desc:    "Get all workers belonging to this cluster",
 		Command: "pulsarctl functions-worker get-cluster",
 	}
 	examples = append(examples, stats)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "[\n" +
 			"  {\n" +

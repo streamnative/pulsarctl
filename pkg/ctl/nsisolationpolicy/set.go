@@ -22,16 +22,17 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func setPolicy(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "Create/Update a namespace isolation policy for a cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc: "Create/Update a namespace isolation policy for a cluster",
 		Command: "pulsarctl ns-isolation-policy set (cluster-name) (policy name) " +
 			"--auto-failover-policy-params min_limit=3,usage_threshold=100 " +
@@ -43,23 +44,23 @@ func setPolicy(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Create/Update namespaces isolation policy: (policy name) successful.",
 	}
 
-	clusterNameErr := pulsar.Output{
+	clusterNameErr := common.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	policyNameErr := pulsar.Output{
+	policyNameErr := common.Output{
 		Desc: "NamespaceIsolationPolicies for cluster standalone does not exist, please check policy name.",
 		Out:  "NamespaceIsolationPolicies for cluster standalone does not exist",
 	}
 
-	paramsErr := pulsar.Output{
+	paramsErr := common.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one, " +
 			"please check cluster name",
 		Out: "the cluster name is not specified or the cluster name is specified more than one",
@@ -73,7 +74,7 @@ func setPolicy(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
-	nsData := &pulsar.NsIsolationPoliciesData{}
+	nsData := &util.NsIsolationPoliciesData{}
 
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doSetPolicy(vc, nsData)
@@ -114,7 +115,7 @@ func setPolicy(vc *cmdutils.VerbCmd) {
 	)
 }
 
-func doSetPolicy(vc *cmdutils.VerbCmd, nsData *pulsar.NsIsolationPoliciesData) error {
+func doSetPolicy(vc *cmdutils.VerbCmd, nsData *util.NsIsolationPoliciesData) error {
 	clusterName := vc.NameArgs[0]
 	policyName := vc.NameArgs[1]
 
@@ -125,7 +126,7 @@ func doSetPolicy(vc *cmdutils.VerbCmd, nsData *pulsar.NsIsolationPoliciesData) e
 		return err
 	}
 
-	namespaceIsolationData, err := pulsar.CreateNamespaceIsolationData(nsData.Namespaces, nsData.Primary,
+	namespaceIsolationData, err := util.CreateNamespaceIsolationData(nsData.Namespaces, nsData.Primary,
 		nsData.Secondary, nsData.AutoFailoverPolicyTypeName, policyParams)
 	if err != nil {
 		return err

@@ -19,19 +19,19 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/olekukonko/tablewriter"
 )
 
 func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the list of namespaces of a tenant"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	list := pulsar.Example{
+	list := common.Example{
 		Desc:    "Get the list of namespaces of a tenant",
 		Command: "pulsarctl namespaces list (tenant name)",
 	}
@@ -39,8 +39,8 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "+------------------+\n" +
 			"|  NAMESPACE NAME  |\n" +
@@ -50,12 +50,12 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 			"+------------------+",
 	}
 
-	notTenantName := pulsar.Output{
+	notTenantName := common.Output{
 		Desc: "you must specify a tenant name, please check if the tenant name is provided",
 		Out:  "[✖]  the tenant name is not specified or the tenant name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}

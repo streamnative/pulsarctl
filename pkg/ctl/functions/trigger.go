@@ -21,18 +21,19 @@ import (
 	"errors"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Trigger the specified Pulsar Function with a supplied value."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	trigger := pulsar.Example{
+	var examples []common.Example
+	trigger := common.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
@@ -43,7 +44,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, trigger)
 
-	triggerWithFQFN := pulsar.Example{
+	triggerWithFQFN := common.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]\n" +
@@ -52,7 +53,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, triggerWithFQFN)
 
-	triggerWithFile := pulsar.Example{
+	triggerWithFile := common.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
@@ -65,28 +66,28 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	failOut := pulsar.Output{
+	var out []common.Output
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := pulsar.Output{
+	failOutWithWrongInstanceID := common.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
 
-	failOutWithTopic := pulsar.Output{
+	failOutWithTopic := common.Output{
 		Desc: "Function in trigger function has unidentified topic",
 		Out:  "[✖]  code: 400 reason: Function in trigger function has unidentified topic",
 	}
 
-	failOutWithTimeout := pulsar.Output{
+	failOutWithTimeout := common.Output{
 		Desc: "Request Timed Out",
 		Out:  "[✖]  code: 408 reason: Request Timed Out",
 	}
@@ -102,7 +103,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"trigger",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -155,13 +156,13 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doTriggerFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doTriggerFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
 	if funcData.TriggerValue == "" && funcData.TriggerFile == "" {
 		return errors.New("either a trigger value or a trigger filepath needs to be specified")

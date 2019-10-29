@@ -19,26 +19,27 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func createTenantCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a new tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "create a tenant named (tenant-name)",
 		Command: "pulsarctl tenants create (tenant-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Create tenant (tenant-name) successfully",
 	}
@@ -53,7 +54,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"create")
 
-	var tenantData pulsar.TenantData
+	var tenantData utils.TenantData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doCreateTenant(vc, &tenantData)
@@ -75,7 +76,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
+func doCreateTenant(vc *cmdutils.VerbCmd, data *utils.TenantData) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError

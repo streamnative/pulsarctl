@@ -22,8 +22,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +35,7 @@ func TestLookupTopicCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(LookUpTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	var data pulsar.LookupData
+	var data utils.LookupData
 	err := json.Unmarshal(out.Bytes(), &data)
 	if err != nil {
 		t.Fatal(err)

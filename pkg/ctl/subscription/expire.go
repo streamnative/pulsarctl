@@ -20,28 +20,28 @@ package subscription
 import (
 	"fmt"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ExpireCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for expiring messages that older than given expiry time (in seconds)" +
 		" for a subscription."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []pulsar.Example
-	expire := pulsar.Example{
+	var examples []common.Example
+	expire := common.Example{
 		Desc: "Expire messages that older than given expire time (in seconds) for a subscription " +
 			"<subscription-name> under a topic",
 		Command: "pulsarctl subscription expire --expire-time (expire-time) (topic-name) (subscription-name)",
 	}
 
-	expireAllSub := pulsar.Example{
+	expireAllSub := common.Example{
 		Desc: "Expire message that older than given expire time (in second) for all subscriptions " +
 			"under a topic",
 		Command: "pulsarctl subscriptions expire --all --expire-time (expire-time) (topic-name)",
@@ -49,8 +49,8 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, expire, expireAllSub)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "Expire messages after (time)(s) for the subscription (subscription-name) of the topic (topic-name) " +
 			"successfully",
@@ -92,7 +92,7 @@ func doExpire(vc *cmdutils.VerbCmd, time int64, all bool) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

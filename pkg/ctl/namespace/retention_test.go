@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,7 +35,7 @@ func TestRetention(t *testing.T) {
 	getOut, execErr, _, _ := TestNamespaceCommands(getRetention, getArgs)
 	assert.Nil(t, execErr)
 
-	var retention pulsar.RetentionPolicies
+	var retention utils.RetentionPolicies
 	err = json.Unmarshal(getOut.Bytes(), &retention)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(0), retention.RetentionSizeInMB)

@@ -19,50 +19,52 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the configuration of a tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	empty := pulsar.Example{
+	var examples []common.Example
+	empty := common.Example{
 		Desc:    "clear the tenant configuration of a tenant",
 		Command: "pulsarctl tenant update (tenant-name)",
 	}
 	examples = append(examples, empty)
 
-	updateAdminRole := pulsar.Example{
+	updateAdminRole := common.Example{
 		Desc:    "update the admin roles for tenant (tenant-name)",
 		Command: "pulsarctl tenants update --admin-roles (admin-A)--admin-roles (admin-B) (tenant-name)",
 	}
 	examples = append(examples, updateAdminRole)
 
-	updateClusters := pulsar.Example{
+	updateClusters := common.Example{
 		Desc:    "update the allowed cluster list for tenant (tenant-name)",
 		Command: "pulsarctl tenants update --allowed-clusters (cluster-A) --allowed-clusters (cluster-B) (tenant-name)",
 	}
 	examples = append(examples, updateClusters)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Update tenant [%s] successfully",
 	}
 	out = append(out, successOut)
 
-	notExist := pulsar.Output{
+	notExist := common.Output{
 		Desc: "the specified tenant does not exist in",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 	out = append(out, tenantNameArgsError, notExist)
 
-	flagErrorOut := pulsar.Output{
+	flagErrorOut := common.Output{
 		Desc: "the flag --admin-roles or --allowed-clusters are not specified",
 		Out:  "[✖]  the admin roles or the allowed clusters is not specified",
 	}
@@ -76,7 +78,7 @@ func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"u")
 
-	var data pulsar.TenantData
+	var data utils.TenantData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUpdateTenant(vc, &data)
@@ -98,7 +100,7 @@ func UpdateTenantCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUpdateTenant(vc *cmdutils.VerbCmd, data *pulsar.TenantData) error {
+func doUpdateTenant(vc *cmdutils.VerbCmd, data *utils.TenantData) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError

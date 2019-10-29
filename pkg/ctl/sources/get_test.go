@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,7 +53,7 @@ func TestGetSource(t *testing.T) {
 
 	out, _, _ := TestSourcesCommands(getSourcesCmd, getArgs)
 
-	var sourceConf pulsar.SourceConfig
+	var sourceConf utils.SourceConfig
 	err = json.Unmarshal(out.Bytes(), &sourceConf)
 	assert.Nil(t, err)
 

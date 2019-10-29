@@ -23,6 +23,7 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
@@ -92,7 +93,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 	return flags
 }
 
-func (c *ClusterConfig) Client(version pulsar.APIVersion) pulsar.Client {
+func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {

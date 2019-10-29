@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -41,14 +40,14 @@ func TestBacklogQuota(t *testing.T) {
 	getArgs := []string{"get-backlog-quotas", "public/test-backlog-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getBacklogQuota, getArgs)
 	assert.Nil(t, execErr)
-	var backlogQuotaMap map[pulsar.BacklogQuotaType]pulsar.BacklogQuota
+	var backlogQuotaMap map[utils.BacklogQuotaType]utils.BacklogQuota
 	err = json.Unmarshal(getOut.Bytes(), &backlogQuotaMap)
 	assert.Nil(t, err)
 
 	for key, value := range backlogQuotaMap {
-		assert.Equal(t, key, pulsar.DestinationStorage)
+		assert.Equal(t, key, utils.DestinationStorage)
 		assert.Equal(t, value.Limit, int64(2147483648))
-		assert.Equal(t, value.Policy, pulsar.ProducerRequestHold)
+		assert.Equal(t, value.Policy, utils.ProducerRequestHold)
 	}
 
 	delArgs := []string{"remove-backlog-quota", "public/test-backlog-namespace"}

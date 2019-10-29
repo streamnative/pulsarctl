@@ -19,24 +19,24 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getTenantCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the configuration of a tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	getSuccess := pulsar.Example{
+	var examples []common.Example
+	getSuccess := common.Example{
 		Desc:    "get the configuration of tenant (tenant-name)",
 		Command: "pulsarctl tenants get (tenant-name)",
 	}
 	examples = append(examples, getSuccess)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"adminRoles\": [],\n" +
@@ -46,7 +46,7 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 	out = append(out, successOut)
-	notExist := pulsar.Output{
+	notExist := common.Output{
 		Desc: "the specified tenant does not exist in the cluster",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}

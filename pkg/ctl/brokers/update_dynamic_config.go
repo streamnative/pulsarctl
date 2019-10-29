@@ -21,29 +21,30 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func updateDynamicConfig(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Update dynamic-serviceConfiguration of broker"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	list := pulsar.Example{
+	var examples []common.Example
+	list := common.Example{
 		Desc:    "Update dynamic-serviceConfiguration of broker",
 		Command: "pulsarctl brokers update-dynamic-config --config (config name) --value (config value)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Update dynamic config: (configName) successful.",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "Can't update non-dynamic configuration, please check `--config` arg.",
 		Out:  "[✖]  code: 412 reason:  Can't update non-dynamic configuration",
 	}
@@ -58,7 +59,7 @@ func updateDynamicConfig(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"update-dynamic-config")
 
-	brokerData := &pulsar.BrokerData{}
+	brokerData := &utils.BrokerData{}
 
 	vc.SetRunFunc(func() error {
 		return doUpdateDynamic(vc, brokerData)
@@ -83,7 +84,7 @@ func updateDynamicConfig(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUpdateDynamic(vc *cmdutils.VerbCmd, brokerData *pulsar.BrokerData) error {
+func doUpdateDynamic(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Brokers().UpdateDynamicConfiguration(brokerData.ConfigName, brokerData.ConfigValue)
 	if err != nil {

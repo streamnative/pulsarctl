@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +35,7 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetSchemaAutoUpdateStrategyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n", ns, pulsar.Full.String()),
+		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n", ns, utils.Full.String()),
 		out.String())
 
 	args = []string{"set-schema-autoupdate-strategy", ns}
@@ -43,7 +43,7 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Successfully set the schema auto-update strategy of the namespace %s to %s\n",
-			ns, pulsar.AutoUpdateDisabled.String()),
+			ns, utils.AutoUpdateDisabled.String()),
 		out.String())
 
 	args = []string{"get-schema-autoupdate-strategy", ns}
@@ -51,7 +51,7 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n",
-			ns, pulsar.AutoUpdateDisabled.String()),
+			ns, utils.AutoUpdateDisabled.String()),
 		out.String())
 
 	args = []string{"set-schema-autoupdate-strategy", "--compatibility", "BackwardTransitive", ns}
@@ -59,7 +59,7 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Successfully set the schema auto-update strategy of the namespace %s to %s\n",
-			ns, pulsar.BackwardTransitive.String()),
+			ns, utils.BackwardTransitive.String()),
 		out.String())
 
 	args = []string{"get-schema-autoupdate-strategy", ns}
@@ -67,7 +67,7 @@ func TestSchemaAutoUpdateStrategyCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("The schema auto-update strategy of the namespace %s is %s\n",
-			ns, pulsar.BackwardTransitive.String()),
+			ns, utils.BackwardTransitive.String()),
 		out.String())
 }
 

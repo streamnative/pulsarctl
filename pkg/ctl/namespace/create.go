@@ -19,7 +19,8 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -28,40 +29,40 @@ import (
 const MaxBundles = int64(1) << 32
 
 func createNs(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Creates a new namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "creates a namespace named (namespace-name)",
 		Command: "pulsarctl namespaces create (namespace-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Created (namespace-name) successfully",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	positiveBundleErr := pulsar.Output{
+	positiveBundleErr := common.Output{
 		Desc: "Invalid number of bundles, please check --bundles value",
 		Out:  "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].",
 	}
@@ -77,7 +78,7 @@ func createNs(vc *cmdutils.VerbCmd) {
 		"create",
 	)
 
-	var namespaceData pulsar.NamespacesData
+	var namespaceData utils.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doCreate(vc, namespaceData)
@@ -100,7 +101,7 @@ func createNs(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doCreate(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	tenantAndNamespace := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
@@ -108,13 +109,13 @@ func doCreate(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 		return errors.New("invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]")
 	}
 
-	ns, err := pulsar.GetNamespaceName(tenantAndNamespace)
+	ns, err := utils.GetNamespaceName(tenantAndNamespace)
 	if err != nil {
 		return err
 	}
-	policies := pulsar.NewDefaultPolicies()
+	policies := utils.NewDefaultPolicies()
 	if data.NumBundles > 0 {
-		policies.Bundles = pulsar.NewBundlesDataWithNumBundles(data.NumBundles)
+		policies.Bundles = utils.NewBundlesDataWithNumBundles(data.NumBundles)
 	}
 
 	if data.Clusters != nil {

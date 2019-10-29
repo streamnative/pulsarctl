@@ -19,31 +19,32 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	setBySub := pulsar.Example{
+	var examples []common.Example
+	setBySub := common.Example{
 		Desc:    "Set the default subscribe rate by subscribe of the namespace (namespace-name) (rate)",
 		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate (rate) (namespace)",
 	}
 
-	setByTime := pulsar.Example{
+	setByTime := common.Example{
 		Desc:    "Set the default subscribe rate by time of the namespace (namespace-name) (period)",
 		Command: "pulsarctl namespaces set-subscribe-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setBySub, setByTime)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Success set the default subscribe rate of the namespace (namespace-name) to (rate)",
 	}
@@ -57,7 +58,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
-	var rate pulsar.SubscribeRate
+	var rate utils.SubscribeRate
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetSubscribeRate(vc, rate)
@@ -71,8 +72,8 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate pulsar.SubscribeRate) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate utils.SubscribeRate) error {
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

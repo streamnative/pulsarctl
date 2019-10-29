@@ -19,31 +19,32 @@ package resourcequotas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 )
 
 func getResourceQuota(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "Get the resource quota for a specified namespace bundle, " +
 		"or default quota if no namespace/bundle is specified."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Get the resource quota use default namespace/bundle",
 		Command: "pulsarctl resource-quotas get",
 	}
-	getWithArgs := pulsar.Example{
+	getWithArgs := common.Example{
 		Desc:    "Get the resource quota for a specified namespace bundle",
 		Command: "pulsarctl resource-quotas get (namespace name) (bundle range)",
 	}
 	examples = append(examples, get, getWithArgs)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"msgRateIn\" : 40.0,\n" +
@@ -94,7 +95,7 @@ func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 			cmdutils.PrintJSON(vc.Command.OutOrStdout(), resourceQuotaData)
 		}
 	case bundle != "" && namespace != "":
-		nsName, err := pulsar.GetNamespaceName(namespace)
+		nsName, err := utils.GetNamespaceName(namespace)
 		if err != nil {
 			return err
 		}

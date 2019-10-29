@@ -19,7 +19,8 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,20 +28,20 @@ import (
 )
 
 func SetMaxConsumersPerTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the max consumers per topic of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []pulsar.Example
-	set := pulsar.Example{
+	var examples []common.Example
+	set := common.Example{
 		Desc:    "Set the max consumers per topic of the namespace (namespace-name) to (size)",
 		Command: "pulsarctl namespaces set-max-consumers-per-topic --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the max consumers per topic of the namespace (namespace-name) to (size)",
 	}
@@ -67,7 +68,7 @@ func SetMaxConsumersPerTopicCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetMaxConsumersPerTopic(vc *cmdutils.VerbCmd, max int) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

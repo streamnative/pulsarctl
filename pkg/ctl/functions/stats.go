@@ -20,19 +20,19 @@ package functions
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the current stats of a Pulsar Function."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	stats := pulsar.Example{
+	var examples []common.Example
+	stats := common.Example{
 		Desc: "Get the current stats of a Pulsar Function",
 		Command: "pulsarctl functions stats \n" +
 			"\t--tenant public\n" +
@@ -41,7 +41,7 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, stats)
 
-	statsWithFQFN := pulsar.Example{
+	statsWithFQFN := common.Example{
 		Desc: "Get the current stats of a Pulsar Function with FQFN",
 		Command: "pulsarctl functions stats \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -49,8 +49,8 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, statsWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"receivedTotal\": 0,\n" +
@@ -112,12 +112,12 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
@@ -133,7 +133,7 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"stats",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -174,13 +174,13 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doStatsFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doStatsFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {
