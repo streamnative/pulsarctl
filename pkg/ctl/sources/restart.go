@@ -126,7 +126,7 @@ func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Restarted instanceID[%s] of Pulsar Sources[%s] successfully",
+		vc.Command.Printf("Restarted instanceID[%s] of Pulsar Sources[%s] successfully\n",
 			sourceData.InstanceID, sourceData.Name)
 	} else {
 		err = admin.Sources().RestartSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
@@ -134,7 +134,7 @@ func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error 
 			return err
 		}
 
-		vc.Command.Printf("Restarted %s successfully", sourceData.Name)
+		vc.Command.Printf("Restarted %s successfully\n", sourceData.Name)
 	}
 
 	return nil

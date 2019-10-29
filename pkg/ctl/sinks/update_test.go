@@ -46,7 +46,7 @@ func TestUpdateSink(t *testing.T) {
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sinks-update successfully")
+	assert.Equal(t, createOut.String(), "Created test-sinks-update successfully\n")
 
 	updateArgs := []string{"update",
 		"--name", "test-sinks-update",

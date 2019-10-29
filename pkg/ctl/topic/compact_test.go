@@ -31,7 +31,7 @@ func TestCompactCmd(t *testing.T) {
 	args = []string{"compact-status", "test-compact-topic"}
 	out, execErr, _, _ := TestTopicCommands(StatusCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is not running",
+	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is not running\n",
 		out.String())
 
 	args = []string{"compact", "test-compact-topic"}
@@ -42,7 +42,7 @@ func TestCompactCmd(t *testing.T) {
 	out, execErr, _, _ = TestTopicCommands(StatusCmd, args)
 	assert.Nil(t, execErr)
 
-	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is running",
+	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is running\n",
 		out.String())
 }
 

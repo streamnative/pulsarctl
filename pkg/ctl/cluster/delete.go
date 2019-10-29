@@ -63,7 +63,7 @@ func doDeleteCluster(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().Delete(clusterName)
 	if err == nil {
-		vc.Command.Printf("Cluster %s delete successfully", clusterName)
+		vc.Command.Printf("Cluster %s delete successfully\n", clusterName)
 	}
 	return err
 }

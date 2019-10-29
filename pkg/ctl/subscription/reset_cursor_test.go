@@ -31,13 +31,13 @@ func TestResetCursorCmd(t *testing.T) {
 	args = []string{"seek", "--time", "1m", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to 1m successfully",
+	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to 1m successfully\n",
 		out.String())
 
 	args = []string{"seek", "--message-id", "-1:-1", "test-reset-cursor-topic", "test-reset-cursor-sub"}
 	out, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to -1:-1 successfully",
+	assert.Equal(t, "Reset the cursor of the subscription test-reset-cursor-sub to -1:-1 successfully\n",
 		out.String())
 }
 

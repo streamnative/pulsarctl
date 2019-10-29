@@ -46,7 +46,7 @@ func TestUpdateSource(t *testing.T) {
 
 	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-update successfully")
+	assert.Equal(t, createOut.String(), "Created test-source-update successfully\n")
 
 	updateArgs := []string{"update",
 		"--name", "test-source-update",

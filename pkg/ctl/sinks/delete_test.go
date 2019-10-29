@@ -51,7 +51,7 @@ func TestDeleteSinks(t *testing.T) {
 	}
 
 	deleteOut, execErr, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	delErr := "Deleted test-sink-delete successfully"
+	delErr := "Deleted test-sink-delete successfully\n"
 	assert.True(t, strings.Contains(deleteOut.String(), delErr))
 	assert.Nil(t, execErr)
 }

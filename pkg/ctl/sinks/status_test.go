@@ -47,7 +47,7 @@ func TestStatusSink(t *testing.T) {
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-status successfully")
+	assert.Equal(t, createOut.String(), "Created test-sink-status successfully\n")
 
 	statusArgs := []string{"status",
 		"--tenant", "public",

@@ -43,7 +43,7 @@ func TestRestartSource(t *testing.T) {
 
 	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-restart successfully")
+	assert.Equal(t, createOut.String(), "Created test-source-restart successfully\n")
 
 	restartArgs := []string{"restart",
 		"--tenant", "public",

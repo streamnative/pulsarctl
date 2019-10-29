@@ -284,14 +284,14 @@ func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created instanceID[%s] of Pulsar Sink[%s] successfully", sinkData.InstanceID, sinkData.Name)
+			vc.Command.Printf("Created instanceID[%s] of Pulsar Sink[%s] successfully\n", sinkData.InstanceID, sinkData.Name)
 		}
 	} else {
 		err = admin.Sinks().CreateSink(sinkData.SinkConf, sinkData.Archive)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created %s successfully", sinkData.Name)
+			vc.Command.Printf("Created %s successfully\n", sinkData.Name)
 		}
 	}
 

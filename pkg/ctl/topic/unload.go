@@ -71,7 +71,7 @@ func doUnloadCmd(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().Unload(*topic)
 	if err == nil {
-		vc.Command.Printf("Unload topic %s successfully/n", topic.String())
+		vc.Command.Printf("Unload topic %s successfully\n", topic.String())
 	}
 
 	return err

@@ -33,7 +33,7 @@ func TestCreateNs(t *testing.T) {
 	args := []string{"create", "public/test-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-namespace successfully\n")
 
 	args = []string{"list", "public"}
 	out, _, _, _ := TestNamespaceCommands(getNamespacesFromTenant, args)
@@ -119,7 +119,7 @@ func TestCreateNsForCluster(t *testing.T) {
 	nsArgs := []string{"create", "public/test-namespace-cluster", "--clusters", "test-cluster"}
 	nsOut, execErr, _, _ := TestNamespaceCommands(createNs, nsArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Created public/test-namespace-cluster successfully", nsOut.String())
+	assert.Equal(t, "Created public/test-namespace-cluster successfully\n", nsOut.String())
 
 	policiesArgs := []string{"policies", "public/test-namespace-cluster"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)

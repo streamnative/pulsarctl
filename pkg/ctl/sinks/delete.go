@@ -104,6 +104,6 @@ func doDeleteSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		return err
 	}
 
-	vc.Command.Printf("Deleted %s successfully", sinkData.Name)
+	vc.Command.Printf("Deleted %s successfully\n", sinkData.Name)
 	return nil
 }

@@ -165,7 +165,7 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) err
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		vc.Command.Printf("Put state %+v successfully", state)
+		vc.Command.Printf("Put state %+v successfully\n", state)
 	}
 
 	return err

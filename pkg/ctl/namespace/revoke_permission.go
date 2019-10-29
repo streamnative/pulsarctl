@@ -81,7 +81,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().RevokeNamespacePermission(*ns, role)
 	if err == nil {
-		vc.Command.Printf("Revoke the client role %s permissions of accessing the namespace %s successfully",
+		vc.Command.Printf("Revoke the client role %s permissions of accessing the namespace %s successfully\n",
 			role, ns.String())
 	}
 

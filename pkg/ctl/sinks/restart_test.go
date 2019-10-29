@@ -42,7 +42,7 @@ func TestRestartSink(t *testing.T) {
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully")
+	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully\n")
 
 	restartArgs := []string{"restart",
 		"--tenant", "public",

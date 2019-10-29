@@ -30,7 +30,7 @@ func TestRetention(t *testing.T) {
 	args := []string{"create", "public/test-retention"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-retention successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-retention successfully\n")
 
 	getArgs := []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getRetention, getArgs)
@@ -45,7 +45,7 @@ func TestRetention(t *testing.T) {
 	setArgs := []string{"set-retention", "public/test-retention", "--time", "10m", "--size", "10M"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setRetention, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set retention successfully for [public/test-retention]")
+	assert.Equal(t, setOut.String(), "Set retention successfully for [public/test-retention]\n")
 
 	getArgs = []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getRetention, getArgs)

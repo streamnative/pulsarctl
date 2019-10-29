@@ -104,7 +104,7 @@ func doSetReplicationClusters(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) 
 	clusters := strings.Split(data.ClusterIds, ",")
 	err := admin.Namespaces().SetNamespaceReplicationClusters(ns, clusters)
 	if err == nil {
-		vc.Command.Printf("Set replication clusters successfully for %s", ns)
+		vc.Command.Printf("Set replication clusters successfully for %s\n", ns)
 	}
 	return err
 }

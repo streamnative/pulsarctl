@@ -83,7 +83,7 @@ func TestGetFailureSource(t *testing.T) {
 	}
 
 	deleteOut, _, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-source-get successfully")
+	assert.Equal(t, deleteOut.String(), "Deleted test-source-get successfully\n")
 
 	failureGetArgs := []string{"get",
 		"--name", "test-source-get",

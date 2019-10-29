@@ -31,7 +31,7 @@ func TestOffloadStatusCmd(t *testing.T) {
 	args = []string{"offload-status", "test-offload-topic"}
 	out, execErr, _, _ := TestTopicCommands(OffloadStatusCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Offloading topic persistent://public/default/test-offload-topic is not running",
+	assert.Equal(t, "Offloading topic persistent://public/default/test-offload-topic is not running\n",
 		out.String())
 }
 

@@ -32,7 +32,7 @@ func TestGetBundleRangeCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetBundleRangeCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "The bundle range of the topic "+
-		"persistent://public/default/test-get-topic-bundle-range is: 0xc0000000_0xffffffff", out.String())
+		"persistent://public/default/test-get-topic-bundle-range is: 0xc0000000_0xffffffff\n", out.String())
 }
 
 func TestGetBundleRangeArgError(t *testing.T) {

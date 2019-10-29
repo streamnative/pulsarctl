@@ -43,7 +43,7 @@ func TestStartAndStopSource(t *testing.T) {
 
 	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-start successfully")
+	assert.Equal(t, createOut.String(), "Created test-source-start successfully\n")
 
 	stopArgs := []string{"stop",
 		"--tenant", "public",

@@ -28,11 +28,11 @@ func TestDeleteNsCmd(t *testing.T) {
 	args := []string{"create", "public/test-delete-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-delete-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-delete-namespace successfully\n")
 
 	args = []string{"delete", "public/test-delete-namespace"}
 	delOut, _, _, _ := TestNamespaceCommands(deleteNs, args)
-	assert.Equal(t, delOut.String(), "Deleted public/test-delete-namespace successfully")
+	assert.Equal(t, delOut.String(), "Deleted public/test-delete-namespace successfully\n")
 
 	args = []string{"list", "public"}
 	listOut, _, _, _ := TestNamespaceCommands(getNamespacesFromTenant, args)

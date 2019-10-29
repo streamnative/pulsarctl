@@ -34,21 +34,21 @@ func TestMaxProducersPerTopicCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetMaxProducersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max producers per topic of the namespace %s is %d", ns, 0),
+		fmt.Sprintf("The max producers per topic of the namespace %s is %d\n", ns, 0),
 		out.String())
 
 	args = []string{"set-max-producers-per-topic", "--size", "10", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetMaxProducersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("Successfully set the max producers per topic of the namespace %s to %d", ns, 10),
+		fmt.Sprintf("Successfully set the max producers per topic of the namespace %s to %d\n", ns, 10),
 		out.String())
 
 	args = []string{"get-max-producers-per-topic", ns}
 	out, execErr, _, _ = TestNamespaceCommands(GetMaxProducersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max producers per topic of the namespace %s is %d", ns, 10),
+		fmt.Sprintf("The max producers per topic of the namespace %s is %d\n", ns, 10),
 		out.String())
 }
 

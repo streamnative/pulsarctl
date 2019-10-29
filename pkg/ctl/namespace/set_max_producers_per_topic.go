@@ -79,7 +79,7 @@ func doSetMaxProducersPerTopic(vc *cmdutils.VerbCmd, max int) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetMaxProducersPerTopic(*ns, max)
 	if err == nil {
-		vc.Command.Printf("Successfully set the max producers per topic of the namespace %s to %d", ns.String(), max)
+		vc.Command.Printf("Successfully set the max producers per topic of the namespace %s to %d\n", ns.String(), max)
 	}
 
 	return err

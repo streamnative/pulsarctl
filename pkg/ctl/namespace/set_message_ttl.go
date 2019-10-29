@@ -96,7 +96,7 @@ func doSetMessageTTL(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().SetNamespaceMessageTTL(ns, data.MessageTTL)
 	if err == nil {
-		vc.Command.Printf("Set message TTL successfully for [%s]", ns)
+		vc.Command.Printf("Set message TTL successfully for [%s]\n", ns)
 	}
 	return err
 }

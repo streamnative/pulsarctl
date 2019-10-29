@@ -48,7 +48,7 @@ func TestStatusSource(t *testing.T) {
 
 	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-status successfully")
+	assert.Equal(t, createOut.String(), "Created test-source-status successfully\n")
 
 	statusArgs := []string{"status",
 		"--tenant", "public",

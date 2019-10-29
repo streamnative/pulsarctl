@@ -47,7 +47,7 @@ func TestStatusFunctions(t *testing.T) {
 
 	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, "Created test-functions-status successfully", out.String())
+	assert.Equal(t, "Created test-functions-status successfully\n", out.String())
 
 	getArgs := []string{"get",
 		"--tenant", "public",

@@ -134,7 +134,7 @@ func doSetPolicy(vc *cmdutils.VerbCmd, nsData *pulsar.NsIsolationPoliciesData) e
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		vc.Command.Printf("Create/Update namespaces isolation policy:%s successful.", policyName)
+		vc.Command.Printf("Create/Update namespaces isolation policy:%s successful\n", policyName)
 	}
 	return err
 }

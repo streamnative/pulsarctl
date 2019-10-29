@@ -72,7 +72,7 @@ func doGetBundleRange(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	bundleRange, err := admin.Topics().GetBundleRange(*topic)
 	if err == nil {
-		vc.Command.Printf("The bundle range of the topic %s is: %s", topic.String(), bundleRange)
+		vc.Command.Printf("The bundle range of the topic %s is: %s\n", topic.String(), bundleRange)
 	}
 
 	return err

@@ -27,7 +27,7 @@ func TestListNsTopicsCmd(t *testing.T) {
 	args := []string{"create", "public/test-topics-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-topics-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-topics-namespace successfully\n")
 
 	args = []string{"topics", "public/test-topics-namespace"}
 	_, execErr, _, _ := TestNamespaceCommands(getTopics, args)

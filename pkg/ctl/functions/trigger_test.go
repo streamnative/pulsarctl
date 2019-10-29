@@ -52,7 +52,7 @@ func TestTriggerFunctions(t *testing.T) {
 	if execErr != nil {
 		t.Errorf("create fucntions error value: %s", execErr.Error())
 	}
-	assert.Equal(t, out.String(), "Created test-functions-trigger successfully")
+	assert.Equal(t, out.String(), "Created test-functions-trigger successfully\n")
 
 	statsArgs := []string{"stats",
 		"--tenant", "public",
@@ -106,7 +106,7 @@ func TestTriggerFunctionsFailure(t *testing.T) {
 
 	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-trigger-failure successfully")
+	assert.Equal(t, out.String(), "Created test-functions-trigger-failure successfully\n")
 	// wait the function create successfully
 	time.Sleep(time.Second * 3)
 

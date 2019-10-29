@@ -30,7 +30,7 @@ func TestPolicesCommand(t *testing.T) {
 	args := []string{"create", "public/test-policy-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-policy-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-policy-namespace successfully\n")
 
 	args = []string{"policies", "public/test-policy-namespace"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, args)

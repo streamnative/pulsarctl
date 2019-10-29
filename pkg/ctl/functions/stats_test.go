@@ -45,7 +45,7 @@ func TestStatsFunctions(t *testing.T) {
 
 	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-stats successfully")
+	assert.Equal(t, out.String(), "Created test-functions-stats successfully\n")
 
 	statsArgs := []string{"stats",
 		"--name", "test-functions-stats",

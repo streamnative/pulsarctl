@@ -125,14 +125,15 @@ func doStartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Started instanceID[%s] of Pulsar Source[%s] successfully ", sourceData.InstanceID, sourceData.Name)
+		vc.Command.Printf("Started instanceID[%s] of Pulsar Source[%s] successfully\n",
+			sourceData.InstanceID, sourceData.Name)
 	} else {
 		err = admin.Sources().StartSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
 			return err
 		}
 
-		vc.Command.Printf("Started %s successfully", sourceData.Name)
+		vc.Command.Printf("Started %s successfully\n", sourceData.Name)
 	}
 
 	return nil

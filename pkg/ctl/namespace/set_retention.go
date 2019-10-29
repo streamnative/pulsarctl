@@ -137,7 +137,7 @@ func doSetRetention(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
 	}
 	err = admin.Namespaces().SetRetention(ns, pulsar.NewRetentionPolicies(retentionTimeInMin, retentionSizeInMB))
 	if err == nil {
-		vc.Command.Printf("Set retention successfully for [%s]", ns)
+		vc.Command.Printf("Set retention successfully for [%s]\n", ns)
 	}
 
 	return err

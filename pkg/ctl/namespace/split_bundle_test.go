@@ -53,5 +53,5 @@ func TestSplitBundle(t *testing.T) {
 	args = []string{"split-bundle", ns, "--bundle", bundle}
 	splitOut, execErr, _, _ := TestNamespaceCommands(splitBundle, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, splitOut.String(), "Split a namespace bundle: "+bundle+" successfully")
+	assert.Equal(t, splitOut.String(), "Split a namespace bundle: "+bundle+" successfully\n")
 }

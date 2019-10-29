@@ -27,7 +27,7 @@ func TestDeleteDynamicConfig(t *testing.T) {
 	args := []string{"delete-dynamic-config", "--config", "dispatcherMinReadBatchSize"}
 	delOut, execErr, _, _ := TestBrokersCommands(deleteDynamicConfigCmd, args)
 	assert.Nil(t, execErr)
-	expectedOut := "Deleted dynamic config: dispatcherMinReadBatchSize successful."
+	expectedOut := "Deleted dynamic config: dispatcherMinReadBatchSize successful\n"
 	assert.Equal(t, expectedOut, delOut.String())
 
 	failArgs := []string{"delete-dynamic-config", "--config", "errorName"}

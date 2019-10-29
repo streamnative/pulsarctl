@@ -120,13 +120,13 @@ func doOffloadStatus(vc *cmdutils.VerbCmd, wait bool) error {
 
 	switch status.Status {
 	case pulsar.NOTRUN:
-		vc.Command.Printf("Offloading topic %s is not running", topic.String())
+		vc.Command.Printf("Offloading topic %s is not running\n", topic.String())
 	case pulsar.RUNNING:
-		vc.Command.Printf("Offloading topic %s is running", topic.String())
+		vc.Command.Printf("Offloading topic %s is running\n", topic.String())
 	case pulsar.SUCCESS:
-		vc.Command.Printf("Offloading topic %s is done successfully", topic.String())
+		vc.Command.Printf("Offloading topic %s is done successfully\n", topic.String())
 	case pulsar.ERROR:
-		vc.Command.Printf("Offloading topic %s is done with error %s", topic.String(), status.LastError)
+		vc.Command.Printf("Offloading topic %s is done with error %s\n", topic.String(), status.LastError)
 	}
 
 	return err

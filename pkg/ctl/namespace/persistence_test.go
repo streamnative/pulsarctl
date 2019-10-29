@@ -30,7 +30,7 @@ func TestPersistence(t *testing.T) {
 	args := []string{"create", "public/test-persistent-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-persistent-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-persistent-namespace successfully\n")
 
 	setArgs := []string{"set-persistence", "public/test-persistent-namespace",
 		"--ensemble-size", "2",
@@ -40,7 +40,7 @@ func TestPersistence(t *testing.T) {
 	}
 	setOut, execErr, _, _ := TestNamespaceCommands(setPersistence, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set the persistence policies successfully for [public/test-persistent-namespace]")
+	assert.Equal(t, setOut.String(), "Set the persistence policies successfully for [public/test-persistent-namespace]\n")
 
 	var persistence pulsar.PersistencePolicies
 

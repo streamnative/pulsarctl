@@ -94,7 +94,7 @@ func doSetReplicatorDispatchRate(vc *cmdutils.VerbCmd, rate pulsar.DispatchRate)
 	err = admin.Namespaces().SetReplicatorDispatchRate(*ns, rate)
 	if err == nil {
 		vc.Command.Printf("Success set the default replicator message dispatch rate "+
-			"of the namespace %s to %+v", ns.String(), rate)
+			"of the namespace %s to %+v\n", ns.String(), rate)
 	}
 
 	return err

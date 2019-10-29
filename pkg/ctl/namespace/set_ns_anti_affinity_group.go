@@ -95,7 +95,7 @@ func doSetAntiAffinityGroup(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) er
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().SetNamespaceAntiAffinityGroup(ns, data.AntiAffinityGroup)
 	if err == nil {
-		vc.Command.Printf("Set the anti-affinity group: %s successfully for %s", data.AntiAffinityGroup, ns)
+		vc.Command.Printf("Set the anti-affinity group: %s successfully for %s\n", data.AntiAffinityGroup, ns)
 	}
 	return err
 }
