@@ -20,15 +20,36 @@
 
 set -e
 
-version=v0.1.0
+version=`curl -s https://raw.githubusercontent.com/streamnative/pulsarctl/master/stable.txt`
 
-if [[ $(uname) == Darwin ]]; then
-    curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl
-    chmod +x pulsarctl
-    mv pulsarctl /usr/local/bin
-elif [[ $(expr substr $(uname -s) 1 5) == Linux ]]; then
-    curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-linux
-    chmod +x pulsarctl-linux
-    mv pulsarctl-linux /usr/local/bin/pulsarctl
-fi
+discoverArch() {
+  ARCH=$(uname -m)
+  case $ARCH in
+    x86) ARCH="386";;
+    x86_64) ARCH="amd64";;
+    i686) ARCH="386";;
+    i386) ARCH="386";;
+  esac
+}
 
+# discovers the operating system for this system.
+discoverOS() {
+  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+  SUFFIX=''
+
+  case "$OS" in
+    # Minimalist GNU for Windows
+    mingw*)
+        OS='windows'
+        SUFFIX='.exe'
+        ;;
+  esac
+}
+
+discoverArch
+discoverOS
+
+curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}${SUFFIX}
+mv pulsarctl-${ARCH}-${OS}${SUFFIX} pulsarctl
+chmod +x pulsarctl
+mv pulsarctl /usr/local/bin

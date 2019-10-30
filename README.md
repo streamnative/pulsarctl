@@ -45,9 +45,19 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/mas
 
 #### Install pulsarctl binary on Windows
 
+If you have command-line shell tools, such as PowerShell. You can download pulsarctl by this way:
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
+```
+
+Or you can download the executable directly.
+
 ``` bash
 curl -LO https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl.exe
 ```
+
+To find out the latest stable version, take a look at https://raw.githubusercontent.com/streamnative/pulsarctl/master/stable.txt
 
 ## Install by code
 
