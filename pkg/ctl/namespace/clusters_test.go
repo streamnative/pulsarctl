@@ -31,7 +31,7 @@ func TestClusters(t *testing.T) {
 	args := []string{"create", "public/test-cluster-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-cluster-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-cluster-namespace successfully\n")
 
 	clusterArgs := []string{"create", "test-replication-cluster", "--url", "192.168.12.11"}
 	_, _, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
@@ -46,7 +46,7 @@ func TestClusters(t *testing.T) {
 	setArgs := []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "test-replication-cluster"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace")
+	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace\n")
 
 	getArgs := []string{"get-clusters", "public/test-cluster-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getReplicationClusters, getArgs)
@@ -62,7 +62,7 @@ func TestClusters(t *testing.T) {
 	setArgs = []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "standalone"}
 	setOut, execErr, _, _ = TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace")
+	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace\n")
 }
 
 func TestFailureCluster(t *testing.T) {

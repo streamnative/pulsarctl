@@ -133,6 +133,6 @@ func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error
 		return err
 	}
 
-	vc.Command.Printf("Deleted successfully")
+	vc.Command.Println("Deleted successfully")
 	return nil
 }

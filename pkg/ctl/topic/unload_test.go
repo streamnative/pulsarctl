@@ -31,7 +31,7 @@ func TestUnloadCmd(t *testing.T) {
 	args = []string{"unload", "test-unload-topic"}
 	out, execErr, _, _ := TestTopicCommands(UnloadCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Unload topic persistent://public/default/test-unload-topic successfully/n", out.String())
+	assert.Equal(t, "Unload topic persistent://public/default/test-unload-topic successfully\n", out.String())
 }
 
 func TestUnloadArgError(t *testing.T) {

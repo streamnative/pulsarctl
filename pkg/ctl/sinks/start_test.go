@@ -42,7 +42,7 @@ func TestStartAndStopSink(t *testing.T) {
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-start successfully")
+	assert.Equal(t, createOut.String(), "Created test-sink-start successfully\n")
 
 	stopArgs := []string{"stop",
 		"--tenant", "public",

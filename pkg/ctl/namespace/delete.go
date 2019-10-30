@@ -72,7 +72,7 @@ func doDeleteNs(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().DeleteNamespace(ns)
 	if err == nil {
-		vc.Command.Printf("Deleted %s successfully", ns)
+		vc.Command.Printf("Deleted %s successfully\n", ns)
 	}
 	return err
 }

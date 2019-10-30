@@ -66,7 +66,7 @@ func doDeleteSchema(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Schemas().DeleteSchema(topic)
 	if err == nil {
-		vc.Command.Printf("Deleted %s successfully", topic)
+		vc.Command.Printf("Deleted %s successfully\n", topic)
 	}
 	return err
 }

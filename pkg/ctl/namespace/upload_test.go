@@ -27,18 +27,18 @@ func TestUpload(t *testing.T) {
 	args := []string{"create", "public/test-unload-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-unload-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-unload-namespace successfully\n")
 
 	args = []string{"unload", "public/test-unload-namespace"}
 	unloadOut, execErr, _, _ := TestNamespaceCommands(unload, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, unloadOut.String(), "Unload namespace public/test-unload-namespace successfully")
+	assert.Equal(t, unloadOut.String(), "Unload namespace public/test-unload-namespace successfully\n")
 
 	argsWithBundle := []string{"unload", "public/test-unload-namespace", "--bundle", "0x40000000_0x80000000"}
 	unloadOut, execErr, _, _ = TestNamespaceCommands(unload, argsWithBundle)
 	assert.Nil(t, execErr)
 	assert.Equal(t, unloadOut.String(),
-		"Unload namespace public/test-unload-namespace with bundle 0x40000000_0x80000000 successfully")
+		"Unload namespace public/test-unload-namespace with bundle 0x40000000_0x80000000 successfully\n")
 
 	// test invalid upper boundary for bundle
 	argsWithInvalidBundle := []string{"unload", "public/test-unload-namespace", "--bundle", "0x00000000_0x60000000"}

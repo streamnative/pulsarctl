@@ -78,7 +78,7 @@ func doUpdatePeerClusters(vc *cmdutils.VerbCmd, clusterData *utils.ClusterData) 
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().UpdatePeerClusters(clusterData.Name, clusterData.PeerClusterNames)
 	if err == nil {
-		vc.Command.Printf("%s peer clusters updated", clusterData.Name)
+		vc.Command.Printf("%s peer clusters updated\n", clusterData.Name)
 	}
 	return err
 }

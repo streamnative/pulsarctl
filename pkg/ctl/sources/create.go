@@ -256,7 +256,7 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created instanceID[%s] of Pulsar Sources[%s] successfully",
+			vc.Command.Printf("Created instanceID[%s] of Pulsar Sources[%s] successfully\n",
 				sourceData.InstanceID, sourceData.Name)
 		}
 	} else {
@@ -264,7 +264,7 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Created %s successfully", sourceData.Name)
+			vc.Command.Printf("Created %s successfully\n", sourceData.Name)
 		}
 	}
 

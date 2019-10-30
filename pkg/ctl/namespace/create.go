@@ -124,7 +124,7 @@ func doCreate(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 
 	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *policies)
 	if err == nil {
-		vc.Command.Printf("Created %s successfully", ns.String())
+		vc.Command.Printf("Created %s successfully\n", ns.String())
 	}
 	return err
 }

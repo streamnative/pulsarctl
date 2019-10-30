@@ -129,7 +129,7 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 
 	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, policy))
 	if err == nil {
-		vc.Command.Printf("Set backlog quota successfully for [%s]", ns)
+		vc.Command.Printf("Set backlog quota successfully for [%s]\n", ns)
 	}
 	return err
 }

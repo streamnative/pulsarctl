@@ -104,7 +104,7 @@ func doTerminate(vc *cmdutils.VerbCmd, partition int) error {
 	admin := cmdutils.NewPulsarClient()
 	messageID, err := admin.Topics().Terminate(*topic)
 	if err == nil {
-		vc.Command.Printf("Topic %s is successfully terminated at %+v", topic.String(), messageID)
+		vc.Command.Printf("Topic %s is successfully terminated at %+v\n", topic.String(), messageID)
 	}
 
 	return err

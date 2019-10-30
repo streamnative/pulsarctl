@@ -27,12 +27,12 @@ func TestMessageTTL(t *testing.T) {
 	args := []string{"create", "public/test-ttl-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created public/test-ttl-namespace successfully")
+	assert.Equal(t, createOut.String(), "Created public/test-ttl-namespace successfully\n")
 
 	setTTLArgs := []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "20"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setMessageTTL, setTTLArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message TTL successfully for [public/test-ttl-namespace]")
+	assert.Equal(t, setOut.String(), "Set message TTL successfully for [public/test-ttl-namespace]\n")
 
 	getTTLArgs := []string{"get-message-ttl", "public/test-ttl-namespace"}
 	getOut, execErr, _, _ := TestNamespaceCommands(getMessageTTL, getTTLArgs)

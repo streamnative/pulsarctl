@@ -150,14 +150,14 @@ func doStopFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 		if err != nil {
 			return err
 		}
-		vc.Command.Printf("Stopped %s successfully", funcData.FuncName)
+		vc.Command.Printf("Stopped %s successfully\n", funcData.FuncName)
 	} else {
 		err = admin.Functions().StopFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			return err
 		}
 
-		vc.Command.Printf("Stopped %s successfully", funcData.FuncName)
+		vc.Command.Printf("Stopped %s successfully\n", funcData.FuncName)
 	}
 
 	return nil

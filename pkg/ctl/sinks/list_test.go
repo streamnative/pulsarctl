@@ -42,7 +42,7 @@ func TestListSinks(t *testing.T) {
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-list successfully")
+	assert.Equal(t, createOut.String(), "Created test-sink-list successfully\n")
 
 	listArgs := []string{"list",
 		"--tenant", "public",
@@ -59,7 +59,7 @@ func TestListSinks(t *testing.T) {
 	}
 
 	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-sink-list successfully")
+	assert.Equal(t, deleteOut.String(), "Deleted test-sink-list successfully\n")
 
 	listArgsAgain := []string{"list"}
 	sinks, _, _ := TestSinksCommands(listSinksCmd, listArgsAgain)

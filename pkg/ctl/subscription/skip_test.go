@@ -32,13 +32,13 @@ func TestSkipCmd(t *testing.T) {
 	out, execErr, _, _ := TestSubCommands(SkipCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "The subscription test-skip-messages-sub skips 1 messages of the topic "+
-		"persistent://public/default/test-skip-messages-topic successfully", out.String())
+		"persistent://public/default/test-skip-messages-topic successfully\n", out.String())
 
 	args = []string{"skip", "--all", "test-skip-messages-topic", "test-skip-messages-sub"}
 	out, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "The subscription test-skip-messages-sub skips -1 messages of the topic "+
-		"persistent://public/default/test-skip-messages-topic successfully", out.String())
+		"persistent://public/default/test-skip-messages-topic successfully\n", out.String())
 }
 
 func TestSkipArgsError(t *testing.T) {

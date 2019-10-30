@@ -110,7 +110,7 @@ func doClearBacklog(vc *cmdutils.VerbCmd, sName, bundle string, force bool) (err
 	}
 
 	if err == nil {
-		vc.Command.Printf("Successfully clear backlog for all topics of the namespace %s", ns.String())
+		vc.Command.Printf("Successfully clear backlog for all topics of the namespace %s\n", ns.String())
 	}
 
 	return err

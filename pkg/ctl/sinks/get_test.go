@@ -81,7 +81,7 @@ func TestGetFailureSink(t *testing.T) {
 	}
 
 	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully")
+	assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully\n")
 
 	failureGetArgs := []string{"get",
 		"--name", "test-sink-get",

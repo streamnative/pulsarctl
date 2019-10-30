@@ -43,7 +43,7 @@ func TestListSources(t *testing.T) {
 
 	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
 	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-list successfully")
+	assert.Equal(t, createOut.String(), "Created test-source-list successfully\n")
 
 	listArgs := []string{"list",
 		"--tenant", "public",
@@ -60,7 +60,7 @@ func TestListSources(t *testing.T) {
 	}
 
 	deleteOut, _, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-source-list successfully")
+	assert.Equal(t, deleteOut.String(), "Deleted test-source-list successfully\n")
 
 	listArgsAgain := []string{"list"}
 	sources, _, _ := TestSourcesCommands(listSourcesCmd, listArgsAgain)

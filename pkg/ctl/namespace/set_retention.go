@@ -138,7 +138,7 @@ func doSetRetention(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 	}
 	err = admin.Namespaces().SetRetention(ns, util.NewRetentionPolicies(retentionTimeInMin, retentionSizeInMB))
 	if err == nil {
-		vc.Command.Printf("Set retention successfully for [%s]", ns)
+		vc.Command.Printf("Set retention successfully for [%s]\n", ns)
 	}
 
 	return err

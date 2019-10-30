@@ -89,7 +89,7 @@ func doSetDispatchRate(vc *cmdutils.VerbCmd, rate utils.DispatchRate) error {
 	err = admin.Namespaces().SetDispatchRate(*ns, rate)
 	if err == nil {
 		vc.Command.Printf("Success set the default message dispatch rate "+
-			"of the namespace %s to %+v", ns.String(), rate)
+			"of the namespace %s to %+v\n", ns.String(), rate)
 	}
 
 	return err

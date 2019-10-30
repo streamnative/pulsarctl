@@ -51,7 +51,7 @@ func TestDeleteSources(t *testing.T) {
 	}
 
 	deleteOut, execErr, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-	delErr := "Deleted test-source-delete successfully"
+	delErr := "Deleted test-source-delete successfully\n"
 	assert.True(t, strings.Contains(deleteOut.String(), delErr))
 	assert.Nil(t, execErr)
 }

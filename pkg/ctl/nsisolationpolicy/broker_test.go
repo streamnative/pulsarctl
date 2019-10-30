@@ -40,7 +40,7 @@ func TestBrokerAndBrokers(t *testing.T) {
 		"--primary", "test-primary", "--secondary", "test-secondary"}
 	setPolicyOut, execErr, _, _ := TestNsIsolationPolicyCommands(setPolicy, setPolicyArgs)
 	assert.Nil(t, execErr)
-	expectedOut := "Create/Update namespaces isolation policy:test-policy-1 successful."
+	expectedOut := "Create/Update namespaces isolation policy:test-policy-1 successful\n"
 	assert.Equal(t, expectedOut, setPolicyOut.String())
 
 	brokersArgs := []string{"brokers", "standalone"}
@@ -56,6 +56,6 @@ func TestBrokerAndBrokers(t *testing.T) {
 	deleteArgs := []string{"delete", "standalone", "test-policy-1"}
 	deleteOut, execErr, _, _ := TestNsIsolationPolicyCommands(deleteNsIsolationPolicy, deleteArgs)
 	assert.Nil(t, execErr)
-	expectedDelOut := "Delete namespaces isolation policy: test-policy-1 successful."
+	expectedDelOut := "Delete namespaces isolation policy: test-policy-1 successful\n"
 	assert.Equal(t, expectedDelOut, deleteOut.String())
 }

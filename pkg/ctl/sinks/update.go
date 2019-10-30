@@ -264,14 +264,14 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated instanceID[%s] of Pulsar Sinks[%s] successfully ", sinkData.InstanceID, sinkData.Name)
+			vc.Command.Printf("Updated instanceID[%s] of Pulsar Sinks[%s] successfully\n", sinkData.InstanceID, sinkData.Name)
 		}
 	} else {
 		err = admin.Sinks().UpdateSink(sinkData.SinkConf, sinkData.Archive, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			vc.Command.Printf("Updated %s successfully", sinkData.Name)
+			vc.Command.Printf("Updated %s successfully\n", sinkData.Name)
 		}
 	}
 

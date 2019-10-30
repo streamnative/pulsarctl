@@ -96,14 +96,14 @@ func doUnload(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	if data.Bundle == "" {
 		err := admin.Namespaces().Unload(ns)
 		if err == nil {
-			vc.Command.Printf("Unload namespace %s successfully", ns)
+			vc.Command.Printf("Unload namespace %s successfully\n", ns)
 		}
 		return err
 	}
 
 	err := admin.Namespaces().UnloadNamespaceBundle(ns, data.Bundle)
 	if err == nil {
-		vc.Command.Printf("Unload namespace %s with bundle %s successfully", ns, data.Bundle)
+		vc.Command.Printf("Unload namespace %s with bundle %s successfully\n", ns, data.Bundle)
 	}
 	return err
 }

@@ -31,7 +31,7 @@ func TestOffloadCmd(t *testing.T) {
 	args = []string{"offload", "test-offload-topic", "10M"}
 	out, execErr, _, _ := TestTopicCommands(OffloadCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Nothing to offload", out.String())
+	assert.Equal(t, "Nothing to offload\n", out.String())
 }
 
 func TestOffloadArgsError(t *testing.T) {

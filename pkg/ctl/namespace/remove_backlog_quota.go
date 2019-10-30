@@ -78,7 +78,7 @@ func doRemoveBacklog(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().RemoveBacklogQuota(ns)
 	if err == nil {
-		vc.Command.Printf("Remove backlog quota successfully for [%s]", ns)
+		vc.Command.Printf("Remove backlog quota successfully for [%s]\n", ns)
 	}
 	return err
 }

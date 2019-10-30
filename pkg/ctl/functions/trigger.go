@@ -178,7 +178,7 @@ func doTriggerFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		vc.Command.Printf(retval)
+		vc.Command.Println(retval)
 	}
 	return err
 }
