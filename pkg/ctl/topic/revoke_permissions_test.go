@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -53,7 +52,7 @@ func testRevokePermission(t *testing.T, topic string) {
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
-	var permissions map[string][]pulsar.AuthAction
+	var permissions map[string][]common.AuthAction
 	err := json.Unmarshal(out.Bytes(), &permissions)
 	if err != nil {
 		t.Fatal(err)
@@ -70,13 +69,13 @@ func testRevokePermission(t *testing.T, topic string) {
 	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
-	var emptyPermissions map[string][]pulsar.AuthAction
+	var emptyPermissions map[string][]common.AuthAction
 	err = json.Unmarshal(out.Bytes(), &emptyPermissions)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, map[string][]pulsar.AuthAction{}, emptyPermissions)
+	assert.Equal(t, map[string][]common.AuthAction{}, emptyPermissions)
 }
 
 func TestRevokePermissionsArgError(t *testing.T) {

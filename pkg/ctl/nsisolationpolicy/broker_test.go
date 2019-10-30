@@ -22,7 +22,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +47,7 @@ func TestBrokerAndBrokers(t *testing.T) {
 	brokersOut, execErr, _, _ := TestNsIsolationPolicyCommands(getAllBrokersWithPolicies, brokersArgs)
 	assert.Nil(t, execErr)
 
-	var brokersData []pulsar.BrokerNamespaceIsolationData
+	var brokersData []utils.BrokerNamespaceIsolationData
 	err := json.Unmarshal(brokersOut.Bytes(), &brokersData)
 	assert.Nil(t, err)
 	assert.True(t, strings.Contains(brokersData[0].BrokerName, "8080"))

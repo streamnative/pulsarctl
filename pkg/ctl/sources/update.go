@@ -20,19 +20,20 @@ package sources
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func updateSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar IO source connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	update := pulsar.Example{
+	update := common.Example{
 		Desc: "Update a Pulsar IO source connector",
 		Command: "pulsarctl source update \n" +
 			"\t--tenant public \n" +
@@ -44,21 +45,21 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--cpu 2",
 	}
 
-	updateWithSchema := pulsar.Example{
+	updateWithSchema := common.Example{
 		Desc: "Update a Pulsar IO source connector with schema type",
 		Command: "pulsarctl source create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other source parameters ",
 	}
 
-	updateWithParallelism := pulsar.Example{
+	updateWithParallelism := common.Example{
 		Desc: "Update a Pulsar IO source connector with parallelism",
 		Command: "pulsarctl source create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other source parameters ",
 	}
 
-	updateWithResource := pulsar.Example{
+	updateWithResource := common.Example{
 		Desc: "Update a Pulsar IO source connector with resource",
 		Command: "pulsarctl source create \n" +
 			"\t--ram 5656565656\n" +
@@ -67,7 +68,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other source parameters ",
 	}
 
-	updateWithSourceConfig := pulsar.Example{
+	updateWithSourceConfig := common.Example{
 		Desc: "Update a Pulsar IO source connector with source config",
 		Command: "pulsarctl source create \n" +
 			"\t--source-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -78,13 +79,13 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 		updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Updated (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
@@ -100,7 +101,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 		"update",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &util.SourceData{}
 	// set the run source
 	vc.SetRunFunc(func() error {
 		return doUpdateSource(vc, sourceData)
@@ -211,7 +212,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 	err := processArguments(sourceData)
 	if err != nil {
 		vc.Command.Help()
@@ -220,9 +221,9 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
 
 	checkArgsForUpdate(sourceData.SourceConf)
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
-	updateOptions := pulsar.NewUpdateOptions()
+	updateOptions := util.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sourceData.UpdateAuthData
 
 	if utils.IsPackageURLSupported(sourceData.Archive) {

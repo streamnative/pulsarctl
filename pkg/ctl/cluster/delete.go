@@ -19,24 +19,24 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func deleteClusterCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for deleting an existing cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	delete := pulsar.Example{
+	var examples []common.Example
+	delete := common.Example{
 		Desc:    "deleting the cluster named (cluster-name)",
 		Command: "pulsarctl clusters delete (cluster-name)",
 	}
 	examples = append(examples, delete)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Cluster (cluster-name) delete successfully.",
 	}

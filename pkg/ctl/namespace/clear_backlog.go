@@ -22,29 +22,29 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for clearing backlog for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	clear := pulsar.Example{
+	var examples []common.Example
+	clear := common.Example{
 		Desc:    "Clear backlog for all topics of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces clear-backlog (namespace-name)",
 	}
 
-	clearWithBundle := pulsar.Example{
+	clearWithBundle := common.Example{
 		Desc:    "Clear backlog for all topic of the namespace (namespace-name) with a bundle range <bundle>",
 		Command: "pulsarctl namespaces clear-backlog --bundle (bundle) (namespace-name)",
 	}
 
-	clearWithSubName := pulsar.Example{
+	clearWithSubName := common.Example{
 		Desc: "Clear the specified subscription (subscription-name) backlog for all topics of the " +
 			"namespace (namespace-name)",
 		Command: "pulsarctl namespaces clear-backlog --subscription (subscription-name) (namespace-name)",
@@ -52,8 +52,8 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, clear, clearWithBundle, clearWithSubName)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Successfully clear backlog for all topics of the namespace (namespace-name)",
 	}
@@ -89,7 +89,7 @@ func doClearBacklog(vc *cmdutils.VerbCmd, sName, bundle string, force bool) (err
 			return nil
 		}
 	}
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

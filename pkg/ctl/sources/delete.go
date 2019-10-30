@@ -19,19 +19,20 @@ package sources
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO source connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	del := pulsar.Example{
+	del := common.Example{
 		Desc: "Delete a Pulsar IO source connector",
 		Command: "pulsarctl source delete \n" +
 			"\t--tenant public\n" +
@@ -41,13 +42,13 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, del)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Deleted (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
@@ -63,7 +64,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &utils.SourceData{}
 
 	// set the run source
 	vc.SetRunFunc(func() error {
@@ -92,13 +93,13 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	err = admin.Sources().DeleteSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		return err

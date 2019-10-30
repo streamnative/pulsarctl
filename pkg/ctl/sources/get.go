@@ -19,19 +19,20 @@ package sources
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func getSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Gets the information about a Pulsar IO source connector"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	get := pulsar.Example{
+	get := common.Example{
 		Desc: "Gets the information about a Pulsar IO source connector",
 		Command: "pulsarctl source get \n" +
 			"\t--tenant public\n" +
@@ -42,8 +43,8 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"tenant\": \"public\",\n" +
@@ -63,7 +64,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 			"}\n",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
@@ -78,7 +79,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &utils.SourceData{}
 	// set the run source
 	vc.SetRunFunc(func() error {
 		return doGetSources(vc, sourceData)
@@ -106,14 +107,14 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doGetSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doGetSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sourceConfig, err := admin.Sources().GetSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

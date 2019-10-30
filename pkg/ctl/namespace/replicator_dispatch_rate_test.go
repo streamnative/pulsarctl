@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +45,7 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default replicator message dispatch rate "+
 			"of the namespace %s to %+v\n", ns,
-			pulsar.DispatchRate{
+			utils.DispatchRate{
 				DispatchThrottlingRateInMsg:  -1,
 				DispatchThrottlingRateInByte: -1,
 				RatePeriodInSecond:           1,
@@ -56,7 +56,7 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(GetReplicatorDispatchRateCmd, args)
 	assert.Nil(t, execErr)
 
-	var rate pulsar.DispatchRate
+	var rate utils.DispatchRate
 	err := json.Unmarshal(out.Bytes(), &rate)
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +71,7 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default replicator message dispatch rate "+
 			"of the namespace %s to %+v\n", ns,
-			pulsar.DispatchRate{
+			utils.DispatchRate{
 				DispatchThrottlingRateInMsg:  10,
 				DispatchThrottlingRateInByte: 10,
 				RatePeriodInSecond:           10,

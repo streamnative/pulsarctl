@@ -19,22 +19,22 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/spf13/cobra"
 )
 
-var tenantNameArgsError = pulsar.Output{
+var tenantNameArgsError = common.Output{
 	Desc: "the tenant name is not specified or the tenant name is specified more than one",
 	Out:  "[✖]  the tenant name is not specified or the tenant name is specified more than one",
 }
 
-var tenantNotExistError = pulsar.Output{
+var tenantNotExistError = common.Output{
 	Desc: "the specified tenant does not exist in the broker",
 	Out:  "[✖]  code: 404 reason: The tenant does not exist",
 }
 
-var tenantAlreadyExistError = pulsar.Output{
+var tenantAlreadyExistError = common.Output{
 	Desc: "the specified tenant has been created",
 	Out:  "[✖]  code: 409 reason: Tenant already exists",
 }

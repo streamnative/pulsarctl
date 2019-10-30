@@ -19,19 +19,20 @@ package functions
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for delete a Pulsar Function that is running on a Pulsar cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	del := pulsar.Example{
+	del := common.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster",
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
@@ -40,7 +41,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, del)
 
-	delWithInstanceID := pulsar.Example{
+	delWithInstanceID := common.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with instance ID",
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
@@ -50,7 +51,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, delWithInstanceID)
 
-	delWithFqfn := pulsar.Example{
+	delWithFqfn := common.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with FQFN",
 		Command: "pulsarctl functions delete \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -58,18 +59,18 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, delWithFqfn)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Deleted <the name of a Pulsar Function> successfully",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
@@ -85,7 +86,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -120,13 +121,13 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	err = admin.Functions().DeleteFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		return err

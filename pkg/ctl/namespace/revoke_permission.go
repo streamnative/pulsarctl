@@ -19,28 +19,29 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
-	var examples []pulsar.Example
-	revoke := pulsar.Example{
+	var examples []common.Example
+	revoke := common.Example{
 		Desc:    "Revoke the client role (role-name) of accessing the namespace (namespace-name)",
 		Command: "pulsarctl namespaces revoke-permission --role (role-name) (namespace-name)",
 	}
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Revoke the client role (role-name) permissions of accessing the namespace (namespace-name) successfully",
 	}
@@ -73,7 +74,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 		return vc.NameError
 	}
 
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

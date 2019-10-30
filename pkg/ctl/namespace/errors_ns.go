@@ -17,24 +17,26 @@
 
 package namespace
 
-import "github.com/streamnative/pulsarctl/pkg/pulsar"
+import (
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+)
 
-var ArgError = pulsar.Output{
+var ArgError = common.Output{
 	Desc: "the namespace name is not specified or the namespace name is specified more than one",
 	Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 }
 
-var AuthNotEnable = pulsar.Output{
+var AuthNotEnable = common.Output{
 	Desc: "the authorization is not enabled",
 	Out:  "[✖]  code: 501 reason: Authorization is not enabled",
 }
 
-var NsNotExistError = pulsar.Output{
+var NsNotExistError = common.Output{
 	Desc: "the specified namespace name does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
-var NsErrors = []pulsar.Output{
+var NsErrors = []common.Output{
 	{
 		Desc: "the namespace name is not in the format of <tenant>/<namespace>",
 		Out:  "[✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name>",

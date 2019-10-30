@@ -22,28 +22,28 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func PeekCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for peeking some messages of a subscription."
 	desc.CommandPermission = "This command requires tenant admin permissions or namespace consumer permissions."
 
-	var example []pulsar.Example
-	peek := pulsar.Example{
+	var example []common.Example
+	peek := common.Example{
 		Desc:    "Peek some messages of a subscription",
 		Command: "pulsarctl subscriptions peek --count (n) (topic-name) (subscription-name)",
 	}
 	example = append(example, peek)
 	desc.CommandExamples = example
 
-	var out []pulsar.Output
-	success := pulsar.Output{
+	var out []common.Output
+	success := common.Output{
 		Desc: "normal output",
 		Out: `Message ID :
 ledgerID:entryID:PartitionIndex:BatchIndex
@@ -73,7 +73,7 @@ Message :`,
 
 func doPeek(vc *cmdutils.VerbCmd, n int) error {
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

@@ -22,7 +22,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,7 +54,7 @@ func TestGetSink(t *testing.T) {
 	out, execErr, _ := TestSinksCommands(getSinksCmd, getArgs)
 	assert.Nil(t, execErr)
 
-	var sinkConf pulsar.SinkConfig
+	var sinkConf utils.SinkConfig
 	err = json.Unmarshal(out.Bytes(), &sinkConf)
 	assert.Nil(t, err)
 

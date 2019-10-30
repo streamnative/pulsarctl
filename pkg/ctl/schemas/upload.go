@@ -21,20 +21,20 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func uploadSchema(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Update the schema for a topic"
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	upload := pulsar.Example{
+	upload := common.Example{
 		Desc: "Update the schema for a topic",
 		Command: "pulsarctl schemas upload \n" +
 			"(topic name) \n " +
@@ -44,18 +44,18 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 	examples = append(examples, upload)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Upload (topic name) successfully",
 	}
 
-	notTopicName := pulsar.Output{
+	notTopicName := common.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
 		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}
 
-	filePathNotExist := pulsar.Output{
+	filePathNotExist := common.Output{
 		Desc: "no such file or directory",
 		Out:  "[✖]  open (file path): no such file or directory",
 	}
@@ -70,7 +70,7 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"upload",
 	)
-	schemaData := &pulsar.SchemaData{}
+	schemaData := &utils.SchemaData{}
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doUploadSchema(vc, schemaData)
@@ -86,8 +86,8 @@ func uploadSchema(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doUploadSchema(vc *cmdutils.VerbCmd, schemaData *pulsar.SchemaData) error {
-	var payload pulsar.PostSchemaPayload
+func doUploadSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
+	var payload utils.PostSchemaPayload
 	topic := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	file, err := ioutil.ReadFile(schemaData.Filename)

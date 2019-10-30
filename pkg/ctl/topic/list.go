@@ -19,25 +19,26 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/olekukonko/tablewriter"
 )
 
 func ListTopicsCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for listing all exist topics under the specified namespace."
 	desc.CommandPermission = "This command requires admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
-	listTopics := pulsar.Example{
+	listTopics := common.Example{
 		Desc:    "List all exist topics under the namespace(tenant/namespace)",
 		Command: "pulsarctl topics list (tenant/namespace)",
 	}
-	desc.CommandExamples = []pulsar.Example{listTopics}
+	desc.CommandExamples = []common.Example{listTopics}
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: `+----------------------------------------------------------+---------------+
 |                        TOPIC NAME                        | PARTITIONED ? |
@@ -45,7 +46,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 +----------------------------------------------------------+---------------+`,
 	}
 
-	argError := pulsar.Output{
+	argError := common.Output{
 		Desc: "the namespace is not specified",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
@@ -71,7 +72,7 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	namespace, err := pulsar.GetNamespaceName(vc.NameArg)
+	namespace, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

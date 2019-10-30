@@ -27,18 +27,19 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
 
-func processArguments(sinkData *pulsar.SinkData) error {
+func processArguments(sinkData *util.SinkData) error {
 	// Initialize config builder either from a supplied YAML config file or from scratch
 	if sinkData.SinkConf != nil {
 		// no-op
 	} else {
-		sinkData.SinkConf = new(pulsar.SinkConfig)
+		sinkData.SinkConf = new(util.SinkConfig)
 	}
 
 	if sinkData.SinkConfigFile != "" {
@@ -128,7 +129,7 @@ func processArguments(sinkData *pulsar.SinkData) error {
 
 	if sinkData.CPU != 0 {
 		if sinkData.SinkConf.Resources == nil {
-			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
+			sinkData.SinkConf.Resources = util.NewDefaultResources()
 		}
 
 		sinkData.SinkConf.Resources.CPU = sinkData.CPU
@@ -136,7 +137,7 @@ func processArguments(sinkData *pulsar.SinkData) error {
 
 	if sinkData.Disk != 0 {
 		if sinkData.SinkConf.Resources == nil {
-			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
+			sinkData.SinkConf.Resources = util.NewDefaultResources()
 		}
 
 		sinkData.SinkConf.Resources.Disk = sinkData.Disk
@@ -144,7 +145,7 @@ func processArguments(sinkData *pulsar.SinkData) error {
 
 	if sinkData.RAM != 0 {
 		if sinkData.SinkConf.Resources == nil {
-			sinkData.SinkConf.Resources = pulsar.NewDefaultResources()
+			sinkData.SinkConf.Resources = util.NewDefaultResources()
 		}
 
 		sinkData.SinkConf.Resources.RAM = sinkData.RAM
@@ -167,7 +168,7 @@ func processArguments(sinkData *pulsar.SinkData) error {
 
 func validateSinkType(sinkType string) string {
 	availableSinks := make([]string, 0, 10)
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	connectorDefinition, err := admin.Sinks().GetBuiltInSinks()
 	if err != nil {
 		log.Printf("get builtin sinks error: %s\n", err.Error())
@@ -199,7 +200,7 @@ func parseConfigs(str string) map[string]interface{} {
 	return resMap
 }
 
-func validateSinkConfigs(sinkConf *pulsar.SinkConfig) error {
+func validateSinkConfigs(sinkConf *util.SinkConfig) error {
 	if sinkConf.Archive == "" {
 		return errors.New("Sink archive not specified")
 	}
@@ -218,7 +219,7 @@ func validateSinkConfigs(sinkConf *pulsar.SinkConfig) error {
 	return nil
 }
 
-func checkArgsForUpdate(sinkConf *pulsar.SinkConfig) {
+func checkArgsForUpdate(sinkConf *util.SinkConfig) {
 	if sinkConf.Tenant == "" {
 		sinkConf.Tenant = utils.PublicTenant
 	}
@@ -228,14 +229,14 @@ func checkArgsForUpdate(sinkConf *pulsar.SinkConfig) {
 	}
 }
 
-func processNamespaceCmd(sinkData *pulsar.SinkData) {
+func processNamespaceCmd(sinkData *util.SinkData) {
 	if sinkData.Tenant == "" || sinkData.Namespace == "" {
 		sinkData.Tenant = utils.PublicTenant
 		sinkData.Namespace = utils.DefaultNamespace
 	}
 }
 
-func processBaseArguments(sinkData *pulsar.SinkData) error {
+func processBaseArguments(sinkData *util.SinkData) error {
 	processNamespaceCmd(sinkData)
 
 	if sinkData.Name == "" {

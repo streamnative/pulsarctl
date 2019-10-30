@@ -19,20 +19,21 @@ package sources
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
 )
 
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "List all running Pulsar IO source connectors"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	list := pulsar.Example{
+	list := common.Example{
 		Desc: "List all running Pulsar IO source connectors",
 		Command: "pulsarctl source list \n" +
 			"\t--tenant public\n" +
@@ -41,8 +42,8 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Source Name    |\n" +
@@ -62,7 +63,7 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 		"list",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &utils.SourceData{}
 
 	// set the run source
 	vc.SetRunFunc(func() error {
@@ -85,10 +86,10 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doListSources(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	processNamespaceCmd(sourceData)
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

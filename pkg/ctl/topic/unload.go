@@ -19,25 +19,26 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func UnloadCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for unloading a topic."
 	desc.CommandPermission = "This command requires super-user permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []pulsar.Example
-	unload := pulsar.Example{
+	var examples []common.Example
+	unload := common.Example{
 		Desc:    "Unload a topic (topic-name)",
 		Command: "pulsarctl topic unload (topic-name)",
 	}
 	examples = append(examples, unload)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Unload topic (topic-name) successfully",
 	}
@@ -63,7 +64,7 @@ func doUnloadCmd(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

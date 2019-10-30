@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,7 +29,7 @@ func TestResourceQuota(t *testing.T) {
 	getDefaultArgs := []string{"get"}
 	getDefaultOut, execErr, _, _ := TestResourceQuotaCommands(getResourceQuota, getDefaultArgs)
 	assert.Nil(t, execErr)
-	var quota pulsar.ResourceQuota
+	var quota utils.ResourceQuota
 	err := json.Unmarshal(getDefaultOut.Bytes(), &quota)
 	assert.Nil(t, err)
 

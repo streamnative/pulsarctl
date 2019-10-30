@@ -22,9 +22,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/stretchr/testify/assert"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func TestStatsFunctions(t *testing.T) {
@@ -54,7 +54,7 @@ func TestStatsFunctions(t *testing.T) {
 	outStats, _, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
 	assert.Nil(t, err)
 
-	var stats pulsar.FunctionStats
+	var stats utils.FunctionStats
 	err = json.Unmarshal(outStats.Bytes(), &stats)
 	assert.Nil(t, err)
 

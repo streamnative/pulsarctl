@@ -19,19 +19,20 @@ package sinks
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func deleteSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO sink connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	del := pulsar.Example{
+	del := common.Example{
 		Desc: "Delete a Pulsar IO sink connector",
 		Command: "pulsarctl sink delete \n" +
 			"\t--tenant public\n" +
@@ -41,13 +42,13 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, del)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Deleted (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}
@@ -63,7 +64,7 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 		"delete",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &utils.SinkData{}
 
 	// set the run sink
 	vc.SetRunFunc(func() error {
@@ -92,13 +93,13 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doDeleteSink(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doDeleteSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	err = admin.Sinks().DeleteSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 	if err != nil {
 		return err

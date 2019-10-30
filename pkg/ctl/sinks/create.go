@@ -20,18 +20,19 @@ package sinks
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func createSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Create a Pulsar IO sink connector to run in a Pulsar cluster."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode",
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
@@ -43,7 +44,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--parallelism 1",
 	}
 
-	createWithPkgURL := pulsar.Example{
+	createWithPkgURL := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with pkg URL",
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
@@ -53,21 +54,21 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--archive file:/http: + connectors/pulsar-io-jdbc-2.4.0.nar",
 	}
 
-	createWithSchema := pulsar.Example{
+	createWithSchema := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithParallelism := pulsar.Example{
+	createWithParallelism := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithResource := pulsar.Example{
+	createWithResource := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with resource",
 		Command: "pulsarctl sink create \n" +
 			"\t--ram 5656565656\n" +
@@ -76,14 +77,14 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other sink parameters ",
 	}
 
-	createWithSinkConfig := pulsar.Example{
+	createWithSinkConfig := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithProcessingGuarantees := pulsar.Example{
+	createWithProcessingGuarantees := common.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with processing guarantees",
 		Command: "pulsarctl sink create \n" +
 			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
@@ -94,18 +95,18 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		createWithResource, createWithSinkConfig, createWithProcessingGuarantees)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Created (the name of a Pulsar Sinks) successfully",
 	}
 
-	failureOut := pulsar.Output{
+	failureOut := common.Output{
 		Desc: "sink archive not specified, please check --archive arg",
 		Out:  "[✖]  Sink archive not specified",
 	}
 
-	sinkTypeOut := pulsar.Output{
+	sinkTypeOut := common.Output{
 		Desc: "Cannot specify both archive and sink-type, please check --archive and --sink-type args",
 		Out:  "[✖]  Cannot specify both archive and sink-type",
 	}
@@ -121,7 +122,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		"create",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &util.SinkData{}
 
 	// set the run sink
 	vc.SetRunFunc(func() error {
@@ -265,7 +266,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	err := processArguments(sinkData)
 	if err != nil {
 		vc.Command.Help()
@@ -278,7 +279,7 @@ func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if utils.IsPackageURLSupported(sinkData.Archive) {
 		err = admin.Sinks().CreateSinkWithURL(sinkData.SinkConf, sinkData.Archive)
 		if err != nil {

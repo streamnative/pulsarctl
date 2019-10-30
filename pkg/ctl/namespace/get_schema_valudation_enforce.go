@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the schema validation enforced."
 	desc.CommandPermission = "This command requires super-user and tenant admin permissions."
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Get schema validation status",
 		Command: "pulsarctl namespaces get-schema-validation-enforced <namespace-name>",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Schema validation enforced is enabled/disabled",
 	}
@@ -56,7 +57,7 @@ func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetSchemaValidationEnforced(vc *cmdutils.VerbCmd) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

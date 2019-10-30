@@ -19,20 +19,21 @@ package sinks
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
 )
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the list of all the running Pulsar IO sink connectors"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	list := pulsar.Example{
+	list := common.Example{
 		Desc: "Get the list of all the running Pulsar IO sink connectors",
 		Command: "pulsarctl sink list \n" +
 			"\t--tenant public\n" +
@@ -41,8 +42,8 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Sink Name    |\n" +
@@ -62,7 +63,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 		"list",
 	)
 
-	sinkData := &pulsar.SinkData{}
+	sinkData := &utils.SinkData{}
 
 	// set the run sink
 	vc.SetRunFunc(func() error {
@@ -85,10 +86,10 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doListSinks(vc *cmdutils.VerbCmd, sinkData *pulsar.SinkData) error {
+func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	processNamespaceCmd(sinkData)
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

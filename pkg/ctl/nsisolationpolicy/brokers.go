@@ -19,24 +19,24 @@ package nsisolationpolicy
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getAllBrokersWithPolicies(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "List all brokers with namespace-isolation policies attached to it."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "List all brokers with namespace-isolation policies attached to it",
 		Command: "pulsarctl ns-isolation-policy brokers (cluster-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "[\n" +
 			"  {\n" +
@@ -48,17 +48,17 @@ func getAllBrokersWithPolicies(vc *cmdutils.VerbCmd) {
 			"]",
 	}
 
-	clusterNameErr := pulsar.Output{
+	clusterNameErr := common.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	paramsErr := pulsar.Output{
+	paramsErr := common.Output{
 		Desc: "need to specified the cluster name and the policy name, please add cluster name and policy name",
 		Out:  "need to specified the cluster name and the policy name",
 	}
 
-	noPolicies := pulsar.Output{
+	noPolicies := common.Output{
 		Desc: "namespace-isolation policies not found for standalone",
 		Out:  "[✖]  code: 404 reason: namespace-isolation policies not found for standalone",
 	}

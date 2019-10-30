@@ -20,19 +20,19 @@ package sources
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func statusSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Check the current status of a Pulsar Source."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	status := pulsar.Example{
+	var examples []common.Example
+	status := common.Example{
 		Desc: "Check the current status of a Pulsar Source",
 		Command: "pulsarctl source status \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, status)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"numInstances\" : 1,\n" +
@@ -67,12 +67,12 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "Update contains no change",
 		Out:  "[✖]  code: 400 reason: Update contains no change",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Source doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Source (your source name) doesn't exist",
 	}
@@ -88,7 +88,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 		"getstatus",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &utils.SourceData{}
 	// set the run source
 	vc.SetRunFunc(func() error {
 		return doStatusSource(vc, sourceData)
@@ -122,13 +122,13 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doStatusSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {

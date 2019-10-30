@@ -19,24 +19,25 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func DeleteCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting a subscription of a topic."
 	desc.CommandPermission = "This command requires tenant admin and namespace consume permissions."
 
-	var examples []pulsar.Example
-	deleteSub := pulsar.Example{
+	var examples []common.Example
+	deleteSub := common.Example{
 		Desc:    "Delete the subscription (subscription-name) of the topic (topic-name)",
 		Command: "pulsarctl subscriptions delete (topic-name) (subscription-name)",
 	}
 	examples = append(examples, deleteSub)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Delete the subscription %s of the topic %s successfully",
 	}
@@ -62,7 +63,7 @@ func doDelete(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

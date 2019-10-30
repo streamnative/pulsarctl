@@ -19,7 +19,8 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,26 +28,26 @@ import (
 )
 
 func RevokePermissions(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []pulsar.Example
-	revoke := pulsar.Example{
+	var examples []common.Example
+	revoke := common.Example{
 		Desc:    "Revoke permissions of a topic (topic-name)",
 		Command: "pulsarctl topic revoke-permissions --role (role) (topic-name)",
 	}
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Revoke permissions for the role (role) of the topic (topic-name) successfully\n",
 	}
 
-	flagError := pulsar.Output{
+	flagError := common.Output{
 		Desc: "the specified role is empty",
 		Out:  "Invalid role name",
 	}
@@ -83,7 +84,7 @@ func doRevokePermissions(vc *cmdutils.VerbCmd, role string) error {
 	if role == "" {
 		return errors.New("Invalid role name")
 	}
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

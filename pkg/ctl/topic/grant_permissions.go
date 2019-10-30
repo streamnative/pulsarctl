@@ -19,7 +19,8 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,31 +28,31 @@ import (
 )
 
 func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []pulsar.Example
-	grant := pulsar.Example{
+	var examples []common.Example
+	grant := common.Example{
 		Desc:    "Grant permissions to a client on a single topic (topic-name)",
 		Command: "pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)",
 	}
 	examples = append(examples, grant)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Grant role %s and actions %v to the topic %s successfully",
 	}
 
-	flagError := pulsar.Output{
+	flagError := common.Output{
 		Desc: "the specified role is empty",
 		Out:  "Invalid role name",
 	}
 
-	actionsError := pulsar.Output{
+	actionsError := common.Output{
 		Desc: "the specified actions is not allowed.",
 		Out: "The auth action  only can be specified as 'produce', " +
 			"'consume', or 'functions'. Invalid auth action '(actions)'",
@@ -91,7 +92,7 @@ func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) erro
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}
@@ -116,10 +117,10 @@ func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) erro
 	return err
 }
 
-func getAuthActions(actions []string) ([]pulsar.AuthAction, error) {
-	authActions := make([]pulsar.AuthAction, 0)
+func getAuthActions(actions []string) ([]common.AuthAction, error) {
+	authActions := make([]common.AuthAction, 0)
 	for _, v := range actions {
-		a, err := pulsar.ParseAuthAction(v)
+		a, err := common.ParseAuthAction(v)
 		if err != nil {
 			return nil, err
 		}

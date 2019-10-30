@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +30,7 @@ func TestFunctionsWorker(t *testing.T) {
 	metricsOut, execErr, _, _ := TestFunctionsWorkerCmd(monitoringMetrics, metricsArgs)
 	assert.Nil(t, execErr)
 
-	var metrics []pulsar.Metrics
+	var metrics []utils.Metrics
 	err := json.Unmarshal(metricsOut.Bytes(), &metrics)
 	assert.Nil(t, err)
 
@@ -40,7 +40,7 @@ func TestFunctionsWorker(t *testing.T) {
 	clusterOut, execErr, _, _ := TestFunctionsWorkerCmd(getCluster, clustersArgs)
 	assert.Nil(t, execErr)
 
-	var cluster []pulsar.WorkerInfo
+	var cluster []utils.WorkerInfo
 	err = json.Unmarshal(clusterOut.Bytes(), &cluster)
 	assert.Nil(t, err)
 
@@ -50,7 +50,7 @@ func TestFunctionsWorker(t *testing.T) {
 	clusterLeaderOut, execErr, _, _ := TestFunctionsWorkerCmd(getClusterLeader, clusterLeaderArgs)
 	assert.Nil(t, execErr)
 
-	var clusterLeader pulsar.WorkerInfo
+	var clusterLeader utils.WorkerInfo
 	err = json.Unmarshal(clusterLeaderOut.Bytes(), &clusterLeader)
 	assert.Nil(t, err)
 

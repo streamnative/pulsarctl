@@ -22,25 +22,27 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "List namespaces owned by the broker"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	list := pulsar.Example{
+	var examples []common.Example
+	list := common.Example{
 		Desc:    "List namespaces owned by the broker",
 		Command: "pulsarctl brokers namespaces (cluster-name) --url (eg:127.0.0.1:8080)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"public/functions/0x40000000_0x80000000\": {\n" +
@@ -56,12 +58,12 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	var argsError = pulsar.Output{
+	var argsError = common.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one",
 		Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
 	}
 
-	var urlError = pulsar.Output{
+	var urlError = common.Output{
 		Desc: "The correct url is not provided, please check the `--url` arg.",
 		Out:  "[✖]  Get (broker url)/admin/v2/brokers/standalone/127.0.0.1:6650/ownedNamespaces: EOF",
 	}
@@ -76,7 +78,7 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"namespaces")
 
-	brokerData := &pulsar.BrokerData{}
+	brokerData := &utils.BrokerData{}
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doOwnedNamespaces(vc, brokerData)
@@ -94,7 +96,7 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doOwnedNamespaces(vc *cmdutils.VerbCmd, brokerData *pulsar.BrokerData) error {
+func doOwnedNamespaces(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
 	clusterName := vc.NameArg
 	if clusterName == "" {
 		return errors.New("should specified a cluster name")

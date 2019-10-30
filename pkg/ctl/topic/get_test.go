@@ -21,8 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +32,7 @@ func TestGetTopicCmd(t *testing.T) {
 
 	args = []string{"get", "test-get-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
-	var partitions pulsar.PartitionedTopicMetadata
+	var partitions utils.PartitionedTopicMetadata
 	err := json.Unmarshal(out.Bytes(), &partitions)
 	if err != nil {
 		t.Fatal(err)
@@ -51,7 +50,7 @@ func TestBetNonPartitionedTopic(t *testing.T) {
 	args = []string{"get", "test-get-non-partitioned-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
-	var partitions pulsar.PartitionedTopicMetadata
+	var partitions utils.PartitionedTopicMetadata
 	err := json.Unmarshal(out.Bytes(), &partitions)
 	if err != nil {
 		t.Fatal(err)
@@ -71,7 +70,7 @@ func TestGetNonExistTopic(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	var partitions pulsar.PartitionedTopicMetadata
+	var partitions utils.PartitionedTopicMetadata
 	err := json.Unmarshal(out.Bytes(), &partitions)
 	if err != nil {
 		t.Fatal(err)

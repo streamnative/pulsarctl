@@ -19,24 +19,24 @@ package nsisolationpolicy
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getNsIsolationPolicies(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "List all namespace isolation policies of a cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "List all namespace isolation policies of a cluster.",
 		Command: "pulsarctl ns-isolation-policy list (cluster-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"test-policiy-1\" : {\n" +
@@ -54,12 +54,12 @@ func getNsIsolationPolicies(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	clusterNameErr := pulsar.Output{
+	clusterNameErr := common.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	paramsErr := pulsar.Output{
+	paramsErr := common.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one, " +
 			"please check cluster name",
 		Out: "the cluster name is not specified or the cluster name is specified more than one",

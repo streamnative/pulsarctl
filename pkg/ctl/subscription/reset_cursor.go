@@ -21,27 +21,27 @@ import (
 	"strings"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ResetCursorCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for resetting the position of a " +
 		"subscription to a position that is closest to the provided timestamp or messageId."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []pulsar.Example
-	resetCursorTime := pulsar.Example{
+	var examples []common.Example
+	resetCursorTime := common.Example{
 		Desc: "Reset the position of the subscription (subscription-name) to a " +
 			"position that is closest to the provided timestamp (time)",
 		Command: "pulsarctl seek --time (time) (topic-name) (subscription-name)",
 	}
 
-	resetCursorMessageID := pulsar.Example{
+	resetCursorMessageID := common.Example{
 		Desc: "Reset the position of the subscription <subscription-name> to a " +
 			"position that is closest to the provided message id (message-id)",
 		Command: "pulsarctl seek --message-id (message-id) (topic-name) (subscription-name)",
@@ -49,13 +49,13 @@ func ResetCursorCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, resetCursorTime, resetCursorMessageID)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Reset the cursor of the subscription (subscription-name) to (time)/(message-id) successfully",
 	}
 
-	resetFlagError := pulsar.Output{
+	resetFlagError := common.Output{
 		Desc: "the time is not specified or the message id is not specified",
 		Out:  "[✖]  The reset position must be specified",
 	}
@@ -97,7 +97,7 @@ func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {
 		return errors.New("the time and message-id can not specified at the same time")
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {
 		if len(strings.Split(mID, ":")) != 2 {
 			return errors.Errorf("invalid position value : %s", mID)
 		}
-		id, err := pulsar.ParseMessageID(mID)
+		id, err := utils.ParseMessageID(mID)
 		if err != nil {
 			return err
 		}

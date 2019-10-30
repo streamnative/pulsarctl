@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,7 +37,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetSubscribeRateCmd, args)
 	assert.Nil(t, execErr)
 
-	var rate pulsar.SubscribeRate
+	var rate utils.SubscribeRate
 	err := json.Unmarshal(out.Bytes(), &rate)
 	if err != nil {
 		t.Fatal(err)
@@ -52,7 +52,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default subscribe rate "+
 			"of the namespace %s to %+v", ns,
-			pulsar.SubscribeRate{
+			utils.SubscribeRate{
 				SubscribeThrottlingRatePerConsumer: -1,
 				RatePeriodInSecond:                 30,
 			}),
@@ -73,7 +73,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default subscribe rate of the namespace %s to %+v", ns,
-			pulsar.SubscribeRate{
+			utils.SubscribeRate{
 				SubscribeThrottlingRatePerConsumer: 10,
 				RatePeriodInSecond:                 10,
 			}),

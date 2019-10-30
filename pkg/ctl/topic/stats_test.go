@@ -21,21 +21,20 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
-var defaultStats = pulsar.TopicStats{
+var defaultStats = utils.TopicStats{
 	MsgRateIn:           0,
 	MsgRateOut:          0,
 	MsgThroughputIn:     0,
 	MsgThroughputOut:    0,
 	AverageMsgSize:      0,
 	StorageSize:         0,
-	Publishers:          []pulsar.PublisherStats{},
-	Subscriptions:       map[string]pulsar.SubscriptionStats{},
-	Replication:         map[string]pulsar.ReplicatorStats{},
+	Publishers:          []utils.PublisherStats{},
+	Subscriptions:       map[string]utils.SubscriptionStats{},
+	Replication:         map[string]utils.ReplicatorStats{},
 	DeDuplicationStatus: "Disabled",
 }
 
@@ -48,7 +47,7 @@ func TestGetStatsCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
-	var stats pulsar.TopicStats
+	var stats utils.TopicStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
 		t.Fatal(err)
@@ -91,7 +90,7 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
-	var stats pulsar.PartitionedTopicStats
+	var stats utils.PartitionedTopicStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
 		t.Fatal(err)
@@ -121,25 +120,25 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
-	var stats pulsar.PartitionedTopicStats
+	var stats utils.PartitionedTopicStats
 	err := json.Unmarshal(out.Bytes(), &stats)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	defaultStats := pulsar.PartitionedTopicStats{
+	defaultStats := utils.PartitionedTopicStats{
 		MsgRateIn:           0,
 		MsgRateOut:          0,
 		MsgThroughputIn:     0,
 		MsgThroughputOut:    0,
 		AverageMsgSize:      0,
 		StorageSize:         0,
-		Publishers:          []pulsar.PublisherStats{},
-		Subscriptions:       map[string]pulsar.SubscriptionStats{},
-		Replication:         map[string]pulsar.ReplicatorStats{},
+		Publishers:          []utils.PublisherStats{},
+		Subscriptions:       map[string]utils.SubscriptionStats{},
+		Replication:         map[string]utils.ReplicatorStats{},
 		DeDuplicationStatus: "",
-		Metadata:            pulsar.PartitionedTopicMetadata{Partitions: 2},
-		Partitions: map[string]pulsar.TopicStats{
+		Metadata:            utils.PartitionedTopicMetadata{Partitions: 2},
+		Partitions: map[string]utils.TopicStats{
 			"persistent://public/default/test-topic-per-partitioned-stats": {
 				MsgRateIn:           0,
 				MsgRateOut:          0,
@@ -147,9 +146,9 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 				MsgThroughputOut:    0,
 				AverageMsgSize:      0,
 				StorageSize:         0,
-				Publishers:          []pulsar.PublisherStats{},
-				Subscriptions:       map[string]pulsar.SubscriptionStats{},
-				Replication:         map[string]pulsar.ReplicatorStats{},
+				Publishers:          []utils.PublisherStats{},
+				Subscriptions:       map[string]utils.SubscriptionStats{},
+				Replication:         map[string]utils.ReplicatorStats{},
 				DeDuplicationStatus: "",
 			},
 		},

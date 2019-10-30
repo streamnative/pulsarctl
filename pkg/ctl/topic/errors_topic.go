@@ -17,44 +17,44 @@
 
 package topic
 
-import "github.com/streamnative/pulsarctl/pkg/pulsar"
+import "github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
-var ArgError = pulsar.Output{
+var ArgError = common.Output{
 	Desc: "the topic name is not specified or the topic name is specified more than one",
 	Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 }
 
-var ArgsError = pulsar.Output{
+var ArgsError = common.Output{
 	Desc: "the topic name and(or) the partitions is not specified",
 	Out:  "[✖]  need to specified the topic name and the partitions",
 }
 
-var TopicAlreadyExistError = pulsar.Output{
+var TopicAlreadyExistError = common.Output{
 	Desc: "the topic has been created",
 	Out:  "[✖]  code: 409 reason: Partitioned topic already exists",
 }
 
-var TopicNotFoundError = pulsar.Output{
+var TopicNotFoundError = common.Output{
 	Desc: "the specified topic does not exist",
 	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
-var TenantNotExistError = pulsar.Output{
+var TenantNotExistError = common.Output{
 	Desc: "the tenant of the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Tenant does not exist",
 }
 
-var NamespaceNotExistError = pulsar.Output{
+var NamespaceNotExistError = common.Output{
 	Desc: "the namespace does not exist",
 	Out:  "[✖]  code: 404 reason: Namespace does not exist",
 }
 
-var InvalidPartitionsNumberError = pulsar.Output{
+var InvalidPartitionsNumberError = common.Output{
 	Desc: "the partitions number is invalid",
 	Out:  "[✖]  invalid partition number '<number>'",
 }
 
-var TopicNameErrors = []pulsar.Output{
+var TopicNameErrors = []common.Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
 		Out: "[✖]  Invalid short topic name '<topic-name>', it should be " +
@@ -72,7 +72,7 @@ var TopicNameErrors = []pulsar.Output{
 	},
 }
 
-var NamespaceErrors = []pulsar.Output{
+var NamespaceErrors = []common.Output{
 	{
 		Desc: "the namespace name is not in the format of <tenant>/<namespace>",
 		Out:  "[✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name>",

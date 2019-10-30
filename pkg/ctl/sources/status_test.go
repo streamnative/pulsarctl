@@ -24,8 +24,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -56,7 +55,7 @@ func TestStatusSource(t *testing.T) {
 		"--name", "test-source-status",
 	}
 
-	var status pulsar.SourceStatus
+	var status utils.SourceStatus
 
 	task := func(args []string, obj interface{}) bool {
 		outStatus, execErr, _ := TestSourcesCommands(statusSourcesCmd, args)
@@ -67,7 +66,7 @@ func TestStatusSource(t *testing.T) {
 		if err != nil {
 			return false
 		}
-		s := obj.(*pulsar.SourceStatus)
+		s := obj.(*utils.SourceStatus)
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 

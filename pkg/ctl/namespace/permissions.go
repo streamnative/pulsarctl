@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting permissions configure data of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	getNs := pulsar.Example{
+	var examples []common.Example
+	getNs := common.Example{
 		Desc:    "Get permissions configure data of a namespace (tenant)/(namespace)",
 		Command: "pulsarctl namespaces permissions (tenant)/(namespace)",
 	}
 	examples = append(examples, getNs)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"<role>\": [\n" +
@@ -65,7 +66,7 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

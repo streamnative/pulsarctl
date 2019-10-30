@@ -19,39 +19,40 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
 func TerminateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for terminating a non-partitioned topic or a partition of " +
 		"a partitioned topic. Upon termination, no more messages are allowed to published to it."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []pulsar.Example
-	terminate := pulsar.Example{
+	var examples []common.Example
+	terminate := common.Example{
 		Desc:    "Terminate a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topic terminate (topic-name)",
 	}
 
-	terminateWithPartition := pulsar.Example{
+	terminateWithPartition := common.Example{
 		Desc:    "Terminate a partition of a partitioned topic",
 		Command: "pulsarctl topic terminate --partition (partition) (topic-name)",
 	}
 	examples = append(examples, terminate, terminateWithPartition)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Topic (topic-name) is successfully terminated at (message-id)",
 	}
 
-	partitionError := pulsar.Output{
+	partitionError := common.Output{
 		Desc: "the specified topic is a partitioned topic",
 		Out:  "[✖]  code: 405 reason: Termination of a partitioned topic is not allowed",
 	}
@@ -84,7 +85,7 @@ func doTerminate(vc *cmdutils.VerbCmd, partition int) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

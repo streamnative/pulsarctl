@@ -21,18 +21,19 @@ import (
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Check the current status of a Pulsar Function."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
-	status := pulsar.Example{
+	var examples []common.Example
+	status := common.Example{
 		Desc: "Check the current status of a Pulsar Function",
 		Command: "pulsarctl functions status \n" +
 			"\t--tenant public\n" +
@@ -41,7 +42,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, status)
 
-	statusWithFQFN := pulsar.Example{
+	statusWithFQFN := common.Example{
 		Desc: "Check the current status of a Pulsar Function with FQFN",
 		Command: "pulsarctl functions status \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -49,8 +50,8 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, statusWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"numInstances\": 1,\n" +
@@ -77,17 +78,17 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := pulsar.Output{
+	failOutWithWrongInstanceID := common.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
@@ -103,7 +104,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"getstatus",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -144,13 +145,13 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doStatusFunction(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {

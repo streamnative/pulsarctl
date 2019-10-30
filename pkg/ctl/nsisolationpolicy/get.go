@@ -19,24 +19,24 @@ package nsisolationpolicy
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getNsIsolationPolicy(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "Get namespace isolation policy of a cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "Get namespace isolation policy of a cluster",
 		Command: "pulsarctl ns-isolation-policy get (cluster-name) (policy-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"namespaces\" : [ \"default\" ],\n" +
@@ -52,17 +52,17 @@ func getNsIsolationPolicy(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	policyNameErr := pulsar.Output{
+	policyNameErr := common.Output{
 		Desc: "NamespaceIsolationPolicies for cluster standalone does not exist, please check policy name.",
 		Out:  "NamespaceIsolationPolicies for cluster standalone does not exist",
 	}
 
-	clusterNameErr := pulsar.Output{
+	clusterNameErr := common.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	paramsErr := pulsar.Output{
+	paramsErr := common.Output{
 		Desc: "need to specified the cluster name and the policy name, please add cluster name and policy name",
 		Out:  "need to specified the cluster name and the policy name",
 	}

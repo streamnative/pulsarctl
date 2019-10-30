@@ -20,20 +20,20 @@ package sources
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func restartSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Restart source instance."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	restart := pulsar.Example{
+	restart := common.Example{
 		Desc: "Restart source instance",
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
@@ -41,7 +41,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--name (the name of Pulsar Source)",
 	}
 
-	restartWithInstanceID := pulsar.Example{
+	restartWithInstanceID := common.Example{
 		Desc: "Restart source instance with instance ID",
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
@@ -53,13 +53,13 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, restart, restartWithInstanceID)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Restarted (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := pulsar.Output{
+	nameNotExistOut := common.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}
@@ -75,7 +75,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 		"restart",
 	)
 
-	sourceData := &pulsar.SourceData{}
+	sourceData := &utils.SourceData{}
 
 	// set the run source
 	vc.SetRunFunc(func() error {
@@ -110,13 +110,13 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doRestartSource(vc *cmdutils.VerbCmd, sourceData *pulsar.SourceData) error {
+func doRestartSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if sourceData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(sourceData.InstanceID)
 		if err != nil {

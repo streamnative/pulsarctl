@@ -20,33 +20,33 @@ package topic
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func UpdateTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the partition number of an exist topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "partitioned topic"
 
-	var examples []pulsar.Example
-	updateTopic := pulsar.Example{
+	var examples []common.Example
+	updateTopic := common.Example{
 		Desc:    "",
 		Command: "pulsarctl topics update (topic-name) (partition-num)",
 	}
 	examples = append(examples, updateTopic)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Update topic (topic-name) with (partition-num) partitions successfully",
 	}
 
-	topicNotExist := pulsar.Output{
+	topicNotExist := common.Output{
 		Desc: "the topic is not exist",
 		Out:  "[✖]  code: 409 reason: Topic is not partitioned topic",
 	}
@@ -73,7 +73,7 @@ func doUpdateTopic(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

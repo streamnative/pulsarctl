@@ -21,24 +21,24 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func CreateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a subscription on a topic."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []pulsar.Example
-	create := pulsar.Example{
+	var examples []common.Example
+	create := common.Example{
 		Desc:    "Create a subscription (subscription-name) on a topic (topic-name) from latest position",
 		Command: "pulsarctl subscriptions create (topic-name) (subscription-name)",
 	}
 
-	createWithFlag := pulsar.Example{
+	createWithFlag := common.Example{
 		Desc: "Create a subscription (subscription-name) on a topic (topic-name) from the specified " +
 			"position (position)",
 		Command: "pulsarctl subscription create --messageId (position) (topic-name) (subscription-name)",
@@ -46,8 +46,8 @@ func CreateCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create, createWithFlag)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Create subscription (subscription-name) on topic (topic-name) from (position) successfully",
 	}
@@ -82,25 +82,25 @@ func doCreate(vc *cmdutils.VerbCmd, id string) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}
 
 	sName := vc.NameArgs[1]
 
-	var messageID pulsar.MessageID
+	var messageID utils.MessageID
 	switch id {
 	case "latest":
-		messageID = pulsar.Latest
+		messageID = utils.Latest
 	case "earliest":
-		messageID = pulsar.Earliest
+		messageID = utils.Earliest
 	default:
 		s := strings.Split(id, ":")
 		if len(s) != 2 {
 			return errors.Errorf("invalid position value : %s", id)
 		}
-		i, err := pulsar.ParseMessageID(id)
+		i, err := utils.ParseMessageID(id)
 		if err != nil {
 			return err
 		}

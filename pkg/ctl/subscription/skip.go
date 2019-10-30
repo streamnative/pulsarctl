@@ -19,32 +19,33 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
 func SkipCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for skipping messages for a subscription."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []pulsar.Example
-	skip := pulsar.Example{
+	var examples []common.Example
+	skip := common.Example{
 		Desc:    "Skip (n) messages for the subscription (subscription-name) of the topic (topic-name)",
 		Command: "pulsarctl subscription skip --count (n) (topic-name) (subscription-name)",
 	}
 
-	skipAll := pulsar.Example{
+	skipAll := common.Example{
 		Desc:    "Skip all messages for the subscription (subscription-name) under the topic (topic-name) (clear-backlog)",
 		Command: "pulsarctl subscription skip --all (topic-name) (subscription-name)",
 	}
 	examples = append(examples, skip, skipAll)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "The subscription (subscription-name) skips (n) messages of the topic <topic-name> successfully",
 	}
@@ -84,7 +85,7 @@ func doSkip(vc *cmdutils.VerbCmd, count int64, all bool) error {
 		return errors.New("the skip message number is not specified")
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArgs[0])
+	topic, err := utils.GetTopicName(vc.NameArgs[0])
 	if err != nil {
 		return err
 	}

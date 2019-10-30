@@ -21,29 +21,30 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Delete dynamic-serviceConfiguration of broker"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
-	list := pulsar.Example{
+	var examples []common.Example
+	list := common.Example{
 		Desc:    "Delete dynamic-serviceConfiguration of broker",
 		Command: "pulsarctl brokers delete-dynamic-config --config (config name)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Deleted dynamic config: (config name) successful.",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "Can't update non-dynamic configuration, please check `--config` arg.",
 		Out:  "[✖]  code: 412 reason:  Can't update non-dynamic configuration",
 	}
@@ -58,7 +59,7 @@ func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"delete-dynamic-config")
 
-	brokerData := &pulsar.BrokerData{}
+	brokerData := &utils.BrokerData{}
 
 	vc.SetRunFunc(func() error {
 		return doDeleteDynamicConf(vc, brokerData)
@@ -75,7 +76,7 @@ func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doDeleteDynamicConf(vc *cmdutils.VerbCmd, brokerData *pulsar.BrokerData) error {
+func doDeleteDynamicConf(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Brokers().DeleteDynamicConfiguration(brokerData.ConfigName)
 	if err != nil {

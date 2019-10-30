@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,7 +44,7 @@ func TestSetSubscriptionAuthModeCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(getPolicies, args)
 	assert.Nil(t, execErr)
 
-	var policies pulsar.Policies
+	var policies utils.Policies
 	err := json.Unmarshal(out.Bytes(), &policies)
 	if err != nil {
 		t.Fatal(err)

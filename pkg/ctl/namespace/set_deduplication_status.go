@@ -19,18 +19,19 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func setDeduplication(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Enable or disable deduplication for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	enableDeduplication := pulsar.Example{
+	var examples []common.Example
+	enableDeduplication := common.Example{
 		Desc:    "Enable or disable deduplication for a namespace",
 		Command: "pulsarctl namespaces set-deduplication tenant/namespace (--enable)",
 	}
@@ -38,23 +39,23 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 	examples = append(examples, enableDeduplication)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Set deduplication is [true or false] successfully for public/default",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
@@ -70,7 +71,7 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 		"set-deduplication",
 	)
 
-	var data pulsar.NamespacesData
+	var data utils.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetDeduplication(vc, data)
@@ -86,7 +87,7 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetDeduplication(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doSetDeduplication(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 

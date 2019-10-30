@@ -20,27 +20,28 @@ package namespace
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the offload threshold of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []pulsar.Example
-	set := pulsar.Example{
+	var examples []common.Example
+	set := common.Example{
 		Desc:    "Set the offload threshold of the namespace (namespace-name) to (size)",
 		Command: "pulsarctl namespaces set-offload-threshold --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the offload threshold of the namespace (namespace-name) to (size)",
 	}
@@ -71,7 +72,7 @@ func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doSetOffloadThreshold(vc *cmdutils.VerbCmd, threshold string) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := util.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +35,7 @@ func TestDumpAllocatorStats(t *testing.T) {
 	statsOut, _, nameErr, _ := TestBrokerStatsCommands(dumpAllocatorStats, successArgs)
 	assert.Nil(t, nameErr)
 
-	var allocatorStats pulsar.AllocatorStats
+	var allocatorStats utils.AllocatorStats
 	err := json.Unmarshal(statsOut.Bytes(), &allocatorStats)
 	assert.Nil(t, err)
 	assert.Equal(t, 512, allocatorStats.TinyCacheSize)

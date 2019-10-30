@@ -24,9 +24,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/pkg/errors"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 const (
@@ -43,7 +42,7 @@ func IsPackageURLSupported(functionPkgURL string) bool {
 		strings.HasPrefix(functionPkgURL, FILE)
 }
 
-func InferMissingFunctionName(funcConf *pulsar.FunctionConfig) {
+func InferMissingFunctionName(funcConf *utils.FunctionConfig) {
 	className := funcConf.ClassName
 	domains := strings.Split(className, "\\.")
 
@@ -54,15 +53,15 @@ func InferMissingFunctionName(funcConf *pulsar.FunctionConfig) {
 	}
 }
 
-func InferMissingTenant(funcConf *pulsar.FunctionConfig) {
+func InferMissingTenant(funcConf *utils.FunctionConfig) {
 	funcConf.Tenant = PublicTenant
 }
 
-func InferMissingNamespace(funcConf *pulsar.FunctionConfig) {
+func InferMissingNamespace(funcConf *utils.FunctionConfig) {
 	funcConf.Namespace = DefaultNamespace
 }
 
-func InferMissingSourceArguments(sourceConf *pulsar.SourceConfig) {
+func InferMissingSourceArguments(sourceConf *utils.SourceConfig) {
 	if sourceConf.Tenant == "" {
 		sourceConf.Tenant = PublicTenant
 	}
@@ -76,7 +75,7 @@ func InferMissingSourceArguments(sourceConf *pulsar.SourceConfig) {
 	}
 }
 
-func InferMissingSinkeArguments(sinkConf *pulsar.SinkConfig) {
+func InferMissingSinkeArguments(sinkConf *utils.SinkConfig) {
 	if sinkConf.Tenant == "" {
 		sinkConf.Tenant = PublicTenant
 	}

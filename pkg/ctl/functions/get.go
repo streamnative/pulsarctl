@@ -19,19 +19,20 @@ package functions
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func getFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Fetch information about a Pulsar Function"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	get := pulsar.Example{
+	get := common.Example{
 		Desc: "Fetch information about a Pulsar Function",
 		Command: "pulsarctl functions get \n" +
 			"\t--tenant public\n" +
@@ -39,7 +40,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--name (the name of Pulsar Function)",
 	}
 
-	getWithFqfn := pulsar.Example{
+	getWithFqfn := common.Example{
 		Desc: "Fetch information about a Pulsar Function with FQFN",
 		Command: "pulsarctl functions get \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -47,8 +48,8 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get, getWithFqfn)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out: "{\n  " +
 			"\"tenant\": \"public\",\n  " +
@@ -68,12 +69,12 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\"cleanupSubscription\": true\n}",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
@@ -89,7 +90,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -124,14 +125,14 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doGetFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doGetFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	functionConfig, err := admin.Functions().GetFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)

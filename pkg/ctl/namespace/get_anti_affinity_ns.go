@@ -19,42 +19,43 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Get the list of namespaces in the same anti-affinity group."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	getRetention := pulsar.Example{
+	var examples []common.Example
+	getRetention := common.Example{
 		Desc:    "Get the list of namespaces in the same anti-affinity group.",
 		Command: "pulsarctl namespaces get-anti-affinity-namespaces tenant/namespace",
 	}
 	examples = append(examples, getRetention)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "(anti-affinity name list)",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
@@ -62,7 +63,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
-	var data pulsar.NamespacesData
+	var data utils.NamespacesData
 
 	vc.SetDescription(
 		"get-anti-affinity-namespaces",
@@ -103,8 +104,8 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doGetAntiAffinityNamespaces(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V1)
+func doGetAntiAffinityNamespaces(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V1)
 	strList, err := admin.Namespaces().GetAntiAffinityNamespaces(data.Tenant, data.Cluster, data.AntiAffinityGroup)
 	if err == nil {
 		vc.Command.Println(strList)

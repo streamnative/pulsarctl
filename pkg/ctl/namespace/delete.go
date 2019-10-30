@@ -19,34 +19,34 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func deleteNs(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Delete a namespace. The namespace needs to be empty"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	del := pulsar.Example{
+	var examples []common.Example
+	del := common.Example{
 		Desc:    "Delete a namespace",
 		Command: "pulsarctl namespaces delete (namespace-name)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Deleted (namespace-name) successfully",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}

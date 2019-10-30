@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +30,7 @@ func TestGetInternalConfig(t *testing.T) {
 	internalOut, execErr, _, _ := TestBrokersCommands(getInternalConfigCmd, args)
 	assert.Nil(t, execErr)
 
-	var internalData pulsar.InternalConfigurationData
+	var internalData utils.InternalConfigurationData
 	err := json.Unmarshal(internalOut.Bytes(), &internalData)
 	assert.Nil(t, err)
 

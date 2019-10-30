@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -40,7 +40,7 @@ func TestNsIsolationPolicy(t *testing.T) {
 	getOut, execErr, _, _ := TestNsIsolationPolicyCommands(getNsIsolationPolicy, getArgs)
 	assert.Nil(t, execErr)
 
-	var getData pulsar.NamespaceIsolationData
+	var getData utils.NamespaceIsolationData
 	err := json.Unmarshal(getOut.Bytes(), &getData)
 	assert.Nil(t, err)
 	assert.Equal(t, "default", getData.Namespaces[0])
@@ -51,7 +51,7 @@ func TestNsIsolationPolicy(t *testing.T) {
 	listOut, execErr, _, _ := TestNsIsolationPolicyCommands(getNsIsolationPolicies, listArgs)
 	assert.Nil(t, execErr)
 
-	var listData map[string]pulsar.NamespaceIsolationData
+	var listData map[string]utils.NamespaceIsolationData
 	err = json.Unmarshal(listOut.Bytes(), &listData)
 	assert.Nil(t, err)
 

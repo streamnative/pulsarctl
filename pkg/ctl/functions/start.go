@@ -20,20 +20,20 @@ package functions
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func startFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "This command is used for starting a stopped function instance."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []pulsar.Example
+	var examples []common.Example
 
-	start := pulsar.Example{
+	start := common.Example{
 		Desc: "Starts a stopped function instance",
 		Command: "pulsarctl functions start \n" +
 			"\t--tenant public\n" +
@@ -42,7 +42,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, start)
 
-	startWithInstanceID := pulsar.Example{
+	startWithInstanceID := common.Example{
 		Desc: "Starts a stopped function instance with instance ID",
 		Command: "pulsarctl functions start \n" +
 			"\t--tenant public\n" +
@@ -52,7 +52,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, startWithInstanceID)
 
-	startWithFQFN := pulsar.Example{
+	startWithFQFN := common.Example{
 		Desc: "Starts a stopped function instance with FQFN",
 		Command: "pulsarctl functions start \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -60,23 +60,23 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, startWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Started <the name of a Pulsar Function> successfully",
 	}
 
-	failOut := pulsar.Output{
+	failOut := common.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := pulsar.Output{
+	failOutWithNameNotExist := common.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := pulsar.Output{
+	failOutWithWrongInstanceID := common.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
@@ -92,7 +92,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 		"start",
 	)
 
-	functionData := &pulsar.FunctionData{}
+	functionData := &utils.FunctionData{}
 
 	// set the run function
 	vc.SetRunFunc(func() error {
@@ -133,14 +133,14 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doStartFunctions(vc *cmdutils.VerbCmd, funcData *pulsar.FunctionData) error {
+func doStartFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
 		vc.Command.Help()
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(pulsar.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	if funcData.InstanceID != "" {
 		instanceID, err := strconv.Atoi(funcData.InstanceID)
 		if err != nil {

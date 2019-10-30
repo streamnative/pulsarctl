@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting compaction threshold of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	set := pulsar.Example{
+	var examples []common.Example
+	set := common.Example{
 		Desc:    "Get compaction threshold of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces get-compaction-threshold (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "The compaction size threshold of the namespace (namespace-name) is (size) byte(s)",
 	}
@@ -56,7 +57,7 @@ func GetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetCompactionThreshold(vc *cmdutils.VerbCmd) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

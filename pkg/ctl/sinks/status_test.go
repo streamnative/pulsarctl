@@ -24,8 +24,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -55,7 +54,7 @@ func TestStatusSink(t *testing.T) {
 		"--name", "test-sink-status",
 	}
 
-	var status pulsar.SinkStatus
+	var status utils.SinkStatus
 
 	task := func(args []string, obj interface{}) bool {
 		outStatus, execErr, _ := TestSinksCommands(statusSinksCmd, args)
@@ -68,7 +67,7 @@ func TestStatusSink(t *testing.T) {
 			return false
 		}
 
-		s := obj.(*pulsar.SinkStatus)
+		s := obj.(*utils.SinkStatus)
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 

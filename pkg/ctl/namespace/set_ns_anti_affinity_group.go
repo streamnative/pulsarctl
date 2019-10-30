@@ -19,19 +19,20 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
-	desc := pulsar.LongDescription{}
+	desc := common.LongDescription{}
 	desc.CommandUsedFor = "Set the anti-affinity group for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	setAntiAffinityName := pulsar.Example{
+	var examples []common.Example
+	setAntiAffinityName := common.Example{
 		Desc: "Set the anti-affinity group for a namespace",
 		Command: "pulsarctl namespaces set-anti-affinity-group tenant/namespace \n" +
 			"\t--group (anti-affinity group name)",
@@ -40,23 +41,23 @@ func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	examples = append(examples, setAntiAffinityName)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Set the anti-affinity group: (anti-affinity group name) successfully for <tenant/namespace>",
 	}
 
-	noNamespaceName := pulsar.Output{
+	noNamespaceName := common.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := pulsar.Output{
+	tenantNotExistError := common.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := pulsar.Output{
+	nsNotExistError := common.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
@@ -72,7 +73,7 @@ func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 		"set-anti-affinity-group",
 	)
 
-	var data pulsar.NamespacesData
+	var data utils.NamespacesData
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetAntiAffinityGroup(vc, data)
@@ -90,7 +91,7 @@ func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 	})
 }
 
-func doSetAntiAffinityGroup(vc *cmdutils.VerbCmd, data pulsar.NamespacesData) error {
+func doSetAntiAffinityGroup(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Namespaces().SetNamespaceAntiAffinityGroup(ns, data.AntiAffinityGroup)

@@ -19,33 +19,34 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
 func CompactCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for compacting a persistent topic or a partition of a partitioned topic."
 	desc.CommandPermission = "This command is requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []pulsar.Example
-	compact := pulsar.Example{
+	var examples []common.Example
+	compact := common.Example{
 		Desc:    "Compact a persistent topic (topic-name)",
 		Command: "pulsarctl topic compact (topic-name)",
 	}
 
-	compactPartition := pulsar.Example{
+	compactPartition := common.Example{
 		Desc:    "Compact a partition of a partitioned topic",
 		Command: "pulsarctl topic compact --partition (index) (topic-name)",
 	}
 	examples = append(examples, compact, compactPartition)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "Sending compact topic (topic-name) request successfully",
 	}
@@ -78,7 +79,7 @@ func doCompact(vc *cmdutils.VerbCmd, partition int) error {
 		return vc.NameError
 	}
 
-	topic, err := pulsar.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

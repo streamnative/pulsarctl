@@ -19,24 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
-	var desc pulsar.LongDescription
+	var desc common.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []pulsar.Example
-	get := pulsar.Example{
+	var examples []common.Example
+	get := common.Example{
 		Desc:    "Get the default subscribe rate per consumer of a namespace (namespace-name)",
 		Command: "pulsarctl namespaces get-subscribe-rate (namespace)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []pulsar.Output
-	successOut := pulsar.Output{
+	var out []common.Output
+	successOut := common.Output{
 		Desc: "normal output",
 		Out:  "{\n  \"subscribeThrottlingRatePerConsumer\" : 0,\n  \"ratePeriodInSecond\" : 30\n}",
 	}
@@ -56,7 +57,7 @@ func GetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doGetSubscribeRate(vc *cmdutils.VerbCmd) error {
-	ns, err := pulsar.GetNamespaceName(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
