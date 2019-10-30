@@ -131,13 +131,13 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool, partition int) error {
 
 	switch status.Status {
 	case utils.NOTRUN:
-		vc.Command.Printf("Compacting the topic %s is not running", topic.String())
+		vc.Command.Printf("Compacting the topic %s is not running\n", topic.String())
 	case utils.RUNNING:
-		vc.Command.Printf("Compacting the topic %s is running", topic.String())
+		vc.Command.Printf("Compacting the topic %s is running\n", topic.String())
 	case utils.SUCCESS:
-		vc.Command.Printf("Compacting the topic %s is done successfully", topic.String())
+		vc.Command.Printf("Compacting the topic %s is done successfully\n", topic.String())
 	case utils.ERROR:
-		vc.Command.Printf("Compacting the topic %s is done with error %s", topic.String(), status.LastError)
+		vc.Command.Printf("Compacting the topic %s is done with error %s\n", topic.String(), status.LastError)
 	}
 
 	return err
