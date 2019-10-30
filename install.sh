@@ -50,6 +50,9 @@ discoverArch
 discoverOS
 
 curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}${SUFFIX}
-mv pulsarctl-${ARCH}-${OS}${SUFFIX} pulsarctl
-chmod +x pulsarctl
-mv pulsarctl /usr/local/bin
+
+if [[ ${OS} != windows ]]; then
+    mv pulsarctl-${ARCH}-${OS} pulsarctl
+    chmod +x pulsarctl
+    mv pulsarctl /usr/local/bin
+fi

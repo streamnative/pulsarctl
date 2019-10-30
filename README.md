@@ -59,7 +59,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/mas
 Or you can download the executable directly.
 
 ``` bash
-curl -LO https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl.exe
+curl -LO https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl-{ARCH}-windows.exe
 ```
 
 To find out the latest stable version, take a look at https://raw.githubusercontent.com/streamnative/pulsarctl/master/stable.txt
