@@ -32,27 +32,10 @@ discoverArch() {
   esac
 }
 
-# discovers the operating system for this system.
-discoverOS() {
-  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
-  SUFFIX=''
-
-  case "$OS" in
-    # Minimalist GNU for Windows
-    mingw*)
-        OS='windows'
-        SUFFIX='.exe'
-        ;;
-  esac
-}
-
 discoverArch
-discoverOS
 
-curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}${SUFFIX}
-
-if [[ ${OS} != windows ]]; then
-    mv pulsarctl-${ARCH}-${OS} pulsarctl
-    chmod +x pulsarctl
-    mv pulsarctl /usr/local/bin
-fi
+OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}
+mv pulsarctl-${ARCH}-${OS} pulsarctl
+chmod +x pulsarctl
+mv pulsarctl /usr/local/bin

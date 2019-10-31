@@ -36,13 +36,7 @@ A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project
 
 ## Install
 
-#### Install pulsarctl binary with curl on Linux
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
-```
-
-#### Install pulsarctl binary with curl on macOS
+#### Install pulsarctl binary with curl on Linux or macOS
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
@@ -50,19 +44,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/mas
 
 #### Install pulsarctl binary on Windows
 
-If you have command-line shell tools, such as PowerShell. You can download pulsarctl by this way:
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
-```
-
-Or you can download the executable directly.
-
-``` bash
-curl -LO https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl-{ARCH}-windows.exe
-```
-
-To find out the latest stable version, take a look at https://raw.githubusercontent.com/streamnative/pulsarctl/master/stable.txt
+1. Download the executable from https://github.com/streamnative/pulsarctl/releases. 
+2. Add the pulsarctl directory to your system PATH.
+3. Input `pulsarctl -h` at CMD to test pulsarctl is work.
 
 ## Install by code
 
