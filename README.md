@@ -23,7 +23,7 @@
 [![LICENSE](https://img.shields.io/hexpm/l/pulsar.svg)](https://github.com/streamnative/pulsarctl/blob/master/LICENSE)
 [![GoDoc](https://img.shields.io/badge/Godoc-reference-blue.svg)](https://godoc.org/github.com/streamnative/pulsarctl)
 
-# Pulsarctl
+## Pulsarctl
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
@@ -33,19 +33,32 @@ A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project
 | --------| --------- |
 | [0.1.0](https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) | 
 
-## Requirement
 
-- Go 1.11 +
+## Install
 
-## Usage
+#### Install pulsarctl binary with curl on Linux or macOS
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
+```
+
+#### Install pulsarctl binary on Windows
+
+1. Download the executable from https://github.com/streamnative/pulsarctl/releases. 
+2. Add the pulsarctl directory to your system PATH.
+3. Type `pulsarctl -h` at CMD to test pulsarctl is work.
+
+## Install by code
 
 ### Prerequisite
+
+- Go 1.11 +
 
 If you have not installed Go, install it according to the [installation instruction](http://golang.org/doc/install).
 
 Since the `go mod` package management tool is used in this project, **Go 1.11 or higher** version is required.
 
-### Install
+### Download Code
 
 1. Clone the project from GitHub to your local.
 
