@@ -46,7 +46,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/mas
 
 1. Download the executable from https://github.com/streamnative/pulsarctl/releases. 
 2. Add the pulsarctl directory to your system PATH.
-3. Input `pulsarctl -h` at CMD to test pulsarctl is work.
+3. Type `pulsarctl -h` at CMD to test pulsarctl is work.
 
 ## Install by code
 
