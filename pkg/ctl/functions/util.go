@@ -194,7 +194,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.WindowLengthCount = funcData.WindowLengthCount
+		funcData.FuncConf.WindowConfig.WindowLengthCount = &funcData.WindowLengthCount
 	}
 
 	if funcData.WindowLengthDurationMs != 0 {
@@ -202,7 +202,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = funcData.WindowLengthDurationMs
+		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = &funcData.WindowLengthDurationMs
 	}
 
 	if funcData.SlidingIntervalCount != 0 {
@@ -210,7 +210,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.SlidingIntervalCount = funcData.SlidingIntervalCount
+		funcData.FuncConf.WindowConfig.SlidingIntervalCount = &funcData.SlidingIntervalCount
 	}
 
 	if funcData.SlidingIntervalDurationMs != 0 {
@@ -218,7 +218,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = funcData.SlidingIntervalDurationMs
+		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = &funcData.SlidingIntervalDurationMs
 	}
 
 	if funcData.AutoAck {
