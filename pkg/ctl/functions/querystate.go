@@ -18,6 +18,7 @@
 package functions
 
 import (
+	`github.com/spf13/cobra`
 	"time"
 
 	"github.com/spf13/pflag"
@@ -148,6 +149,9 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"w",
 			false,
 			"Watch for changes in the value associated with a key for a Pulsar Function")
+
+		cobra.MarkFlagRequired(flagSet, "key")
+		cobra.MarkFlagRequired(flagSet, "name")
 	})
 }
 
