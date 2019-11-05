@@ -194,7 +194,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.WindowLengthCount = funcData.WindowLengthCount
+		funcData.FuncConf.WindowConfig.WindowLengthCount = &funcData.WindowLengthCount
 	}
 
 	if funcData.WindowLengthDurationMs != 0 {
@@ -202,7 +202,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = funcData.WindowLengthDurationMs
+		funcData.FuncConf.WindowConfig.WindowLengthDurationMs = &funcData.WindowLengthDurationMs
 	}
 
 	if funcData.SlidingIntervalCount != 0 {
@@ -210,7 +210,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.SlidingIntervalCount = funcData.SlidingIntervalCount
+		funcData.FuncConf.WindowConfig.SlidingIntervalCount = &funcData.SlidingIntervalCount
 	}
 
 	if funcData.SlidingIntervalDurationMs != 0 {
@@ -218,7 +218,7 @@ func processArgs(funcData *util.FunctionData) error {
 			funcData.FuncConf.WindowConfig = util.NewDefaultWindowConfing()
 		}
 
-		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = funcData.SlidingIntervalDurationMs
+		funcData.FuncConf.WindowConfig.SlidingIntervalDurationMs = &funcData.SlidingIntervalDurationMs
 	}
 
 	if funcData.AutoAck {
@@ -228,7 +228,7 @@ func processArgs(funcData *util.FunctionData) error {
 	}
 
 	if funcData.MaxMessageRetries != 0 {
-		funcData.FuncConf.MaxMessageRetries = funcData.MaxMessageRetries
+		funcData.FuncConf.MaxMessageRetries = &funcData.MaxMessageRetries
 	}
 
 	if funcData.DeadLetterTopic != "" {
@@ -236,27 +236,27 @@ func processArgs(funcData *util.FunctionData) error {
 	}
 
 	if funcData.Jar != "" {
-		funcData.FuncConf.Jar = funcData.Jar
+		funcData.FuncConf.Jar = &funcData.Jar
 	}
 
 	if funcData.Py != "" {
-		funcData.FuncConf.Py = funcData.Py
+		funcData.FuncConf.Py = &funcData.Py
 	}
 
 	if funcData.Go != "" {
-		funcData.FuncConf.Go = funcData.Go
+		funcData.FuncConf.Go = &funcData.Go
 	}
 
-	if funcData.FuncConf.Go != "" {
-		funcData.UserCodeFile = funcData.FuncConf.Go
+	if funcData.FuncConf.Go != nil {
+		funcData.UserCodeFile = *funcData.FuncConf.Go
 	}
 
-	if funcData.FuncConf.Py != "" {
-		funcData.UserCodeFile = funcData.FuncConf.Py
+	if funcData.FuncConf.Py != nil {
+		funcData.UserCodeFile = *funcData.FuncConf.Py
 	}
 
-	if funcData.FuncConf.Jar != "" {
-		funcData.UserCodeFile = funcData.FuncConf.Jar
+	if funcData.FuncConf.Jar != nil {
+		funcData.UserCodeFile = *funcData.FuncConf.Jar
 	}
 
 	return nil
@@ -275,40 +275,40 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 		utils.InferMissingNamespace(functionConfig)
 	}
 
-	if functionConfig.Jar != "" && functionConfig.Py != "" && functionConfig.Go != "" {
+	if functionConfig.Jar != nil && functionConfig.Py != nil && functionConfig.Go != nil {
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
 			"be specified for the function, Cannot specify both")
 	}
 
-	if functionConfig.Jar == "" && functionConfig.Py == "" && functionConfig.Go == "" {
+	if functionConfig.Jar == nil && functionConfig.Py == nil && functionConfig.Go == nil {
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
 			"be specified for the function. Please specify one")
 	}
 
-	if functionConfig.Jar != "" && !utils.IsPackageURLSupported(functionConfig.Jar) &&
-		!utils.IsFileExist(functionConfig.Jar) {
+	if functionConfig.Jar != nil && !utils.IsPackageURLSupported(*functionConfig.Jar) &&
+		!utils.IsFileExist(*functionConfig.Jar) {
 		return errors.New("the specified jar file does not exist")
 	}
 
-	if functionConfig.Py != "" && !utils.IsPackageURLSupported(functionConfig.Py) &&
-		!utils.IsFileExist(functionConfig.Py) {
+	if functionConfig.Py != nil && !utils.IsPackageURLSupported(*functionConfig.Py) &&
+		!utils.IsFileExist(*functionConfig.Py) {
 		return errors.New("the specified py file does not exist")
 	}
 
-	if functionConfig.Go != "" && !utils.IsPackageURLSupported(functionConfig.Go) &&
-		!utils.IsFileExist(functionConfig.Go) {
+	if functionConfig.Go != nil && !utils.IsPackageURLSupported(*functionConfig.Go) &&
+		!utils.IsFileExist(*functionConfig.Go) {
 		return errors.New("the specified go file does not exist")
 	}
 
-	if functionConfig.Go != "" {
+	if functionConfig.Go != nil {
 		functionConfig.Runtime = util.GoRuntime
 	}
 
-	if functionConfig.Py != "" {
+	if functionConfig.Py != nil {
 		functionConfig.Runtime = util.PythonRuntime
 	}
 
-	if functionConfig.Jar != "" {
+	if functionConfig.Jar != nil {
 		functionConfig.Runtime = util.JavaRuntime
 	}
 
