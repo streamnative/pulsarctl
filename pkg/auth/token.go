@@ -75,5 +75,5 @@ func (p *TokenAuthProvider) GetData() ([]byte, error) {
 
 func (p *TokenAuthProvider) DoAuth(client *http.Client, req *http.Request) {
 	data, _ := p.GetData()
-	req.Header.Set("Authorization", "Bearer"+string(data))
+	req.Header.Set("Authorization", "Bearer "+string(data))
 }
