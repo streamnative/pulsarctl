@@ -18,6 +18,7 @@
 package pulsar
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -39,12 +40,13 @@ type FunctionsWorker interface {
 }
 
 type worker struct {
-	client          *client
+	client          *pulsarClient
+	request         *cli.Client
 	workerPath      string
 	workerStatsPath string
 }
 
-func (c *client) FunctionsWorker() FunctionsWorker {
+func (c *pulsarClient) FunctionsWorker() FunctionsWorker {
 	return &worker{
 		client:          c,
 		workerPath:      "/worker",
@@ -55,7 +57,7 @@ func (c *client) FunctionsWorker() FunctionsWorker {
 func (w *worker) GetFunctionsStats() ([]*utils.WorkerFunctionInstanceStats, error) {
 	endpoint := w.client.endpoint(w.workerStatsPath, "functionsmetrics")
 	var workerStats []*utils.WorkerFunctionInstanceStats
-	err := w.client.get(endpoint, &workerStats)
+	err := w.request.Get(endpoint, &workerStats)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +67,7 @@ func (w *worker) GetFunctionsStats() ([]*utils.WorkerFunctionInstanceStats, erro
 func (w *worker) GetMetrics() ([]*utils.Metrics, error) {
 	endpoint := w.client.endpoint(w.workerStatsPath, "metrics")
 	var metrics []*utils.Metrics
-	err := w.client.get(endpoint, &metrics)
+	err := w.request.Get(endpoint, &metrics)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +77,7 @@ func (w *worker) GetMetrics() ([]*utils.Metrics, error) {
 func (w *worker) GetCluster() ([]*utils.WorkerInfo, error) {
 	endpoint := w.client.endpoint(w.workerPath, "cluster")
 	var workersInfo []*utils.WorkerInfo
-	err := w.client.get(endpoint, &workersInfo)
+	err := w.request.Get(endpoint, &workersInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +87,7 @@ func (w *worker) GetCluster() ([]*utils.WorkerInfo, error) {
 func (w *worker) GetClusterLeader() (*utils.WorkerInfo, error) {
 	endpoint := w.client.endpoint(w.workerPath, "cluster", "leader")
 	var workerInfo utils.WorkerInfo
-	err := w.client.get(endpoint, &workerInfo)
+	err := w.request.Get(endpoint, &workerInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +97,7 @@ func (w *worker) GetClusterLeader() (*utils.WorkerInfo, error) {
 func (w *worker) GetAssignments() (map[string][]string, error) {
 	endpoint := w.client.endpoint(w.workerPath, "assignments")
 	var assignments map[string][]string
-	err := w.client.get(endpoint, &assignments)
+	err := w.request.Get(endpoint, &assignments)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
@@ -101,7 +102,8 @@ type Topics interface {
 }
 
 type topics struct {
-	client            *client
+	client            *pulsarClient
+	request           *cli.Client
 	basePath          string
 	persistentPath    string
 	nonPersistentPath string
@@ -109,9 +111,10 @@ type topics struct {
 }
 
 // Topics is used to access the topics endpoints
-func (c *client) Topics() Topics {
+func (c *pulsarClient) Topics() Topics {
 	return &topics{
 		client:            c,
+		request:           c.Client,
 		basePath:          "",
 		persistentPath:    "/persistent",
 		nonPersistentPath: "/non-persistent",
@@ -124,7 +127,7 @@ func (t *topics) Create(topic utils.TopicName, partitions int) error {
 	if partitions == 0 {
 		endpoint = t.client.endpoint(t.basePath, topic.GetRestPath())
 	}
-	return t.client.put(endpoint, partitions)
+	return t.request.Put(endpoint, partitions)
 }
 
 func (t *topics) Delete(topic utils.TopicName, force bool, nonPartitioned bool) error {
@@ -135,18 +138,18 @@ func (t *topics) Delete(topic utils.TopicName, force bool, nonPartitioned bool) 
 	params := map[string]string{
 		"force": strconv.FormatBool(force),
 	}
-	return t.client.deleteWithQueryParams(endpoint, nil, params)
+	return t.request.DeleteWithQueryParams(endpoint, params)
 }
 
 func (t *topics) Update(topic utils.TopicName, partitions int) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
-	return t.client.post(endpoint, partitions)
+	return t.request.Post(endpoint, partitions)
 }
 
 func (t *topics) GetMetadata(topic utils.TopicName) (utils.PartitionedTopicMetadata, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "partitions")
 	var partitionedMeta utils.PartitionedTopicMetadata
-	err := t.client.get(endpoint, &partitionedMeta)
+	err := t.request.Get(endpoint, &partitionedMeta)
 	return partitionedMeta, err
 }
 
@@ -190,21 +193,21 @@ func (t *topics) List(namespace utils.NameSpaceName) ([]string, []string, error)
 
 func (t *topics) getTopics(endpoint string, out chan<- []string, err chan<- error) {
 	var topics []string
-	err <- t.client.get(endpoint, &topics)
+	err <- t.request.Get(endpoint, &topics)
 	out <- topics
 }
 
 func (t *topics) GetInternalInfo(topic utils.TopicName) (utils.ManagedLedgerInfo, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internal-info")
 	var info utils.ManagedLedgerInfo
-	err := t.client.get(endpoint, &info)
+	err := t.request.Get(endpoint, &info)
 	return info, err
 }
 
 func (t *topics) GetPermissions(topic utils.TopicName) (map[string][]common.AuthAction, error) {
 	var permissions map[string][]common.AuthAction
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions")
-	err := t.client.get(endpoint, &permissions)
+	err := t.request.Get(endpoint, &permissions)
 	return permissions, err
 }
 
@@ -214,45 +217,45 @@ func (t *topics) GrantPermission(topic utils.TopicName, role string, action []co
 	for _, v := range action {
 		s = append(s, v.String())
 	}
-	return t.client.post(endpoint, s)
+	return t.request.Post(endpoint, s)
 }
 
 func (t *topics) RevokePermission(topic utils.TopicName, role string) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "permissions", role)
-	return t.client.delete(endpoint)
+	return t.request.Delete(endpoint)
 }
 
 func (t *topics) Lookup(topic utils.TopicName) (utils.LookupData, error) {
 	var lookup utils.LookupData
 	endpoint := fmt.Sprintf("%s/%s", t.lookupPath, topic.GetRestPath())
-	err := t.client.get(endpoint, &lookup)
+	err := t.request.Get(endpoint, &lookup)
 	return lookup, err
 }
 
 func (t *topics) GetBundleRange(topic utils.TopicName) (string, error) {
 	endpoint := fmt.Sprintf("%s/%s/%s", t.lookupPath, topic.GetRestPath(), "bundle")
-	data, err := t.client.getWithQueryParams(endpoint, nil, nil, false)
+	data, err := t.request.GetWithQueryParams(endpoint, nil, nil, false)
 	return string(data), err
 }
 
 func (t *topics) GetLastMessageID(topic utils.TopicName) (utils.MessageID, error) {
 	var messageID utils.MessageID
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "lastMessageId")
-	err := t.client.get(endpoint, &messageID)
+	err := t.request.Get(endpoint, &messageID)
 	return messageID, err
 }
 
 func (t *topics) GetStats(topic utils.TopicName) (utils.TopicStats, error) {
 	var stats utils.TopicStats
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "stats")
-	err := t.client.get(endpoint, &stats)
+	err := t.request.Get(endpoint, &stats)
 	return stats, err
 }
 
 func (t *topics) GetInternalStats(topic utils.TopicName) (utils.PersistentTopicInternalStats, error) {
 	var stats utils.PersistentTopicInternalStats
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "internalStats")
-	err := t.client.get(endpoint, &stats)
+	err := t.request.Get(endpoint, &stats)
 	return stats, err
 }
 
@@ -262,42 +265,42 @@ func (t *topics) GetPartitionedStats(topic utils.TopicName, perPartition bool) (
 	params := map[string]string{
 		"perPartition": strconv.FormatBool(perPartition),
 	}
-	_, err := t.client.getWithQueryParams(endpoint, &stats, params, true)
+	_, err := t.request.GetWithQueryParams(endpoint, &stats, params, true)
 	return stats, err
 }
 
 func (t *topics) Terminate(topic utils.TopicName) (utils.MessageID, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "terminate")
 	var messageID utils.MessageID
-	err := t.client.postWithObj(endpoint, "", &messageID)
+	err := t.request.PostWithObj(endpoint, "", &messageID)
 	return messageID, err
 }
 
 func (t *topics) Offload(topic utils.TopicName, messageID utils.MessageID) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
-	return t.client.put(endpoint, messageID)
+	return t.request.Put(endpoint, messageID)
 }
 
 func (t *topics) OffloadStatus(topic utils.TopicName) (utils.OffloadProcessStatus, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "offload")
 	var status utils.OffloadProcessStatus
-	err := t.client.get(endpoint, &status)
+	err := t.request.Get(endpoint, &status)
 	return status, err
 }
 
 func (t *topics) Unload(topic utils.TopicName) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "unload")
-	return t.client.put(endpoint, "")
+	return t.request.Put(endpoint, "")
 }
 
 func (t *topics) Compact(topic utils.TopicName) error {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
-	return t.client.put(endpoint, "")
+	return t.request.Put(endpoint, "")
 }
 
 func (t *topics) CompactStatus(topic utils.TopicName) (utils.LongRunningProcessStatus, error) {
 	endpoint := t.client.endpoint(t.basePath, topic.GetRestPath(), "compaction")
 	var status utils.LongRunningProcessStatus
-	err := t.client.get(endpoint, &status)
+	err := t.request.Get(endpoint, &status)
 	return status, err
 }

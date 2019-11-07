@@ -22,6 +22,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -58,14 +59,16 @@ type Brokers interface {
 }
 
 type broker struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
 // Brokers is used to access the brokers endpoints
-func (c *client) Brokers() Brokers {
+func (c *pulsarClient) Brokers() Brokers {
 	return &broker{
 		client:   c,
+		request:  c.Client,
 		basePath: "/brokers",
 	}
 }
@@ -73,7 +76,7 @@ func (c *client) Brokers() Brokers {
 func (b *broker) GetActiveBrokers(cluster string) ([]string, error) {
 	endpoint := b.client.endpoint(b.basePath, cluster)
 	var res []string
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +86,7 @@ func (b *broker) GetActiveBrokers(cluster string) ([]string, error) {
 func (b *broker) GetDynamicConfigurationNames() ([]string, error) {
 	endpoint := b.client.endpoint(b.basePath, "/configuration/")
 	var res []string
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +96,7 @@ func (b *broker) GetDynamicConfigurationNames() ([]string, error) {
 func (b *broker) GetOwnedNamespaces(cluster, brokerURL string) (map[string]utils.NamespaceOwnershipStatus, error) {
 	endpoint := b.client.endpoint(b.basePath, cluster, brokerURL, "ownedNamespaces")
 	var res map[string]utils.NamespaceOwnershipStatus
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -103,18 +106,18 @@ func (b *broker) GetOwnedNamespaces(cluster, brokerURL string) (map[string]utils
 func (b *broker) UpdateDynamicConfiguration(configName, configValue string) error {
 	value := url.QueryEscape(configValue)
 	endpoint := b.client.endpoint(b.basePath, "/configuration/", configName, value)
-	return b.client.post(endpoint, nil)
+	return b.request.Post(endpoint, nil)
 }
 
 func (b *broker) DeleteDynamicConfiguration(configName string) error {
 	endpoint := b.client.endpoint(b.basePath, "/configuration/", configName)
-	return b.client.delete(endpoint)
+	return b.request.Delete(endpoint)
 }
 
 func (b *broker) GetRuntimeConfigurations() (map[string]string, error) {
 	endpoint := b.client.endpoint(b.basePath, "/configuration/", "runtime")
 	var res map[string]string
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +127,7 @@ func (b *broker) GetRuntimeConfigurations() (map[string]string, error) {
 func (b *broker) GetInternalConfigurationData() (*utils.InternalConfigurationData, error) {
 	endpoint := b.client.endpoint(b.basePath, "/internal-configuration")
 	var res utils.InternalConfigurationData
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +137,7 @@ func (b *broker) GetInternalConfigurationData() (*utils.InternalConfigurationDat
 func (b *broker) GetAllDynamicConfigurations() (map[string]string, error) {
 	endpoint := b.client.endpoint(b.basePath, "/configuration/", "values")
 	var res map[string]string
-	err := b.client.get(endpoint, &res)
+	err := b.request.Get(endpoint, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +147,7 @@ func (b *broker) GetAllDynamicConfigurations() (map[string]string, error) {
 func (b *broker) HealthCheck() error {
 	endpoint := b.client.endpoint(b.basePath, "/health")
 
-	buf, err := b.client.getWithQueryParams(endpoint, nil, nil, false)
+	buf, err := b.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return err
 	}

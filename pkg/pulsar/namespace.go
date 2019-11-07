@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
@@ -250,14 +251,16 @@ type Namespaces interface {
 }
 
 type namespaces struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
 // Namespaces is used to access the namespaces endpoints
-func (c *client) Namespaces() Namespaces {
+func (c *pulsarClient) Namespaces() Namespaces {
 	return &namespaces{
 		client:   c,
+		request:  c.Client,
 		basePath: "/namespaces",
 	}
 }
@@ -265,7 +268,7 @@ func (c *client) Namespaces() Namespaces {
 func (n *namespaces) GetNamespaces(tenant string) ([]string, error) {
 	var namespaces []string
 	endpoint := n.client.endpoint(n.basePath, tenant)
-	err := n.client.get(endpoint, &namespaces)
+	err := n.request.Get(endpoint, &namespaces)
 	return namespaces, err
 }
 
@@ -276,7 +279,7 @@ func (n *namespaces) GetTopics(namespace string) ([]string, error) {
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String(), "topics")
-	err = n.client.get(endpoint, &topics)
+	err = n.request.Get(endpoint, &topics)
 	return topics, err
 }
 
@@ -287,7 +290,7 @@ func (n *namespaces) GetPolicies(namespace string) (*utils.Policies, error) {
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	err = n.client.get(endpoint, &police)
+	err = n.request.Get(endpoint, &police)
 	return &police, err
 }
 
@@ -301,7 +304,7 @@ func (n *namespaces) CreateNsWithPolices(namespace string, policies utils.Polici
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	return n.client.put(endpoint, &policies)
+	return n.request.Put(endpoint, &policies)
 }
 
 func (n *namespaces) CreateNsWithBundlesData(namespace string, bundleData *utils.BundlesData) error {
@@ -313,7 +316,7 @@ func (n *namespaces) CreateNsWithBundlesData(namespace string, bundleData *utils
 	polices := new(utils.Policies)
 	polices.Bundles = bundleData
 
-	return n.client.put(endpoint, &polices)
+	return n.request.Put(endpoint, &polices)
 }
 
 func (n *namespaces) CreateNamespace(namespace string) error {
@@ -322,7 +325,7 @@ func (n *namespaces) CreateNamespace(namespace string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	return n.client.put(endpoint, nil)
+	return n.request.Put(endpoint, nil)
 }
 
 func (n *namespaces) DeleteNamespace(namespace string) error {
@@ -331,7 +334,7 @@ func (n *namespaces) DeleteNamespace(namespace string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String())
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) DeleteNamespaceBundle(namespace string, bundleRange string) error {
@@ -340,7 +343,7 @@ func (n *namespaces) DeleteNamespaceBundle(namespace string, bundleRange string)
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, ns.String(), bundleRange)
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) GetNamespaceMessageTTL(namespace string) (int, error) {
@@ -350,7 +353,7 @@ func (n *namespaces) GetNamespaceMessageTTL(namespace string) (int, error) {
 		return 0, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "messageTTL")
-	err = n.client.get(endpoint, &ttl)
+	err = n.request.Get(endpoint, &ttl)
 	return ttl, err
 }
 
@@ -361,7 +364,7 @@ func (n *namespaces) SetNamespaceMessageTTL(namespace string, ttlInSeconds int) 
 	}
 
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "messageTTL")
-	return n.client.post(endpoint, &ttlInSeconds)
+	return n.request.Post(endpoint, &ttlInSeconds)
 }
 
 func (n *namespaces) SetRetention(namespace string, policy utils.RetentionPolicies) error {
@@ -370,7 +373,7 @@ func (n *namespaces) SetRetention(namespace string, policy utils.RetentionPolici
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "retention")
-	return n.client.post(endpoint, &policy)
+	return n.request.Post(endpoint, &policy)
 }
 
 func (n *namespaces) GetRetention(namespace string) (*utils.RetentionPolicies, error) {
@@ -380,7 +383,7 @@ func (n *namespaces) GetRetention(namespace string) (*utils.RetentionPolicies, e
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "retention")
-	err = n.client.get(endpoint, &policy)
+	err = n.request.Get(endpoint, &policy)
 	return &policy, err
 }
 
@@ -391,7 +394,7 @@ func (n *namespaces) GetBacklogQuotaMap(namespace string) (map[utils.BacklogQuot
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "backlogQuotaMap")
-	err = n.client.get(endpoint, &backlogQuotaMap)
+	err = n.request.Get(endpoint, &backlogQuotaMap)
 	return backlogQuotaMap, err
 }
 
@@ -401,7 +404,7 @@ func (n *namespaces) SetBacklogQuota(namespace string, backlogQuota utils.Backlo
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "backlogQuota")
-	return n.client.post(endpoint, &backlogQuota)
+	return n.request.Post(endpoint, &backlogQuota)
 }
 
 func (n *namespaces) RemoveBacklogQuota(namespace string) error {
@@ -413,17 +416,17 @@ func (n *namespaces) RemoveBacklogQuota(namespace string) error {
 	params := map[string]string{
 		"backlogQuotaType": string(utils.DestinationStorage),
 	}
-	return n.client.deleteWithQueryParams(endpoint, nil, params)
+	return n.request.DeleteWithQueryParams(endpoint, params)
 }
 
 func (n *namespaces) SetSchemaValidationEnforced(namespace utils.NameSpaceName, schemaValidationEnforced bool) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaValidationEnforced")
-	return n.client.post(endpoint, schemaValidationEnforced)
+	return n.request.Post(endpoint, schemaValidationEnforced)
 }
 
 func (n *namespaces) GetSchemaValidationEnforced(namespace utils.NameSpaceName) (bool, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaValidationEnforced")
-	r, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	r, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return false, err
 	}
@@ -433,14 +436,14 @@ func (n *namespaces) GetSchemaValidationEnforced(namespace utils.NameSpaceName) 
 func (n *namespaces) SetSchemaAutoUpdateCompatibilityStrategy(namespace utils.NameSpaceName,
 	strategy utils.SchemaCompatibilityStrategy) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaAutoUpdateCompatibilityStrategy")
-	return n.client.put(endpoint, strategy.String())
+	return n.request.Put(endpoint, strategy.String())
 }
 
 func (n *namespaces) GetSchemaAutoUpdateCompatibilityStrategy(namespace utils.NameSpaceName) (
 	utils.SchemaCompatibilityStrategy, error) {
 
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "schemaAutoUpdateCompatibilityStrategy")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return "", err
 	}
@@ -453,17 +456,17 @@ func (n *namespaces) GetSchemaAutoUpdateCompatibilityStrategy(namespace utils.Na
 
 func (n *namespaces) ClearOffloadDeleteLag(namespace utils.NameSpaceName) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) SetOffloadDeleteLag(namespace utils.NameSpaceName, timeMs int64) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
-	return n.client.put(endpoint, timeMs)
+	return n.request.Put(endpoint, timeMs)
 }
 
 func (n *namespaces) GetOffloadDeleteLag(namespace utils.NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadDeletionLagMs")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -472,12 +475,12 @@ func (n *namespaces) GetOffloadDeleteLag(namespace utils.NameSpaceName) (int64, 
 
 func (n *namespaces) SetMaxConsumersPerSubscription(namespace utils.NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
-	return n.client.post(endpoint, max)
+	return n.request.Post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxConsumersPerSubscription(namespace utils.NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -486,12 +489,12 @@ func (n *namespaces) GetMaxConsumersPerSubscription(namespace utils.NameSpaceNam
 
 func (n *namespaces) SetOffloadThreshold(namespace utils.NameSpaceName, threshold int64) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
-	return n.client.put(endpoint, threshold)
+	return n.request.Put(endpoint, threshold)
 }
 
 func (n *namespaces) GetOffloadThreshold(namespace utils.NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "offloadThreshold")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -500,12 +503,12 @@ func (n *namespaces) GetOffloadThreshold(namespace utils.NameSpaceName) (int64, 
 
 func (n *namespaces) SetMaxConsumersPerTopic(namespace utils.NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
-	return n.client.post(endpoint, max)
+	return n.request.Post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxConsumersPerTopic(namespace utils.NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -514,12 +517,12 @@ func (n *namespaces) GetMaxConsumersPerTopic(namespace utils.NameSpaceName) (int
 
 func (n *namespaces) SetCompactionThreshold(namespace utils.NameSpaceName, threshold int64) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
-	return n.client.put(endpoint, threshold)
+	return n.request.Put(endpoint, threshold)
 }
 
 func (n *namespaces) GetCompactionThreshold(namespace utils.NameSpaceName) (int64, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "compactionThreshold")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -528,12 +531,12 @@ func (n *namespaces) GetCompactionThreshold(namespace utils.NameSpaceName) (int6
 
 func (n *namespaces) SetMaxProducersPerTopic(namespace utils.NameSpaceName, max int) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
-	return n.client.post(endpoint, max)
+	return n.request.Post(endpoint, max)
 }
 
 func (n *namespaces) GetMaxProducersPerTopic(namespace utils.NameSpaceName) (int, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
-	b, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	b, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	if err != nil {
 		return -1, err
 	}
@@ -547,7 +550,7 @@ func (n *namespaces) GetNamespaceReplicationClusters(namespace string) ([]string
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "replication")
-	err = n.client.get(endpoint, &data)
+	err = n.request.Get(endpoint, &data)
 	return data, err
 }
 
@@ -557,7 +560,7 @@ func (n *namespaces) SetNamespaceReplicationClusters(namespace string, clusterId
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "replication")
-	return n.client.post(endpoint, &clusterIds)
+	return n.request.Post(endpoint, &clusterIds)
 }
 
 func (n *namespaces) SetNamespaceAntiAffinityGroup(namespace string, namespaceAntiAffinityGroup string) error {
@@ -566,7 +569,7 @@ func (n *namespaces) SetNamespaceAntiAffinityGroup(namespace string, namespaceAn
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
-	return n.client.post(endpoint, namespaceAntiAffinityGroup)
+	return n.request.Post(endpoint, namespaceAntiAffinityGroup)
 }
 
 func (n *namespaces) GetAntiAffinityNamespaces(tenant, cluster, namespaceAntiAffinityGroup string) ([]string, error) {
@@ -575,7 +578,7 @@ func (n *namespaces) GetAntiAffinityNamespaces(tenant, cluster, namespaceAntiAff
 	params := map[string]string{
 		"property": tenant,
 	}
-	_, err := n.client.getWithQueryParams(endpoint, &data, params, false)
+	_, err := n.request.GetWithQueryParams(endpoint, &data, params, false)
 	return data, err
 }
 
@@ -585,7 +588,7 @@ func (n *namespaces) GetNamespaceAntiAffinityGroup(namespace string) (string, er
 		return "", err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
-	data, err := n.client.getWithQueryParams(endpoint, nil, nil, false)
+	data, err := n.request.GetWithQueryParams(endpoint, nil, nil, false)
 	return string(data), err
 }
 
@@ -595,7 +598,7 @@ func (n *namespaces) DeleteNamespaceAntiAffinityGroup(namespace string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "antiAffinity")
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) SetDeduplicationStatus(namespace string, enableDeduplication bool) error {
@@ -604,7 +607,7 @@ func (n *namespaces) SetDeduplicationStatus(namespace string, enableDeduplicatio
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "deduplication")
-	return n.client.post(endpoint, enableDeduplication)
+	return n.request.Post(endpoint, enableDeduplication)
 }
 
 func (n *namespaces) SetPersistence(namespace string, persistence utils.PersistencePolicies) error {
@@ -613,7 +616,7 @@ func (n *namespaces) SetPersistence(namespace string, persistence utils.Persiste
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence")
-	return n.client.post(endpoint, &persistence)
+	return n.request.Post(endpoint, &persistence)
 }
 
 func (n *namespaces) SetBookieAffinityGroup(namespace string, bookieAffinityGroup utils.BookieAffinityGroupData) error {
@@ -622,7 +625,7 @@ func (n *namespaces) SetBookieAffinityGroup(namespace string, bookieAffinityGrou
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
-	return n.client.post(endpoint, &bookieAffinityGroup)
+	return n.request.Post(endpoint, &bookieAffinityGroup)
 }
 
 func (n *namespaces) DeleteBookieAffinityGroup(namespace string) error {
@@ -631,7 +634,7 @@ func (n *namespaces) DeleteBookieAffinityGroup(namespace string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) GetBookieAffinityGroup(namespace string) (*utils.BookieAffinityGroupData, error) {
@@ -641,7 +644,7 @@ func (n *namespaces) GetBookieAffinityGroup(namespace string) (*utils.BookieAffi
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence", "bookieAffinity")
-	err = n.client.get(endpoint, &data)
+	err = n.request.Get(endpoint, &data)
 	return &data, err
 }
 
@@ -652,7 +655,7 @@ func (n *namespaces) GetPersistence(namespace string) (*utils.PersistencePolicie
 		return nil, err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "persistence")
-	err = n.client.get(endpoint, &persistence)
+	err = n.request.Get(endpoint, &persistence)
 	return &persistence, err
 }
 
@@ -662,7 +665,7 @@ func (n *namespaces) Unload(namespace string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), "unload")
-	return n.client.put(endpoint, "")
+	return n.request.Put(endpoint, "")
 }
 
 func (n *namespaces) UnloadNamespaceBundle(namespace, bundle string) error {
@@ -671,7 +674,7 @@ func (n *namespaces) UnloadNamespaceBundle(namespace, bundle string) error {
 		return err
 	}
 	endpoint := n.client.endpoint(n.basePath, nsName.String(), bundle, "unload")
-	return n.client.put(endpoint, "")
+	return n.request.Put(endpoint, "")
 }
 
 func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitBundles bool) error {
@@ -683,13 +686,13 @@ func (n *namespaces) SplitNamespaceBundle(namespace, bundle string, unloadSplitB
 	params := map[string]string{
 		"unload": strconv.FormatBool(unloadSplitBundles),
 	}
-	return n.client.putWithQueryParams(endpoint, "", nil, params)
+	return n.request.PutWithQueryParams(endpoint, "", nil, params)
 }
 
 func (n *namespaces) GetNamespacePermissions(namespace utils.NameSpaceName) (map[string][]common.AuthAction, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions")
 	var permissions map[string][]common.AuthAction
-	err := n.client.get(endpoint, &permissions)
+	err := n.request.Get(endpoint, &permissions)
 	return permissions, err
 }
 
@@ -700,111 +703,111 @@ func (n *namespaces) GrantNamespacePermission(namespace utils.NameSpaceName, rol
 	for _, v := range action {
 		s = append(s, v.String())
 	}
-	return n.client.post(endpoint, s)
+	return n.request.Post(endpoint, s)
 }
 
 func (n *namespaces) RevokeNamespacePermission(namespace utils.NameSpaceName, role string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions", role)
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) GrantSubPermission(namespace utils.NameSpaceName, sName string, roles []string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
 		"subscription", sName)
-	return n.client.post(endpoint, roles)
+	return n.request.Post(endpoint, roles)
 }
 
 func (n *namespaces) RevokeSubPermission(namespace utils.NameSpaceName, sName, role string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "permissions",
 		"subscription", sName, role)
-	return n.client.delete(endpoint)
+	return n.request.Delete(endpoint)
 }
 
 func (n *namespaces) SetSubscriptionAuthMode(namespace utils.NameSpaceName, mode utils.SubscriptionAuthMode) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscriptionAuthMode")
-	return n.client.post(endpoint, mode.String())
+	return n.request.Post(endpoint, mode.String())
 }
 
 func (n *namespaces) SetEncryptionRequiredStatus(namespace utils.NameSpaceName, encrypt bool) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "encryptionRequired")
-	return n.client.post(endpoint, strconv.FormatBool(encrypt))
+	return n.request.Post(endpoint, strconv.FormatBool(encrypt))
 }
 
 func (n *namespaces) UnsubscribeNamespace(namespace utils.NameSpaceName, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "unsubscribe", url.QueryEscape(sName))
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) UnsubscribeNamespaceBundle(namespace utils.NameSpaceName, bundle, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "unsubscribe", url.QueryEscape(sName))
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBundleBacklogForSubscription(namespace utils.NameSpaceName,
 	bundle, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "clearBacklog", url.QueryEscape(sName))
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBundleBacklog(namespace utils.NameSpaceName, bundle string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), bundle, "clearBacklog")
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBacklogForSubscription(namespace utils.NameSpaceName, sName string) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "clearBacklog", url.QueryEscape(sName))
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) ClearNamespaceBacklog(namespace utils.NameSpaceName) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "clearBacklog")
-	return n.client.post(endpoint, "")
+	return n.request.Post(endpoint, "")
 }
 
 func (n *namespaces) SetReplicatorDispatchRate(namespace utils.NameSpaceName, rate utils.DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "replicatorDispatchRate")
-	return n.client.post(endpoint, rate)
+	return n.request.Post(endpoint, rate)
 }
 
 func (n *namespaces) GetReplicatorDispatchRate(namespace utils.NameSpaceName) (utils.DispatchRate, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "replicatorDispatchRate")
 	var rate utils.DispatchRate
-	err := n.client.get(endpoint, &rate)
+	err := n.request.Get(endpoint, &rate)
 	return rate, err
 }
 
 func (n *namespaces) SetSubscriptionDispatchRate(namespace utils.NameSpaceName, rate utils.DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscriptionDispatchRate")
-	return n.client.post(endpoint, rate)
+	return n.request.Post(endpoint, rate)
 }
 
 func (n *namespaces) GetSubscriptionDispatchRate(namespace utils.NameSpaceName) (utils.DispatchRate, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscriptionDispatchRate")
 	var rate utils.DispatchRate
-	err := n.client.get(endpoint, &rate)
+	err := n.request.Get(endpoint, &rate)
 	return rate, err
 }
 
 func (n *namespaces) SetSubscribeRate(namespace utils.NameSpaceName, rate utils.SubscribeRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscribeRate")
-	return n.client.post(endpoint, rate)
+	return n.request.Post(endpoint, rate)
 }
 
 func (n *namespaces) GetSubscribeRate(namespace utils.NameSpaceName) (utils.SubscribeRate, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "subscribeRate")
 	var rate utils.SubscribeRate
-	err := n.client.get(endpoint, &rate)
+	err := n.request.Get(endpoint, &rate)
 	return rate, err
 }
 
 func (n *namespaces) SetDispatchRate(namespace utils.NameSpaceName, rate utils.DispatchRate) error {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "dispatchRate")
-	return n.client.post(endpoint, rate)
+	return n.request.Post(endpoint, rate)
 }
 
 func (n *namespaces) GetDispatchRate(namespace utils.NameSpaceName) (utils.DispatchRate, error) {
 	endpoint := n.client.endpoint(n.basePath, namespace.String(), "dispatchRate")
 	var rate utils.DispatchRate
-	err := n.client.get(endpoint, &rate)
+	err := n.request.Get(endpoint, &rate)
 	return rate, err
 }

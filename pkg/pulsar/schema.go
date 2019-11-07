@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -43,14 +44,16 @@ type Schema interface {
 }
 
 type schemas struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
 // Schemas is used to access the schemas endpoints
-func (c *client) Schemas() Schema {
+func (c *pulsarClient) Schemas() Schema {
 	return &schemas{
 		client:   c,
+		request:  c.Client,
 		basePath: "/schemas",
 	}
 }
@@ -64,7 +67,7 @@ func (s *schemas) GetSchemaInfo(topic string) (*utils.SchemaInfo, error) {
 	endpoint := s.client.endpoint(s.basePath, topicName.GetTenant(), topicName.GetNamespace(),
 		topicName.GetEncodedTopic(), "schema")
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.Get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +85,7 @@ func (s *schemas) GetSchemaInfoWithVersion(topic string) (*utils.SchemaInfoWithV
 	endpoint := s.client.endpoint(s.basePath, topicName.GetTenant(), topicName.GetNamespace(),
 		topicName.GetEncodedTopic(), "schema")
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.Get(endpoint, &response)
 	if err != nil {
 		fmt.Println("err:", err.Error())
 		return nil, err
@@ -102,7 +105,7 @@ func (s *schemas) GetSchemaInfoByVersion(topic string, version int64) (*utils.Sc
 	endpoint := s.client.endpoint(s.basePath, topicName.GetTenant(), topicName.GetNamespace(), topicName.GetEncodedTopic(),
 		"schema", strconv.FormatInt(version, 10))
 
-	err = s.client.get(endpoint, &response)
+	err = s.request.Get(endpoint, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +125,7 @@ func (s *schemas) DeleteSchema(topic string) error {
 
 	fmt.Println(endpoint)
 
-	return s.client.delete(endpoint)
+	return s.request.Delete(endpoint)
 }
 
 func (s *schemas) CreateSchemaByPayload(topic string, schemaPayload utils.PostSchemaPayload) error {
@@ -134,5 +137,5 @@ func (s *schemas) CreateSchemaByPayload(topic string, schemaPayload utils.PostSc
 	endpoint := s.client.endpoint(s.basePath, topicName.GetTenant(), topicName.GetNamespace(),
 		topicName.GetEncodedTopic(), "schema")
 
-	return s.client.post(endpoint, &schemaPayload)
+	return s.request.Post(endpoint, &schemaPayload)
 }

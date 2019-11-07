@@ -18,6 +18,7 @@
 package pulsar
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -39,13 +40,15 @@ type ResourceQuotas interface {
 }
 
 type resource struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
-func (c *client) ResourceQuotas() ResourceQuotas {
+func (c *pulsarClient) ResourceQuotas() ResourceQuotas {
 	return &resource{
 		client:   c,
+		request:  c.Client,
 		basePath: "/resource-quotas",
 	}
 }
@@ -53,7 +56,7 @@ func (c *client) ResourceQuotas() ResourceQuotas {
 func (r *resource) GetDefaultResourceQuota() (*utils.ResourceQuota, error) {
 	endpoint := r.client.endpoint(r.basePath)
 	var quota utils.ResourceQuota
-	err := r.client.get(endpoint, &quota)
+	err := r.request.Get(endpoint, &quota)
 	if err != nil {
 		return nil, err
 	}
@@ -62,13 +65,13 @@ func (r *resource) GetDefaultResourceQuota() (*utils.ResourceQuota, error) {
 
 func (r *resource) SetDefaultResourceQuota(quota utils.ResourceQuota) error {
 	endpoint := r.client.endpoint(r.basePath)
-	return r.client.post(endpoint, &quota)
+	return r.request.Post(endpoint, &quota)
 }
 
 func (r *resource) GetNamespaceBundleResourceQuota(namespace, bundle string) (*utils.ResourceQuota, error) {
 	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
 	var quota utils.ResourceQuota
-	err := r.client.get(endpoint, &quota)
+	err := r.request.Get(endpoint, &quota)
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +80,10 @@ func (r *resource) GetNamespaceBundleResourceQuota(namespace, bundle string) (*u
 
 func (r *resource) SetNamespaceBundleResourceQuota(namespace, bundle string, quota utils.ResourceQuota) error {
 	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
-	return r.client.post(endpoint, &quota)
+	return r.request.Post(endpoint, &quota)
 }
 
 func (r *resource) ResetNamespaceBundleResourceQuota(namespace, bundle string) error {
 	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
-	return r.client.delete(endpoint)
+	return r.request.Delete(endpoint)
 }

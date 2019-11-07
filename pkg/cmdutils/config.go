@@ -21,7 +21,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
@@ -100,16 +99,12 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		config.WebServiceURL = c.WebServiceURL
 	}
 
-	if len(c.TLSTrustCertsFilePath) > 0 && c.TLSTrustCertsFilePath != config.TLSOptions.TrustCertsFilePath {
-		config.TLSOptions.TrustCertsFilePath = c.TLSTrustCertsFilePath
+	if len(c.TLSTrustCertsFilePath) > 0 && c.TLSTrustCertsFilePath != config.TLSCertFile {
+		config.TLSCertFile = c.TLSTrustCertsFilePath
 	}
 
 	if c.TLSAllowInsecureConnection {
-		config.TLSOptions.AllowInsecureConnection = true
-	}
-
-	if len(c.AuthParams) > 0 && c.AuthParams != config.AuthParams {
-		config.AuthParams = c.AuthParams
+		config.TLSAllowInsecureConnection = true
 	}
 
 	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
@@ -122,23 +117,8 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 			logger.Critical("the token and tls can not be specified at the same time")
 			os.Exit(1)
 		}
-
-		tokenParams := make(map[string]string)
-		if len(c.Token) > 0 {
-			tokenParams["token"] = c.Token
-		}
-
-		if len(c.TokenFile) > 0 {
-			tokenParams["file"] = c.TokenFile
-		}
-
-		tokenAuth, err := auth.NewAuthenticationTokenWithParams(tokenParams)
-		if err != nil {
-			logger.Critical("%s\n", err.Error())
-			os.Exit(1)
-		}
-
-		config.TokenAuth = tokenAuth
+		config.TokenFile = c.TokenFile
+		config.Token = c.Token
 	}
 
 	config.APIVersion = version

@@ -28,6 +28,7 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -71,15 +72,17 @@ type Subscriptions interface {
 }
 
 type subscriptions struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 	SubPath  string
 }
 
 // Subscriptions is used to access the subscriptions endpoints
-func (c *client) Subscriptions() Subscriptions {
+func (c *pulsarClient) Subscriptions() Subscriptions {
 	return &subscriptions{
 		client:   c,
+		request:  c.Client,
 		basePath: "",
 		SubPath:  "subscription",
 	}
@@ -87,57 +90,57 @@ func (c *client) Subscriptions() Subscriptions {
 
 func (s *subscriptions) Create(topic utils.TopicName, sName string, messageID utils.MessageID) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.client.put(endpoint, messageID)
+	return s.request.Put(endpoint, messageID)
 }
 
 func (s *subscriptions) Delete(topic utils.TopicName, sName string) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.client.delete(endpoint)
+	return s.request.Delete(endpoint)
 }
 
 func (s *subscriptions) List(topic utils.TopicName) ([]string, error) {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscriptions")
 	var list []string
-	return list, s.client.get(endpoint, &list)
+	return list, s.request.Get(endpoint, &list)
 }
 
 func (s *subscriptions) ResetCursorToMessageID(topic utils.TopicName, sName string, id utils.MessageID) error {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "resetcursor")
-	return s.client.post(endpoint, id)
+	return s.request.Post(endpoint, id)
 }
 
 func (s *subscriptions) ResetCursorToTimestamp(topic utils.TopicName, sName string, timestamp int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"resetcursor", strconv.FormatInt(timestamp, 10))
-	return s.client.post(endpoint, "")
+	return s.request.Post(endpoint, "")
 }
 
 func (s *subscriptions) ClearBacklog(topic utils.TopicName, sName string) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "skip_all")
-	return s.client.post(endpoint, "")
+	return s.request.Post(endpoint, "")
 }
 
 func (s *subscriptions) SkipMessages(topic utils.TopicName, sName string, n int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"skip", strconv.FormatInt(n, 10))
-	return s.client.post(endpoint, "")
+	return s.request.Post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireMessages(topic utils.TopicName, sName string, expire int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.client.post(endpoint, "")
+	return s.request.Post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireAllMessages(topic utils.TopicName, expire int64) error {
 	endpoint := s.client.endpoint(
 		s.basePath, topic.GetRestPath(), "all_subscription",
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.client.post(endpoint, "")
+	return s.request.Post(endpoint, "")
 }
 
 func (s *subscriptions) PeekMessages(topic utils.TopicName, sName string, n int) ([]*utils.Message, error) {
@@ -160,18 +163,22 @@ func (s *subscriptions) PeekMessages(topic utils.TopicName, sName string, n int)
 func (s *subscriptions) peekNthMessage(topic utils.TopicName, sName string, pos int) ([]*utils.Message, error) {
 	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscription", url.QueryEscape(sName),
 		"position", strconv.Itoa(pos))
-	req, err := s.client.newRequest(http.MethodGet, endpoint)
-	if err != nil {
-		return nil, err
-	}
 
-	resp, err := checkSuccessful(s.client.doRequest(req))
+	resp, err := s.request.MakeRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 	defer safeRespClose(resp)
 
 	return handleResp(topic, resp)
+}
+
+// safeRespClose is used to close a response body
+func safeRespClose(resp *http.Response) {
+	if resp != nil {
+		// ignore error since it is closing a response body
+		_ = resp.Body.Close()
+	}
 }
 
 const (

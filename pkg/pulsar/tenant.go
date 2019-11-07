@@ -18,6 +18,7 @@
 package pulsar
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -40,43 +41,45 @@ type Tenants interface {
 }
 
 type tenants struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
 // Tenants is used to access the tenants endpoints
-func (c *client) Tenants() Tenants {
+func (c *pulsarClient) Tenants() Tenants {
 	return &tenants{
 		client:   c,
+		request:  c.Client,
 		basePath: "/tenants",
 	}
 }
 
 func (c *tenants) Create(data utils.TenantData) error {
 	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.client.put(endpoint, &data)
+	return c.request.Put(endpoint, &data)
 }
 
 func (c *tenants) Delete(name string) error {
 	endpoint := c.client.endpoint(c.basePath, name)
-	return c.client.delete(endpoint)
+	return c.request.Delete(endpoint)
 }
 
 func (c *tenants) Update(data utils.TenantData) error {
 	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.client.post(endpoint, &data)
+	return c.request.Post(endpoint, &data)
 }
 
 func (c *tenants) List() ([]string, error) {
 	var tenantList []string
 	endpoint := c.client.endpoint(c.basePath, "")
-	err := c.client.get(endpoint, &tenantList)
+	err := c.request.Get(endpoint, &tenantList)
 	return tenantList, err
 }
 
 func (c *tenants) Get(name string) (utils.TenantData, error) {
 	var data utils.TenantData
 	endpoint := c.client.endpoint(c.basePath, name)
-	err := c.client.get(endpoint, &data)
+	err := c.request.Get(endpoint, &data)
 	return data, err
 }

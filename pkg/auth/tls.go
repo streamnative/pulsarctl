@@ -17,26 +17,29 @@
 
 package auth
 
-import "crypto/tls"
+import (
+	"crypto/tls"
+	"crypto/x509"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/pkg/errors"
+)
 
 type TLSAuthProvider struct {
-	certificatePath string
-	privateKeyPath  string
-}
-
-// NewAuthenticationTLSWithParams initialize the authentication provider with map param.
-func NewAuthenticationTLSWithParams(params map[string]string) *TLSAuthProvider {
-	return NewAuthenticationTLS(
-		params["tlsCertFile"],
-		params["tlsKeyFile"],
-	)
+	certificatePath         string
+	privateKeyPath          string
+	allowInsecureConnection bool
 }
 
 // NewAuthenticationTLS initialize the authentication provider
-func NewAuthenticationTLS(certificatePath string, privateKeyPath string) *TLSAuthProvider {
+func NewAuthenticationTLS(certificatePath string, privateKeyPath string,
+	allowInsecureConnection bool) *TLSAuthProvider {
+
 	return &TLSAuthProvider{
-		certificatePath: certificatePath,
-		privateKeyPath:  privateKeyPath,
+		certificatePath:         certificatePath,
+		privateKeyPath:          privateKeyPath,
+		allowInsecureConnection: allowInsecureConnection,
 	}
 }
 
@@ -53,4 +56,45 @@ func (p *TLSAuthProvider) Name() string {
 func (p *TLSAuthProvider) GetTLSCertificate() (*tls.Certificate, error) {
 	cert, err := tls.LoadX509KeyPair(p.certificatePath, p.privateKeyPath)
 	return &cert, err
+}
+
+func (p *TLSAuthProvider) DoAuth(client *http.Client, req *http.Request) {
+	if client.Transport == nil {
+		tlsConf, _ := p.GetTLSConfig(p.certificatePath, p.allowInsecureConnection)
+		if tlsConf != nil {
+			client.Transport = &http.Transport{
+				MaxIdleConnsPerHost: 10,
+				TLSClientConfig:     tlsConf,
+			}
+		}
+	}
+}
+
+func (p *TLSAuthProvider) GetTLSConfig(certFile string, allowInsecureConnection bool) (*tls.Config, error) {
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: allowInsecureConnection,
+	}
+
+	if certFile != "" {
+		caCerts, err := ioutil.ReadFile(certFile)
+		if err != nil {
+			return nil, err
+		}
+
+		tlsConfig.RootCAs = x509.NewCertPool()
+		if !tlsConfig.RootCAs.AppendCertsFromPEM(caCerts) {
+			return nil, errors.New("failed to parse root CAs certificates")
+		}
+	}
+
+	cert, err := p.GetTLSCertificate()
+	if err != nil {
+		return nil, err
+	}
+
+	if cert != nil {
+		tlsConfig.Certificates = []tls.Certificate{*cert}
+	}
+
+	return tlsConfig, nil
 }

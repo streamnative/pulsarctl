@@ -18,6 +18,7 @@
 package pulsar
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -61,82 +62,84 @@ type Clusters interface {
 }
 
 type clusters struct {
-	client   *client
+	client   *pulsarClient
+	request  *cli.Client
 	basePath string
 }
 
 // Clusters is used to access the cluster endpoints.
-func (c *client) Clusters() Clusters {
+func (c *pulsarClient) Clusters() Clusters {
 	return &clusters{
 		client:   c,
+		request:  c.Client,
 		basePath: "/clusters",
 	}
 }
 
 func (c *clusters) List() ([]string, error) {
 	var clusters []string
-	err := c.client.get(c.client.endpoint(c.basePath), &clusters)
+	err := c.request.Get(c.client.endpoint(c.basePath), &clusters)
 	return clusters, err
 }
 
 func (c *clusters) Get(name string) (utils.ClusterData, error) {
 	cdata := utils.ClusterData{}
 	endpoint := c.client.endpoint(c.basePath, name)
-	err := c.client.get(endpoint, &cdata)
+	err := c.request.Get(endpoint, &cdata)
 	return cdata, err
 }
 
 func (c *clusters) Create(cdata utils.ClusterData) error {
 	endpoint := c.client.endpoint(c.basePath, cdata.Name)
-	return c.client.put(endpoint, &cdata)
+	return c.request.Put(endpoint, &cdata)
 }
 
 func (c *clusters) Delete(name string) error {
 	endpoint := c.client.endpoint(c.basePath, name)
-	return c.client.delete(endpoint)
+	return c.request.Delete(endpoint)
 }
 
 func (c *clusters) Update(cdata utils.ClusterData) error {
 	endpoint := c.client.endpoint(c.basePath, cdata.Name)
-	return c.client.post(endpoint, &cdata)
+	return c.request.Post(endpoint, &cdata)
 }
 
 func (c *clusters) GetPeerClusters(name string) ([]string, error) {
 	var peerClusters []string
 	endpoint := c.client.endpoint(c.basePath, name, "peers")
-	err := c.client.get(endpoint, &peerClusters)
+	err := c.request.Get(endpoint, &peerClusters)
 	return peerClusters, err
 }
 
 func (c *clusters) UpdatePeerClusters(cluster string, peerClusters []string) error {
 	endpoint := c.client.endpoint(c.basePath, cluster, "peers")
-	return c.client.post(endpoint, peerClusters)
+	return c.request.Post(endpoint, peerClusters)
 }
 
 func (c *clusters) CreateFailureDomain(data utils.FailureDomainData) error {
 	endpoint := c.client.endpoint(c.basePath, data.ClusterName, "failureDomains", data.DomainName)
-	return c.client.post(endpoint, &data)
+	return c.request.Post(endpoint, &data)
 }
 
 func (c *clusters) GetFailureDomain(clusterName string, domainName string) (utils.FailureDomainData, error) {
 	var res utils.FailureDomainData
 	endpoint := c.client.endpoint(c.basePath, clusterName, "failureDomains", domainName)
-	err := c.client.get(endpoint, &res)
+	err := c.request.Get(endpoint, &res)
 	return res, err
 }
 
 func (c *clusters) ListFailureDomains(clusterName string) (utils.FailureDomainMap, error) {
 	var domainData utils.FailureDomainMap
 	endpoint := c.client.endpoint(c.basePath, clusterName, "failureDomains")
-	err := c.client.get(endpoint, &domainData)
+	err := c.request.Get(endpoint, &domainData)
 	return domainData, err
 }
 
 func (c *clusters) DeleteFailureDomain(data utils.FailureDomainData) error {
 	endpoint := c.client.endpoint(c.basePath, data.ClusterName, "failureDomains", data.DomainName)
-	return c.client.delete(endpoint)
+	return c.request.Delete(endpoint)
 }
 func (c *clusters) UpdateFailureDomain(data utils.FailureDomainData) error {
 	endpoint := c.client.endpoint(c.basePath, data.ClusterName, "failureDomains", data.DomainName)
-	return c.client.post(endpoint, &data)
+	return c.request.Post(endpoint, &data)
 }
