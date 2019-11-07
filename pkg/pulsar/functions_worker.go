@@ -49,6 +49,7 @@ type worker struct {
 func (c *pulsarClient) FunctionsWorker() FunctionsWorker {
 	return &worker{
 		client:          c,
+		request:         c.Client,
 		workerPath:      "/worker",
 		workerStatsPath: "/worker-stats",
 	}

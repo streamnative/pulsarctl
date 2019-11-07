@@ -97,6 +97,7 @@ type sources struct {
 func (c *pulsarClient) Sources() Sources {
 	return &sources{
 		client:   c,
+		request:  c.Client,
 		basePath: "/sources",
 	}
 }

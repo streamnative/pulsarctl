@@ -123,6 +123,7 @@ type functions struct {
 func (c *pulsarClient) Functions() Functions {
 	return &functions{
 		client:   c,
+		request:  c.Client,
 		basePath: "/functions",
 	}
 }
