@@ -19,25 +19,25 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func DeleteCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting a subscription of a topic."
 	desc.CommandPermission = "This command requires tenant admin and namespace consume permissions."
 
-	var examples []common.Example
-	deleteSub := common.Example{
+	var examples []cmdutils.Example
+	deleteSub := cmdutils.Example{
 		Desc:    "Delete the subscription (subscription-name) of the topic (topic-name)",
 		Command: "pulsarctl subscriptions delete (topic-name) (subscription-name)",
 	}
 	examples = append(examples, deleteSub)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Delete the subscription %s of the topic %s successfully",
 	}

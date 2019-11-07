@@ -19,39 +19,38 @@ package nsisolationpolicy
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func deleteNsIsolationPolicy(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Delete namespace isolation policy of a cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "Delete namespace isolation policy of a cluster.",
 		Command: "pulsarctl ns-isolation-policy delete (cluster-name) (policy-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Delete namespaces isolation policy:(policy name) successful.",
 	}
 
-	policyNameErr := common.Output{
+	policyNameErr := cmdutils.Output{
 		Desc: "NamespaceIsolationPolicies for cluster standalone does not exist, please check policy name.",
 		Out:  "NamespaceIsolationPolicies for cluster standalone does not exist",
 	}
 
-	clusterNameErr := common.Output{
+	clusterNameErr := cmdutils.Output{
 		Desc: "Reason: Cluster name does not exist, please check cluster name.",
 		Out:  "Reason: Cluster name does not exist.",
 	}
 
-	paramsErr := common.Output{
+	paramsErr := cmdutils.Output{
 		Desc: "need to specified the cluster name and the policy name, please add cluster name and policy name",
 		Out:  "need to specified the cluster name and the policy name",
 	}

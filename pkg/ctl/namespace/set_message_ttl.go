@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -27,40 +27,40 @@ import (
 )
 
 func setMessageTTL(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set Message TTL for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	setMsgTTL := common.Example{
+	var examples []cmdutils.Example
+	setMsgTTL := cmdutils.Example{
 		Desc:    "Set Message TTL for a namespace",
 		Command: "pulsarctl namespaces set-message-ttl tenant/namespace -ttl 10",
 	}
 	examples = append(examples, setMsgTTL)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Set message TTL successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "Invalid value for message TTL, please check -ttl arg",
 		Out:  "code: 412 reason: Invalid value for message TTL",
 	}

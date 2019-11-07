@@ -28,31 +28,31 @@ import (
 )
 
 func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role on a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	grant := common.Example{
+	var examples []cmdutils.Example
+	grant := cmdutils.Example{
 		Desc:    "Grant permissions to a client on a single topic (topic-name)",
 		Command: "pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)",
 	}
 	examples = append(examples, grant)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Grant role %s and actions %v to the topic %s successfully",
 	}
 
-	flagError := common.Output{
+	flagError := cmdutils.Output{
 		Desc: "the specified role is empty",
 		Out:  "Invalid role name",
 	}
 
-	actionsError := common.Output{
+	actionsError := cmdutils.Output{
 		Desc: "the specified actions is not allowed.",
 		Out: "The auth action  only can be specified as 'produce', " +
 			"'consume', or 'functions'. Invalid auth action '(actions)'",

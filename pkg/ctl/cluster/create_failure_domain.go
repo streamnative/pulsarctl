@@ -19,7 +19,7 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -27,18 +27,18 @@ import (
 )
 
 func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a failure domain of the (cluster-name)."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "create the failure domain",
 		Command: "pulsarctl clusters create-failure-domain (cluster-name) (domain-name)",
 	}
 	examples = append(examples, create)
 
-	createWithBrokers := common.Example{
+	createWithBrokers := cmdutils.Example{
 		Desc: "create the failure domain with brokers",
 		Command: "pulsarctl clusters create-failure-domain" +
 			" -b (broker-ip):(broker-port) -b (broker-ip):(broker-port) (cluster-name) (domain-name)",
@@ -46,14 +46,14 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, createWithBrokers)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Create failure domain (domain-name) for cluster (cluster-name) succeed",
 	}
 	out = append(out, successOut)
 
-	argsErrorOut := common.Output{
+	argsErrorOut := cmdutils.Output{
 		Desc: "the args need to be specified as (cluster-name) (domain-name)",
 		Out:  "[✖]  need specified two names for cluster and failure domain",
 	}

@@ -26,13 +26,13 @@ import (
 )
 
 func getSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Gets the information about a Pulsar IO source connector"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	get := common.Example{
+	get := cmdutils.Example{
 		Desc: "Gets the information about a Pulsar IO source connector",
 		Command: "pulsarctl source get \n" +
 			"\t--tenant public\n" +
@@ -43,8 +43,8 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"tenant\": \"public\",\n" +
@@ -64,7 +64,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 			"}\n",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}

@@ -24,24 +24,24 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ExpireCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for expiring messages that older than given expiry time (in seconds)" +
 		" for a subscription."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []common.Example
-	expire := common.Example{
+	var examples []cmdutils.Example
+	expire := cmdutils.Example{
 		Desc: "Expire messages that older than given expire time (in seconds) for a subscription " +
 			"<subscription-name> under a topic",
 		Command: "pulsarctl subscription expire --expire-time (expire-time) (topic-name) (subscription-name)",
 	}
 
-	expireAllSub := common.Example{
+	expireAllSub := cmdutils.Example{
 		Desc: "Expire message that older than given expire time (in second) for all subscriptions " +
 			"under a topic",
 		Command: "pulsarctl subscriptions expire --all --expire-time (expire-time) (topic-name)",
@@ -49,8 +49,8 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, expire, expireAllSub)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "Expire messages after (time)(s) for the subscription (subscription-name) of the topic (topic-name) " +
 			"successfully",

@@ -27,13 +27,13 @@ import (
 )
 
 func stopSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for stopping source instance."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	stop := common.Example{
+	stop := cmdutils.Example{
 		Desc: "Stops source instance",
 		Command: "pulsarctl source stop \n" +
 			"\t--tenant public\n" +
@@ -42,7 +42,7 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, stop)
 
-	stopWithInstanceID := common.Example{
+	stopWithInstanceID := cmdutils.Example{
 		Desc: "Stops source instance with instance ID",
 		Command: "pulsarctl source stop \n" +
 			"\t--tenant public\n" +
@@ -53,13 +53,13 @@ func stopSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, stopWithInstanceID)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Stopped (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}

@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -29,40 +29,40 @@ import (
 const MaxBundles = int64(1) << 32
 
 func createNs(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Creates a new namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "creates a namespace named (namespace-name)",
 		Command: "pulsarctl namespaces create (namespace-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Created (namespace-name) successfully",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	positiveBundleErr := common.Output{
+	positiveBundleErr := cmdutils.Output{
 		Desc: "Invalid number of bundles, please check --bundles value",
 		Out:  "Invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32].",
 	}

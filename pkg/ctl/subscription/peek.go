@@ -25,25 +25,25 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func PeekCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for peeking some messages of a subscription."
 	desc.CommandPermission = "This command requires tenant admin permissions or namespace consumer permissions."
 
-	var example []common.Example
-	peek := common.Example{
+	var example []cmdutils.Example
+	peek := cmdutils.Example{
 		Desc:    "Peek some messages of a subscription",
 		Command: "pulsarctl subscriptions peek --count (n) (topic-name) (subscription-name)",
 	}
 	example = append(example, peek)
 	desc.CommandExamples = example
 
-	var out []common.Output
-	success := common.Output{
+	var out []cmdutils.Output
+	success := cmdutils.Output{
 		Desc: "normal output",
 		Out: `Message ID :
 ledgerID:entryID:PartitionIndex:BatchIndex

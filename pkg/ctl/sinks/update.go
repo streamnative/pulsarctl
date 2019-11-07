@@ -27,13 +27,13 @@ import (
 )
 
 func updateSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar IO sink connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	update := common.Example{
+	update := cmdutils.Example{
 		Desc: "Update a Pulsar IO sink connector",
 		Command: "pulsarctl sink update \n" +
 			"\t--tenant public \n" +
@@ -45,21 +45,21 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--cpu 2",
 	}
 
-	updateWithSchema := common.Example{
+	updateWithSchema := cmdutils.Example{
 		Desc: "Update a Pulsar IO sink connector with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other sink parameters ",
 	}
 
-	updateWithParallelism := common.Example{
+	updateWithParallelism := cmdutils.Example{
 		Desc: "Update a Pulsar IO sink connector with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other sink parameters ",
 	}
 
-	updateWithResource := common.Example{
+	updateWithResource := cmdutils.Example{
 		Desc: "Update a Pulsar IO sink connector with resource",
 		Command: "pulsarctl sink create \n" +
 			"\t--ram 5656565656\n" +
@@ -68,7 +68,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other sink parameters ",
 	}
 
-	updateWithSinkConfig := common.Example{
+	updateWithSinkConfig := cmdutils.Example{
 		Desc: "Update a Pulsar IO sink connector with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -78,13 +78,13 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, update, updateWithSinkConfig, updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Updated (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}

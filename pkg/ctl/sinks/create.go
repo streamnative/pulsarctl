@@ -27,12 +27,12 @@ import (
 )
 
 func createSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Create a Pulsar IO sink connector to run in a Pulsar cluster."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode",
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
@@ -44,7 +44,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--parallelism 1",
 	}
 
-	createWithPkgURL := common.Example{
+	createWithPkgURL := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with pkg URL",
 		Command: "pulsarctl sink create \n" +
 			"\t--tenant public \n" +
@@ -54,21 +54,21 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t--archive file:/http: + connectors/pulsar-io-jdbc-2.4.0.nar",
 	}
 
-	createWithSchema := common.Example{
+	createWithSchema := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with schema type",
 		Command: "pulsarctl sink create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithParallelism := common.Example{
+	createWithParallelism := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with parallelism",
 		Command: "pulsarctl sink create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithResource := common.Example{
+	createWithResource := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with resource",
 		Command: "pulsarctl sink create \n" +
 			"\t--ram 5656565656\n" +
@@ -77,14 +77,14 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other sink parameters ",
 	}
 
-	createWithSinkConfig := common.Example{
+	createWithSinkConfig := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with sink config",
 		Command: "pulsarctl sink create \n" +
 			"\t--sink-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
 			"\t// Other sink parameters ",
 	}
 
-	createWithProcessingGuarantees := common.Example{
+	createWithProcessingGuarantees := cmdutils.Example{
 		Desc: "Create a Pulsar Sink in cluster mode with processing guarantees",
 		Command: "pulsarctl sink create \n" +
 			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
@@ -95,18 +95,18 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 		createWithResource, createWithSinkConfig, createWithProcessingGuarantees)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Created (the name of a Pulsar Sinks) successfully",
 	}
 
-	failureOut := common.Output{
+	failureOut := cmdutils.Output{
 		Desc: "sink archive not specified, please check --archive arg",
 		Out:  "[✖]  Sink archive not specified",
 	}
 
-	sinkTypeOut := common.Output{
+	sinkTypeOut := cmdutils.Output{
 		Desc: "Cannot specify both archive and sink-type, please check --archive and --sink-type args",
 		Out:  "[✖]  Cannot specify both archive and sink-type",
 	}

@@ -26,13 +26,13 @@ import (
 )
 
 func deleteSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for deleting a Pulsar IO sink connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	del := common.Example{
+	del := cmdutils.Example{
 		Desc: "Delete a Pulsar IO sink connector",
 		Command: "pulsarctl sink delete \n" +
 			"\t--tenant public\n" +
@@ -42,13 +42,13 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, del)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Deleted (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}

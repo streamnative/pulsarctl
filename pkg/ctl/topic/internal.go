@@ -19,7 +19,7 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -57,27 +57,27 @@ var normalOutput = `{
 `
 
 func GetInternalInfoCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the internal info of a topic " +
 		"which has messages or subscriptions."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "Get the internal info of a topic <topic-name>",
 		Command: "pulsarctl topic internal-info <topic-name>",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  normalOutput,
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "the specified topic does not exist",
 		Out:  "[✖]  code: 500 reason: Unknown pulsar error",
 	}

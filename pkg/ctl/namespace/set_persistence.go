@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -27,12 +27,12 @@ import (
 )
 
 func setPersistence(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set the persistence policy for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	setPersistence := common.Example{
+	var examples []cmdutils.Example
+	setPersistence := cmdutils.Example{
 		Desc: "Set the persistence policy for a namespace",
 		Command: "pulsarctl namespaces set-persistence tenant/namespace \n" +
 			"\t--ensemble-size 2 \n" +
@@ -44,28 +44,28 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 	examples = append(examples, setPersistence)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Set the persistence policies successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	errArgsForBk := common.Output{
+	errArgsForBk := cmdutils.Output{
 		Desc: "Bookkeeper Ensemble >= WriteQuorum >= AckQuoru, please c ",
 		Out:  "code: 412 reason: Bookkeeper Ensemble >= WriteQuorum >= AckQuoru",
 	}

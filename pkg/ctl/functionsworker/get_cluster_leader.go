@@ -19,24 +19,23 @@ package functionsworker
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getClusterLeader(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get the leader of the worker cluster"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	stats := common.Example{
+	var examples []cmdutils.Example
+	stats := cmdutils.Example{
 		Desc:    "Get the leader of the worker cluster",
 		Command: "pulsarctl functions-worker get-cluster-leader",
 	}
 	examples = append(examples, stats)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"workerId\": \"c-standalone-fw-127.0.0.1-8080\",\n" +

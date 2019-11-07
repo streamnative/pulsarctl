@@ -19,14 +19,14 @@ package schemas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func getSchema(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get the schema for a topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
@@ -37,13 +37,13 @@ func getSchema(vc *cmdutils.VerbCmd) {
 		"get",
 	)
 
-	var examples []common.Example
-	del := common.Example{
+	var examples []cmdutils.Example
+	del := cmdutils.Example{
 		Desc:    "Get the schema for a topic",
 		Command: "pulsarctl schemas get (topic name)",
 	}
 
-	delWithVersion := common.Example{
+	delWithVersion := cmdutils.Example{
 		Desc: "Get the schema for a topic with version",
 		Command: "pulsarctl schemas get (topic name) \n" +
 			"\t--version 2",
@@ -52,8 +52,8 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	examples = append(examples, del, delWithVersion)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"name\": \"test-schema\",\n" +
@@ -82,12 +82,12 @@ func getSchema(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "HTTP 404 Not Found, please check if the topic name you entered is correct",
 		Out:  "[✖]  code: 404 reason: Not Found",
 	}
 
-	notTopicName := common.Output{
+	notTopicName := cmdutils.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
 		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}

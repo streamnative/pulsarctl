@@ -23,47 +23,47 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func OffloadStatusCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for checking the status of offloading data" +
 		" from a persistent topic to a long-term storage."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	offloadStatus := common.Example{
+	var examples []cmdutils.Example
+	offloadStatus := cmdutils.Example{
 		Desc:    "Check the status of offloading data from a topic (persistent-topic-name) to a long-term storage",
 		Command: "pulsarctl topic offload-status (persistent-topic-name)",
 	}
 
-	waiting := common.Example{
+	waiting := cmdutils.Example{
 		Desc:    "Wait for offloading to complete",
 		Command: "pulsarctl topic offload-status --wait (persistent-topic-name)",
 	}
 	examples = append(examples, offloadStatus, waiting)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Offloading topic (topic-name) data is done successfully",
 	}
 
-	notRun := common.Output{
+	notRun := cmdutils.Output{
 		Desc: "Offloading topic is not running",
 		Out:  "Offloading topic (topic-name) data is not running",
 	}
 
-	running := common.Output{
+	running := cmdutils.Output{
 		Desc: "Offloading topic is running",
 		Out:  "Offloading topic (topic-name) data is running",
 	}
 
-	errorOut := common.Output{
+	errorOut := cmdutils.Output{
 		Desc: "Offloading topic with error",
 		Out:  "Offloading topic (topic-name) data is done with error (error-msg)",
 	}

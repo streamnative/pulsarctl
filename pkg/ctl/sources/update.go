@@ -27,13 +27,13 @@ import (
 )
 
 func updateSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar IO source connector."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	update := common.Example{
+	update := cmdutils.Example{
 		Desc: "Update a Pulsar IO source connector",
 		Command: "pulsarctl source update \n" +
 			"\t--tenant public \n" +
@@ -45,21 +45,21 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--cpu 2",
 	}
 
-	updateWithSchema := common.Example{
+	updateWithSchema := cmdutils.Example{
 		Desc: "Update a Pulsar IO source connector with schema type",
 		Command: "pulsarctl source create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other source parameters ",
 	}
 
-	updateWithParallelism := common.Example{
+	updateWithParallelism := cmdutils.Example{
 		Desc: "Update a Pulsar IO source connector with parallelism",
 		Command: "pulsarctl source create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other source parameters ",
 	}
 
-	updateWithResource := common.Example{
+	updateWithResource := cmdutils.Example{
 		Desc: "Update a Pulsar IO source connector with resource",
 		Command: "pulsarctl source create \n" +
 			"\t--ram 5656565656\n" +
@@ -68,7 +68,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other source parameters ",
 	}
 
-	updateWithSourceConfig := common.Example{
+	updateWithSourceConfig := cmdutils.Example{
 		Desc: "Update a Pulsar IO source connector with source config",
 		Command: "pulsarctl source create \n" +
 			"\t--source-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -79,13 +79,13 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 		updateWithResource, updateWithParallelism, updateWithSchema)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Updated (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}

@@ -27,12 +27,12 @@ import (
 )
 
 func createFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for creating a new Pulsar Function in cluster mode."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with jar file",
 		Command: "pulsarctl functions create \n" +
 			"\t--tenant public \n" +
@@ -45,7 +45,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, create)
 
-	createWithConf := common.Example{
+	createWithConf := cmdutils.Example{
 		Desc: "Create a Pulsar Function use function config yaml file",
 		Command: "pulsarctl functions create \n" +
 			"\t--function-config-file (the path of function config yaml file) \n" +
@@ -53,7 +53,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithConf)
 
-	createWithPkgURL := common.Example{
+	createWithPkgURL := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with pkg URL",
 		Command: "pulsarctl functions create \n" +
 			"\t--tenant public \n" +
@@ -66,7 +66,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithPkgURL)
 
-	createWithLogTopic := common.Example{
+	createWithLogTopic := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with log topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
@@ -74,7 +74,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithLogTopic)
 
-	createWithDeadLetterTopic := common.Example{
+	createWithDeadLetterTopic := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with dead letter topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
@@ -83,7 +83,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithDeadLetterTopic)
 
-	createWithAutoAck := common.Example{
+	createWithAutoAck := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with auto ack",
 		Command: "pulsarctl functions create \n" +
 			"\t--auto-ack \n" +
@@ -91,7 +91,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithAutoAck)
 
-	createWithFQFN := common.Example{
+	createWithFQFN := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with FQFN",
 		Command: "pulsarctl functions create \n" +
 			"\t--fqfn tenant/namespace/name eg:public/default/test-fqfn-function\n" +
@@ -99,7 +99,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithFQFN)
 
-	createWithTopicsPattern := common.Example{
+	createWithTopicsPattern := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with topics pattern",
 		Command: "pulsarctl functions create \n" +
 			"\t--topics-pattern persistent://tenant/ns/topicPattern*\n" +
@@ -107,7 +107,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithTopicsPattern)
 
-	createWithUserConfig := common.Example{
+	createWithUserConfig := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with user config",
 		Command: "pulsarctl functions create \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -115,7 +115,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithUserConfig)
 
-	createWithRetainOrdering := common.Example{
+	createWithRetainOrdering := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with retain ordering",
 		Command: "pulsarctl functions create \n" +
 			"\t--retain-ordering \n" +
@@ -123,7 +123,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithRetainOrdering)
 
-	createWithCustomSchemasInputs := common.Example{
+	createWithCustomSchemasInputs := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with custom schema for inputs topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
@@ -131,7 +131,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithCustomSchemasInputs)
 
-	createWithSchema := common.Example{
+	createWithSchema := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with schema type for output topic",
 		Command: "pulsarctl functions create \n" +
 			"\t--schema-type schema.STRING\n" +
@@ -139,7 +139,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithSchema)
 
-	createWithParallelism := common.Example{
+	createWithParallelism := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with parallelism",
 		Command: "pulsarctl functions create \n" +
 			"\t--parallelism 1\n" +
@@ -147,7 +147,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithParallelism)
 
-	createWithResource := common.Example{
+	createWithResource := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with resource",
 		Command: "pulsarctl functions create \n" +
 			"\t--ram 5656565656\n" +
@@ -157,7 +157,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, createWithResource)
 
-	createWithWindowFunctions := common.Example{
+	createWithWindowFunctions := cmdutils.Example{
 		Desc: "Create a Pulsar Function in cluster mode with window functions",
 		Command: "pulsarctl functions create \n" +
 			"\t--window-length-count 10\n" +
@@ -170,8 +170,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Created (the name of a Pulsar Function) successfully",
 	}

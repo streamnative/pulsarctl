@@ -27,13 +27,13 @@ import (
 )
 
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List all running Pulsar IO source connectors"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	list := common.Example{
+	list := cmdutils.Example{
 		Desc: "List all running Pulsar IO source connectors",
 		Command: "pulsarctl source list \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Source Name    |\n" +

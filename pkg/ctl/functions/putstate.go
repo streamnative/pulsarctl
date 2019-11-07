@@ -29,12 +29,12 @@ import (
 )
 
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Put a key/value pair to the state associated with a Pulsar Function."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	putstate := common.Example{
+	var examples []cmdutils.Example
+	putstate := cmdutils.Example{
 		Desc: "Put a key/(string value) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
@@ -44,7 +44,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, putstate)
 
-	putstateWithByte := common.Example{
+	putstateWithByte := cmdutils.Example{
 		Desc: "Put a key/(file path) pair to the state associated with a Pulsar Function",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--tenant public\n" +
@@ -54,7 +54,7 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, putstateWithByte)
 
-	putstateWithFQFN := common.Example{
+	putstateWithFQFN := cmdutils.Example{
 		Desc: "Put a key/value pair to the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions putstate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions] \n" +
@@ -63,28 +63,28 @@ func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, putstateWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Put state (the function state) successfully",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the `--name` arg",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithKeyOrValueNotExist := common.Output{
+	failOutWithKeyOrValueNotExist := cmdutils.Output{
 		Desc: "The state key and state value not specified, please check your input format",
 		Out:  "[✖]  need to specified the state key and state value",
 	}
 
-	fileOutErrInputFormat := common.Output{
+	fileOutErrInputFormat := cmdutils.Output{
 		Desc: "The format of the input is incorrect, please check.",
 		Out:  "[✖]  error input format",
 	}

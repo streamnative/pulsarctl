@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -27,21 +27,21 @@ import (
 )
 
 func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscription auth mode of a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
-	var examples []common.Example
-	set := common.Example{
+	var examples []cmdutils.Example
+	set := cmdutils.Example{
 		Desc:    "Set the default subscription auth mode (mode) of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces set-subscription-auth-mode --mode (mode) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the default subscription auth mode of namespace <namespace-name> to <mode>",
 	}

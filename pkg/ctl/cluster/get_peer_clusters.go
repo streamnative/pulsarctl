@@ -19,26 +19,25 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/olekukonko/tablewriter"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the peer clusters of the specified cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "getting the (cluster-name) peer clusters",
 		Command: "pulsarctl clusters get-peer-clusters (cluster-name)",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+-------------------+\n" +
 			"|   PEER CLUSTERS   |\n" +

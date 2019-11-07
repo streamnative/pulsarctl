@@ -19,37 +19,37 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetDispatchRateCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default message dispatch rate of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	setByMsg := common.Example{
+	var examples []cmdutils.Example
+	setByMsg := cmdutils.Example{
 		Desc:    "Set the default message dispatch rate by message of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-dispatch-rate --msg-rate (rate) (namespace)",
 	}
 
-	setByByte := common.Example{
+	setByByte := cmdutils.Example{
 		Desc:    "Set the default message dispatch rate by byte of the namespace (namespace-name) to (rate)",
 		Command: "pulsarctl namespaces set-dispatch-rate --byte-rate (rate) (namespace)",
 	}
 
-	setByTime := common.Example{
+	setByTime := cmdutils.Example{
 		Desc:    "Set the default message dispatch rate by time of the namespace (namespace-name) to (period)",
 		Command: "pulsarctl namespaces set-dispatch-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setByMsg, setByByte, setByTime)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Success set the default message dispatch rate of the namespace (namespace-name) to (rate)",
 	}

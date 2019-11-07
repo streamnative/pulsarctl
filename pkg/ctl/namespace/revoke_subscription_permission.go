@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -28,14 +28,14 @@ import (
 )
 
 func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions of " +
 		"accessing a subscription of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
-	var examples []common.Example
-	revoke := common.Example{
+	var examples []cmdutils.Example
+	revoke := cmdutils.Example{
 		Desc: "Revoke a client role (role-name) permissions of accessing the subscription " +
 			"(subscription-name) of the (namespace-name)",
 		Command: "pulsarctl namespaces revoke-subscription-permission --role (role-name) " +
@@ -44,14 +44,14 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "Revoke the client role (role-name) permissions of accessing the subscription " +
 			"(subscription-name) of the namespace (namespace-name) successfully",
 	}
 
-	argsError := common.Output{
+	argsError := cmdutils.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need to specified namespace name and subscription name",
 	}

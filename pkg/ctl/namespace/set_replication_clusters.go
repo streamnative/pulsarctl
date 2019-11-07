@@ -21,7 +21,7 @@ import (
 	"strings"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -29,12 +29,12 @@ import (
 )
 
 func setReplicationClusters(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set the replicated clusters for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	setClusters := common.Example{
+	var examples []cmdutils.Example
+	setClusters := cmdutils.Example{
 		Desc:    "Set the replicated clusters for a namespace",
 		Command: "pulsarctl namespaces set-clusters tenant/namespace --clusters (cluster name)",
 	}
@@ -42,28 +42,28 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 	examples = append(examples, setClusters)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Set replication clusters successfully for tenant/namespace",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	invalidClustersName := common.Output{
+	invalidClustersName := cmdutils.Output{
 		Desc: "Invalid cluster name, please check if your cluster name has the appropriate " +
 			"permissions under the current tenant",
 		Out: "[✖]  code: 403 reason: Cluster name is not in the list of allowed clusters list for tenant [public]",

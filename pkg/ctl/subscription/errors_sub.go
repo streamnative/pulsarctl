@@ -18,30 +18,30 @@
 package subscription
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-var ArgError = common.Output{
+var ArgError = cmdutils.Output{
 	Desc: "the topic name is not specified or the topic name is specified more than one",
 	Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 }
 
-var ArgsError = common.Output{
+var ArgsError = cmdutils.Output{
 	Desc: "the topic name and(or) the subscription name is not specified",
 	Out:  "[✖]  need to specified the topic name and the subscription name",
 }
 
-var TopicNotFoundError = common.Output{
+var TopicNotFoundError = cmdutils.Output{
 	Desc: "the specified topic does not exist",
 	Out:  "[✖]  code: 404 reason: Topic not found",
 }
 
-var SubNotFoundError = common.Output{
+var SubNotFoundError = cmdutils.Output{
 	Desc: "the specified subscription does not exist",
 	Out:  "[✖]  code: 404 reason: Subscription not found",
 }
 
-var TopicNameErrors = []common.Output{
+var TopicNameErrors = []cmdutils.Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
 		Out: "[✖]  Invalid short topic name '<topic-name>', it should be " +
@@ -59,7 +59,7 @@ var TopicNameErrors = []common.Output{
 	},
 }
 
-var NamespaceErrors = []common.Output{
+var NamespaceErrors = []cmdutils.Output{
 	{
 		Desc: "the namespace name is not in the format of <tenant>/<namespace>",
 		Out:  "[✖]  The complete name of namespace is invalid. complete name : <namespace-complete-name>",
@@ -80,7 +80,7 @@ var NamespaceErrors = []common.Output{
 	},
 }
 
-var MessageIDErrors = []common.Output{
+var MessageIDErrors = []cmdutils.Output{
 	{
 		Desc: "the split of message id is not valid",
 		Out:  "[✖]  Invalid message id string. <message-id>",

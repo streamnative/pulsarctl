@@ -26,13 +26,13 @@ import (
 )
 
 func getSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get the information about a Pulsar IO sink connector"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	get := common.Example{
+	get := cmdutils.Example{
 		Desc: "Get the information about a Pulsar IO sink connector",
 		Command: "pulsarctl sink get \n" +
 			"\t--tenant public\n" +
@@ -43,8 +43,8 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			" \"tenant\": \"public\",\n" +
@@ -69,7 +69,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}

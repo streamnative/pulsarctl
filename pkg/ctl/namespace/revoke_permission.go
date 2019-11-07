@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -27,21 +27,21 @@ import (
 )
 
 func RevokePermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for revoking a client role permissions of accessing a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions and " +
 		"broker has read-writer permissions on the zookeeper."
 
-	var examples []common.Example
-	revoke := common.Example{
+	var examples []cmdutils.Example
+	revoke := cmdutils.Example{
 		Desc:    "Revoke the client role (role-name) of accessing the namespace (namespace-name)",
 		Command: "pulsarctl namespaces revoke-permission --role (role-name) (namespace-name)",
 	}
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Revoke the client role (role-name) permissions of accessing the namespace (namespace-name) successfully",
 	}

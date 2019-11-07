@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -27,18 +27,18 @@ import (
 )
 
 func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for unsubscribing the specified " +
 		"subscription for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	unsub := common.Example{
+	var examples []cmdutils.Example
+	unsub := cmdutils.Example{
 		Desc:    "Unsubscribe the specified subscription <subscription-name> for all topic of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces unsubscribe (namespace-name) (subscription-name)",
 	}
 
-	unsubWithBundle := common.Example{
+	unsubWithBundle := cmdutils.Example{
 		Desc: "Unsubscribe the specified subscription (subscription-name) for all topic of the namespace (namespace-name) " +
 			"with bundle range <bundle>",
 		Command: "pulsarctl namespaces unsubscribe --bundle (bundle) (namespace-name) (subscription-name)",
@@ -46,14 +46,14 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, unsub, unsubWithBundle)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "Successfully unsubscribe the subscription (subscription-name) " +
 			"for all topics of the namespace (namespace-name)",
 	}
 
-	argsError := common.Output{
+	argsError := cmdutils.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need two arguments apply to the command",
 	}

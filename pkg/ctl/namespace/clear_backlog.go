@@ -24,27 +24,27 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for clearing backlog for all topics of a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	clear := common.Example{
+	var examples []cmdutils.Example
+	clear := cmdutils.Example{
 		Desc:    "Clear backlog for all topics of the namespace (namespace-name)",
 		Command: "pulsarctl namespaces clear-backlog (namespace-name)",
 	}
 
-	clearWithBundle := common.Example{
+	clearWithBundle := cmdutils.Example{
 		Desc:    "Clear backlog for all topic of the namespace (namespace-name) with a bundle range <bundle>",
 		Command: "pulsarctl namespaces clear-backlog --bundle (bundle) (namespace-name)",
 	}
 
-	clearWithSubName := common.Example{
+	clearWithSubName := cmdutils.Example{
 		Desc: "Clear the specified subscription (subscription-name) backlog for all topics of the " +
 			"namespace (namespace-name)",
 		Command: "pulsarctl namespaces clear-backlog --subscription (subscription-name) (namespace-name)",
@@ -52,8 +52,8 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, clear, clearWithBundle, clearWithSubName)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Successfully clear backlog for all topics of the namespace (namespace-name)",
 	}

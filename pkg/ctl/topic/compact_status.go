@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -29,42 +29,42 @@ import (
 )
 
 func StatusCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting compaction status of a topic " +
 		"or a partition of a partitioned topic."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	compactStatus := common.Example{
+	var examples []cmdutils.Example
+	compactStatus := cmdutils.Example{
 		Desc:    "Get compaction status of a persistent topic (topic-name)",
 		Command: "pulsarctl topic compact-status (topic-name)",
 	}
 
-	compactPartitionStatus := common.Example{
+	compactPartitionStatus := cmdutils.Example{
 		Desc:    "Get compaction status of a partition of partitioned topic",
 		Command: "pulsarctl topic compact-status --partition (partition) (topic-name)",
 	}
 	examples = append(examples, compactStatus, compactPartitionStatus)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Compacting the topic (topic-name) is done successfully",
 	}
 
-	notRun := common.Output{
+	notRun := cmdutils.Output{
 		Desc: "Compacting the topic (topic-name) is not running",
 		Out:  "Compacting the topic (topic-name) is not running",
 	}
 
-	running := common.Output{
+	running := cmdutils.Output{
 		Desc: "Compacting the topic (topic-name) is running",
 		Out:  "Compacting the topic (topic-name) is running",
 	}
 
-	errorOut := common.Output{
+	errorOut := cmdutils.Output{
 		Desc: "Compacting the topic (topic-name) is done with error",
 		Out:  "Compacting the topic (topic-name) is done with error <error-msg>",
 	}

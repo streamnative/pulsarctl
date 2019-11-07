@@ -19,29 +19,28 @@ package schemas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func deleteSchema(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Delete the latest schema for a topic"
 	desc.CommandPermission = "This command requires namespace admin permissions."
 
-	var examples []common.Example
-	del := common.Example{
+	var examples []cmdutils.Example
+	del := cmdutils.Example{
 		Desc:    "Delete the latest schema for a topic",
 		Command: "pulsarctl schemas delete (topic name)",
 	}
 	examples = append(examples, del)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Deleted (topic name) successfully",
 	}
 
-	notTopicName := common.Output{
+	notTopicName := cmdutils.Output{
 		Desc: "you must specify a topic name, please check if the topic name is provided",
 		Out:  "[✖]  the topic name is not specified or the topic name is specified more than one",
 	}

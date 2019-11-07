@@ -19,26 +19,26 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func LookUpTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for looking up the owner broker of a topic."
 	desc.CommandPermission = "This command does not require permissions. "
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	lookup := common.Example{
+	var examples []cmdutils.Example
+	lookup := cmdutils.Example{
 		Desc:    "Lookup the owner broker of the topic (topic-name)",
 		Command: "pulsarctl topic lookup (topic-name)",
 	}
 	examples = append(examples, lookup)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "",
 		Out: "{\n" +
 			"  \"brokerUlr\": \"\",\n" +

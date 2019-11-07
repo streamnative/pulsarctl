@@ -19,39 +19,39 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func deleteFailureDomainCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting the failure domain (domain-name) " +
 		"of the cluster (cluster-name)"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	delete := common.Example{
+	var examples []cmdutils.Example
+	delete := cmdutils.Example{
 		Desc:    "delete the failure domain",
 		Command: "pulsarctl clusters delete-failure-domain (cluster-name) (domain-name)",
 	}
 	examples = append(examples, delete)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "output example",
 		Out:  "Delete failure domain [(domain-name)] for cluster [(cluster-name)] succeed",
 	}
 	out = append(out, successOut, failureDomainArgsError)
 
-	failureDomainNonExist := common.Output{
+	failureDomainNonExist := cmdutils.Output{
 		Desc: "the specified failure domain is not exist",
 		Out: "code: 404 reason: Domain-name non-existent-failure-domain" +
 			" or cluster standalone does not exist",
 	}
 	out = append(out, failureDomainNonExist)
 
-	clusterNotExist := common.Output{
+	clusterNotExist := cmdutils.Output{
 		Desc: "the specified cluster is not exist",
 		Out:  "code: 412 reason: Cluster non-existent-cluster does not exist.",
 	}

@@ -27,12 +27,12 @@ import (
 )
 
 func statusSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get the current status of a Pulsar Sink."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	status := common.Example{
+	var examples []cmdutils.Example
+	status := cmdutils.Example{
 		Desc: "Get the current status of a Pulsar Sink",
 		Command: "pulsarctl sink status \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, status)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			" \"numInstances\" : 1,\n" +
@@ -67,12 +67,12 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "Update contains no change",
 		Out:  "[✖]  code: 400 reason: Update contains no change",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Sink doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Sink (your sink name) doesn't exist",
 	}

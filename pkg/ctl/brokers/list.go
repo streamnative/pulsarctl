@@ -22,29 +22,28 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getBrokerListCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List active brokers of the cluster"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	list := common.Example{
+	var examples []cmdutils.Example
+	list := cmdutils.Example{
 		Desc:    "List active brokers of the cluster",
 		Command: "pulsarctl brokers list (cluster-name)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "127.0.0.1:8080",
 	}
 
-	var argsError = common.Output{
+	var argsError = cmdutils.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one",
 		Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
 	}

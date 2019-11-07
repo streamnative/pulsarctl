@@ -27,13 +27,13 @@ import (
 )
 
 func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar Function that has been deployed to a Pulsar cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	update := common.Example{
+	update := cmdutils.Example{
 		Desc: "Change the output topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--tenant public \n" +
@@ -43,7 +43,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, update)
 
-	updateWithConf := common.Example{
+	updateWithConf := cmdutils.Example{
 		Desc: "Update a Pulsar Function using a function config yaml file",
 		Command: "pulsarctl functions update \n" +
 			"\t--function-config-file (the path of function config yaml file) \n" +
@@ -51,7 +51,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithConf)
 
-	updateWithLogTopic := common.Example{
+	updateWithLogTopic := cmdutils.Example{
 		Desc: "Change the log topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--log-topic persistent://public/default/test-log-topic\n" +
@@ -59,7 +59,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithLogTopic)
 
-	updateWithDeadLetterTopic := common.Example{
+	updateWithDeadLetterTopic := cmdutils.Example{
 		Desc: "Change the dead letter topic of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--dead-letter-topic persistent://public/default/test-dead-letter-topic\n" +
@@ -68,7 +68,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithDeadLetterTopic)
 
-	updateWithUserConfig := common.Example{
+	updateWithUserConfig := cmdutils.Example{
 		Desc: "Update the user configs of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--user-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
@@ -76,7 +76,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithUserConfig)
 
-	updateWithCustomSchemasInputs := common.Example{
+	updateWithCustomSchemasInputs := cmdutils.Example{
 		Desc: "Change the schemas of the input topics for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--custom-schema-inputs \"{\"topic-1\":\"schema.STRING\", \"topic-2\":\"schema.JSON\"}\"\n" +
@@ -84,7 +84,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithCustomSchemasInputs)
 
-	updateWithSchema := common.Example{
+	updateWithSchema := cmdutils.Example{
 		Desc: "Change the schema type of the input topic for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--schema-type schema.STRING\n" +
@@ -92,7 +92,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithSchema)
 
-	updateWithParallelism := common.Example{
+	updateWithParallelism := cmdutils.Example{
 		Desc: "Change the parallelism of a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--parallelism 1\n" +
@@ -100,7 +100,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithParallelism)
 
-	updateWithResource := common.Example{
+	updateWithResource := cmdutils.Example{
 		Desc: "Change the resource usage for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--ram 5656565656\n" +
@@ -110,7 +110,7 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, updateWithResource)
 
-	updateWithWindowFunctions := common.Example{
+	updateWithWindowFunctions := cmdutils.Example{
 		Desc: "Update the window configurations for a Pulsar Function",
 		Command: "pulsarctl functions update \n" +
 			"\t--window-length-count 10\n" +
@@ -122,18 +122,18 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, updateWithWindowFunctions)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Updated (the name of a Pulsar Function) successfully",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "Update contains no change",
 		Out:  "[✖]  code: 400 reason: Update contains no change",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}

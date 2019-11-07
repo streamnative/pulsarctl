@@ -24,24 +24,24 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ResetCursorCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for resetting the position of a " +
 		"subscription to a position that is closest to the provided timestamp or messageId."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []common.Example
-	resetCursorTime := common.Example{
+	var examples []cmdutils.Example
+	resetCursorTime := cmdutils.Example{
 		Desc: "Reset the position of the subscription (subscription-name) to a " +
 			"position that is closest to the provided timestamp (time)",
 		Command: "pulsarctl seek --time (time) (topic-name) (subscription-name)",
 	}
 
-	resetCursorMessageID := common.Example{
+	resetCursorMessageID := cmdutils.Example{
 		Desc: "Reset the position of the subscription <subscription-name> to a " +
 			"position that is closest to the provided message id (message-id)",
 		Command: "pulsarctl seek --message-id (message-id) (topic-name) (subscription-name)",
@@ -49,13 +49,13 @@ func ResetCursorCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, resetCursorTime, resetCursorMessageID)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Reset the cursor of the subscription (subscription-name) to (time)/(message-id) successfully",
 	}
 
-	resetFlagError := common.Output{
+	resetFlagError := cmdutils.Output{
 		Desc: "the time is not specified or the message id is not specified",
 		Out:  "[✖]  The reset position must be specified",
 	}

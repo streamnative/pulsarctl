@@ -27,13 +27,13 @@ import (
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List all Pulsar Functions running under a specific tenant and namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	list := common.Example{
+	list := cmdutils.Example{
 		Desc: "List all Pulsar Functions running under a specific tenant and namespace",
 		Command: "pulsarctl functions list \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Function Name    |\n" +

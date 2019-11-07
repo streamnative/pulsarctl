@@ -23,22 +23,22 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func CreateCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for creating a subscription on a topic."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "Create a subscription (subscription-name) on a topic (topic-name) from latest position",
 		Command: "pulsarctl subscriptions create (topic-name) (subscription-name)",
 	}
 
-	createWithFlag := common.Example{
+	createWithFlag := cmdutils.Example{
 		Desc: "Create a subscription (subscription-name) on a topic (topic-name) from the specified " +
 			"position (position)",
 		Command: "pulsarctl subscription create --messageId (position) (topic-name) (subscription-name)",
@@ -46,8 +46,8 @@ func CreateCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, create, createWithFlag)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Create subscription (subscription-name) on topic (topic-name) from (position) successfully",
 	}
