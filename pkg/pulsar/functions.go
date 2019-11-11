@@ -28,7 +28,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -114,16 +113,14 @@ type Functions interface {
 }
 
 type functions struct {
-	client   *pulsarClient
-	request  *cli.Client
+	pulsar   *pulsarClient
 	basePath string
 }
 
 // Functions is used to access the functions endpoints
 func (c *pulsarClient) Functions() Functions {
 	return &functions{
-		client:   c,
-		request:  c.Client,
+		pulsar:   c,
 		basePath: "/functions",
 	}
 }
@@ -143,7 +140,7 @@ func (f *functions) createTextFromFiled(w *multipart.Writer, value string) (io.W
 }
 
 func (f *functions) CreateFunc(funcConf *utils.FunctionConfig, fileName string) error {
-	endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
+	endpoint := f.pulsar.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
 
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
@@ -193,7 +190,7 @@ func (f *functions) CreateFunc(funcConf *utils.FunctionConfig, fileName string) 
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.request.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.pulsar.Client.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -202,7 +199,7 @@ func (f *functions) CreateFunc(funcConf *utils.FunctionConfig, fileName string) 
 }
 
 func (f *functions) CreateFuncWithURL(funcConf *utils.FunctionConfig, pkgURL string) error {
-	endpoint := f.client.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
+	endpoint := f.pulsar.endpoint(f.basePath, funcConf.Tenant, funcConf.Namespace, funcConf.Name)
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
 
@@ -238,7 +235,7 @@ func (f *functions) CreateFuncWithURL(funcConf *utils.FunctionConfig, pkgURL str
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.request.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.pulsar.Client.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -247,63 +244,63 @@ func (f *functions) CreateFuncWithURL(funcConf *utils.FunctionConfig, pkgURL str
 }
 
 func (f *functions) StopFunction(tenant, namespace, name string) error {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.request.Post(endpoint+"/stop", "")
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	return f.pulsar.Client.Post(endpoint+"/stop", "")
 }
 
 func (f *functions) StopFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.request.Post(endpoint+"/stop", "")
+	return f.pulsar.Client.Post(endpoint+"/stop", "")
 }
 
 func (f *functions) DeleteFunction(tenant, namespace, name string) error {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.request.Delete(endpoint)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	return f.pulsar.Client.Delete(endpoint)
 }
 
 func (f *functions) StartFunction(tenant, namespace, name string) error {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.request.Post(endpoint+"/start", "")
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	return f.pulsar.Client.Post(endpoint+"/start", "")
 }
 
 func (f *functions) StartFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.request.Post(endpoint+"/start", "")
+	return f.pulsar.Client.Post(endpoint+"/start", "")
 }
 
 func (f *functions) RestartFunction(tenant, namespace, name string) error {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	return f.request.Post(endpoint+"/restart", "")
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	return f.pulsar.Client.Post(endpoint+"/restart", "")
 }
 
 func (f *functions) RestartFunctionWithID(tenant, namespace, name string, instanceID int) error {
 	id := fmt.Sprintf("%d", instanceID)
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, id)
 
-	return f.request.Post(endpoint+"/restart", "")
+	return f.pulsar.Client.Post(endpoint+"/restart", "")
 }
 
 func (f *functions) GetFunctions(tenant, namespace string) ([]string, error) {
 	var functions []string
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace)
-	err := f.request.Get(endpoint, &functions)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace)
+	err := f.pulsar.Client.Get(endpoint, &functions)
 	return functions, err
 }
 
 func (f *functions) GetFunction(tenant, namespace, name string) (utils.FunctionConfig, error) {
 	var functionConfig utils.FunctionConfig
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.request.Get(endpoint, &functionConfig)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	err := f.pulsar.Client.Get(endpoint, &functionConfig)
 	return functionConfig, err
 }
 
 func (f *functions) UpdateFunction(functionConfig *utils.FunctionConfig, fileName string,
 	updateOptions *utils.UpdateOptions) error {
-	endpoint := f.client.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
+	endpoint := f.pulsar.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
 
@@ -369,7 +366,7 @@ func (f *functions) UpdateFunction(functionConfig *utils.FunctionConfig, fileNam
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.request.PutWithMultiPart(endpoint, bodyBuf, contentType)
+	err = f.pulsar.Client.PutWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -379,7 +376,7 @@ func (f *functions) UpdateFunction(functionConfig *utils.FunctionConfig, fileNam
 
 func (f *functions) UpdateFunctionWithURL(functionConfig *utils.FunctionConfig, pkgURL string,
 	updateOptions *utils.UpdateOptions) error {
-	endpoint := f.client.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
+	endpoint := f.pulsar.endpoint(f.basePath, functionConfig.Tenant, functionConfig.Namespace, functionConfig.Name)
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
 
@@ -434,7 +431,7 @@ func (f *functions) UpdateFunctionWithURL(functionConfig *utils.FunctionConfig, 
 	}
 
 	contentType := multiPartWriter.FormDataContentType()
-	err = f.request.PutWithMultiPart(endpoint, bodyBuf, contentType)
+	err = f.pulsar.Client.PutWithMultiPart(endpoint, bodyBuf, contentType)
 	if err != nil {
 		return err
 	}
@@ -444,8 +441,8 @@ func (f *functions) UpdateFunctionWithURL(functionConfig *utils.FunctionConfig, 
 
 func (f *functions) GetFunctionStatus(tenant, namespace, name string) (utils.FunctionStatus, error) {
 	var functionStatus utils.FunctionStatus
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.request.Get(endpoint+"/status", &functionStatus)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	err := f.pulsar.Client.Get(endpoint+"/status", &functionStatus)
 	return functionStatus, err
 }
 
@@ -453,15 +450,15 @@ func (f *functions) GetFunctionStatusWithInstanceID(tenant, namespace, name stri
 	instanceID int) (utils.FunctionInstanceStatusData, error) {
 	var functionInstanceStatusData utils.FunctionInstanceStatusData
 	id := fmt.Sprintf("%d", instanceID)
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
-	err := f.request.Get(endpoint+"/status", &functionInstanceStatusData)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, id)
+	err := f.pulsar.Client.Get(endpoint+"/status", &functionInstanceStatusData)
 	return functionInstanceStatusData, err
 }
 
 func (f *functions) GetFunctionStats(tenant, namespace, name string) (utils.FunctionStats, error) {
 	var functionStats utils.FunctionStats
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name)
-	err := f.request.Get(endpoint+"/stats", &functionStats)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name)
+	err := f.pulsar.Client.Get(endpoint+"/stats", &functionStats)
 	return functionStats, err
 }
 
@@ -469,20 +466,20 @@ func (f *functions) GetFunctionStatsWithInstanceID(tenant, namespace, name strin
 	instanceID int) (utils.FunctionInstanceStatsData, error) {
 	var functionInstanceStatsData utils.FunctionInstanceStatsData
 	id := fmt.Sprintf("%d", instanceID)
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, id)
-	err := f.request.Get(endpoint+"/stats", &functionInstanceStatsData)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, id)
+	err := f.pulsar.Client.Get(endpoint+"/stats", &functionInstanceStatsData)
 	return functionInstanceStatsData, err
 }
 
 func (f *functions) GetFunctionState(tenant, namespace, name, key string) (utils.FunctionState, error) {
 	var functionState utils.FunctionState
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, "state", key)
-	err := f.request.Get(endpoint, &functionState)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, "state", key)
+	err := f.pulsar.Client.Get(endpoint, &functionState)
 	return functionState, err
 }
 
 func (f *functions) PutFunctionState(tenant, namespace, name string, state utils.FunctionState) error {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, "state", state.Key)
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, "state", state.Key)
 
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
@@ -514,7 +511,7 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state utils
 
 	contentType := multiPartWriter.FormDataContentType()
 
-	err = f.request.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
+	err = f.pulsar.Client.PostWithMultiPart(endpoint, nil, bodyBuf, contentType)
 
 	if err != nil {
 		return err
@@ -524,7 +521,7 @@ func (f *functions) PutFunctionState(tenant, namespace, name string, state utils
 }
 
 func (f *functions) TriggerFunction(tenant, namespace, name, topic, triggerValue, triggerFile string) (string, error) {
-	endpoint := f.client.endpoint(f.basePath, tenant, namespace, name, "trigger")
+	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, name, "trigger")
 
 	// buffer to store our request as bytes
 	bodyBuf := bytes.NewBufferString("")
@@ -583,7 +580,7 @@ func (f *functions) TriggerFunction(tenant, namespace, name, topic, triggerValue
 
 	contentType := multiPartWriter.FormDataContentType()
 	var str string
-	err := f.request.PostWithMultiPart(endpoint, &str, bodyBuf, contentType)
+	err := f.pulsar.Client.PostWithMultiPart(endpoint, &str, bodyBuf, contentType)
 	if err != nil {
 		return "", err
 	}

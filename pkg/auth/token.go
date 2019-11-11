@@ -73,7 +73,7 @@ func (p *TokenAuthProvider) GetData() ([]byte, error) {
 	return []byte(t), nil
 }
 
-func (p *TokenAuthProvider) DoAuth(client *http.Client, req *http.Request) {
+func (p *TokenAuthProvider) AddAuthParams(client *http.Client, req *http.Request) {
 	data, _ := p.GetData()
 	req.Header.Set("Authorization", "Bearer "+string(data))
 }

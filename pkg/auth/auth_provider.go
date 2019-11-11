@@ -21,6 +21,6 @@ import "net/http"
 
 // Provider provide a general method to add auth message
 type Provider interface {
-	// DoAuth is used to add auth information to a http request
-	DoAuth(client *http.Client, request *http.Request)
+	// AddAuthParams is used to add auth information to a http request
+	AddAuthParams(client *http.Client, request *http.Request)
 }

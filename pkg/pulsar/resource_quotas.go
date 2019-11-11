@@ -18,7 +18,6 @@
 package pulsar
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -40,23 +39,21 @@ type ResourceQuotas interface {
 }
 
 type resource struct {
-	client   *pulsarClient
-	request  *cli.Client
+	pulsar   *pulsarClient
 	basePath string
 }
 
 func (c *pulsarClient) ResourceQuotas() ResourceQuotas {
 	return &resource{
-		client:   c,
-		request:  c.Client,
+		pulsar:   c,
 		basePath: "/resource-quotas",
 	}
 }
 
 func (r *resource) GetDefaultResourceQuota() (*utils.ResourceQuota, error) {
-	endpoint := r.client.endpoint(r.basePath)
+	endpoint := r.pulsar.endpoint(r.basePath)
 	var quota utils.ResourceQuota
-	err := r.request.Get(endpoint, &quota)
+	err := r.pulsar.Client.Get(endpoint, &quota)
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +61,14 @@ func (r *resource) GetDefaultResourceQuota() (*utils.ResourceQuota, error) {
 }
 
 func (r *resource) SetDefaultResourceQuota(quota utils.ResourceQuota) error {
-	endpoint := r.client.endpoint(r.basePath)
-	return r.request.Post(endpoint, &quota)
+	endpoint := r.pulsar.endpoint(r.basePath)
+	return r.pulsar.Client.Post(endpoint, &quota)
 }
 
 func (r *resource) GetNamespaceBundleResourceQuota(namespace, bundle string) (*utils.ResourceQuota, error) {
-	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
+	endpoint := r.pulsar.endpoint(r.basePath, namespace, bundle)
 	var quota utils.ResourceQuota
-	err := r.request.Get(endpoint, &quota)
+	err := r.pulsar.Client.Get(endpoint, &quota)
 	if err != nil {
 		return nil, err
 	}
@@ -79,11 +76,11 @@ func (r *resource) GetNamespaceBundleResourceQuota(namespace, bundle string) (*u
 }
 
 func (r *resource) SetNamespaceBundleResourceQuota(namespace, bundle string, quota utils.ResourceQuota) error {
-	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
-	return r.request.Post(endpoint, &quota)
+	endpoint := r.pulsar.endpoint(r.basePath, namespace, bundle)
+	return r.pulsar.Client.Post(endpoint, &quota)
 }
 
 func (r *resource) ResetNamespaceBundleResourceQuota(namespace, bundle string) error {
-	endpoint := r.client.endpoint(r.basePath, namespace, bundle)
-	return r.request.Delete(endpoint)
+	endpoint := r.pulsar.endpoint(r.basePath, namespace, bundle)
+	return r.pulsar.Client.Delete(endpoint)
 }

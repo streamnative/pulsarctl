@@ -28,7 +28,6 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -72,8 +71,7 @@ type Subscriptions interface {
 }
 
 type subscriptions struct {
-	client   *pulsarClient
-	request  *cli.Client
+	pulsar   *pulsarClient
 	basePath string
 	SubPath  string
 }
@@ -81,66 +79,65 @@ type subscriptions struct {
 // Subscriptions is used to access the subscriptions endpoints
 func (c *pulsarClient) Subscriptions() Subscriptions {
 	return &subscriptions{
-		client:   c,
-		request:  c.Client,
+		pulsar:   c,
 		basePath: "",
 		SubPath:  "subscription",
 	}
 }
 
 func (s *subscriptions) Create(topic utils.TopicName, sName string, messageID utils.MessageID) error {
-	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.request.Put(endpoint, messageID)
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
+	return s.pulsar.Client.Put(endpoint, messageID)
 }
 
 func (s *subscriptions) Delete(topic utils.TopicName, sName string) error {
-	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
-	return s.request.Delete(endpoint)
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName))
+	return s.pulsar.Client.Delete(endpoint)
 }
 
 func (s *subscriptions) List(topic utils.TopicName) ([]string, error) {
-	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscriptions")
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), "subscriptions")
 	var list []string
-	return list, s.request.Get(endpoint, &list)
+	return list, s.pulsar.Client.Get(endpoint, &list)
 }
 
 func (s *subscriptions) ResetCursorToMessageID(topic utils.TopicName, sName string, id utils.MessageID) error {
-	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "resetcursor")
-	return s.request.Post(endpoint, id)
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "resetcursor")
+	return s.pulsar.Client.Post(endpoint, id)
 }
 
 func (s *subscriptions) ResetCursorToTimestamp(topic utils.TopicName, sName string, timestamp int64) error {
-	endpoint := s.client.endpoint(
+	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"resetcursor", strconv.FormatInt(timestamp, 10))
-	return s.request.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, "")
 }
 
 func (s *subscriptions) ClearBacklog(topic utils.TopicName, sName string) error {
-	endpoint := s.client.endpoint(
+	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName), "skip_all")
-	return s.request.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, "")
 }
 
 func (s *subscriptions) SkipMessages(topic utils.TopicName, sName string, n int64) error {
-	endpoint := s.client.endpoint(
+	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"skip", strconv.FormatInt(n, 10))
-	return s.request.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireMessages(topic utils.TopicName, sName string, expire int64) error {
-	endpoint := s.client.endpoint(
+	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.QueryEscape(sName),
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.request.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, "")
 }
 
 func (s *subscriptions) ExpireAllMessages(topic utils.TopicName, expire int64) error {
-	endpoint := s.client.endpoint(
+	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), "all_subscription",
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.request.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, "")
 }
 
 func (s *subscriptions) PeekMessages(topic utils.TopicName, sName string, n int) ([]*utils.Message, error) {
@@ -161,10 +158,10 @@ func (s *subscriptions) PeekMessages(topic utils.TopicName, sName string, n int)
 }
 
 func (s *subscriptions) peekNthMessage(topic utils.TopicName, sName string, pos int) ([]*utils.Message, error) {
-	endpoint := s.client.endpoint(s.basePath, topic.GetRestPath(), "subscription", url.QueryEscape(sName),
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), "subscription", url.QueryEscape(sName),
 		"position", strconv.Itoa(pos))
 
-	resp, err := s.request.MakeRequest(http.MethodGet, endpoint)
+	resp, err := s.pulsar.Client.MakeRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}

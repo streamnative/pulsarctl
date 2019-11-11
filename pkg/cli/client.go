@@ -68,12 +68,12 @@ func (c *Client) doRequest(r *request) (*http.Response, error) {
 	} else {
 		// add default headers
 		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Accept", "application/json")
 	}
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.useragent())
 
 	if c.AuthProvider != nil {
-		c.AuthProvider.DoAuth(c.HTTPClient, req)
+		c.AuthProvider.AddAuthParams(c.HTTPClient, req)
 	}
 
 	hc := c.HTTPClient

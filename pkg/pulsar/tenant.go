@@ -18,7 +18,6 @@
 package pulsar
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -41,45 +40,43 @@ type Tenants interface {
 }
 
 type tenants struct {
-	client   *pulsarClient
-	request  *cli.Client
+	pulsar   *pulsarClient
 	basePath string
 }
 
 // Tenants is used to access the tenants endpoints
 func (c *pulsarClient) Tenants() Tenants {
 	return &tenants{
-		client:   c,
-		request:  c.Client,
+		pulsar:   c,
 		basePath: "/tenants",
 	}
 }
 
 func (c *tenants) Create(data utils.TenantData) error {
-	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.request.Put(endpoint, &data)
+	endpoint := c.pulsar.endpoint(c.basePath, data.Name)
+	return c.pulsar.Client.Put(endpoint, &data)
 }
 
 func (c *tenants) Delete(name string) error {
-	endpoint := c.client.endpoint(c.basePath, name)
-	return c.request.Delete(endpoint)
+	endpoint := c.pulsar.endpoint(c.basePath, name)
+	return c.pulsar.Client.Delete(endpoint)
 }
 
 func (c *tenants) Update(data utils.TenantData) error {
-	endpoint := c.client.endpoint(c.basePath, data.Name)
-	return c.request.Post(endpoint, &data)
+	endpoint := c.pulsar.endpoint(c.basePath, data.Name)
+	return c.pulsar.Client.Post(endpoint, &data)
 }
 
 func (c *tenants) List() ([]string, error) {
 	var tenantList []string
-	endpoint := c.client.endpoint(c.basePath, "")
-	err := c.request.Get(endpoint, &tenantList)
+	endpoint := c.pulsar.endpoint(c.basePath, "")
+	err := c.pulsar.Client.Get(endpoint, &tenantList)
 	return tenantList, err
 }
 
 func (c *tenants) Get(name string) (utils.TenantData, error) {
 	var data utils.TenantData
-	endpoint := c.client.endpoint(c.basePath, name)
-	err := c.request.Get(endpoint, &data)
+	endpoint := c.pulsar.endpoint(c.basePath, name)
+	err := c.pulsar.Client.Get(endpoint, &data)
 	return data, err
 }

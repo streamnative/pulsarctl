@@ -58,7 +58,7 @@ func (p *TLSAuthProvider) GetTLSCertificate() (*tls.Certificate, error) {
 	return &cert, err
 }
 
-func (p *TLSAuthProvider) DoAuth(client *http.Client, req *http.Request) {
+func (p *TLSAuthProvider) AddAuthParams(client *http.Client, req *http.Request) {
 	if client.Transport == nil {
 		tlsConf, _ := p.GetTLSConfig(p.certificatePath, p.allowInsecureConnection)
 		if tlsConf != nil {
