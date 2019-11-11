@@ -21,17 +21,17 @@ import (
 	"errors"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func resetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Reset the specified namespace bundle's resource quota to default value."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	reset := common.Example{
+	var examples []cmdutils.Example
+	reset := cmdutils.Example{
 		Desc:    "Reset the specified namespace bundle's resource quota to default value",
 		Command: "pulsarctl resource-quotas reset (namespace name) (bundle range)",
 	}
@@ -39,8 +39,8 @@ func resetNamespaceBundleResourceQuota(vc *cmdutils.VerbCmd) {
 	examples = append(examples, reset)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Reset resource quota successful",
 	}

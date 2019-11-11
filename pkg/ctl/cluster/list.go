@@ -19,26 +19,25 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/olekukonko/tablewriter"
 )
 
 func ListClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "List the existing clusters"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "List the existing clusters",
 		Command: "pulsarctl clusters list",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+--------------+\n" +
 			"| CLUSTER NAME |\n" +

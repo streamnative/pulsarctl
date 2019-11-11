@@ -20,21 +20,21 @@ package topic
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 )
 
 func OffloadCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for triggering offloading the messages of a topic " +
 		"to a long-term storage (e.g. Amazon S3)"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	offload := common.Example{
+	var examples []cmdutils.Example
+	offload := cmdutils.Example{
 		Desc: "Trigger offloading the messages of a topic (topic-name) to a long-term storage and " +
 			"keep the configured amount of data in BookKeeper only (e.g. 10M, 5G, " +
 			"the unit is byte if the specified value without the unit.)",
@@ -43,18 +43,18 @@ func OffloadCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, offload)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Trigger offloading the data before the message (messageId) of the topic (topic-name) successfully",
 	}
 
-	nothingOut := common.Output{
+	nothingOut := cmdutils.Output{
 		Desc: "noting to offload",
 		Out:  "Nothing to offload",
 	}
 
-	argsError := common.Output{
+	argsError := cmdutils.Output{
 		Desc: "the topic name is not specified or the offload threshold is not specified",
 		Out:  "[✖]  only two arguments are allowed to be used as names",
 	}

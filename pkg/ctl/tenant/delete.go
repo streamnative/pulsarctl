@@ -19,31 +19,30 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func deleteTenantCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 
 	desc.CommandUsedFor = "This command is used for deleting an existing tenant."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	deleteExample := common.Example{
+	var examples []cmdutils.Example
+	deleteExample := cmdutils.Example{
 		Desc:    "delete a tenant named (tenant-name)",
 		Command: "pulsarctl tenants delete (tenant-name)",
 	}
 	examples = append(examples, deleteExample)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Delete tenant <tenant-name> successfully",
 	}
 	out = append(out, successOut)
 
-	NonEmptyError := common.Output{
+	NonEmptyError := cmdutils.Output{
 		Desc: "there has namespace(s) under the tenant (tenant-name)",
 		Out:  "code: 409 reason: The tenant still has active namespaces",
 	}

@@ -20,24 +20,23 @@ package brokers
 import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getDynamicConfigListNameCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get all overridden dynamic-configuration values"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	list := common.Example{
+	var examples []cmdutils.Example
+	list := cmdutils.Example{
 		Desc:    "Get all overridden dynamic-configuration values",
 		Command: "pulsarctl brokers list-dynamic-config",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "dispatchThrottlingRatePerTopicInMsg\n" +
 			"loadBalancerSheddingEnabled\n" +

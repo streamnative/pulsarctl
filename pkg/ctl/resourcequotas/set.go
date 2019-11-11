@@ -19,7 +19,7 @@ package resourcequotas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -28,17 +28,17 @@ import (
 )
 
 func setResourceQuota(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Set the resource quota for specified namespace bundle, " +
 		"or default quota if no namespace/bundle specified."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	set := common.Example{
+	var examples []cmdutils.Example
+	set := cmdutils.Example{
 		Desc:    "Set the resource quota use default namespace/bundle",
 		Command: "pulsarctl resource-quotas set",
 	}
-	setWithArgs := common.Example{
+	setWithArgs := cmdutils.Example{
 		Desc: "Set the resource quota for specified namespace bundle",
 		Command: "pulsarctl resource-quotas set --namespace (namespace name) --bundle (bundle range)" +
 			"--msgRateIn (msg rate in value)" +
@@ -51,8 +51,8 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 	examples = append(examples, set, setWithArgs)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Set (default) resource quota successful",
 	}

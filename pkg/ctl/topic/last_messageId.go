@@ -19,33 +19,33 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the last message id of a topic (partition)."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "Get the last message id of a topic (persistent-topic-name)",
 		Command: "pulsarctl topic last-message-id (persistent-topic-name)",
 	}
 
-	getPartitionedTopic := common.Example{
+	getPartitionedTopic := cmdutils.Example{
 		Desc:    "Get the last message id of a partition of a partitioned topic (topic-name)",
 		Command: "pulsarctl topic last-message-id --partition (partition) (topic-name)",
 	}
 	examples = append(examples, get, getPartitionedTopic)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"LedgerID\": 0,\n" +
@@ -55,13 +55,13 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut, ArgError)
 
-	topicNotFoundError := common.Output{
+	topicNotFoundError := cmdutils.Output{
 		Desc: "the topic (persistent-topic-name) does not exist in the cluster",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}
 	out = append(out, topicNotFoundError)
 
-	notAllowedError := common.Output{
+	notAllowedError := cmdutils.Output{
 		Desc: "the topic (persistent-topic-name) does not a persistent topic",
 		Out:  "[✖]  code: 405 reason: GetLastMessageId on a non-persistent topic is not allowed",
 	}

@@ -19,39 +19,38 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func removeBacklogQuota(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Remove a backlog quota policy from a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	removeBacklog := common.Example{
+	var examples []cmdutils.Example
+	removeBacklog := cmdutils.Example{
 		Desc:    "Remove a backlog quota policy from a namespace",
 		Command: "pulsarctl namespaces remove-backlog-quota tenant/namespace",
 	}
 	examples = append(examples, removeBacklog)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Remove backlog quota successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}

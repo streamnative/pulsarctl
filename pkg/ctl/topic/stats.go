@@ -19,40 +19,40 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func GetStatsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the stats for an existing topic and its " +
 		"connected producers and consumers. (All the rates are computed over a 1 minute window " +
 		"and are relative the last completed 1 minute period)"
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "Get the non-partitioned topic (topic-name) stats",
 		Command: "pulsarctl topic stats (topic-name)",
 	}
 
-	getPartition := common.Example{
+	getPartition := cmdutils.Example{
 		Desc:    "Get the partitioned topic (topic-name) stats",
 		Command: "pulsarctl topic stats --partitioned-topic (topic-name)",
 	}
 
-	getPerPartition := common.Example{
+	getPerPartition := cmdutils.Example{
 		Desc:    "Get the partitioned topic (topic-name) stats and per partition stats",
 		Command: "pulsarctl topic stats --partitioned-topic --per-partition (topic-name)",
 	}
 	examples = append(examples, get, getPartition, getPerPartition)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "Get the non-partitioned topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -68,7 +68,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 }`,
 	}
 
-	partitionOutput := common.Output{
+	partitionOutput := cmdutils.Output{
 		Desc: "Get the partitioned topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -88,7 +88,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 }`,
 	}
 
-	perPartitionOutput := common.Output{
+	perPartitionOutput := cmdutils.Output{
 		Desc: "Get the partitioned topic stats and per partition topic stats",
 		Out: `{
   "msgRateIn": 0,
@@ -122,7 +122,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut, partitionOutput, perPartitionOutput, ArgError)
 
-	topicNotFoundError := common.Output{
+	topicNotFoundError := cmdutils.Output{
 		Desc: "the specified topic does not exist " +
 			"or the specified topic is a partitioned-topic and you don't specified --partitioned-topic " +
 			"or the specified topic is a non-partitioned topic and you specified --partitioned-topic",

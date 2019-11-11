@@ -19,44 +19,44 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for updating the cluster data of the specified cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	updateURL := common.Example{
+	updateURL := cmdutils.Example{
 		Desc:    "updating the web service url of the (cluster-name)",
 		Command: "pulsarctl clusters update --url http://example:8080 (cluster-name)",
 	}
 	examples = append(examples, updateURL)
 
-	updateURLTLS := common.Example{
+	updateURLTLS := cmdutils.Example{
 		Desc:    "updating the tls secured web service url of the (cluster-name)",
 		Command: "pulsarctl clusters update --url-tls https://example:8080 (cluster-name)",
 	}
 	examples = append(examples, updateURLTLS)
 
-	updateBrokerURL := common.Example{
+	updateBrokerURL := cmdutils.Example{
 		Desc:    "updating the broker service url of the (cluster-name)",
 		Command: "pulsarctl clusters update --broker-url pulsar://example:6650 (cluster-name)",
 	}
 	examples = append(examples, updateBrokerURL)
 
-	updateBrokerURLTLS := common.Example{
+	updateBrokerURLTLS := cmdutils.Example{
 		Desc:    "updating the tls secured web service url of the (cluster-name)",
 		Command: "pulsarctl clusters update --broker-url-tls pulsar+ssl://example:6650 (cluster-name)",
 	}
 	examples = append(examples, updateBrokerURLTLS)
 
-	updatePeerCluster := common.Example{
+	updatePeerCluster := cmdutils.Example{
 		Desc:    "registered as a peer-cluster of the (cluster-name) clusters",
 		Command: "pulsarctl clusters update -p (cluster-a) -p (cluster-b) (cluster)",
 	}
@@ -64,8 +64,8 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Cluster (cluster-name) updated",
 	}

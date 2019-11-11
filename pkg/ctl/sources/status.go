@@ -27,12 +27,12 @@ import (
 )
 
 func statusSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Check the current status of a Pulsar Source."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	status := common.Example{
+	var examples []cmdutils.Example
+	status := cmdutils.Example{
 		Desc: "Check the current status of a Pulsar Source",
 		Command: "pulsarctl source status \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, status)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"numInstances\" : 1,\n" +
@@ -67,12 +67,12 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "Update contains no change",
 		Out:  "[✖]  code: 400 reason: Update contains no change",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Source doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Source (your source name) doesn't exist",
 	}

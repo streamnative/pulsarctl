@@ -19,32 +19,32 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the default subscribe rate per consumer of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	setBySub := common.Example{
+	var examples []cmdutils.Example
+	setBySub := cmdutils.Example{
 		Desc:    "Set the default subscribe rate by subscribe of the namespace (namespace-name) (rate)",
 		Command: "pulsarctl namespaces set-subscribe-rate --subscribe-rate (rate) (namespace)",
 	}
 
-	setByTime := common.Example{
+	setByTime := cmdutils.Example{
 		Desc:    "Set the default subscribe rate by time of the namespace (namespace-name) (period)",
 		Command: "pulsarctl namespaces set-subscribe-rate --period (period) (namespace)",
 	}
 	examples = append(examples, setBySub, setByTime)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Success set the default subscribe rate of the namespace (namespace-name) to (rate)",
 	}

@@ -20,7 +20,7 @@ package namespace
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/cobra"
@@ -28,20 +28,20 @@ import (
 )
 
 func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting compaction threshold of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []common.Example
-	set := common.Example{
+	var examples []cmdutils.Example
+	set := cmdutils.Example{
 		Desc:    "Set the compaction size threshold of the namespace (namespace-name) to (size)",
 		Command: "pulsarctl namespaces set-compaction-threshold --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the compaction size threshold of the namespace (namespace-name) to (size)",
 	}

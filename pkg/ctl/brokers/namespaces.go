@@ -24,25 +24,24 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List namespaces owned by the broker"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	list := common.Example{
+	var examples []cmdutils.Example
+	list := cmdutils.Example{
 		Desc:    "List namespaces owned by the broker",
 		Command: "pulsarctl brokers namespaces (cluster-name) --url (eg:127.0.0.1:8080)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"public/functions/0x40000000_0x80000000\": {\n" +
@@ -58,12 +57,12 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	var argsError = common.Output{
+	var argsError = cmdutils.Output{
 		Desc: "the cluster name is not specified or the cluster name is specified more than one",
 		Out:  "[✖]  the cluster name is not specified or the cluster name is specified more than one",
 	}
 
-	var urlError = common.Output{
+	var urlError = cmdutils.Output{
 		Desc: "The correct url is not provided, please check the `--url` arg.",
 		Out:  "[✖]  Get (broker url)/admin/v2/brokers/standalone/127.0.0.1:6650/ownedNamespaces: EOF",
 	}

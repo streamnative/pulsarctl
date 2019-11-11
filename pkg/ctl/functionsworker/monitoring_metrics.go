@@ -19,24 +19,23 @@ package functionsworker
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func monitoringMetrics(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Dump metrics for Monitoring"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	stats := common.Example{
+	var examples []cmdutils.Example
+	stats := cmdutils.Example{
 		Desc:    "Dump metrics for Monitoring",
 		Command: "pulsarctl functions-worker monitoring-metrics",
 	}
 	examples = append(examples, stats)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "[\n" +
 			"  {\n" +

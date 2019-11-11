@@ -19,7 +19,7 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/olekukonko/tablewriter"
@@ -32,20 +32,20 @@ var o = `+----------------------+
 `
 
 func ListCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for listing all the existing subscriptions of a topic."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []common.Example
-	list := common.Example{
+	var examples []cmdutils.Example
+	list := cmdutils.Example{
 		Desc:    "List all the existing subscriptions of a topic (topic-name)",
 		Command: "pulsarctl subscriptions list (topic-name)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  o,
 	}

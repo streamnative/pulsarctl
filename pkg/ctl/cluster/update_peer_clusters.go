@@ -19,27 +19,27 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func updatePeerClustersCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for updating peer clusters."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	update := common.Example{
+	var examples []cmdutils.Example
+	update := cmdutils.Example{
 		Desc:    "updating the <cluster-name> peer clusters",
 		Command: "pulsarctl clusters update-peer-clusters -p cluster-a -p cluster-b (cluster-name)",
 	}
 	examples = append(examples, update)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "output example",
 		Out:  "(cluster-name) peer clusters updated",
 	}

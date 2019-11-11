@@ -19,7 +19,7 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -27,25 +27,25 @@ import (
 )
 
 func SkipCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for skipping messages for a subscription."
 	desc.CommandPermission = "This command requires tenant admin and namespace produce or consume permissions."
 
-	var examples []common.Example
-	skip := common.Example{
+	var examples []cmdutils.Example
+	skip := cmdutils.Example{
 		Desc:    "Skip (n) messages for the subscription (subscription-name) of the topic (topic-name)",
 		Command: "pulsarctl subscription skip --count (n) (topic-name) (subscription-name)",
 	}
 
-	skipAll := common.Example{
+	skipAll := cmdutils.Example{
 		Desc:    "Skip all messages for the subscription (subscription-name) under the topic (topic-name) (clear-backlog)",
 		Command: "pulsarctl subscription skip --all (topic-name) (subscription-name)",
 	}
 	examples = append(examples, skip, skipAll)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "The subscription (subscription-name) skips (n) messages of the topic <topic-name> successfully",
 	}

@@ -19,34 +19,34 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the internal stats for a non-partitioned topic or a " +
 		"partition of a partitioned topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "Get internal stats for an existing non-partitioned-topic (topic-name)",
 		Command: "pulsarctl topic internal-stats (topic-name)",
 	}
 
-	getPartition := common.Example{
+	getPartition := cmdutils.Example{
 		Desc:    "Get internal stats for a partition of a partitioned topic",
 		Command: "pulsarctl topic internal-stats --partition (partition) (topic-name)",
 	}
 	examples = append(examples, get, getPartition)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: `{
   "entriesAddedCounter": 0,
@@ -73,7 +73,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 	}
 	out = append(out, successOut, ArgError)
 
-	partitionedTopicInternalStatsError := common.Output{
+	partitionedTopicInternalStatsError := cmdutils.Output{
 		Desc: "the specified topic is not exist or the specified topic is a partitioned topic",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}

@@ -19,27 +19,27 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the schema auto-update strategy of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []common.Example
-	set := common.Example{
+	var examples []cmdutils.Example
+	set := cmdutils.Example{
 		Desc:    "Set the schema auto-update strategy to (strategy)",
 		Command: "pulsarctl namespaces set-schema-autoupdate-strategy --compatibility (strategy) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the schema auto-update strategy of the namespace (namespace-name) to (strategy)",
 	}

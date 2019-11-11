@@ -24,17 +24,17 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func setBacklogQuota(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set a backlog quota policy for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	setBacklog := common.Example{
+	var examples []cmdutils.Example
+	setBacklog := cmdutils.Example{
 		Desc: "Set a backlog quota policy for a namespace",
 		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
 			"\t--limit 2G \n" +
@@ -43,28 +43,28 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Set backlog quota successfully for [tenant/namespace]",
 	}
 
-	noNamespaceName := common.Output{
+	noNamespaceName := cmdutils.Output{
 		Desc: "you must specify a tenant/namespace name, please check if the tenant/namespace name is provided",
 		Out:  "[✖]  the namespace name is not specified or the namespace name is specified more than one",
 	}
 
-	tenantNotExistError := common.Output{
+	tenantNotExistError := cmdutils.Output{
 		Desc: "the tenant does not exist",
 		Out:  "[✖]  code: 404 reason: Tenant does not exist",
 	}
 
-	nsNotExistError := common.Output{
+	nsNotExistError := cmdutils.Output{
 		Desc: "the namespace does not exist",
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	noSupportPolicyType := common.Output{
+	noSupportPolicyType := cmdutils.Output{
 		Desc: "invalid retention policy type, please check --policy arg",
 		Out:  "invalid retention policy type: (policy type)",
 	}

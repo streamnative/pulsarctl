@@ -28,13 +28,13 @@ import (
 )
 
 func startSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for starting a stopped sink instance."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	start := common.Example{
+	start := cmdutils.Example{
 		Desc: "Start sink instance",
 		Command: "pulsarctl sink start \n" +
 			"\t--tenant public\n" +
@@ -43,7 +43,7 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, start)
 
-	startWithInstanceID := common.Example{
+	startWithInstanceID := cmdutils.Example{
 		Desc: "Starts a stopped sink instance with instance ID",
 		Command: "pulsarctl sink start \n" +
 			"\t--tenant public\n" +
@@ -53,13 +53,13 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, startWithInstanceID)
 	desc.CommandExamples = examples
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Started (the name of a Pulsar Sink) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "sink doesn't exist",
 		Out:  "code: 404 reason: Sink (the name of a Pulsar Sink) doesn't exist",
 	}

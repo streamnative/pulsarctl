@@ -27,13 +27,13 @@ import (
 )
 
 func restartSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Restart source instance."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	restart := common.Example{
+	restart := cmdutils.Example{
 		Desc: "Restart source instance",
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
@@ -41,7 +41,7 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--name (the name of Pulsar Source)",
 	}
 
-	restartWithInstanceID := common.Example{
+	restartWithInstanceID := cmdutils.Example{
 		Desc: "Restart source instance with instance ID",
 		Command: "pulsarctl source restart \n" +
 			"\t--tenant public\n" +
@@ -53,13 +53,13 @@ func restartSourcesCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, restart, restartWithInstanceID)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Restarted (the name of a Pulsar Source) successfully",
 	}
 
-	nameNotExistOut := common.Output{
+	nameNotExistOut := cmdutils.Output{
 		Desc: "source doesn't exist",
 		Out:  "code: 404 reason: Source (the name of a Pulsar Source) doesn't exist",
 	}

@@ -19,26 +19,26 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the metadata of an exist topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	getTopic := common.Example{
+	var examples []cmdutils.Example
+	getTopic := cmdutils.Example{
 		Desc:    "Get hte metadata of an exist topic (topic-name) metadata",
 		Command: "pulsarctl topics get (topic-name)",
 	}
 	examples = append(examples, getTopic)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"partitions\": \"(partitions)\"\n" +

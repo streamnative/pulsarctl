@@ -28,12 +28,12 @@ import (
 )
 
 func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Fetch a key/value pair from the state associated with a Pulsar Function."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	querystate := common.Example{
+	var examples []cmdutils.Example
+	querystate := cmdutils.Example{
 		Desc: "Fetch the current state associated with a Pulsar Function",
 		Command: "pulsarctl functions querystate \n" +
 			"\t--tenant public\n" +
@@ -44,7 +44,7 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, querystate)
 
-	querystateWithFQFN := common.Example{
+	querystateWithFQFN := cmdutils.Example{
 		Desc: "Fetch a key/value pair from the state associated with a Pulsar Function with FQFN",
 		Command: "pulsarctl functions querystate \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]\n" +
@@ -53,7 +53,7 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, querystateWithFQFN)
 
-	querystateNoWatch := common.Example{
+	querystateNoWatch := cmdutils.Example{
 		Desc: "Fetch a key/value pair from the state associated with a Pulsar Function",
 		Command: "pulsarctl functions querystate \n" +
 			"\t--tenant public\n" +
@@ -65,8 +65,8 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  \"key\": \"pulsar\",\n" +
@@ -77,17 +77,17 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"}",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}
 
-	failOutWithKeyNotExist := common.Output{
+	failOutWithKeyNotExist := cmdutils.Output{
 		Desc: "key <the name of key> doesn't exist, please check --key args",
 		Out:  "error: key <the name of key> doesn't exist",
 	}

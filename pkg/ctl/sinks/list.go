@@ -27,13 +27,13 @@ import (
 )
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get the list of all the running Pulsar IO sink connectors"
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	list := common.Example{
+	list := cmdutils.Example{
 		Desc: "Get the list of all the running Pulsar IO sink connectors",
 		Command: "pulsarctl sink list \n" +
 			"\t--tenant public\n" +
@@ -42,8 +42,8 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+--------------------+\n" +
 			"|   Sink Name    |\n" +

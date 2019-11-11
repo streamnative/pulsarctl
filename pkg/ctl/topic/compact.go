@@ -19,7 +19,7 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -27,26 +27,26 @@ import (
 )
 
 func CompactCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for compacting a persistent topic or a partition of a partitioned topic."
 	desc.CommandPermission = "This command is requires tenant admin permissions."
 	desc.CommandScope = "non-partitioned topic, a partition of a partitioned topic"
 
-	var examples []common.Example
-	compact := common.Example{
+	var examples []cmdutils.Example
+	compact := cmdutils.Example{
 		Desc:    "Compact a persistent topic (topic-name)",
 		Command: "pulsarctl topic compact (topic-name)",
 	}
 
-	compactPartition := common.Example{
+	compactPartition := cmdutils.Example{
 		Desc:    "Compact a partition of a partitioned topic",
 		Command: "pulsarctl topic compact --partition (index) (topic-name)",
 	}
 	examples = append(examples, compact, compactPartition)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Sending compact topic (topic-name) request successfully",
 	}

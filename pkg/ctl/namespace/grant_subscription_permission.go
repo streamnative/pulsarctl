@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -28,12 +28,12 @@ import (
 )
 
 func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for granting client roles to access a subscription of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	grant := common.Example{
+	var examples []cmdutils.Example
+	grant := cmdutils.Example{
 		Desc: "Grant the client roles (roles-name) to access the subscription (subscription-name) of the " +
 			"namespace (namespace-name)",
 		Command: "pulsarctl namespaces grant-subscription-permission --role (role1-name) --role (role2-name) " +
@@ -42,14 +42,14 @@ func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, grant)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "Grant the client role <role-name> to access the subscription <subscription-name> of the " +
 			"namespace <namespace-name> successfully",
 	}
 
-	argsError := common.Output{
+	argsError := cmdutils.Output{
 		Desc: "the namespace name is not specified or the subscription name is not specified",
 		Out:  "[✖]  need to specified namespace name and subscription name",
 	}

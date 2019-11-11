@@ -26,13 +26,13 @@ import (
 )
 
 func getFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Fetch information about a Pulsar Function"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	get := common.Example{
+	get := cmdutils.Example{
 		Desc: "Fetch information about a Pulsar Function",
 		Command: "pulsarctl functions get \n" +
 			"\t--tenant public\n" +
@@ -40,7 +40,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\t--name (the name of Pulsar Function)",
 	}
 
-	getWithFqfn := common.Example{
+	getWithFqfn := cmdutils.Example{
 		Desc: "Fetch information about a Pulsar Function with FQFN",
 		Command: "pulsarctl functions get \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -48,8 +48,8 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, get, getWithFqfn)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n  " +
 			"\"tenant\": \"public\",\n  " +
@@ -69,12 +69,12 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"\"cleanupSubscription\": true\n}",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}

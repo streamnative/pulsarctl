@@ -21,26 +21,26 @@ import (
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 )
 
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for creating topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	createNonPartitions := common.Example{
+	var examples []cmdutils.Example
+	createNonPartitions := cmdutils.Example{
 		Desc:    "Create a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topics create (topic-name) 0",
 	}
 	examples = append(examples, createNonPartitions)
 
-	create := common.Example{
+	create := cmdutils.Example{
 		Desc:    "Create a partitioned topic (topic-name) with (partitions-num) partitions",
 		Command: "pulsarctl topics create (topic-name) (partition-num)",
 	}
@@ -48,8 +48,8 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandExamples = examples
 	vc.Command.Example = "#example \n command"
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Create topic (topic-name) with (partition-num) partitions successfully",
 	}

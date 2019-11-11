@@ -19,7 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -28,20 +28,20 @@ import (
 )
 
 func SetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the max producers per topic of a namespace."
 	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
-	var examples []common.Example
-	set := common.Example{
+	var examples []cmdutils.Example
+	set := cmdutils.Example{
 		Desc:    "Set the max producers per topic of the namespace (namespace-name) to (size)",
 		Command: "pulsarctl namespaces set-max-producers-per-topic --size (size) (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Successfully set the max producers per topic of namespace (namespace-name) to (size)",
 	}

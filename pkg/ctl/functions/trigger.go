@@ -28,12 +28,12 @@ import (
 )
 
 func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Trigger the specified Pulsar Function with a supplied value."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	trigger := common.Example{
+	var examples []cmdutils.Example
+	trigger := cmdutils.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
@@ -44,7 +44,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, trigger)
 
-	triggerWithFQFN := common.Example{
+	triggerWithFQFN := cmdutils.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]\n" +
@@ -53,7 +53,7 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, triggerWithFQFN)
 
-	triggerWithFile := common.Example{
+	triggerWithFile := cmdutils.Example{
 		Desc: "Trigger the specified Pulsar Function with a supplied value",
 		Command: "pulsarctl functions trigger \n" +
 			"\t--tenant public\n" +
@@ -66,28 +66,28 @@ func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	failOut := common.Output{
+	var out []cmdutils.Output
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := common.Output{
+	failOutWithWrongInstanceID := cmdutils.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
 
-	failOutWithTopic := common.Output{
+	failOutWithTopic := cmdutils.Output{
 		Desc: "Function in trigger function has unidentified topic",
 		Out:  "[✖]  code: 400 reason: Function in trigger function has unidentified topic",
 	}
 
-	failOutWithTimeout := common.Output{
+	failOutWithTimeout := cmdutils.Output{
 		Desc: "Request Timed Out",
 		Out:  "[✖]  code: 408 reason: Request Timed Out",
 	}

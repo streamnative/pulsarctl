@@ -27,12 +27,12 @@ import (
 )
 
 func createSourcesCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Submit a Pulsar IO source connector to run in a Pulsar cluster."
 	desc.CommandPermission = "This command requires namespace function permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode",
 		Command: "pulsarctl sources create \n" +
 			"\t--tenant public \n" +
@@ -45,7 +45,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--parallelism 1",
 	}
 
-	createWithPkgURL := common.Example{
+	createWithPkgURL := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with pkg URL",
 		Command: "pulsarctl source create \n" +
 			"\t--tenant public \n" +
@@ -56,21 +56,21 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t--archive file://(or http://) + /examples/api-examples.nar",
 	}
 
-	createWithSchema := common.Example{
+	createWithSchema := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with schema type",
 		Command: "pulsarctl source create \n" +
 			"\t--schema-type schema.STRING\n" +
 			"\t// Other source parameters ",
 	}
 
-	createWithParallelism := common.Example{
+	createWithParallelism := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with parallelism",
 		Command: "pulsarctl source create \n" +
 			"\t--parallelism 1\n" +
 			"\t// Other source parameters ",
 	}
 
-	createWithResource := common.Example{
+	createWithResource := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with resource",
 		Command: "pulsarctl source create \n" +
 			"\t--ram 5656565656\n" +
@@ -79,14 +79,14 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"\t// Other source parameters ",
 	}
 
-	createWithSourceConfig := common.Example{
+	createWithSourceConfig := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with source config",
 		Command: "pulsarctl source create \n" +
 			"\t--source-config \"{\"publishTopic\":\"publishTopic\", \"key\":\"pulsar\"}\"\n" +
 			"\t// Other source parameters ",
 	}
 
-	createWithProcessingGuarantees := common.Example{
+	createWithProcessingGuarantees := cmdutils.Example{
 		Desc: "Create a Pulsar Source in cluster mode with processing guarantees",
 		Command: "pulsarctl source create \n" +
 			"\t--processing-guarantees EFFECTIVELY_ONCE\n" +
@@ -97,19 +97,19 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		createWithResource, createWithSourceConfig, createWithProcessingGuarantees)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Created (the name of a Pulsar Sources) successfully",
 	}
 
-	failureOut := common.Output{
+	failureOut := cmdutils.Output{
 		Desc: "source archive not specified, please check --archive arg",
 		Out:  "[✖]  Source archive not specified",
 	}
 
 	//Cannot specify both archive and source-type
-	sourceTypeOut := common.Output{
+	sourceTypeOut := cmdutils.Output{
 		Desc: "Cannot specify both archive and source-type, please check --archive and --source-type args",
 		Out:  "[✖]  Cannot specify both archive and source-type",
 	}

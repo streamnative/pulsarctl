@@ -19,33 +19,33 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for enabling or disabling messages encryption for a namespace."
 	desc.CommandPermission = "This command requires tenant admin and " +
 		"a broker needs the read-write operations of the global zookeeper."
 
-	var examples []common.Example
-	enable := common.Example{
+	var examples []cmdutils.Example
+	enable := cmdutils.Example{
 		Desc:    "Enable messages encryption for the namespace (namespace-name)",
 		Command: "pulsarctl namespaces messages-encryption (namespace-name)",
 	}
 
-	disable := common.Example{
+	disable := cmdutils.Example{
 		Desc:    "Disable messages encryption for the namespace (namespace-name)",
 		Command: "pulsarct. namespaces messages-encryption --disable (namespace-name)",
 	}
 	examples = append(examples, enable, disable)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Enable/Disable message encryption for the namespace (namespace-name)",
 	}

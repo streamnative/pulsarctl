@@ -19,24 +19,23 @@ package brokers
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func getRuntimeConfigCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Get runtime configuration values"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	list := common.Example{
+	var examples []cmdutils.Example
+	list := cmdutils.Example{
 		Desc:    "Get runtime configuration values",
 		Command: "pulsarctl brokers get-runtime-config",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "{\n" +
 			"  “activeConsumerFailoverDelayTimeMillis”: “1000\",\n" +

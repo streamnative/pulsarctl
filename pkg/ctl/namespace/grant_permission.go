@@ -27,17 +27,17 @@ import (
 )
 
 func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for granting permissions to a client role to access a namespace."
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
-	var examples []common.Example
-	grant := common.Example{
+	var examples []cmdutils.Example
+	grant := cmdutils.Example{
 		Desc:    "Grant permission (action) to the client role (role-name) to access the namespace (namespace-name)",
 		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action) (namespace-name)",
 	}
 
-	grantActions := common.Example{
+	grantActions := cmdutils.Example{
 		Desc: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)",
 		Command: "pulsarctl namespaces grant-permission --role (role-name) --actions (action-1) --actions (action-2) " +
 			"(namespace-name)",
@@ -45,8 +45,8 @@ func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, grant, grantActions)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "Grant permissions (actions) to the client role (role-name) to access the namespace (namespace-name)" +
 			" successfully",

@@ -26,13 +26,13 @@ import (
 )
 
 func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for delete a Pulsar Function that is running on a Pulsar cluster."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	del := common.Example{
+	del := cmdutils.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster",
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
@@ -41,7 +41,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, del)
 
-	delWithInstanceID := common.Example{
+	delWithInstanceID := cmdutils.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with instance ID",
 		Command: "pulsarctl functions delete \n" +
 			"\t--tenant public\n" +
@@ -51,7 +51,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, delWithInstanceID)
 
-	delWithFqfn := common.Example{
+	delWithFqfn := cmdutils.Example{
 		Desc: "Delete a Pulsar Function that is running on a Pulsar cluster with FQFN",
 		Command: "pulsarctl functions delete \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -59,18 +59,18 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, delWithFqfn)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Deleted <the name of a Pulsar Function> successfully",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function <your function name> doesn't exist",
 	}

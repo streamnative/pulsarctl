@@ -19,26 +19,25 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/olekukonko/tablewriter"
 )
 
 func listTenantCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for listing all the existing tenants."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	listSuccess := common.Example{
+	var examples []cmdutils.Example
+	listSuccess := cmdutils.Example{
 		Desc:    "list all the existing tenants",
 		Command: "pulsarctl tenants list",
 	}
 	examples = append(examples, listSuccess)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out: "+-------------+\n" +
 			"| TENANT NAME |\n" +

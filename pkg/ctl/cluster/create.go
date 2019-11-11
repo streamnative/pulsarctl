@@ -19,30 +19,30 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func CreateClusterCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for adding the configuration data for a cluster. " +
 		"The configuration data is mainly used for geo-replication between clusters, so please " +
 		"make sure the service urls provided in this command are reachable between clusters. " +
 		"This operation requires Pulsar super-user privileges."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	create := common.Example{
+	var examples []cmdutils.Example
+	create := cmdutils.Example{
 		Desc:    "Provisions a new cluster",
 		Command: "pulsarctl clusters create (cluster-name)",
 	}
 	examples = append(examples, create)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Cluster (cluster-name) added",
 	}

@@ -19,24 +19,23 @@ package brokerstats
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func dumpMonitoringMetrics(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Dumps the metrics for Monitoring"
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
-	get := common.Example{
+	var examples []cmdutils.Example
+	get := cmdutils.Example{
 		Desc:    "Dumps the metrics for Monitoring",
 		Command: "pulsarctl broker-stats monitoring-metrics",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Get all the metrics details for Monitoring",
 	}

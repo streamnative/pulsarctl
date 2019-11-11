@@ -19,43 +19,43 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/spf13/pflag"
 )
 
 func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
-	var desc common.LongDescription
+	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for deleting an existing topic."
 	desc.CommandPermission = "This command requires namespace admin permissions."
 	desc.CommandScope = "non-partitioned topic, partitioned topic"
 
-	var examples []common.Example
-	deleteTopic := common.Example{
+	var examples []cmdutils.Example
+	deleteTopic := cmdutils.Example{
 		Desc:    "Delete a partitioned topic (topic-name)",
 		Command: "pulsarctl topics delete (topic-name)",
 	}
 
-	deleteNonPartitionedTopic := common.Example{
+	deleteNonPartitionedTopic := cmdutils.Example{
 		Desc:    "Delete a non-partitioned topic (topic-name)",
 		Command: "pulsarctl topics delete --non-partitioned (topic-name)",
 	}
 
 	examples = append(examples, deleteTopic, deleteNonPartitionedTopic)
 	desc.CommandExamples = examples
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Delete topic (topic-name) successfully",
 	}
 
-	partitionedTopicNotExistError := common.Output{
+	partitionedTopicNotExistError := cmdutils.Output{
 		Desc: "the partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Partitioned topic does not exist",
 	}
 
-	nonPartitionedTopicNotExistError := common.Output{
+	nonPartitionedTopicNotExistError := cmdutils.Output{
 		Desc: "the non-partitioned topic does not exist",
 		Out:  "[✖]  code: 404 reason: Topic not found",
 	}

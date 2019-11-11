@@ -28,13 +28,13 @@ import (
 )
 
 func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
-	desc := common.LongDescription{}
+	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for stopping function instance."
 	desc.CommandPermission = "This command requires super-user permissions."
 
-	var examples []common.Example
+	var examples []cmdutils.Example
 
-	stop := common.Example{
+	stop := cmdutils.Example{
 		Desc: "Stops function instance",
 		Command: "pulsarctl functions stop \n" +
 			"\t--tenant public\n" +
@@ -43,7 +43,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, stop)
 
-	stopWithInstanceID := common.Example{
+	stopWithInstanceID := cmdutils.Example{
 		Desc: "Stops function instance with instance ID",
 		Command: "pulsarctl functions stop \n" +
 			"\t--tenant public\n" +
@@ -53,7 +53,7 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	}
 	examples = append(examples, stopWithInstanceID)
 
-	stopWithFQFN := common.Example{
+	stopWithFQFN := cmdutils.Example{
 		Desc: "Stops function instance with FQFN",
 		Command: "pulsarctl functions stop \n" +
 			"\t--fqfn tenant/namespace/name [eg: public/default/ExampleFunctions]",
@@ -61,23 +61,23 @@ func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, stopWithFQFN)
 	desc.CommandExamples = examples
 
-	var out []common.Output
-	successOut := common.Output{
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
 		Desc: "normal output",
 		Out:  "Stopped (the name of a Pulsar Function) successfully",
 	}
 
-	failOut := common.Output{
+	failOut := cmdutils.Output{
 		Desc: "You must specify a name for the Pulsar Functions or a FQFN, please check the --name args",
 		Out:  "[✖]  you must specify a name for the function or a Fully Qualified Function Name (FQFN)",
 	}
 
-	failOutWithNameNotExist := common.Output{
+	failOutWithNameNotExist := cmdutils.Output{
 		Desc: "The name of Pulsar Functions doesn't exist, please check the --name args",
 		Out:  "[✖]  code: 404 reason: Function (your function name) doesn't exist",
 	}
 
-	failOutWithWrongInstanceID := common.Output{
+	failOutWithWrongInstanceID := cmdutils.Output{
 		Desc: "Used an instanceID that does not exist or other impermissible actions",
 		Out:  "[✖]  code: 400 reason: Operation not permitted",
 	}
