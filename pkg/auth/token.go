@@ -19,7 +19,6 @@ package auth
 
 import (
 	"io/ioutil"
-	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -73,7 +72,16 @@ func (p *TokenAuthProvider) GetData() ([]byte, error) {
 	return []byte(t), nil
 }
 
-func (p *TokenAuthProvider) AddAuthParams(client *http.Client, req *http.Request) {
-	data, _ := p.GetData()
-	req.Header.Set("Authorization", "Bearer "+string(data))
+func (p *TokenAuthProvider) HasDataForHTTP() bool {
+	return true
+}
+
+func (p *TokenAuthProvider) GetHTTPHeaders() (map[string]string, error) {
+	data, err := p.GetData()
+	if err != nil {
+		return nil, err
+	}
+	headers := make(map[string]string)
+	headers["Authorization"] = "Bearer " + string(data)
+	return headers, nil
 }

@@ -17,10 +17,11 @@
 
 package auth
 
-import "net/http"
-
 // Provider provide a general method to add auth message
 type Provider interface {
-	// AddAuthParams is used to add auth information to a http request
-	AddAuthParams(client *http.Client, request *http.Request)
+	// HasDataForHTTP is used to check if data for HTTP are available
+	HasDataForHTTP() bool
+
+	// GetHTTPHeaders is used to get all auth headers
+	GetHTTPHeaders() (map[string]string, error)
 }

@@ -73,7 +73,15 @@ func (c *Client) doRequest(r *request) (*http.Response, error) {
 	req.Header.Set("User-Agent", c.useragent())
 
 	if c.AuthProvider != nil {
-		c.AuthProvider.AddAuthParams(c.HTTPClient, req)
+		if c.AuthProvider.HasDataForHTTP() {
+			headers, err := c.AuthProvider.GetHTTPHeaders()
+			if err != nil {
+				return nil, err
+			}
+			for k, v := range headers {
+				req.Header.Set(k, v)
+			}
+		}
 	}
 
 	hc := c.HTTPClient

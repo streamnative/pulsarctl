@@ -21,7 +21,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/pkg/errors"
 )
@@ -58,18 +57,6 @@ func (p *TLSAuthProvider) GetTLSCertificate() (*tls.Certificate, error) {
 	return &cert, err
 }
 
-func (p *TLSAuthProvider) AddAuthParams(client *http.Client, req *http.Request) {
-	if client.Transport == nil {
-		tlsConf, _ := p.GetTLSConfig(p.certificatePath, p.allowInsecureConnection)
-		if tlsConf != nil {
-			client.Transport = &http.Transport{
-				MaxIdleConnsPerHost: 10,
-				TLSClientConfig:     tlsConf,
-			}
-		}
-	}
-}
-
 func (p *TLSAuthProvider) GetTLSConfig(certFile string, allowInsecureConnection bool) (*tls.Config, error) {
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: allowInsecureConnection,
@@ -97,4 +84,12 @@ func (p *TLSAuthProvider) GetTLSConfig(certFile string, allowInsecureConnection 
 	}
 
 	return tlsConfig, nil
+}
+
+func (p *TLSAuthProvider) HasDataForHTTP() bool {
+	return false
+}
+
+func (p *TLSAuthProvider) GetHTTPHeaders() (map[string]string, error) {
+	return nil, errors.New("Unsupported operation")
 }
