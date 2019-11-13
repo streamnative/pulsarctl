@@ -19,7 +19,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
@@ -28,13 +27,15 @@ import (
 func Examples() {
 	config := &pulsar.Config{
 		WebServiceURL: "http://localhost:8080",
-		HTTPClient:    http.DefaultClient,
 
 		// If the server enable the TLSAuth
-		// Auth: auth.NewAuthenticationTLS()
+		// TLSCertFile: filepath,
+		// TLSKeyFile: key_filepath,
+		// TLSAllowInsecureConnection: true,
 
 		// If the server enable the TokenAuth
-		// TokenAuth: auth.NewAuthenticationToken()
+		// Token: token_string,
+		// TokenFile: toke_filepath,
 	}
 
 	// the default NewPulsarClient will use v2 APIs. If you need to request other version APIs,
