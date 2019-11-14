@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
@@ -34,6 +35,9 @@ var PulsarCtlConfig = ClusterConfig{}
 type ClusterConfig struct {
 	// the web service url that pulsarctl connects to. Default is http://localhost:8080
 	WebServiceURL string
+
+	// the bookkeeper service url that pulsarctl connects to.
+	BKWebServiceURL string
 	// Set the path to the trusted TLS certificate file
 	TLSTrustCertsFilePath string
 	// Configure whether the Pulsar client accept untrusted TLS certificate from broker (default: false)
@@ -89,7 +93,18 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"",
 		"Using the token file to authentication")
 
+	c.addBKFlags(flags)
+
 	return flags
+}
+
+func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
+	flags.StringVar(
+		&c.BKWebServiceURL,
+		"bookie-service-url",
+		bookkeeper.DefaultWebServiceURL,
+		"The bookie web service url that pulsarctl connects to.",
+	)
 }
 
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
@@ -128,4 +143,18 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		log.Fatalf("create pulsar client error: %s", err.Error())
 	}
 	return client
+}
+
+func (c *ClusterConfig) BookieClient() bookkeeper.Client {
+	config := bookkeeper.DefaultConfig()
+	if len(c.BKWebServiceURL) > 0 {
+		config.WebServiceURL = c.BKWebServiceURL
+	}
+
+	bk, err := bookkeeper.New(config)
+	if err != nil {
+		log.Fatalf("create bookie client error: %s", err.Error())
+	}
+
+	return bk
 }
