@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
@@ -87,6 +88,10 @@ func NewPulsarClient() pulsar.Client {
 
 func NewPulsarClientWithAPIVersion(version common.APIVersion) pulsar.Client {
 	return PulsarCtlConfig.Client(version)
+}
+
+func NewBookieClient() bookkeeper.Client {
+	return PulsarCtlConfig.BookieClient()
 }
 
 func PrintJSON(w io.Writer, obj interface{}) {
