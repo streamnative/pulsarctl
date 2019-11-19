@@ -19,7 +19,7 @@ package bkctl
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
+	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/spf13/cobra"

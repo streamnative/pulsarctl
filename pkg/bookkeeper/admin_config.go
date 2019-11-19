@@ -30,7 +30,6 @@ const (
 
 var ReleaseVersion = "None"
 
-
 // Config is used to configure the bookKeeper admin client
 type Config struct {
 	WebServiceURL string
