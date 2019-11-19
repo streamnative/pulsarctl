@@ -15,33 +15,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookkeeper
+package ledger
 
 import (
-	"time"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
+	"github.com/spf13/cobra"
 )
 
-const (
-	DefaultWebServiceURL       = "http://localhost:8080"
-	DefaultHTTPTimeOutDuration = 5 * time.Minute
-)
+func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+	resourceCmd := cmdutils.NewResourceCmd(
+		"ledger",
+		"Operations about ledger",
+		"",
+		"")
 
-var ReleaseVersion = "None"
-
-
-// Config is used to configure the bookKeeper admin client
-type Config struct {
-	WebServiceURL string
-	HTTPTimeout   time.Duration
-	APIVersion    bkdata.APIVersion
-}
-
-// DefaultConfig for a bookKeeper admin client
-func DefaultConfig() *Config {
-	return &Config{
-		WebServiceURL: DefaultWebServiceURL,
-		HTTPTimeout:   DefaultHTTPTimeOutDuration,
+	commands := []func(*cmdutils.VerbCmd){
+		deleteCmd,
+		getCmd,
+		listCmd,
+		readCmd,
 	}
+
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
+
+	return resourceCmd
 }

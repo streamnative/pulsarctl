@@ -15,33 +15,28 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookkeeper
+package ledger
 
 import (
-	"time"
+	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
+	"github.com/stretchr/testify/assert"
 )
 
-const (
-	DefaultWebServiceURL       = "http://localhost:8080"
-	DefaultHTTPTimeOutDuration = 5 * time.Minute
-)
+func TestDeleteArgError(t *testing.T) {
+	args := []string{"delete"}
+	_, _, nameErr, _ := testLedgerCommands(deleteCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the ledger id is not specified or the ledger id is specified more than one",
+		nameErr.Error())
 
-var ReleaseVersion = "None"
+	args = []string{"delete", "a"}
+	_, execErr, _, _ := testLedgerCommands(deleteCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid ledger id a", execErr.Error())
 
-
-// Config is used to configure the bookKeeper admin client
-type Config struct {
-	WebServiceURL string
-	HTTPTimeout   time.Duration
-	APIVersion    bkdata.APIVersion
-}
-
-// DefaultConfig for a bookKeeper admin client
-func DefaultConfig() *Config {
-	return &Config{
-		WebServiceURL: DefaultWebServiceURL,
-		HTTPTimeout:   DefaultHTTPTimeOutDuration,
-	}
+	args = []string{"delete", "--", "-1"}
+	_, execErr, _, _ = testLedgerCommands(deleteCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "invalid ledger id -1", execErr.Error())
 }

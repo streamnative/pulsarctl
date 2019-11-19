@@ -29,6 +29,8 @@ import (
 type Client interface {
 	// Bookie related commands
 	Bookie() Bookie
+	// Ledger related commands
+	Ledger() Ledger
 }
 
 type bookieClient struct {

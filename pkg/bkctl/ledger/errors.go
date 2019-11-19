@@ -15,33 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookkeeper
+package ledger
 
-import (
-	"time"
+import "github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
-)
-
-const (
-	DefaultWebServiceURL       = "http://localhost:8080"
-	DefaultHTTPTimeOutDuration = 5 * time.Minute
-)
-
-var ReleaseVersion = "None"
-
-
-// Config is used to configure the bookKeeper admin client
-type Config struct {
-	WebServiceURL string
-	HTTPTimeout   time.Duration
-	APIVersion    bkdata.APIVersion
-}
-
-// DefaultConfig for a bookKeeper admin client
-func DefaultConfig() *Config {
-	return &Config{
-		WebServiceURL: DefaultWebServiceURL,
-		HTTPTimeout:   DefaultHTTPTimeOutDuration,
-	}
+var argError = cmdutils.Output{
+	Desc: "the ledger id is not specified or the ledger id is specified more than one",
+	Out:  "[✖]  the ledger id is not specified or the ledger id is specified more than one",
 }
