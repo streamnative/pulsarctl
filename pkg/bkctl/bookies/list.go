@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookie
+package bookies
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
@@ -89,7 +89,7 @@ func doList(vc *cmdutils.VerbCmd, show bool) error {
 	}
 
 	admin := cmdutils.NewBookieClient()
-	bookies, err := admin.Bookie().List(t, show)
+	bookies, err := admin.Bookies().List(t, show)
 	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), bookies)
 	}

@@ -29,7 +29,7 @@ func expandStorageCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	expand := cmdutils.Example{
 		Desc:    "Expanding storage for a bookie",
-		Command: "pulsarctl bookkeeper bookie expand",
+		Command: "pulsarctl bookkeeper bookie expand-storage",
 	}
 	examples = append(examples, expand)
 	desc.CommandExamples = examples
@@ -43,7 +43,7 @@ func expandStorageCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"expand",
+		"expand-storage",
 		"Expand storage for a bookie",
 		desc.ToString(),
 		desc.ExampleToString())

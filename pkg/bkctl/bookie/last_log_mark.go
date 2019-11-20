@@ -29,7 +29,7 @@ func lastLogMarkCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
 		Desc:    "Get the last log marker",
-		Command: "pulsarctl bookkeeper bookie lastlogmarker",
+		Command: "pulsarctl bookkeeper bookie last-log-marker",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -47,7 +47,7 @@ func lastLogMarkCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"lastlogmarker",
+		"last-log-marker",
 		"Get the last log marker",
 		desc.ToString(),
 		desc.ExampleToString())

@@ -30,7 +30,7 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	list := cmdutils.Example{
 		Desc:    "Get all the specified fileType (e.g. journal, entrylog, index) files on the disk of the current bookie",
-		Command: "pulsarctl bookkeeper bookie listdiskfile (file-type)",
+		Command: "pulsarctl bookkeeper bookie list-disk-file (file-type)",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
@@ -59,7 +59,7 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"listdiskfile",
+		"list-disk-file",
 		"Get all the files on the disk of the current bookie",
 		desc.ToString(),
 		desc.ExampleToString())

@@ -29,6 +29,8 @@ import (
 type Client interface {
 	// Bookie related commands
 	Bookie() Bookie
+	// Bookies related commands
+	Bookies() Bookies
 	// Ledger related commands
 	Ledger() Ledger
 }

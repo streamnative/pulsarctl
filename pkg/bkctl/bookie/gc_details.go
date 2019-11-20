@@ -32,7 +32,7 @@ func gcDetailsCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
 		Desc:    "Get the details of the running GC",
-		Command: "pulsarctl bookkeeper bookie gcdetails",
+		Command: "pulsarctl bookkeeper bookie gc-details",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -59,7 +59,7 @@ func gcDetailsCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"gcdetails",
+		"gc-details",
 		"Get the details of the running GC",
 		desc.ToString(),
 		desc.ExampleToString())

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookie
+package bookies
 
 import (
 	"fmt"
@@ -26,13 +26,13 @@ import (
 
 func TestListArgError(t *testing.T) {
 	args := []string{"list"}
-	_, _, nameErr, _ := testBookieCommands(listCmd, args)
+	_, _, nameErr, _ := testBookiesCommands(args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "the type is not specified or the type is specified more than one",
 		nameErr.Error())
 
 	args = []string{"list", "invalid"}
-	_, execErr, _, _ := testBookieCommands(listCmd, args)
+	_, execErr, _, _ := testBookiesCommands(args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, fmt.Sprintf("invalid bookie type %s. the bookie type only can "+
 		"be specified as 'rw' or 'ro'", "invalid"), execErr.Error())

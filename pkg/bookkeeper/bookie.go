@@ -18,18 +18,10 @@
 package bookkeeper
 
 import (
-	"strconv"
-
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
 )
 
 type Bookie interface {
-	// List all the available bookies
-	List(bkdata.BookieType, bool) (map[string]string, error)
-
-	// Get the bookies disk usage info of a cluster
-	Info() (map[string]string, error)
-
 	// Get the last log marker
 	LastLogMark() (map[string]string, error)
 
@@ -64,22 +56,6 @@ func (c *bookieClient) Bookie() Bookie {
 		basePath: "/bookie",
 		params:   make(map[string]string),
 	}
-}
-
-func (b *bookie) List(t bkdata.BookieType, show bool) (map[string]string, error) {
-	endpoint := b.bk.endpoint(b.basePath, "/list_bookies")
-	b.params["type"] = t.String()
-	b.params["print_hostnames"] = strconv.FormatBool(show)
-	bookies := make(map[string]string)
-	_, err := b.bk.Client.GetWithQueryParams(endpoint, &bookies, b.params, true)
-	return bookies, err
-}
-
-func (b *bookie) Info() (map[string]string, error) {
-	endpoint := b.bk.endpoint(b.basePath, "/list_bookie_info")
-	info := make(map[string]string)
-	err := b.bk.Client.Get(endpoint, &info)
-	return info, err
 }
 
 func (b *bookie) LastLogMark() (map[string]string, error) {

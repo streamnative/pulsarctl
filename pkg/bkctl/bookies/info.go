@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookie
+package bookies
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -29,7 +29,7 @@ func infoCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
 		Desc:    "Get the bookie disk usage info of a cluster",
-		Command: "pulsar bookkeeper bookie info",
+		Command: "pulsar bookkeeper bookie disk-usage-info",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
@@ -48,7 +48,7 @@ func infoCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"info",
+		"disk-usage-info",
 		"Get the bookie disk usage info of a cluster",
 		desc.ToString(),
 		desc.ExampleToString())
@@ -60,7 +60,7 @@ func infoCmd(vc *cmdutils.VerbCmd) {
 
 func doGetInfo(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
-	info, err := admin.Bookie().Info()
+	info, err := admin.Bookies().Info()
 	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
 	}

@@ -15,30 +15,46 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bookie
+package bookies
 
 import (
+	"bytes"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
+	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookie",
-		"Operations about one bookie",
-		"")
+func testBookiesCommands(args []string) (out *bytes.Buffer,
+	execErr, nameErr, err error) {
 
-	commands := []func(*cmdutils.VerbCmd){
-		lastLogMarkCmd,
-		listDiskFileCmd,
-		expandStorageCmd,
-		gcCmd,
-		gcStatusCmd,
-		gcDetailsCmd,
-		stateCmd,
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
 	}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-	return resourceCmd
+	var nameError error
+	cmdutils.CheckNameArgError = func(err error) {
+		nameError = err
+	}
+
+	var rootCmd = &cobra.Command{
+		Use:   "pulsarctl [command]",
+		Short: "a CLI for Apache Pulsar",
+		Run: func(cmd *cobra.Command, _ []string) {
+			if err := cmd.Help(); err != nil {
+				logger.Debug("ignoring error %q", err.Error())
+			}
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	rootCmd.SetOut(buf)
+	rootCmd.SetArgs(append([]string{"bookies"}, args...))
+	flagGrouping := cmdutils.NewGrouping()
+	rootCmd.AddCommand(Command(flagGrouping))
+	err = rootCmd.Execute()
+
+	return buf, execError, nameError, err
 }
