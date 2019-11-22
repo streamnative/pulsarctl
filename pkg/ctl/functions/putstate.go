@@ -31,7 +31,7 @@ import (
 func putstateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Put a key/value pair to the state associated with a Pulsar Function."
-	desc.CommandPermission = "This command requires namespace function permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 	putstate := cmdutils.Example{

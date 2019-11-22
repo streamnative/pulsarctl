@@ -30,7 +30,7 @@ import (
 func uploadSchema(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Update the schema for a topic"
-	desc.CommandPermission = "This command requires namespace admin permissions."
+	desc.CommandPermission = "This command requires super user and tenant admin and produce permissions."
 
 	var examples []cmdutils.Example
 

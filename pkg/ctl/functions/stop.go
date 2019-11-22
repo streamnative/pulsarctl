@@ -30,7 +30,7 @@ import (
 func stopFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for stopping function instance."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 

@@ -29,7 +29,7 @@ import (
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List all running Pulsar IO source connectors"
-	desc.CommandPermission = "This command requires namespace function permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 

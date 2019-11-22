@@ -29,7 +29,7 @@ import (
 func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Update a Pulsar Function that has been deployed to a Pulsar cluster."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 

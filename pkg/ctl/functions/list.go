@@ -29,7 +29,7 @@ import (
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "List all Pulsar Functions running under a specific tenant and namespace."
-	desc.CommandPermission = "This command requires super-user permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 

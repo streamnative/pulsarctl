@@ -30,7 +30,7 @@ import (
 func triggerFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Trigger the specified Pulsar Function with a supplied value."
-	desc.CommandPermission = "This command requires namespace function permissions."
+	desc.CommandPermission = "This command requires super-user and tenant admin and function permissions."
 
 	var examples []cmdutils.Example
 	trigger := cmdutils.Example{
