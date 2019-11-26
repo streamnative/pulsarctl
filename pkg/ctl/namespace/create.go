@@ -18,15 +18,16 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"math"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
-const MaxBundles = int64(1) << 32
+const MaxBundles = math.MaxInt32
 
 func createNs(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
