@@ -1,4 +1,4 @@
-name: TLS_Test
+name: Pulsarctl Security TLS Check
 on: [pull_request]
 jobs:
 

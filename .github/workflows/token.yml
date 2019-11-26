@@ -1,4 +1,4 @@
-name: Token_Test
+name: Pulsarctl Security Token Check
 on: [pull_request]
 jobs:
 

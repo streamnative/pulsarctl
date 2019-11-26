@@ -1,11 +1,10 @@
-name: Pulsarctl Release
+name: Pulsarctl Build and Website Check
 
-on:
-  release:
+on: [pull_request]
 
 jobs:
-  upload:
-    name: Upload go build
+  check:
+    name: Build and site check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -26,10 +25,3 @@ jobs:
       - name: build-site
         run: |
           make cli
-
-      - name: publish
-        uses: skx/github-action-publish-binaries@release-0.11
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: 'pulsarctl*'

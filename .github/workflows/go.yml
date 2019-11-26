@@ -1,4 +1,4 @@
-name: Go
+name: Pulsarctl Unit Tests Check
 on: [pull_request]
 jobs:
 
