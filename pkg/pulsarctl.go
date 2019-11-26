@@ -18,7 +18,6 @@
 package pkg
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/brokers"
 	"github.com/streamnative/pulsarctl/pkg/ctl/brokerstats"
@@ -99,9 +98,6 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(brokerstats.Command(flagGrouping))
 	rootCmd.AddCommand(resourcequotas.Command(flagGrouping))
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
-
-	// bookie commands group
-	rootCmd.AddCommand(bkctl.Command(flagGrouping))
 
 	return rootCmd
 }
