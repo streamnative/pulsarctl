@@ -25,10 +25,6 @@ import (
 
 type HS256 struct{}
 
-func (h *HS256) GetName() string {
-	return "HS256"
-}
-
 func (h *HS256) IsHMAC() bool {
 	return true
 }

@@ -25,10 +25,6 @@ import (
 
 type HS512 struct{}
 
-func (h *HS512) GetName() string {
-	return "HS512"
-}
-
 func (h *HS512) IsHMAC() bool {
 	return true
 }

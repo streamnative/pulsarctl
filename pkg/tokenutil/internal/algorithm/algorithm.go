@@ -24,9 +24,6 @@ import (
 // SignatureAlgorithm is a collection of all signature algorithm and it provides
 // some basic method to use.
 type SignatureAlgorithm interface {
-	// GetName is used to getting the signature algorithm name. We provide HS256, HS384, HS512.
-	GetName() string
-
 	// IsHMAC is used to checking if the algorithm is belong to HMAC.
 	IsHMAC() bool
 
