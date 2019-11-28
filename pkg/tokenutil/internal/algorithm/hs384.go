@@ -25,10 +25,6 @@ import (
 
 type HS384 struct{}
 
-func (h *HS384) GetName() string {
-	return "HS384"
-}
-
 func (h *HS384) IsHMAC() bool {
 	return true
 }
