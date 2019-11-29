@@ -31,7 +31,6 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
-	"github.com/streamnative/pulsarctl/pkg/tokenutil"
 
 	functiona "github.com/streamnative/pulsarctl/pkg/ctl/functions"
 	schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
@@ -101,9 +100,12 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(resourcequotas.Command(flagGrouping))
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
 	rootCmd.AddCommand(token.Command(flagGrouping))
+<<<<<<< HEAD
 
 	// token util commands group
 	rootCmd.AddCommand(tokenutil.Command(flagGrouping))
+=======
+>>>>>>> Address comments
 
 	return rootCmd
 }
