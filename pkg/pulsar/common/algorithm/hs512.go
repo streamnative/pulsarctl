@@ -25,10 +25,6 @@ import (
 
 type HS512 struct{}
 
-func (h *HS512) IsHMAC() bool {
-	return true
-}
-
 func (h *HS512) GenerateSecret() []byte {
 	bytes := make([]byte, 64)
 	rand.Read(bytes)

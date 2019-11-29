@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package tokenutil
+package token
 
 import (
+	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,12 +36,15 @@ var testData = []struct {
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: false, outputFile: "test-HS256-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: true, outputFile: "test-HS256-secret.key"},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: false, outputFile: "test-HS384-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: true, outputFile: "test-HS384-secret.key"},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: false, outputFile: "test-HS512-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: "test-HS512-secret.key"},
 	{InvalidAlgorithm: true, SignatureAlgorithm: "INVALID", encode: false, outputFile: ""},
 }
 
@@ -69,29 +72,27 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 	out, execErr, _ := testTokenCommands(createSecretKey, args)
 	assert.Nil(t, execErr)
 
-	if encode {
-		assert.Nil(t, execErr)
-		return
-	}
-
 	if outputFile != "" {
-		assert.Nil(t, execErr)
 		assert.Equal(t,
 			fmt.Sprintf("Write the secret key to the file %s successfully.\n", outputFile),
 			out.String())
 		return
 	}
 
+	var output []byte
+	if encode {
+		output, _ = base64.StdEncoding.DecodeString(out.String())
+	} else {
+		output = out.Bytes()[:len(out.Bytes())-1]
+	}
+
 	switch {
 	case signatureAlgorithm == "HS256":
-		result := strings.Split(out.String(), " ")
-		assert.Equal(t, 32, len(result))
+		assert.Equal(t, 32, len(output))
 	case signatureAlgorithm == "HS384":
-		result := strings.Split(out.String(), " ")
-		assert.Equal(t, 48, len(result))
+		assert.Equal(t, 48, len(output))
 	case signatureAlgorithm == "HS512":
-		result := strings.Split(out.String(), " ")
-		assert.Equal(t, 64, len(result))
+		assert.Equal(t, 64, len(output))
 	default:
 		log.Fatal("Test error")
 	}
@@ -102,7 +103,7 @@ func testInvalidError(t *testing.T, signatureAlgorithm string) {
 	_, execErr, _ := testTokenCommands(createSecretKey, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("the signature algorithm '%s' is invalid. Valid options include: 'HS256', "+
+		fmt.Sprintf("the signature algorithm '%s' is invalid. Valid options are: 'HS256', "+
 			"'HS384', 'HS512'\n", signatureAlgorithm),
 		execErr.Error())
 }

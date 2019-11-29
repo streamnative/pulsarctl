@@ -18,20 +18,26 @@
 package algorithm
 
 import (
-	"crypto/hmac"
-	"crypto/rand"
-	"crypto/sha256"
+	"github.com/pkg/errors"
 )
 
-type HS256 struct{}
-
-func (h *HS256) IsHMAC() bool {
-	return true
+// SignatureAlgorithm is a collection of all signature algorithm and it provides
+// some basic method to use.
+type SignatureAlgorithm interface {
+	// GenerateSecret is used to generating a secret.
+	GenerateSecret() []byte
 }
 
-func (h *HS256) GenerateSecret() []byte {
-	bytes := make([]byte, 32)
-	rand.Read(bytes)
-	s := hmac.New(sha256.New, bytes)
-	return s.Sum(nil)
+func GetSignatureAlgorithm(algorithm string) (SignatureAlgorithm, error) {
+	switch algorithm {
+	case "HS256":
+		return new(HS256), nil
+	case "HS384":
+		return new(HS384), nil
+	case "HS512":
+		return new(HS512), nil
+	default:
+		return nil, errors.Errorf("the signature algorithm '%s' is invalid. Valid options are: 'HS256', "+
+			"'HS384', 'HS512'\n", algorithm)
+	}
 }

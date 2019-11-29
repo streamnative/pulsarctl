@@ -15,32 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package tokenutil
+package algorithm
 
 import (
-	"bytes"
-
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/spf13/cobra"
+	"crypto/hmac"
+	"crypto/rand"
+	"crypto/sha256"
 )
 
-func testTokenCommands(newVerb func(*cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
-	execErr, err error) {
+type HS256 struct{}
 
-	cmdutils.ExecErrorHandler = func(err error) {
-		execErr = err
-	}
-
-	rootCmd := &cobra.Command{}
-	out = new(bytes.Buffer)
-	rootCmd.SetOut(out)
-	rootCmd.SetArgs(append([]string{"token"}, args...))
-	flagGrouping := cmdutils.NewGrouping()
-	rootCmd.AddCommand(Command(flagGrouping))
-	resourceCmd := cmdutils.NewResourceCmd("token", "", "")
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
-	err = rootCmd.Execute()
-
-	return
+func (h *HS256) GenerateSecret() []byte {
+	bytes := make([]byte, 32)
+	rand.Read(bytes)
+	s := hmac.New(sha256.New, bytes)
+	return s.Sum(nil)
 }
