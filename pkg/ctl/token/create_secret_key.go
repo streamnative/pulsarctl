@@ -66,7 +66,12 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 
 	toFile := cmdutils.Output{
 		Desc: "write the secret key to a file",
-		Out:  "Write secret to file (filename) successfully.",
+		Out:  "Write secret to file (filename) successfully",
+	}
+
+	toFileError := cmdutils.Output{
+		Desc: "writing the secret key to a file was failed",
+		Out:  "[✖]  writing the secret key to the file %s was failed",
 	}
 
 	invalidSignatureAlgorithmError := cmdutils.Output{
@@ -75,7 +80,7 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 			"'HS256', 'HS384', 'HS512'",
 	}
 
-	out = append(out, toTerminal, withBase64, toFile, invalidSignatureAlgorithmError)
+	out = append(out, toTerminal, withBase64, toFile, toFileError, invalidSignatureAlgorithmError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
@@ -123,7 +128,7 @@ func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile stri
 		if err != nil {
 			return errors.Errorf("writing the secret key to the file %s was failed\n", outputFile)
 		}
-		vc.Command.Printf("Write the secret key to the file %s successfully.\n", outputFile)
+		vc.Command.Printf("Write the secret key to the file %s successfully\n", outputFile)
 		return nil
 	}
 

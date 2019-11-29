@@ -36,15 +36,15 @@ var testData = []struct {
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: false, outputFile: "test-HS256-secret.key"},
-	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: true, outputFile: "test-HS256-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS256", encode: true, outputFile: "test-HS256-encode-secret.key"},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: false, outputFile: "test-HS384-secret.key"},
-	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: true, outputFile: "test-HS384-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS384", encode: true, outputFile: "test-HS384-encode-secret.key"},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: false, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: ""},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: false, outputFile: "test-HS512-secret.key"},
-	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: "test-HS512-secret.key"},
+	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: "test-HS512-encode-secret.key"},
 	{InvalidAlgorithm: true, SignatureAlgorithm: "INVALID", encode: false, outputFile: ""},
 }
 
@@ -74,7 +74,7 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 
 	if outputFile != "" {
 		assert.Equal(t,
-			fmt.Sprintf("Write the secret key to the file %s successfully.\n", outputFile),
+			fmt.Sprintf("Write the secret key to the file %s successfully\n", outputFile),
 			out.String())
 		return
 	}
