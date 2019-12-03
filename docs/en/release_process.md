@@ -86,9 +86,9 @@ to install the Pulsarctl and make sure the version of the downloaded Pulsarctl i
 
 (3) Add the latest version to the `Available Release` in `README.md`.
 
-(4) Delete the previous milestone.
+(4) Close the previous milestone.
 
 6. Announce the release
 
-After publishing and checking the release, work with Growth to
-announce that a new version of Pulsarctl is released.
+After publishing and checking the release, work with Growth team
+to announce that a new version of Pulsarctl is released.
