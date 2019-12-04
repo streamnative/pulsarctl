@@ -40,7 +40,7 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 	}
 
 	outputWithBase64 := cmdutils.Example{
-		Desc:    "Create a base64 encoded key",
+		Desc:    "Create a base64 encoded secret key",
 		Command: "pulsarctl token create-secret-key --base64",
 	}
 
@@ -60,18 +60,18 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 	}
 
 	withBase64 := cmdutils.Output{
-		Desc: "write the secret key to the terminal and encode with base64",
+		Desc: "write a base64 encoded secret key to the terminal",
 		Out:  base64.StdEncoding.EncodeToString(o),
 	}
 
 	toFile := cmdutils.Output{
 		Desc: "write the secret key to a file",
-		Out:  "Write secret to file (filename) successfully",
+		Out:  "Write secret to the file (filename) successfully",
 	}
 
 	toFileError := cmdutils.Output{
 		Desc: "writing the secret key to a file was failed",
-		Out:  "[✖]  writing the secret key to the file %s was failed",
+		Out:  "[✖]  writing the secret key to the file (filename) was failed",
 	}
 
 	invalidSignatureAlgorithmError := cmdutils.Output{
@@ -90,26 +90,26 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString())
 
 	var signatureAlgorithm string
-	var encode bool
+	var base64Encoded bool
 	var output string
 
 	vc.SetRunFunc(func() error {
-		return doCreateSecretKey(vc, signatureAlgorithm, output, encode)
+		return doCreateSecretKey(vc, signatureAlgorithm, output, base64Encoded)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Create secret key", func(set *pflag.FlagSet) {
 		set.StringVarP(&signatureAlgorithm, "signature-algorithm", "a", "HS256",
-			"The signature algorithm used for generating the secret key. valid options are:"+
+			"The signature algorithm used for generating the secret key. Valid options are:"+
 				"'HS256', 'HS384', 'HS512'")
 		set.StringVarP(&output, "output-file", "o", "",
 			"The file that the secret key is written to")
-		set.BoolVarP(&encode, "base64", "b", false,
+		set.BoolVarP(&base64Encoded, "base64", "b", false,
 			"Generate a base64 encoded secret key")
 	})
 
 }
 
-func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile string, encode bool) error {
+func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile string, base64Encoded bool) error {
 	admin := cmdutils.NewPulsarClient()
 	secret, err := admin.Token().CreateSecretKey(signatureAlgorithm)
 	if err != nil {
@@ -117,7 +117,7 @@ func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile stri
 	}
 
 	var output []byte
-	if encode {
+	if base64Encoded {
 		output = []byte(base64.StdEncoding.EncodeToString(secret))
 	} else {
 		output = secret
