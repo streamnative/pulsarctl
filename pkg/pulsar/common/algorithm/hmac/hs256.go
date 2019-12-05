@@ -15,19 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package algorithm
+package hmac
 
 import (
 	"crypto/hmac"
 	"crypto/rand"
-	"crypto/sha512"
+	"crypto/sha256"
 )
 
-type HS512 struct{}
+type HS256 struct{}
 
-func (h *HS512) GenerateSecret() []byte {
-	bytes := make([]byte, 64)
+func (h *HS256) GenerateSecret() []byte {
+	bytes := make([]byte, 32)
 	rand.Read(bytes)
-	s := hmac.New(sha512.New, bytes)
+	s := hmac.New(sha256.New, bytes)
 	return s.Sum(nil)
 }

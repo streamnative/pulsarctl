@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -35,17 +36,17 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 
 	var examples []cmdutils.Example
 	outputToTerminal := cmdutils.Example{
-		Desc:    "Create a secret key",
+		Desc:    "Create a secret key.",
 		Command: "pulsarctl token create-secret-key",
 	}
 
 	outputWithBase64 := cmdutils.Example{
-		Desc:    "Create a base64 encoded secret key",
+		Desc:    "Create a base64 encoded secret key.",
 		Command: "pulsarctl token create-secret-key --base64",
 	}
 
 	outputToFile := cmdutils.Example{
-		Desc:    "Create a secret key and save it to a file",
+		Desc:    "Create a secret key and save it to a file.",
 		Command: "pulsarctl token create-secret-key --output (file path)",
 	}
 	examples = append(examples, outputToTerminal, outputWithBase64, outputToFile)
@@ -55,27 +56,27 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	toTerminal := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Create a secret key successfully.",
 		Out:  fmt.Sprintf("%+v", o),
 	}
 
 	withBase64 := cmdutils.Output{
-		Desc: "write a base64 encoded secret key to the terminal",
+		Desc: "Write a base64 encoded secret key to the terminal.",
 		Out:  base64.StdEncoding.EncodeToString(o),
 	}
 
 	toFile := cmdutils.Output{
-		Desc: "write the secret key to a file",
-		Out:  "Write secret to the file (filename) successfully",
+		Desc: "Write the secret key to a file successfully.",
+		Out:  "Write secret to the file (filename) successfully.",
 	}
 
 	toFileError := cmdutils.Output{
-		Desc: "writing the secret key to a file was failed",
+		Desc: "Writing the secret key to a file was failed.",
 		Out:  "[✖]  writing the secret key to the file (filename) was failed",
 	}
 
 	invalidSignatureAlgorithmError := cmdutils.Output{
-		Desc: "using invalid signature algorithm to generate secret key",
+		Desc: "Using invalid signature algorithm to generate secret key.",
 		Out: "[✖]  the signature algorithm '(signature algorithm)' is invalid. Valid options are: " +
 			"'HS256', 'HS384', 'HS512'",
 	}
@@ -100,18 +101,18 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Create secret key", func(set *pflag.FlagSet) {
 		set.StringVarP(&signatureAlgorithm, "signature-algorithm", "a", "HS256",
 			"The signature algorithm used for generating the secret key. Valid options are:"+
-				"'HS256', 'HS384', 'HS512'")
+				"'HS256', 'HS384', 'HS512'.")
 		set.StringVarP(&output, "output-file", "o", "",
-			"The file that the secret key is written to")
+			"The file that the secret key is written to.")
 		set.BoolVarP(&base64Encoded, "base64", "b", false,
-			"Generate a base64 encoded secret key")
+			"Generate a base64 encoded secret key.")
 	})
 
 }
 
 func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile string, base64Encoded bool) error {
 	admin := cmdutils.NewPulsarClient()
-	secret, err := admin.Token().CreateSecretKey(signatureAlgorithm)
+	secret, err := admin.Token().CreateSecretKey(algorithm.Algorithm(signatureAlgorithm))
 	if err != nil {
 		return err
 	}
@@ -128,7 +129,7 @@ func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile stri
 		if err != nil {
 			return errors.Errorf("writing the secret key to the file %s was failed\n", outputFile)
 		}
-		vc.Command.Printf("Write the secret key to the file %s successfully\n", outputFile)
+		vc.Command.Printf("Write the secret key to the file %s successfully.\n", outputFile)
 		return nil
 	}
 

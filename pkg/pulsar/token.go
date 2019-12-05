@@ -27,7 +27,7 @@ type Token interface {
 	CreateKeyPair(algorithm.Algorithm) (*keypair.KeyPair, error)
 
 	// CreateSecretKey is used for creating a secret key
-	CreateSecretKey(string) ([]byte, error)
+	CreateSecretKey(algorithm.Algorithm) ([]byte, error)
 }
 
 type token struct {
@@ -48,7 +48,7 @@ func (c *token) CreateKeyPair(signatureAlgorithm algorithm.Algorithm) (*keypair.
 	return sa.GenerateKeyPair()
 }
 
-func (t *token) CreateSecretKey(signatureAlgorithm string) ([]byte, error) {
+func (t *token) CreateSecretKey(signatureAlgorithm algorithm.Algorithm) ([]byte, error) {
 	sa, err := algorithm.GetSignatureAlgorithm(signatureAlgorithm)
 	if err != nil {
 		return nil, err

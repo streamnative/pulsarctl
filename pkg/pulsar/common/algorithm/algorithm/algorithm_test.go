@@ -34,6 +34,9 @@ var testData = []struct {
 	{"ECDSA", ES256},
 	{"ECDSA", ES384},
 	{"ECDSA", ES512},
+	{"HMAC", HS256},
+	{"HMAC", HS384},
+	{"HMAC", HS512},
 	{"INVALID", Algorithm("INVALID")},
 }
 
@@ -45,13 +48,15 @@ func TestGetSignatureAlgorithm(t *testing.T) {
 			testRSA(t, data.algorithm)
 		case "ECDSA":
 			testECDSA(t, data.algorithm)
+		case "HMAC":
+			testHMAC(t, data.algorithm)
 		default:
 			sa, err := GetSignatureAlgorithm(data.algorithm)
 			assert.Nil(t, sa)
 			assert.NotNil(t, err)
 			assert.Equal(t,
 				fmt.Sprintf("the signature algorithm '%s' is invalid. Valid options are: "+
-					"'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'\n", data.algorithm),
+					"'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'HS256', 'HS384', 'HS512'\n", data.algorithm),
 				err.Error())
 		}
 	}
@@ -103,4 +108,20 @@ func testECDSA(t *testing.T, algorithm Algorithm) {
 	assert.Equal(t,
 		"the private key is not generated using RSA signature algorithm",
 		err.Error())
+}
+
+func testHMAC(t *testing.T, algorithm Algorithm) {
+	sa, err := GetSignatureAlgorithm(algorithm)
+	assert.Nil(t, err)
+
+	secrets := sa.GenerateSecret()
+	assert.Nil(t, err)
+	switch algorithm {
+	case HS256:
+		assert.Equal(t, 32, len(secrets))
+	case HS384:
+		assert.Equal(t, 48, len(secrets))
+	case HS512:
+		assert.Equal(t, 64, len(secrets))
+	}
 }

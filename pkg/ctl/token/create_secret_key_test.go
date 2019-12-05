@@ -50,11 +50,11 @@ var testData = []struct {
 
 func TestCreateSecretKeyCommand(t *testing.T) {
 	for _, data := range testData {
+		t.Logf("test case: %+v", data)
 		if data.InvalidAlgorithm {
 			testInvalidError(t, data.SignatureAlgorithm)
 			continue
 		}
-		log.Printf("test case: %+v", data)
 		testNormalCase(t, data.SignatureAlgorithm, data.outputFile, data.encode)
 	}
 }
@@ -74,7 +74,7 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 
 	if outputFile != "" {
 		assert.Equal(t,
-			fmt.Sprintf("Write the secret key to the file %s successfully\n", outputFile),
+			fmt.Sprintf("Write the secret key to the file %s successfully.\n", outputFile),
 			out.String())
 		return
 	}

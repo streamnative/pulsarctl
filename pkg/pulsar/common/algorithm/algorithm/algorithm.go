@@ -19,6 +19,7 @@ package algorithm
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/ecdsa"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/hmac"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/rsa"
 
@@ -28,12 +29,15 @@ import (
 type Algorithm string
 
 const (
-	RS256 = "RS256"
-	RS384 = "RS384"
-	RS512 = "RS512"
-	ES256 = "ES256"
-	ES384 = "ES384"
-	ES512 = "ES512"
+	RS256           = "RS256"
+	RS384           = "RS384"
+	RS512           = "RS512"
+	ES256           = "ES256"
+	ES384           = "ES384"
+	ES512           = "ES512"
+	HS256 Algorithm = "HS256"
+	HS384 Algorithm = "HS384"
+	HS512 Algorithm = "HS512"
 )
 
 var algorithmMap = map[Algorithm]SignatureAlgorithm{
@@ -43,20 +47,26 @@ var algorithmMap = map[Algorithm]SignatureAlgorithm{
 	ES256: new(ecdsa.ES256),
 	ES384: new(ecdsa.ES384),
 	ES512: new(ecdsa.ES512),
+	HS256: new(hmac.HS256),
+	HS384: new(hmac.HS384),
+	HS512: new(hmac.HS512),
 }
 
 // SignatureAlgorithm is a collection of all signature algorithm and it provides
-// some basic method to use
+// some basic method to use.
 type SignatureAlgorithm interface {
 	// GenerateKeyPair generates public and private key
 	GenerateKeyPair() (*keypair.KeyPair, error)
+
+	// GenerateSecret is used to generating a secret.
+	GenerateSecret() []byte
 }
 
 func GetSignatureAlgorithm(algorithm Algorithm) (SignatureAlgorithm, error) {
 	sa := algorithmMap[algorithm]
 	if sa == nil {
 		return nil, errors.Errorf("the signature algorithm '%s' is invalid. Valid options are: "+
-			"'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'\n", algorithm)
+			"'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512', 'HS256', 'HS384', 'HS512'\n", algorithm)
 	}
 	return sa, nil
 }
