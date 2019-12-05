@@ -74,7 +74,7 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 
 	if outputFile != "" {
 		assert.Equal(t,
-			fmt.Sprintf("Write the secret key to the file %s successfully\n", outputFile),
+			fmt.Sprintf("Write the secret key to the file %s successfully.\n", outputFile),
 			out.String())
 		return
 	}
