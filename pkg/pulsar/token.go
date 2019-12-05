@@ -48,7 +48,7 @@ func (c *token) CreateKeyPair(signatureAlgorithm algorithm.Algorithm) (*keypair.
 	return sa.GenerateKeyPair()
 }
 
-func (t *token) CreateSecretKey(signatureAlgorithm algorithm.Algorithm) ([]byte, error) {
+func (c *token) CreateSecretKey(signatureAlgorithm algorithm.Algorithm) ([]byte, error) {
 	sa, err := algorithm.GetSignatureAlgorithm(signatureAlgorithm)
 	if err != nil {
 		return nil, err
