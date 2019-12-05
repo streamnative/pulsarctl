@@ -50,7 +50,7 @@ func createKeyPair(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	defaultOutput := cmdutils.Output{
-		Desc: "Successfully create a key pair.",
+		Desc: "Create a key pair successfully.",
 		Out: "The private key and public key are generated to (private-key-path) and " +
 			"(public-key-path) successfully.",
 	}
