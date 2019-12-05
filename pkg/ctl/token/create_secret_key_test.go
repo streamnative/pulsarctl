@@ -20,7 +20,6 @@ package token
 import (
 	"encoding/base64"
 	"fmt"
-	"log"
 	"os"
 	"testing"
 
@@ -46,13 +45,24 @@ var testSecretKeyData = []struct {
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: false, outputFile: "test-HS512-secret.key"},
 	{InvalidAlgorithm: false, SignatureAlgorithm: "HS512", encode: true, outputFile: "test-HS512-encode-secret.key"},
 	{InvalidAlgorithm: true, SignatureAlgorithm: "INVALID", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "RS256", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "RS384", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "RS512", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "ES256", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "ES384", encode: false, outputFile: ""},
+	{InvalidAlgorithm: true, SignatureAlgorithm: "ES512", encode: false, outputFile: ""},
 }
 
 func TestCreateSecretKeyCommand(t *testing.T) {
 	for _, data := range testSecretKeyData {
 		t.Logf("test case: %+v", data)
 		if data.InvalidAlgorithm {
-			testInvalidError(t, data.SignatureAlgorithm)
+			switch data.SignatureAlgorithm {
+			case "INVALID":
+				testInvalidError(t, data.SignatureAlgorithm)
+			default:
+				testUnsupportedOperationError(t, data.SignatureAlgorithm)
+			}
 			continue
 		}
 		testNormalCase(t, data.SignatureAlgorithm, data.outputFile, data.encode)
@@ -94,7 +104,7 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 	case signatureAlgorithm == "HS512":
 		assert.Equal(t, 64, len(output))
 	default:
-		log.Fatal("Test error")
+		t.Fatal()
 	}
 }
 
@@ -104,6 +114,13 @@ func testInvalidError(t *testing.T, signatureAlgorithm string) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("the signature algorithm '%s' is invalid. Valid options are: 'HS256', "+
-			"'HS384', 'HS512'\n", signatureAlgorithm),
+			"'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'\n", signatureAlgorithm),
 		execErr.Error())
+}
+
+func testUnsupportedOperationError(t *testing.T, signatureAlgorithm string) {
+	args := []string{"create-secret-key", "--signature-algorithm", signatureAlgorithm}
+	_, execErr, _ := testTokenCommands(createSecretKey, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "unsupported operation", execErr.Error())
 }
