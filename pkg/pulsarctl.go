@@ -100,12 +100,6 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(resourcequotas.Command(flagGrouping))
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
 	rootCmd.AddCommand(token.Command(flagGrouping))
-<<<<<<< HEAD
-
-	// token util commands group
-	rootCmd.AddCommand(tokenutil.Command(flagGrouping))
-=======
->>>>>>> Address comments
 
 	return rootCmd
 }

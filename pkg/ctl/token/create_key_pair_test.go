@@ -47,7 +47,7 @@ func TestCreateKeyPair(t *testing.T) {
 			assert.NotNil(t, execErr)
 			assert.Equal(t,
 				fmt.Sprintf("the signature algorithm '%s' is invalid. Valid options are: "+
-					"'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'\n",
+					"'HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'\n",
 					data.signatureAlgorithm),
 				execErr.Error())
 			continue

@@ -53,5 +53,5 @@ func (t *token) CreateSecretKey(signatureAlgorithm algorithm.Algorithm) ([]byte,
 	if err != nil {
 		return nil, err
 	}
-	return sa.GenerateSecret(), nil
+	return sa.GenerateSecret()
 }

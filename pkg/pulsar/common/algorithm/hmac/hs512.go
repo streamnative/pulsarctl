@@ -21,13 +21,21 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha512"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
+
+	"github.com/pkg/errors"
 )
 
 type HS512 struct{}
 
-func (h *HS512) GenerateSecret() []byte {
+func (h *HS512) GenerateSecret() ([]byte, error) {
 	bytes := make([]byte, 64)
 	rand.Read(bytes)
 	s := hmac.New(sha512.New, bytes)
-	return s.Sum(nil)
+	return s.Sum(nil), nil
+}
+
+func (h *HS512) GenerateKeyPair() (*keypair.KeyPair, error) {
+	return nil, errors.New("unsupported operation")
 }

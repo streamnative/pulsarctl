@@ -86,7 +86,7 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"create-secret-key",
-		"Create a secret key",
+		"Create a secret key.",
 		desc.ToString(),
 		desc.ExampleToString())
 

@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testData = []struct {
+var testSecretKeyData = []struct {
 	InvalidAlgorithm   bool
 	encode             bool
 	SignatureAlgorithm string
@@ -49,7 +49,7 @@ var testData = []struct {
 }
 
 func TestCreateSecretKeyCommand(t *testing.T) {
-	for _, data := range testData {
+	for _, data := range testSecretKeyData {
 		t.Logf("test case: %+v", data)
 		if data.InvalidAlgorithm {
 			testInvalidError(t, data.SignatureAlgorithm)
