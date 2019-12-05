@@ -29,6 +29,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/resourcequotas"
 	"github.com/streamnative/pulsarctl/pkg/ctl/subscription"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
+	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 
 	functiona "github.com/streamnative/pulsarctl/pkg/ctl/functions"
@@ -98,6 +99,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(brokerstats.Command(flagGrouping))
 	rootCmd.AddCommand(resourcequotas.Command(flagGrouping))
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
+	rootCmd.AddCommand(token.Command(flagGrouping))
 
 	return rootCmd
 }
