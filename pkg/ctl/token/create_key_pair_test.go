@@ -30,9 +30,12 @@ var testData = []struct {
 	outputPrivateFilePath string
 	outputPublicFilePath  string
 }{
-	{"RS256", "private.key", "public.key"},
-	{"RS384", "private.key", "public.key"},
-	{"RS512", "private.key", "public.key"},
+	{"RS256", "rs256-private.key", "rs256-public.key"},
+	{"RS384", "rs384-private.key", "rs384-public.key"},
+	{"RS512", "rs512-private.key", "rs512-public.key"},
+	{"ES256", "es256-private.key", "es256-public.key"},
+	{"ES384", "es384-private.key", "es384-public.key"},
+	{"ES512", "es512-private.key", "es512-public.key"},
 	{"INVALID", "private.key", "public.key"},
 }
 
