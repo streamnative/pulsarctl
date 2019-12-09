@@ -48,21 +48,7 @@ func New(keyType KeyType, privateKey interface{}) *KeyPair {
 
 // EncodedPrivateKey gets the encoded private key
 func (k *KeyPair) EncodedPrivateKey() ([]byte, error) {
-	switch k.keyType {
-	case RSA:
-		key, err := k.GetRsaPrivateKey()
-		if err != nil {
-			return nil, err
-		}
-		return x509.MarshalPKCS1PrivateKey(key), err
-	case ECDSA:
-		key, err := k.GetEcdsaPrivateKey()
-		if err != nil {
-			return nil, err
-		}
-		return x509.MarshalECPrivateKey(key)
-	}
-	return nil, errors.New("unknown error")
+	return x509.MarshalPKCS8PrivateKey(k.privateKey)
 }
 
 // DecodePrivateKey parses the private key to a KeyPair.
@@ -91,7 +77,10 @@ func (k *KeyPair) EncodedPublicKey() ([]byte, error) {
 	switch k.keyType {
 	case RSA:
 		key, err := k.GetRsaPrivateKey()
-		return x509.MarshalPKCS1PublicKey(&key.PublicKey), err
+		if err != nil {
+			return nil, err
+		}
+		return x509.MarshalPKIXPublicKey(&key.PublicKey)
 	case ECDSA:
 		key, _ := k.GetEcdsaPrivateKey()
 		return x509.MarshalPKIXPublicKey(&key.PublicKey)
@@ -101,7 +90,12 @@ func (k *KeyPair) EncodedPublicKey() ([]byte, error) {
 
 // DecodeRSAPublicKey parses the rsa public key.
 func DecodeRSAPublicKey(publicKey []byte) (*rsa.PublicKey, error) {
-	return x509.ParsePKCS1PublicKey(publicKey)
+	pri, err := x509.ParsePKIXPublicKey(publicKey)
+	if err != nil {
+		p, e := x509.ParsePKCS1PublicKey(publicKey)
+		return p, e
+	}
+	return pri.(*rsa.PublicKey), err
 }
 
 // DecodeECDSAPublicKey parses the ecdsa public key
