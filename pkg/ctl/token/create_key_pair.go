@@ -56,12 +56,12 @@ func createKeyPair(vc *cmdutils.VerbCmd) {
 	}
 
 	writePrivateKeyFailed := cmdutils.Output{
-		Desc: "Write a private key to a file was failed.",
+		Desc: "Writing a private key to a file was failed.",
 		Out:  "[✖]  failed to write private key to the file (private-key-path)",
 	}
 
 	writePublicKeyFailed := cmdutils.Output{
-		Desc: "Write a public key failed to a file was failed.",
+		Desc: "Writing a public key failed to a file was failed.",
 		Out:  "[✖]  failed to write public key to the file (public-key-path)",
 	}
 
