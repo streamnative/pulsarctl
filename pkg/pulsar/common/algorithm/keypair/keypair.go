@@ -65,6 +65,27 @@ func (k *KeyPair) EncodedPrivateKey() ([]byte, error) {
 	return nil, errors.New("unknown error")
 }
 
+// DecodePrivateKey parses the private key to a KeyPair.
+func DecodePrivateKey(keyType KeyType, privateKey []byte) (*KeyPair, error) {
+	switch keyType {
+	case RSA:
+		key, err := x509.ParsePKCS1PrivateKey(privateKey)
+		if err != nil {
+			k, e := x509.ParsePKCS8PrivateKey(privateKey)
+			return New(keyType, k), e
+		}
+		return New(keyType, key), nil
+	case ECDSA:
+		key, err := x509.ParseECPrivateKey(privateKey)
+		if err != nil {
+			k, e := x509.ParsePKCS8PrivateKey(privateKey)
+			return New(keyType, k), e
+		}
+		return New(ECDSA, key), nil
+	}
+	return nil, errors.New("unknown error")
+}
+
 // EncodedPublicKey gets the encoded public key
 func (k *KeyPair) EncodedPublicKey() ([]byte, error) {
 	switch k.keyType {
@@ -76,6 +97,23 @@ func (k *KeyPair) EncodedPublicKey() ([]byte, error) {
 		return x509.MarshalPKIXPublicKey(&key.PublicKey)
 	}
 	return nil, errors.New("unknown error")
+}
+
+// DecodeRSAPublicKey parses the rsa public key.
+func DecodeRSAPublicKey(publicKey []byte) (*rsa.PublicKey, error) {
+	return x509.ParsePKCS1PublicKey(publicKey)
+}
+
+// DecodeECDSAPublicKey parses the ecdsa public key
+func DecodeECDSAPublicKey(publicKey []byte) (*ecdsa.PublicKey, error) {
+	pubKey, err := x509.ParsePKIXPublicKey(publicKey)
+	if err != nil {
+		return nil, err
+	}
+	if ecdsaPubKey, ok := pubKey.(*ecdsa.PublicKey); ok {
+		return ecdsaPubKey, nil
+	}
+	return nil, errors.New("the public key is not generated using ECDSA signature algorithm")
 }
 
 // GetRsaPrivateKey gets the rsa private key if you are using rsa signature

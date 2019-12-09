@@ -30,12 +30,13 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"You can use this tool to generate secret key, private/public key, and token.",
 		"")
 
-	cmds := []func(*cmdutils.VerbCmd){
+	cmd := []func(*cmdutils.VerbCmd){
 		createKeyPair,
 		createSecretKey,
+		create,
 	}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, cmds...)
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, cmd...)
 
 	return resourceCmd
 }
