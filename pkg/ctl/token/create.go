@@ -43,7 +43,7 @@ type createCmdArgs struct {
 }
 
 var errNoKeySpecified = errors.New("none of the signing keys is specified")
-var errkeySpecifiedMoreThanOne = errors.New("the signing key is specified more than one")
+var errKeySpecifiedMoreThanOne = errors.New("the signing key is specified more than one")
 
 func create(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
@@ -92,7 +92,7 @@ func create(vc *cmdutils.VerbCmd) {
 
 	KeySpecifiedMoreThanOneErr := cmdutils.Output{
 		Desc: "Signing key is specified more than one.",
-		Out:  "[✖]  " + errkeySpecifiedMoreThanOne.Error(),
+		Out:  "[✖]  " + errKeySpecifiedMoreThanOne.Error(),
 	}
 	out = append(out, defaultOutput, keysNotSpecifiedErr, KeySpecifiedMoreThanOneErr)
 	desc.CommandOutput = out
@@ -173,7 +173,7 @@ func createCmdCheckArgs(args *createCmdArgs) error {
 	case args.secretKeyFile != "" && args.privateKeyFile != "":
 		fallthrough
 	case args.secretKeyString != "" && args.privateKeyFile != "":
-		return errkeySpecifiedMoreThanOne
+		return errKeySpecifiedMoreThanOne
 	default:
 		return nil
 	}
