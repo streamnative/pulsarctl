@@ -53,7 +53,7 @@ var algorithmMap = map[Algorithm]SignatureAlgorithm{
 }
 
 // SignatureAlgorithm is a collection of all signature algorithm and it provides
-// some basic method to use.
+// some basic method to use
 type SignatureAlgorithm interface {
 	// GenerateKeyPair generates public and private key
 	GenerateKeyPair() (*keypair.KeyPair, error)
