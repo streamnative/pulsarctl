@@ -36,7 +36,7 @@ type Token interface {
 	// object and the expire time.
 	Create(algorithm.Algorithm, interface{}, string, int64) (string, error)
 
-	// Validate can validate the speci
+	// Validate a token is valid or not
 	Validate(algorithm.Algorithm, string, interface{}) (string, int64, error)
 }
 
