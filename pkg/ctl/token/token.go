@@ -35,6 +35,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		createSecretKey,
 		create,
 		validate,
+		show,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, cmd...)
