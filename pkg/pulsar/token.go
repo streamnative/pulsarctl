@@ -32,7 +32,7 @@ type Token interface {
 	CreateSecretKey(algorithm.Algorithm) ([]byte, error)
 
 	// Create creates a token object using the specified signature algorithm, private key,
-	// object and the expire time.
+	// object and the expire time
 	Create(algorithm.Algorithm, interface{}, string, int64) (string, error)
 }
 
