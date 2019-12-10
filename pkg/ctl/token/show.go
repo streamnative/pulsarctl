@@ -24,7 +24,6 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/pflag"
 )
 
@@ -96,12 +95,12 @@ func doShow(vc *cmdutils.VerbCmd, tokenString, tokenFile string) error {
 		return err
 	}
 
-	parts := strings.Split(token, ".")
-	algorithm, err := jwt.DecodeSegment(parts[0])
+	tokenUtil := cmdutils.NewPulsarClient().Token()
+	algorithm, err := tokenUtil.GetAlgorithm(token)
 	if err != nil {
 		return err
 	}
-	subject, err := jwt.DecodeSegment(parts[1])
+	subject, err := tokenUtil.GetSubject(token)
 	if err != nil {
 		return err
 	}

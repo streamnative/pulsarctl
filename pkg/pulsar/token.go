@@ -20,6 +20,7 @@ package pulsar
 import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
@@ -38,6 +39,12 @@ type Token interface {
 
 	// Validate can validate the speci
 	Validate(algorithm.Algorithm, string, interface{}) (string, int64, error)
+
+	// GetAlgorithm gets which algorithm the token used
+	GetAlgorithm(string) (string, error)
+
+	// GetSubject gets the subject of a token
+	GetSubject(string) (string, error)
 }
 
 type token struct {
@@ -98,6 +105,24 @@ func (t *token) Validate(algorithm algorithm.Algorithm, tokenString string,
 	}
 
 	return "", 0, err
+}
+
+func (t *token) GetAlgorithm(tokenString string) (string, error) {
+	parts := strings.Split(tokenString, ".")
+	algorithm, err := jwt.DecodeSegment(parts[0])
+	if err != nil {
+		return "", err
+	}
+	return string(algorithm), nil
+}
+
+func (t *token) GetSubject(tokenString string) (string, error) {
+	parts := strings.Split(tokenString, ".")
+	algorithm, err := jwt.DecodeSegment(parts[1])
+	if err != nil {
+		return "", err
+	}
+	return string(algorithm), nil
 }
 
 func parseAlgorithmToJwtSignMethod(a algorithm.Algorithm) jwt.SigningMethod {
