@@ -215,3 +215,11 @@ func TestValidateKeySpecifiedMoreThanOneErr(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t, errValidateKeySpecifiedMoreThanOne.Error(), execErr.Error())
 }
+
+func TestTrimSpaceForArgs(t *testing.T) {
+	args := []string{"validate", "--secret-key-file", "    ", "--token-string", "    "}
+	_, execErr, err := testTokenCommands(validate, args)
+	assert.Nil(t, err)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, errNoTokenStringOrFile.Error(), execErr.Error())
+}

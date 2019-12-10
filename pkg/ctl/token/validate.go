@@ -20,6 +20,7 @@ package token
 import (
 	"encoding/base64"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -143,6 +144,7 @@ func validate(vc *cmdutils.VerbCmd) {
 }
 
 func doValidate(vc *cmdutils.VerbCmd, args *validateCmdArgs) error {
+	args = trimSpaceForValidateArgs(args)
 	err := validateCmdCheckArgs(args)
 	if err != nil {
 		return err
@@ -178,6 +180,17 @@ func doValidate(vc *cmdutils.VerbCmd, args *validateCmdArgs) error {
 	}
 
 	return nil
+}
+
+func trimSpaceForValidateArgs(args *validateCmdArgs) *validateCmdArgs {
+	return &validateCmdArgs{
+		tokenString:        strings.TrimSpace(args.tokenString),
+		tokenFile:          strings.TrimSpace(args.tokenFile),
+		secretKeyString:    strings.TrimSpace(args.secretKeyString),
+		secretKeyFile:      strings.TrimSpace(args.secretKeyFile),
+		signatureAlgorithm: strings.TrimSpace(args.signatureAlgorithm),
+		publicKeyFile:      strings.TrimSpace(args.publicKeyFile),
+	}
 }
 
 func validateCmdCheckArgs(args *validateCmdArgs) error {
