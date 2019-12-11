@@ -23,29 +23,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeleteCmd(t *testing.T) {
-	args := []string{"delete", "1"}
-	out, execErr, nameErr, err := testLedgerCommands(deleteCmd, args)
+func TestListCmd(t *testing.T)  {
+	args := []string{"list"}
+	out, execErr, nameErr, err := testLedgerCommands(listCmd, args)
 	assert.Nil(t, err)
 	assert.Nil(t, nameErr)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "Successfully delete the ledger 1\n", out.String())
-}
-
-func TestDeleteArgError(t *testing.T) {
-	args := []string{"delete"}
-	_, _, nameErr, _ := testLedgerCommands(deleteCmd, args)
-	assert.NotNil(t, nameErr)
-	assert.Equal(t, "the ledger id is not specified or the ledger id is specified more than one",
-		nameErr.Error())
-
-	args = []string{"delete", "a"}
-	_, execErr, _, _ := testLedgerCommands(deleteCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "invalid ledger id a", execErr.Error())
-
-	args = []string{"delete", "--", "-1"}
-	_, execErr, _, _ = testLedgerCommands(deleteCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "invalid ledger id -1", execErr.Error())
+	assert.Equal(t, "[]\n", out.String())
 }

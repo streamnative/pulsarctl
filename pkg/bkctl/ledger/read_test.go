@@ -23,6 +23,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestReadCmd(t *testing.T)  {
+	args := []string{"read", "1"}
+	_, execErr, nameErr, err := testLedgerCommands(readCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "code: 500 reason: Unknown pulsar error", execErr.Error())
+}
+
 func TestReadArgError(t *testing.T) {
 	args := []string{"read"}
 	_, _, nameErr, _ := testLedgerCommands(readCmd, args)
