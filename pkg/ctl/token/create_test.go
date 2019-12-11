@@ -40,36 +40,36 @@ var algorithmList = []string{
 }
 
 var keyFiles = []string{
-	"key/pulsar-admin-hs256-secret.key",
-	"key/pulsar-admin-hs256-base64-secret.key",
-	"key/pulsarctl-hs256-secret.key",
-	"key/pulsarctl-hs256-base64-secret.key",
+	"../../../test/key/pulsar-admin-hs256-secret.key",
+	"../../../test/key/pulsar-admin-hs256-base64-secret.key",
+	"../../../test/key/pulsarctl-hs256-secret.key",
+	"../../../test/key/pulsarctl-hs256-base64-secret.key",
 
-	"key/pulsar-admin-hs384-secret.key",
-	"key/pulsar-admin-hs384-base64-secret.key",
-	"key/pulsarctl-hs384-secret.key",
-	"key/pulsarctl-hs384-base64-secret.key",
+	"../../../test/key/pulsar-admin-hs384-secret.key",
+	"../../../test/key/pulsar-admin-hs384-base64-secret.key",
+	"../../../test/key/pulsarctl-hs384-secret.key",
+	"../../../test/key/pulsarctl-hs384-base64-secret.key",
 
-	"key/pulsar-admin-hs512-secret.key",
-	"key/pulsar-admin-hs512-base64-secret.key",
-	"key/pulsarctl-hs512-secret.key",
-	"key/pulsarctl-hs512-base64-secret.key",
+	"../../../test/key/pulsar-admin-hs512-secret.key",
+	"../../../test/key/pulsar-admin-hs512-base64-secret.key",
+	"../../../test/key/pulsarctl-hs512-secret.key",
+	"../../../test/key/pulsarctl-hs512-base64-secret.key",
 
-	"key/pulsar-admin-rs256-private.key",
-	"key/pulsar-admin-rs384-private.key",
-	"key/pulsar-admin-rs512-private.key",
+	"../../../test/key/pulsar-admin-rs256-private.key",
+	"../../../test/key/pulsar-admin-rs384-private.key",
+	"../../../test/key/pulsar-admin-rs512-private.key",
 
-	"key/pulsarctl-rs256-private.key",
-	"key/pulsarctl-rs384-private.key",
-	"key/pulsarctl-rs512-private.key",
+	"../../../test/key/pulsarctl-rs256-private.key",
+	"../../../test/key/pulsarctl-rs384-private.key",
+	"../../../test/key/pulsarctl-rs512-private.key",
 
-	"key/pulsar-admin-es256-private.key",
-	"key/pulsar-admin-es384-private.key",
-	"key/pulsar-admin-es512-private.key",
+	"../../../test/key/pulsar-admin-es256-private.key",
+	"../../../test/key/pulsar-admin-es384-private.key",
+	"../../../test/key/pulsar-admin-es512-private.key",
 
-	"key/pulsarctl-es256-private.key",
-	"key/pulsarctl-es384-private.key",
-	"key/pulsarctl-es512-private.key",
+	"../../../test/key/pulsarctl-es256-private.key",
+	"../../../test/key/pulsarctl-es384-private.key",
+	"../../../test/key/pulsarctl-es512-private.key",
 }
 
 func TestCreateTokenWithSecretKeyFileCmd(t *testing.T) {
@@ -147,4 +147,29 @@ func doTestCreateTokenWithPrivateKey(t *testing.T, signatureAlgorithm, privateKe
 	default:
 		t.Logf("invalid case for testing create token with private key")
 	}
+}
+
+func TestNoKeySpecifiedErr(t *testing.T) {
+	args := []string{"create", "--subject", "subject"}
+	_, execErr, err := testTokenCommands(create, args)
+	assert.Nil(t, err)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, errNoKeySpecified.Error(), execErr.Error())
+}
+
+func TestKeySpecifiedMoreThanOneErr(t *testing.T) {
+	args := []string{"create", "--secret-key-string", "secret-key", "--private-key-file", "private-key",
+		"--subject", "subject"}
+	_, execErr, err := testTokenCommands(create, args)
+	assert.Nil(t, err)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, errKeySpecifiedMoreThanOne.Error(), execErr.Error())
+}
+
+func TestTrimSpaceForCreadCmdArgs(t *testing.T) {
+	args := []string{"create", "--secret-key-string", "   ", "--subject", "   "}
+	_, execErr, err := testTokenCommands(create, args)
+	assert.Nil(t, err)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, errNoKeySpecified.Error(), execErr.Error())
 }

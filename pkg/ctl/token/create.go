@@ -43,7 +43,7 @@ type createCmdArgs struct {
 }
 
 var errNoKeySpecified = errors.New("none of the signing keys is specified")
-var errkeySpecifiedMoreThanOne = errors.New("the signing key is specified more than one")
+var errKeySpecifiedMoreThanOne = errors.New("the signing key is specified more than one")
 
 func create(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
@@ -92,7 +92,7 @@ func create(vc *cmdutils.VerbCmd) {
 
 	KeySpecifiedMoreThanOneErr := cmdutils.Output{
 		Desc: "Signing key is specified more than one.",
-		Out:  "[✖]  " + errkeySpecifiedMoreThanOne.Error(),
+		Out:  "[✖]  " + errKeySpecifiedMoreThanOne.Error(),
 	}
 	out = append(out, defaultOutput, keysNotSpecifiedErr, KeySpecifiedMoreThanOneErr)
 	desc.CommandOutput = out
@@ -111,10 +111,9 @@ func create(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("Create a token", func(set *pflag.FlagSet) {
 		set.StringVarP(&args.signatureAlgorithm, "signature-algorithm", "a", "RS256",
-			"The signature algorithm used to generate the secret key or the private key, generate a token "+
-				"needs to use the same signature algorithm. Valid options are: "+
-				"'HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', "+
-				"'ES384', 'ES512'.")
+			"The signature algorithm used to generate the secret key or the private key "+
+				"Valid options are: 'HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', "+
+				"'PS384', 'PS512', 'ES256', 'ES384', 'ES512'.")
 		set.StringVar(&args.secretKeyString, "secret-key-string", "",
 			"The secret key string that used to sign a token.")
 		set.StringVar(&args.secretKeyFile, "secret-key-file", "",
@@ -173,7 +172,7 @@ func createCmdCheckArgs(args *createCmdArgs) error {
 	case args.secretKeyFile != "" && args.privateKeyFile != "":
 		fallthrough
 	case args.secretKeyString != "" && args.privateKeyFile != "":
-		return errkeySpecifiedMoreThanOne
+		return errKeySpecifiedMoreThanOne
 	default:
 		return nil
 	}
