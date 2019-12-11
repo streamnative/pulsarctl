@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadCmd(t *testing.T)  {
+func TestReadCmd(t *testing.T) {
 	args := []string{"read", "1"}
 	_, execErr, nameErr, err := testLedgerCommands(readCmd, args)
 	assert.Nil(t, err)

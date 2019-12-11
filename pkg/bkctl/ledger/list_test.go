@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListCmd(t *testing.T)  {
+func TestListCmd(t *testing.T) {
 	args := []string{"list"}
 	out, execErr, nameErr, err := testLedgerCommands(listCmd, args)
 	assert.Nil(t, err)
