@@ -19,21 +19,48 @@ package bookies
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+var testListData = []struct {
+	bookieType   string
+	showHostName bool
+	outString    string ``
+}{
+	{"ro", false, "{}\n"},
+	{"ro", true, "{}\n"},
+	{"rw", false, "3181"},
+	{"rw", true, "3181"},
+}
+
+func TestListCmd(t *testing.T) {
+	for _, data := range testListData {
+		t.Logf("test case: %+v\n", data)
+		args := []string{"list", data.bookieType}
+		if data.showHostName {
+			args = append(args, "--show-hostname")
+		}
+		out, execErr, nameErr, err := testBookiesCommands(args)
+		assert.Nil(t, err)
+		assert.Nil(t, nameErr)
+		assert.Nil(t, execErr)
+		assert.True(t, strings.Contains(out.String(), data.outString))
+	}
+}
+
 func TestListArgError(t *testing.T) {
 	args := []string{"list"}
 	_, _, nameErr, _ := testBookiesCommands(args)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "the type is not specified or the type is specified more than one",
+	assert.Equal(t, "the bookie type is not specified or the bookie type is specified more than one",
 		nameErr.Error())
 
 	args = []string{"list", "invalid"}
 	_, execErr, _, _ := testBookiesCommands(args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, fmt.Sprintf("invalid bookie type %s. the bookie type only can "+
+	assert.Equal(t, fmt.Sprintf("invalid bookie type %s, the bookie type only can "+
 		"be specified as 'rw' or 'ro'", "invalid"), execErr.Error())
 }

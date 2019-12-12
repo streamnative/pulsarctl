@@ -26,12 +26,12 @@ import (
 
 func gcDetailsCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the details of the running GC."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting the garbage collection details of a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the details of the running GC",
+		Desc:    "Get the garbage collection details of a bookie.",
 		Command: "pulsarctl bookkeeper bookie gc-details",
 	}
 	examples = append(examples, get)
@@ -52,7 +52,7 @@ func gcDetailsCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the garbage collection details of a bookie.",
 		Out:  string(d),
 	}
 	out = append(out, successOut)
@@ -60,7 +60,7 @@ func gcDetailsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"gc-details",
-		"Get the details of the running GC",
+		"Get the garbage collection details of a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

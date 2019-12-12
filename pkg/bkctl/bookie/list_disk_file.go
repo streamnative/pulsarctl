@@ -24,12 +24,12 @@ import (
 
 func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting all the files on the disk of the current bookie."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting all the files on the disk of a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	list := cmdutils.Example{
-		Desc:    "Get all the specified fileType (e.g. journal, entrylog, index) files on the disk of the current bookie",
+		Desc:    "Get all the specified fileType (e.g. journal, entrylog, index) files on the disk of a bookie.",
 		Command: "pulsarctl bookkeeper bookie list-disk-file (file-type)",
 	}
 	examples = append(examples, list)
@@ -37,7 +37,7 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the files on the disk of a bookie",
 		Out: `{
     "journal files" : "filename1 filename2 ...",
     "entrylog files" : "filename1 filename2...",
@@ -46,12 +46,12 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	argError := cmdutils.Output{
-		Desc: "the file type is not specified or the file type is specified more than one",
+		Desc: "The file type is not specified or the file type is specified more than one.",
 		Out:  "[✖]  the file type is not specified or the file type is specified more than one",
 	}
 
 	typeError := cmdutils.Output{
-		Desc: "the specified file type is invalid",
+		Desc: "The specified file type is invalid.",
 		Out: "[✖]  invalid file type %s, the file type only can be specified as 'journal', " +
 			"'entrylog', 'index'",
 	}
@@ -60,7 +60,7 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"list-disk-file",
-		"Get all the files on the disk of the current bookie",
+		"Get all the files on the disk of a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

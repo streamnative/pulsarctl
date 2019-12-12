@@ -22,25 +22,25 @@ import (
 )
 
 type Bookie interface {
-	// Get the last log marker
+	// LastLogMark gets the last log marker of a bookie
 	LastLogMark() (map[string]string, error)
 
-	// Get all the files on disk of the current bookie
+	// ListDiskFile gets all the files on disk of a bookie
 	ListDiskFile(bkdata.FileType) (map[string]string, error)
 
-	// Expand storage for a bookie
+	// ExpandStorage expands storage for a bookie
 	ExpandStorage() error
 
-	// Trigger GC for a bookie
+	// GC triggers garbage collection for a bookie
 	GC() error
 
-	// Check the GC status
+	// GCStatus gets the garbage collection status
 	GCStatus() (map[string]string, error)
 
-	// Details of the Garbage Collection
+	// GCDetails gets the garbage collection details
 	GCDetails() ([]bkdata.GCStatus, error)
 
-	// State of a bookie
+	// State gets the state of a bookie
 	State() (*bkdata.State, error)
 }
 

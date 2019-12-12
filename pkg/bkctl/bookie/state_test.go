@@ -15,33 +15,27 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkdata
+package bookie
 
 import (
-	"strings"
+	"testing"
 
-	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
-type BookieType string
-
-const (
-	rw BookieType = "rw"
-	ro BookieType = "ro"
-)
-
-func ParseBookieType(t string) (BookieType, error) {
-	switch strings.ToLower(t) {
-	case rw.String():
-		return rw, nil
-	case ro.String():
-		return ro, nil
-	default:
-		return "", errors.Errorf("invalid bookie type %s, the bookie type only can "+
-			"be specified as 'rw' or 'ro'", t)
-	}
-}
-
-func (t BookieType) String() string {
-	return string(t)
+func TestStateCmd(t *testing.T) {
+	args := []string{"state"}
+	out, execErr, nameErr, err := testBookieCommands(stateCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.Equal(t,
+		"{\n"+
+			"  \"running\": true,\n"+
+			"  \"readOnly\": false,\n"+
+			"  \"shuttingDown\": false,\n"+
+			"  \"availableForHighPriorityWrites\": true\n"+
+			"}\n"+
+			"",
+		out.String())
 }

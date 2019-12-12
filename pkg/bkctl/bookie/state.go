@@ -26,12 +26,12 @@ import (
 
 func stateCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the state of the bookie."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting the state of a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the state of the bookie",
+		Desc:    "Get the state of the bookie.",
 		Command: "pulsarctl bookkeeper bookie state",
 	}
 	examples = append(examples, get)
@@ -47,7 +47,7 @@ func stateCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the state of a bookie.",
 		Out:  string(o),
 	}
 	out = append(out, successOut)
@@ -55,7 +55,7 @@ func stateCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"state",
-		"Get the state of the bookie",
+		"Get the state of a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

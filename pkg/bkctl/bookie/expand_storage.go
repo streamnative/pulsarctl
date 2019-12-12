@@ -24,11 +24,11 @@ import (
 func expandStorageCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for expanding storage for a bookie."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	expand := cmdutils.Example{
-		Desc:    "Expanding storage for a bookie",
+		Desc:    "Expanding storage for a bookie.",
 		Command: "pulsarctl bookkeeper bookie expand-storage",
 	}
 	examples = append(examples, expand)
@@ -36,7 +36,7 @@ func expandStorageCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Expand the storage successfully.",
 		Out:  "Successfully expand the storage",
 	}
 	out = append(out, successOut)
@@ -44,7 +44,7 @@ func expandStorageCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"expand-storage",
-		"Expand storage for a bookie",
+		"Expand storage for a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -57,7 +57,7 @@ func doExpandStorage(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
 	err := admin.Bookie().ExpandStorage()
 	if err == nil {
-		vc.Command.Println("Successfully expand the storage")
+		vc.Command.Println("Successfully expand the storage.")
 	}
 
 	return err

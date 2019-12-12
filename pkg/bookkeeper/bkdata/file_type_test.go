@@ -18,30 +18,38 @@
 package bkdata
 
 import (
-	"strings"
+	"testing"
 
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
-type BookieType string
+var testParseFileTypeData = []struct {
+	fileType       string
+	parsedFileType FileType
+	errString      string
+}{
+	{"journal", journal, ""},
+	{"entrylog", entryLog, ""},
+	{"index", index, ""},
+	{"", "", fileTypeErrStr("")},
+	{"invalid", "", fileTypeErrStr("invalid")},
+}
 
-const (
-	rw BookieType = "rw"
-	ro BookieType = "ro"
-)
-
-func ParseBookieType(t string) (BookieType, error) {
-	switch strings.ToLower(t) {
-	case rw.String():
-		return rw, nil
-	case ro.String():
-		return ro, nil
-	default:
-		return "", errors.Errorf("invalid bookie type %s, the bookie type only can "+
-			"be specified as 'rw' or 'ro'", t)
+func TestParseFileType(t *testing.T) {
+	for _, data := range testParseFileTypeData {
+		ft, err := ParseFileType(data.fileType)
+		if data.errString != "" {
+			assert.NotNil(t, err)
+			assert.Equal(t, data.errString, err.Error())
+			continue
+		}
+		assert.Equal(t, data.parsedFileType, ft)
 	}
 }
 
-func (t BookieType) String() string {
-	return string(t)
+func fileTypeErrStr(fileType string) string {
+	return errors.Errorf(
+		"invalid file type %s, the file type only can be specified as 'journal', "+
+			"'entrylog', 'index'", fileType).Error()
 }

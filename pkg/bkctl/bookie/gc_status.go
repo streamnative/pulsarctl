@@ -23,12 +23,12 @@ import (
 
 func gcStatusCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the status of the running GC."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting the garbage collection status of a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the status of the running GC",
+		Desc:    "Get the garbage collection status of a bookie.",
 		Command: "pulsarctl bookkeeper bookie gc-status",
 	}
 	examples = append(examples, get)
@@ -36,7 +36,7 @@ func gcStatusCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the garbage collection status of a bookie.",
 		Out: `{
     "is_in_force_gc" : "false"
 }`,
@@ -46,7 +46,7 @@ func gcStatusCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"gc-status",
-		"Get the status of the running GC",
+		"Get the garbage collection status of a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

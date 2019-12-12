@@ -31,7 +31,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 
 	commands := []func(*cmdutils.VerbCmd){
 		listCmd,
-		infoCmd,
+		diskUsageInfoCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

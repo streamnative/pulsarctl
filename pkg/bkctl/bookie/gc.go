@@ -23,12 +23,12 @@ import (
 
 func gcCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for triggering GC for a bookie."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for triggering garbage collection for a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	gc := cmdutils.Example{
-		Desc:    "Trigger GC for a bookie",
+		Desc:    "Trigger garbage collection for a bookie.",
 		Command: "pulsarctl bookkeeper bookie gc",
 	}
 	examples = append(examples, gc)
@@ -36,15 +36,15 @@ func gcCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
-		Out:  "Successfully trigger running GC",
+		Desc: "Trigger garbage collection successfully.",
+		Out:  "Successfully trigger garbage collection.",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
 		"gc",
-		"Trigger GC for a bookie",
+		"Trigger garbage collection for a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -57,7 +57,7 @@ func doGC(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
 	err := admin.Bookie().GC()
 	if err == nil {
-		vc.Command.Println("Successfully trigger running GC")
+		vc.Command.Println("Successfully trigger garbage collection.")
 	}
 
 	return err

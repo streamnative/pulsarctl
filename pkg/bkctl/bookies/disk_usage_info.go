@@ -21,14 +21,14 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func infoCmd(vc *cmdutils.VerbCmd) {
+func diskUsageInfoCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the bookie disk usage info of a cluster."
 	desc.CommandPermission = "none"
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the bookie disk usage info of a cluster",
+		Desc:    "Get the bookie disk usage info of a cluster.",
 		Command: "pulsar bookkeeper bookie disk-usage-info",
 	}
 	examples = append(examples, get)
@@ -36,7 +36,7 @@ func infoCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the bookie disk usage info of a cluster.",
 		Out: `{
     "bookieAddress" : {free: xxx, total: xxx},
     "bookieAddress" : {free: xxx, total: xxx},
@@ -49,7 +49,7 @@ func infoCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"disk-usage-info",
-		"Get the bookie disk usage info of a cluster",
+		"Get the bookie disk usage info of a cluster.",
 		desc.ToString(),
 		desc.ExampleToString())
 

@@ -23,12 +23,12 @@ import (
 
 func lastLogMarkCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the last log marker."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting the last log marker of the journals on a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the last log marker",
+		Desc:    "Get the last log marker of the journals on a bookie.",
 		Command: "pulsarctl bookkeeper bookie last-log-marker",
 	}
 	examples = append(examples, get)
@@ -36,7 +36,7 @@ func lastLogMarkCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully get the last log marker of the journals on a bookie.",
 		Out: `{
     JournalId1 : position1,
     JournalId2 : position2,
@@ -48,7 +48,7 @@ func lastLogMarkCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"last-log-marker",
-		"Get the last log marker",
+		"Get the last log marker of the journals on a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

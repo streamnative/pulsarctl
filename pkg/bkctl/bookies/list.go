@@ -27,16 +27,16 @@ import (
 func listCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for listing all the available bookies that type is the specified type."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	list := cmdutils.Example{
-		Desc:    "List all the available bookies that type is the specified type",
+		Desc:    "List all the available bookies that type is the specified type.",
 		Command: "pulsarctl bookkeeper bookies list (type)",
 	}
 
 	showHostname := cmdutils.Example{
-		Desc:    "List all the available bookies that type is the specified type and print the hostname of the bookies",
+		Desc:    "List all the available bookies that type is the specified type and print the hostname of the bookies.",
 		Command: "pulsarctl bookkeeper bookies list --show-hostname (type)",
 	}
 	examples = append(examples, list, showHostname)
@@ -44,19 +44,19 @@ func listCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "List all the available bookies successfully.",
 		Out: `{
 	"bookieSocketAddress": "hostname",
 }`,
 	}
 
 	argError := cmdutils.Output{
-		Desc: "the type is not specified or the type is specified more than one",
-		Out:  "[✖]  the type is not specified or the type is specified more than one",
+		Desc: "The bookie type is not specified or the bookie type is specified more than one.",
+		Out:  "[✖]  the bookie type is not specified or the bookie type is specified more than one",
 	}
 
 	typeError := cmdutils.Output{
-		Desc: "the type is invalid",
+		Desc: "The specified bookie type is invalid.",
 		Out: "[✖]  invalid bookie type. the bookie type only can " +
 			"be specified as 'rw' or 'ro'",
 	}
@@ -66,7 +66,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"list",
-		"List all the available bookies",
+		"List all the available bookies.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -74,11 +74,11 @@ func listCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doList(vc, show)
-	}, "the type is not specified or the type is specified more than one")
+	}, "the bookie type is not specified or the bookie type is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("List Bookie", func(set *pflag.FlagSet) {
 		set.BoolVarP(&show, "show-hostname", "p", false,
-			"show the hostname of the bookies")
+			"Show the hostname of the bookies.")
 	})
 }
 

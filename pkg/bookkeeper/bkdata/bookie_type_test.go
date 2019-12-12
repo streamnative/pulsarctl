@@ -18,30 +18,36 @@
 package bkdata
 
 import (
-	"strings"
+	"testing"
 
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
-type BookieType string
+var testParseBookieTypeData = []struct {
+	bookieType       string
+	parsedBookieType BookieType
+	errString        string
+}{
+	{"rw", rw, ""},
+	{"ro", ro, ""},
+	{"", "", bookieTypeErrStr("")},
+	{"r", "", bookieTypeErrStr("r")},
+}
 
-const (
-	rw BookieType = "rw"
-	ro BookieType = "ro"
-)
-
-func ParseBookieType(t string) (BookieType, error) {
-	switch strings.ToLower(t) {
-	case rw.String():
-		return rw, nil
-	case ro.String():
-		return ro, nil
-	default:
-		return "", errors.Errorf("invalid bookie type %s, the bookie type only can "+
-			"be specified as 'rw' or 'ro'", t)
+func TestParseBookieType(t *testing.T) {
+	for _, data := range testParseBookieTypeData {
+		bkt, err := ParseBookieType(data.bookieType)
+		if data.errString != "" {
+			assert.NotNil(t, err)
+			assert.Equal(t, data.errString, err.Error())
+			continue
+		}
+		assert.Equal(t, data.parsedBookieType, bkt)
 	}
 }
 
-func (t BookieType) String() string {
-	return string(t)
+func bookieTypeErrStr(bookieType string) string {
+	return errors.Errorf(
+		"invalid bookie type %s, the bookie type only can be specified as 'rw' or 'ro'", bookieType).Error()
 }
