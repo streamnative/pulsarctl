@@ -105,8 +105,7 @@ func doShow(vc *cmdutils.VerbCmd, tokenString, tokenFile string) error {
 		return err
 	}
 
-	vc.Command.Printf("The algorithm and subject of the token are %s, %s.\n",
-		string(algorithm), string(subject))
+	vc.Command.Printf("The algorithm and subject of the token are %s, %s.\n", algorithm, subject)
 
 	return nil
 }
