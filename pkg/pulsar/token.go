@@ -18,9 +18,10 @@
 package pulsar
 
 import (
+	"strings"
+
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
-	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
@@ -34,10 +35,10 @@ type Token interface {
 	CreateSecretKey(algorithm.Algorithm) ([]byte, error)
 
 	// Create creates a token object using the specified signature algorithm, private key,
-	// object and the expire time.
+	// object and the expire time
 	Create(algorithm.Algorithm, interface{}, string, int64) (string, error)
 
-	// Validate can validate the speci
+	// Validate a token is valid or not
 	Validate(algorithm.Algorithm, string, interface{}) (string, int64, error)
 
 	// GetAlgorithm gets which algorithm the token used
