@@ -60,7 +60,7 @@ func diskUsageInfoCmd(vc *cmdutils.VerbCmd) {
 
 func doGetInfo(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
-	info, err := admin.Bookies().Info()
+	info, err := admin.Bookies().DiskUsageInfo()
 	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
 	}

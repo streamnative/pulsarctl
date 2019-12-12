@@ -24,11 +24,11 @@ import (
 )
 
 type Bookies interface {
-	// List all the available bookies
+	// List lists all the available bookies
 	List(bkdata.BookieType, bool) (map[string]string, error)
 
-	// Get the bookies disk usage info of a cluster
-	Info() (map[string]string, error)
+	// DiskUsageInfo gets the bookies disk usage info of a cluster
+	DiskUsageInfo() (map[string]string, error)
 }
 
 type bookies struct {
@@ -54,7 +54,7 @@ func (b *bookies) List(t bkdata.BookieType, show bool) (map[string]string, error
 	return bookies, err
 }
 
-func (b *bookies) Info() (map[string]string, error) {
+func (b *bookies) DiskUsageInfo() (map[string]string, error) {
 	endpoint := b.bk.endpoint(b.basePath, "/list_bookie_info")
 	info := make(map[string]string)
 	err := b.bk.Client.Get(endpoint, &info)

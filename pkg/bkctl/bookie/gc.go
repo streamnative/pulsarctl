@@ -36,7 +36,7 @@ func gcCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "Trigger garbage collection successfully.",
+		Desc: "Successfully trigger garbage collection.",
 		Out:  "Successfully trigger garbage collection.",
 	}
 	out = append(out, successOut)

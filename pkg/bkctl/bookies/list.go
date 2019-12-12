@@ -31,7 +31,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 
 	var examples []cmdutils.Example
 	list := cmdutils.Example{
-		Desc:    "List all the available bookies that type is the specified type.",
+		Desc:    "List all the available bookies that type is the specified type, valid options are: 'ro', 'rw'.",
 		Command: "pulsarctl bookkeeper bookies list (type)",
 	}
 
@@ -44,7 +44,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "List all the available bookies successfully.",
+		Desc: "Successfully list all the available bookies.",
 		Out: `{
 	"bookieSocketAddress": "hostname",
 }`,

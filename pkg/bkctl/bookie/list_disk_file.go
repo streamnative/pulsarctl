@@ -37,7 +37,7 @@ func listDiskFileCmd(vc *cmdutils.VerbCmd) {
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "Successfully get the files on the disk of a bookie",
+		Desc: "Successfully get the files on the disk of a bookie.",
 		Out: `{
     "journal files" : "filename1 filename2 ...",
     "entrylog files" : "filename1 filename2...",
