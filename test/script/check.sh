@@ -7,12 +7,12 @@ function checkBookie() {
     failed=0
     until curl localhost:8080; do
         echo waiting service start...
-        sleep 1
         failed=`expr ${failed} + 1`
         if [[ ${failed} == 120 ]]; then
             echo service start up was failed
             exit 1
         fi
+        sleep 1
     done
 }
 
@@ -21,4 +21,5 @@ case $1 in
     ;;
     *) echo Which service you would like to check?
        echo Available service: bookie
+    ;;
 esac

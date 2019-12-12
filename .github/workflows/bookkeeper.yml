@@ -22,8 +22,10 @@ jobs:
         docker-compose pull
         docker-compose up -d
         popd
-        ./test/script/check.sh bookie
 
+    - name: Check bookKeeper service
+      run: |
+        ./test/script/check.sh bookie
 
     - name: Test
       run: |
