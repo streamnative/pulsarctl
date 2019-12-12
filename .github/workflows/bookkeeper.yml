@@ -18,9 +18,10 @@ jobs:
 
     - name: Run bookKeeper service
       run: |
-        cd docker
+        pushd test/docker
         docker-compose pull
         docker-compose up -d
+        popd
         sleep 10
 
     - name: Test
