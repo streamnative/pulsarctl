@@ -34,12 +34,12 @@ func show(vc *cmdutils.VerbCmd) {
 
 	var examples []cmdutils.Example
 	readTokenFromEnv := cmdutils.Example{
-		Desc:    "Read a token from env TOKEN.",
+		Desc:    "Read a token from the env TOKEN.",
 		Command: "pulsarctl token show",
 	}
 
 	readTokenFromString := cmdutils.Example{
-		Desc:    "Read a token from the given string.",
+		Desc:    "Read a token from a given string.",
 		Command: "pulsarctl token show --token-string (token)",
 	}
 
