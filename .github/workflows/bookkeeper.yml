@@ -22,7 +22,8 @@ jobs:
         docker-compose pull
         docker-compose up -d
         popd
-        sleep 10
+        ./test/script/check.sh bookie
+
 
     - name: Test
       run: |
