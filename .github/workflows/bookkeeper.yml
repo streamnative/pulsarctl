@@ -19,8 +19,6 @@ jobs:
     - name: Run bookKeeper service
       run: |
         pushd test/docker
-        mkdir -p data/bookie/journal
-        mkdir -p data/bookie/ledgers
         docker-compose pull
         docker-compose up -d
         popd
