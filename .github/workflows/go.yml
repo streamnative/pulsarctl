@@ -42,9 +42,6 @@ jobs:
         ls -al test/functions/
         sleep 10
 
-    - name: Check pulsar service
-      run: ./test/script/check.sh bookie
-
     - name: Build
       run: go build .
       
