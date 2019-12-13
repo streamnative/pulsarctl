@@ -1,6 +1,7 @@
 version: '3'
 services:
   zookeeper:
+    container_name: bk-zookeeper
     image: "apache/bookkeeper:4.10.0"
     hostname: zookeeper
     entrypoint:
@@ -9,6 +10,7 @@ services:
       - zookeeper
 
   bookie:
+    container_name: bk
     depends_on:
       - zookeeper
       - bookie-init
