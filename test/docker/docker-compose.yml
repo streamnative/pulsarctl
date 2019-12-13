@@ -25,6 +25,9 @@ services:
       - BK_httpServerEnabled=true
       - BK_httpServerPort=8080
       - BK_httpServerClass=org.apache.bookkeeper.http.vertx.VertxHttpServer
+      - BK_ledgerDirectories=bk/ledgers
+      - BK_indexDirectories=bk/ledgers
+      - BK_journalDirectory=bk/journal
     command:
       - |
         /opt/bookkeeper/bin/bookkeeper bookie
