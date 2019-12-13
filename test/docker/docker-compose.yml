@@ -26,8 +26,8 @@ services:
       - BK_httpServerPort=8080
       - BK_httpServerClass=org.apache.bookkeeper.http.vertx.VertxHttpServer
     volumes:
-      - ./data/bookie-1/journal:/data/bookkeeper/journal
-      - ./data/bookie-1/ledgers:/data/bookkeeper/ledgers
+      - ./data/bookie/journal:/data/bookkeeper/journal
+      - ./data/bookie/ledgers:/data/bookkeeper/ledgers
     command:
       - |
         /opt/bookkeeper/bin/bookkeeper bookie
