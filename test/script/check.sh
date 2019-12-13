@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Waiting bookie service start up, if the bookie service does not
-# start up in 120 seconds, that means the bookie service is not start
+# Waiting bookie HTTP service start up, if the bookie HTTP service does not
+# start up in 30 seconds, that means the bookie HTTP service is not start
 # up successfully.
-function checkBookie() {
+function checkBookieHTTP() {
     failed=0
     until curl localhost:8080; do
         echo waiting service start...
@@ -17,9 +17,9 @@ function checkBookie() {
 }
 
 case $1 in
-    bookie) checkBookie
+    bookieHTTP) checkBookieHTTP
     ;;
     *) echo Which service you would like to check?
-       echo Available service: bookie
+       echo Available service: bookieHTTP
     ;;
 esac
