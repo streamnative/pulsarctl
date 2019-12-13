@@ -27,7 +27,6 @@ jobs:
     - name: Check bookKeeper service
       run: |
         docker ps -a
-#        ./test/script/check.sh bookie
         docker logs -f bk
 
     - name: Test
