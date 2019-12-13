@@ -22,12 +22,10 @@ jobs:
         docker-compose pull
         docker-compose up -d
         popd
-        sleep 10
 
     - name: Check bookKeeper service
       run: |
-        docker ps -a
-        docker logs -f bk
+        ./test/script/check.sh bookie
 
     - name: Test
       run: |
