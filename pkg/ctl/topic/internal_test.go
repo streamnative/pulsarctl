@@ -34,5 +34,5 @@ func TestGetNonExistingTopicInternalInfo(t *testing.T) {
 	args := []string{"internal-info", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetInternalInfoCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 500 reason: Unknown pulsar error", execErr.Error())
+	assert.Equal(t, "code: 500 reason: Unknown error", execErr.Error())
 }
