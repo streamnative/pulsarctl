@@ -63,11 +63,15 @@ func (c *Client) doRequest(r *request) (*http.Response, error) {
 		return nil, err
 	}
 
-	if r.contentType != "" {
-		req.Header.Set("Content-Type", r.contentType)
-	} else {
-		// add default headers
-		req.Header.Set("Content-Type", "application/json")
+	switch r.method {
+	case http.MethodPut:
+		fallthrough
+	case http.MethodPost:
+		if r.contentType != "" {
+			req.Header.Set("Content-Type", r.contentType)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+		}
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.useragent())
