@@ -87,8 +87,8 @@ func TestGetFailureSource(t *testing.T) {
 	failureGetArgs := []string{"get",
 		"--name", "test-source-get",
 	}
-	getOut, execErr, _ := TestSourcesCommands(getSourcesCmd, failureGetArgs)
+	_, execErr, _ := TestSourcesCommands(getSourcesCmd, failureGetArgs)
 	assert.NotNil(t, execErr)
 	exceptedErr := "error: code: 404 reason: Source test-source-get doesn't exist\n"
-	assert.Equal(t, getOut.String(), exceptedErr)
+	assert.Equal(t, exceptedErr, execErr.Error())
 }
