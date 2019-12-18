@@ -63,12 +63,12 @@ func (c *Client) doRequest(r *request) (*http.Response, error) {
 		return nil, err
 	}
 
-	switch {
-	case req.Body != nil:
-		req.Header.Set("Content-Type", "application/json")
-	case r.contentType != "":
+	if r.contentType != "" {
 		req.Header.Set("Content-Type", r.contentType)
+	} else if req.Body != nil {
+		req.Header.Set("Content-Type", "application/json")
 	}
+
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.useragent())
 
