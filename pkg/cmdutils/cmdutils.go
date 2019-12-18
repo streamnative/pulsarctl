@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
@@ -105,8 +106,8 @@ func PrintJSON(w io.Writer, obj interface{}) {
 
 func PrintError(w io.Writer, err error) {
 	msg := err.Error()
-	if common.IsAdminError(err) {
-		ae, _ := err.(common.Error)
+	if cli.IsAdminError(err) {
+		ae, _ := err.(cli.Error)
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)
