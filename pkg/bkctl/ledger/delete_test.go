@@ -18,18 +18,36 @@
 package ledger
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteCmd(t *testing.T) {
+	o := doListCmdTest(t)
+	assert.True(t, strings.Contains(o, "0"))
+	assert.True(t, strings.Contains(o, "1"))
+
 	args := []string{"delete", "1"}
 	out, execErr, nameErr, err := testLedgerCommands(deleteCmd, args)
 	assert.Nil(t, err)
 	assert.Nil(t, nameErr)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Successfully delete the ledger 1\n", out.String())
+
+	o = doListCmdTest(t)
+	assert.True(t, strings.Contains(o, "0"))
+	assert.False(t, strings.Contains(o, "1"))
+}
+
+func TestDeleteNonExistentLedger(t *testing.T) {
+	args := []string{"delete", "10"}
+	out, execErr, nameErr, err := testLedgerCommands(deleteCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "Successfully delete the ledger 10\n", out.String())
 }
 
 func TestDeleteArgError(t *testing.T) {

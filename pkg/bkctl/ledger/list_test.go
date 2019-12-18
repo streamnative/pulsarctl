@@ -18,16 +18,22 @@
 package ledger
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestListCmd(t *testing.T) {
+	o := doListCmdTest(t)
+	assert.True(t, strings.Contains(o, "0"))
+}
+
+func doListCmdTest(t *testing.T) string {
 	args := []string{"list"}
 	out, execErr, nameErr, err := testLedgerCommands(listCmd, args)
 	assert.Nil(t, err)
 	assert.Nil(t, nameErr)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "[]\n", out.String())
+	return out.String()
 }

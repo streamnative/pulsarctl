@@ -18,18 +18,46 @@
 package ledger
 
 import (
+	"encoding/json"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCmd(t *testing.T) {
-	args := []string{"get", "1"}
+	var result map[int64]bkdata.LedgerMetadata
+	args := []string{"get", "0"}
+	out, execErr, nameErr, err := testLedgerCommands(getCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+
+	json.Unmarshal(out.Bytes(), &result)
+
+	assert.Equal(t, 1, len(result))
+	meta := result[0]
+	assert.Equal(t, false, meta.StoreCtime)
+	assert.Equal(t, false, meta.HasPassword)
+	assert.Equal(t, 3, meta.MetadataFormatVersion)
+	assert.Equal(t, 1, meta.Ensemble)
+	assert.Equal(t, 1, meta.WriteQuorum)
+	assert.Equal(t, 1, meta.AckQuorum)
+	assert.Equal(t, int64(1000), meta.Length)
+	assert.Equal(t, int64(9), meta.LastEntryID)
+	assert.Equal(t, "CLOSED", meta.State)
+	assert.Equal(t, "CRC32C", meta.DigestType)
+	assert.Equal(t, 1, len(meta.Ensembles))
+	assert.Equal(t, "", string(meta.Password))
+}
+
+func TestGetNonExistentLedger(t *testing.T) {
+	args := []string{"get", "10"}
 	_, execErr, nameErr, err := testLedgerCommands(getCmd, args)
 	assert.Nil(t, err)
 	assert.Nil(t, nameErr)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 500 reason: Unknown pulsar error", execErr.Error())
+	assert.Equal(t, "code: 500 reason: Internal Server Error", execErr.Error())
 }
 
 func TestGetArgError(t *testing.T) {
