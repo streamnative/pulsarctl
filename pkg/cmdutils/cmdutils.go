@@ -27,9 +27,9 @@ import (
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
+	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/cli"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"

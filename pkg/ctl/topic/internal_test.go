@@ -18,6 +18,7 @@
 package topic
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,5 +35,5 @@ func TestGetNonExistingTopicInternalInfo(t *testing.T) {
 	args := []string{"internal-info", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetInternalInfoCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 500 reason: Unknown error", execErr.Error())
+	assert.True(t, strings.Contains(execErr.Error(), "code: 500"))
 }
