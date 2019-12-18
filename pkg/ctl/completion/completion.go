@@ -54,9 +54,11 @@ source /dev/stdin <<<"$(pulsarctl completion bash)"
 mkdir -p ~/.zsh/completion/
 pulsarctl completion zsh > ~/.zsh/completion/_pulsarctl
 
-and put the following in ~/.zshrc:
-
+# Include the directory in your $fpath, for example by adding in ~/.zshrc:
 fpath=($fpath ~/.zsh/completion)
+
+# You may have to force rebuild zcompdump:
+rm -f ~/.zcompdump; compinit
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return rootCmd.GenZshCompletion(os.Stdout)
