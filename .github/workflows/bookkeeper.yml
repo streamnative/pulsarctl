@@ -29,8 +29,8 @@ jobs:
 
     - name: Write dummy data
       run: |
-        docker exec -it bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
-        docker exec -it bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
+        docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
+        docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
 
     - name: Test
       run: |
