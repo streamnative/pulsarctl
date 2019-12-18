@@ -82,6 +82,10 @@ export GO111MODULE=on
 go build -o pulsarctl main.go
 ```
 
+## Optional pulsarctl configurations
+
+If you want to enable autocompletion in shell, see [enable_completion](docs/en/enable_completion.md).
+
 ## Project Status
 
 The following is an incomplete list of features that are not yet implemented:
