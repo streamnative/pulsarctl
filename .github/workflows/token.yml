@@ -1,4 +1,4 @@
-name: Token_Test
+name: Pulsarctl Security Token Check
 on: [pull_request]
 jobs:
 
@@ -18,7 +18,7 @@ jobs:
 
       - name: Get dependencies
         run: |
-          docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}/test/token/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test apachepulsar/pulsar bin/pulsar standalone
+          docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}/test/token/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test apachepulsar/pulsar bin/pulsar standalone -nfw
           sleep 10
 
       - name: Test TLS
