@@ -1,4 +1,4 @@
-name: ProjectStyle
+name: Pulsarctl Project Style Check
 on: [pull_request]
 jobs:
 
