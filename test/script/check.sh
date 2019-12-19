@@ -3,7 +3,7 @@
 # Waiting bookie HTTP service start up, if the bookie HTTP service does not
 # start up in 30 seconds, that means the bookie HTTP service is not start
 # up successfully.
-function checkBookieHTTP() {
+function HTTPService() {
     failed=0
     until curl localhost:8080; do
         echo waiting service start...
@@ -17,9 +17,9 @@ function checkBookieHTTP() {
 }
 
 case $1 in
-    bookieHTTP) checkBookieHTTP
+    HTTP) HTTPService
     ;;
     *) echo Which service you would like to check?
-       echo Available service: bookieHTTP
+       echo Available service: HTTP
     ;;
 esac

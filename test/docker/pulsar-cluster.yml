@@ -1,0 +1,66 @@
+version: '3'
+services:
+  pulsar-zookeeper:
+    container_name: zookeeper
+    image: "apachepulsar/pulsar:latest"
+    hostname: pulsar-zookeeper
+    command: bin/pulsar zookeeper
+
+  pulsar-proxy:
+    container_name: proxy
+    image: "apachepulsar/pulsar:latest"
+    hostname: pulsar-proxy
+    links:
+      - pulsar-zookeeper
+    depends_on:
+      - pulsar-zookeeper
+    environment:
+      - brokerServiceURL=pulsar://broker:6650
+      - brokerWebServiceURL=http://broker:8080
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "sleep 10
+      && bin/apply-config-from-env.py conf/proxy.conf
+      && bin/pulsar proxy"
+
+  pulsar-broker:
+    container_name: broker
+    image: "apachepulsar/pulsar:latest"
+    hostname: broker
+    links:
+      - pulsar-zookeeper
+    depends_on:
+      - pulsar-zookeeper
+    environment:
+      - zookeeperServers=pulsar-zookeeper:2181
+      - clusterName=test
+    command: >
+      sh -c "sleep 10
+      && bin/apply-config-from-env.py conf/broker.conf
+      && bin/pulsar broker"
+
+  pulsar-bookie:
+    container_name: bookie
+    image: "apachepulsar/pulsar:latest"
+    hostname: bk
+    links:
+      - pulsar-zookeeper
+    depends_on:
+      - pulsar-zookeeper
+    environment:
+      - zkServers=pulsar-zookeeper:2181
+    command: >
+      sh -c "sleep 10
+      && bin/apply-config-from-env.py conf/bookkeeper.conf
+      && bin/pulsar bookie"
+
+  pulsar-init:
+    container_name: pulsar-init
+    image: "apachepulsar/pulsar:latest"
+    links:
+      - pulsar-zookeeper
+    depends_on:
+      - pulsar-zookeeper
+    command: bin/pulsar initialize-cluster-metadata -c test -cs pulsar-zookeeper:2181 -uw pulsar-proxy:8080 -zk pulsar-zookeeper:2181
+

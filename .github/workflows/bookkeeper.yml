@@ -25,7 +25,7 @@ jobs:
 
     - name: Check bookKeeper service
       run: |
-        ./test/script/check.sh bookieHTTP
+        ./test/script/check.sh HTTP
 
     - name: Write dummy data
       run: |
