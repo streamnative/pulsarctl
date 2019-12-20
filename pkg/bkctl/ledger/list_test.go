@@ -15,22 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package common
+package ledger
 
-import "fmt"
+import (
+	"strings"
+	"testing"
 
-const UnknownErrorReason = "Unknown pulsar error"
+	"github.com/stretchr/testify/assert"
+)
 
-type Error struct {
-	Reason string `json:"reason"`
-	Code   int
+func TestListCmd(t *testing.T) {
+	o := doListCmdTest(t)
+	assert.True(t, strings.Contains(o, "0"))
 }
 
-func (e Error) Error() string {
-	return fmt.Sprintf("code: %d reason: %s", e.Code, e.Reason)
-}
-
-func IsAdminError(err error) bool {
-	_, ok := err.(Error)
-	return ok
+func doListCmdTest(t *testing.T) string {
+	args := []string{"list"}
+	out, execErr, nameErr, err := testLedgerCommands(listCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	return out.String()
 }
