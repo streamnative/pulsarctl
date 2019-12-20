@@ -82,7 +82,7 @@ export GO111MODULE=on
 go build -o pulsarctl main.go
 ```
 
-## Optional pulsarctl configurations
+## Enable Auto-Completion
 
 If you want to enable autocompletion in shell, see [enable_completion](docs/en/enable_completion.md).
 
