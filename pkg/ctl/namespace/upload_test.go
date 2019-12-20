@@ -18,6 +18,7 @@
 package namespace
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -44,5 +45,5 @@ func TestUpload(t *testing.T) {
 	argsWithInvalidBundle := []string{"unload", "public/test-unload-namespace", "--bundle", "0x00000000_0x60000000"}
 	_, execErr, _, _ = TestNamespaceCommands(unload, argsWithInvalidBundle)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 500 reason: Unknown pulsar error")
+	assert.True(t, strings.Contains(execErr.Error(), "code: 500"))
 }
