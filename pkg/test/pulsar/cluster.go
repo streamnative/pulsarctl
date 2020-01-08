@@ -41,6 +41,7 @@ var (
 
 type ClusterDef struct {
 	clusterSpec      *ClusterSpec
+	networkName      string
 	network          testcontainers.Network
 	zkContainer      *test.BaseContainer
 	proxyContainer   *test.BaseContainer
@@ -48,55 +49,34 @@ type ClusterDef struct {
 	brokerContainers map[string]*test.BaseContainer
 }
 
-type Cluster interface {
-	// Start a pulsar cluster.
-	Start(ctx context.Context) error
-
-	// Stop a pulsar cluster.
-	Stop(ctx context.Context) error
-
-	// GetPlainTextServiceURL gets the pulsar service connect string.
-	GetPlainTextServiceURL(ctx context.Context) (string, error)
-
-	// GetHTTPServiceURL gets the pulsar HTTP service connect string.
-	GetHTTPServiceURL(ctx context.Context) (string, error)
-
-	// Close closes resources used for starting the cluster.
-	Close(ctx context.Context)
-}
-
 // DefaultPulsarCluster creates a pulsar cluster using the default cluster spec.
-func DefaultPulsarCluster() (Cluster, error) {
+func DefaultPulsarCluster() (test.Cluster, error) {
 	return NewPulsarCluster(DefaultClusterSpec())
 }
 
 // NewPulsarCluster creates a pulsar cluster using the spec.
-func NewPulsarCluster(spec *ClusterSpec) (Cluster, error) {
-	networkName := spec.ClusterName
-	network, err := test.NewNetwork(networkName)
+func NewPulsarCluster(spec *ClusterSpec) (test.Cluster, error) {
+	c := &ClusterDef{clusterSpec: spec}
+	c.networkName = spec.ClusterName + test.RandomSuffix()
+	network, err := test.NewNetwork(c.networkName)
 	if err != nil {
-		return nil, err
+		return c, err
 	}
+	c.network = network
 
-	zookeeper := containers.NewZookeeperContainer(LatestImage, networkName)
-	bookies := getBookieContainers(networkName, spec.NumBookies)
-	brokers := getBrokerContainers(spec.ClusterName, networkName, spec.NumBrokers)
+	c.zkContainer = containers.NewZookeeperContainer(LatestImage, c.networkName)
+	c.bookieContainers = getBookieContainers(c.networkName, spec.NumBookies)
+	brokers := getBrokerContainers(spec.ClusterName, c.networkName, spec.NumBrokers)
 	broker := getABrokerNetAlias(brokers)
-	proxy := containers.NewProxyContainer(LatestImage, networkName).WithEnv(map[string]string{
+	c.brokerContainers = brokers
+	c.proxyContainer = containers.NewProxyContainer(LatestImage, c.networkName).WithEnv(map[string]string{
 		"webServicePort":      strconv.Itoa(spec.ProxyHTTPServicePort),
 		"servicePort":         strconv.Itoa(spec.ProxyServicePort),
 		"brokerServiceURL":    fmt.Sprintf("pulsar://%s:%d", broker, spec.BrokerServicePort),
 		"brokerWebServiceURL": fmt.Sprintf("http://%s:%d", broker, spec.BrokerHTTPServicePort),
 	})
 
-	return &ClusterDef{
-		network:          network,
-		clusterSpec:      spec,
-		zkContainer:      zookeeper,
-		proxyContainer:   proxy,
-		bookieContainers: bookies,
-		brokerContainers: brokers,
-	}, nil
+	return c, nil
 }
 
 func getBookieContainers(network string, num int) map[string]*test.BaseContainer {
@@ -146,7 +126,7 @@ func (c *ClusterDef) Start(ctx context.Context) error {
 		Zookeeper:          fmt.Sprintf("%s:%d", containers.ZookeeperName, DefaultZKPort),
 		Broker: fmt.Sprintf("%s:%d",
 			getABrokerNetAlias(c.brokerContainers), c.clusterSpec.BrokerHTTPServicePort),
-	}, LatestImage, c.clusterSpec.ClusterName)
+	}, LatestImage, c.networkName)
 	err = init.Start(ctx)
 	if err != nil {
 		return errors.WithMessage(err, "encountered errors when initializing the pulsar cluster")
@@ -231,5 +211,7 @@ func (c *ClusterDef) GetHTTPServiceURL(ctx context.Context) (string, error) {
 }
 
 func (c *ClusterDef) Close(ctx context.Context) {
-	c.network.Remove(ctx)
+	if c.network != nil {
+		c.network.Remove(ctx)
+	}
 }

@@ -15,31 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookkeeper
 
-import (
-	"context"
-	"strconv"
-	"time"
+import "github.com/streamnative/pulsarctl/pkg/test/bookkeeper/containers"
 
-	"github.com/testcontainers/testcontainers-go"
-)
-
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
+type ClusterSpec struct {
+	Image                 string
+	ClusterName           string
+	NumBookies            int
+	BookieServicePort     int
+	BookieHTTPServicePort int
+	ZookeeperServicePort  int
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+func DefaultClusterSpec() *ClusterSpec {
+	return &ClusterSpec{
+		Image:                 LatestImage,
+		ClusterName:           "default-bookie",
+		NumBookies:            1,
+		BookieServicePort:     containers.DefaultBookieServicePort,
+		BookieHTTPServicePort: containers.DefaultBookieHTTPServicePort,
+		ZookeeperServicePort:  containers.DefaultZookeeperServicePort,
+	}
 }

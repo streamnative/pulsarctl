@@ -61,6 +61,11 @@ func (bc *BaseContainer) WithNetworkAliases(aliases map[string][]string) *BaseCo
 	return bc
 }
 
+// GetANetworkAlias returns a network alias of the container.
+func (bc *BaseContainer) GetANetworkAlias(network string) string {
+	return bc.containerRequest.NetworkAliases[network][0]
+}
+
 // WithCmd sets the containers start up commands.
 func (bc *BaseContainer) WithCmd(cmd []string) *BaseContainer {
 	bc.containerRequest.Cmd = append(bc.containerRequest.Cmd, cmd...)
