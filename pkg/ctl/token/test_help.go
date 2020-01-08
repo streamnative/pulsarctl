@@ -15,22 +15,32 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package common
+package token
 
-import "fmt"
+import (
+	"bytes"
 
-const UnknownErrorReason = "Unknown pulsar error"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-type Error struct {
-	Reason string `json:"reason"`
-	Code   int
-}
+	"github.com/spf13/cobra"
+)
 
-func (e Error) Error() string {
-	return fmt.Sprintf("code: %d reason: %s", e.Code, e.Reason)
-}
+func testTokenCommands(newVerb func(*cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
+	execErr, err error) {
 
-func IsAdminError(err error) bool {
-	_, ok := err.(Error)
-	return ok
+	cmdutils.ExecErrorHandler = func(err error) {
+		execErr = err
+	}
+
+	rootCmd := &cobra.Command{}
+	out = new(bytes.Buffer)
+	rootCmd.SetOut(out)
+	rootCmd.SetArgs(append([]string{"token"}, args...))
+	flagGrouping := cmdutils.NewGrouping()
+	rootCmd.AddCommand(Command(flagGrouping))
+	resourceCmd := cmdutils.NewResourceCmd("token", "", "")
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
+	err = rootCmd.Execute()
+
+	return
 }

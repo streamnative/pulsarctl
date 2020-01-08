@@ -1,4 +1,4 @@
-name: Go
+name: Pulsarctl Unit Tests Check
 on: [pull_request]
 jobs:
 
@@ -49,4 +49,4 @@ jobs:
       run: |
         docker ps
         ./pulsarctl clusters list
-        go test -v ./...
+        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl)

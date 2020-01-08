@@ -33,7 +33,7 @@ func deleteCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	deleteLedger := cmdutils.Example{
 		Desc:    "Delete the specified ledger",
-		Command: "pulsarctl bookkeeper ledger delete --ledger-id (ledger-id)",
+		Command: "pulsarctl bookkeeper ledger delete (ledger-id)",
 	}
 	examples = append(examples, deleteLedger)
 	desc.CommandExamples = examples

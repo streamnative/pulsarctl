@@ -31,8 +31,8 @@ A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project
 
 | Version | Reference |
 | --------| --------- |
-| [0.1.0](https://github.com/streamnative/pulsarctl/releases/download/v0.1.0/pulsarctl) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) | 
-
+| [0.1.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.1.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) |
+| [0.2.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.2.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.2.0/) |
 
 ## Install
 
@@ -81,6 +81,10 @@ export GO111MODULE=on
 
 go build -o pulsarctl main.go
 ```
+
+## Enable Auto-Completion
+
+If you want to enable autocompletion in shell, see [enable_completion](docs/en/enable_completion.md).
 
 ## Project Status
 

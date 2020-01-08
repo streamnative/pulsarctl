@@ -36,3 +36,4 @@ categories:
   - resource-quotas
   - functions-worker
   - ns-isolation-policy
+  - token
