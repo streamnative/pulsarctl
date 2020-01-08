@@ -280,14 +280,6 @@ func (rules *ClientConfigLoadingRules) GetDefaultFilename() string {
 	return ""
 }
 
-func IsFileExists(path string) bool {
-	_, err := os.Stat(path)
-	if err != nil {
-		return os.IsExist(err)
-	}
-	return true
-}
-
 // LoadFromFile takes a filename and deserializes the contents into Config object
 func LoadFromFile(filename string) (*Config, error) {
 	pulsarconfigBytes, err := ioutil.ReadFile(filename)

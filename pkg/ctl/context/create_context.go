@@ -91,10 +91,10 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 }
 
 type createContextOptions struct {
-	access     internal.ConfigAccess
-	authInfo   string
-	serviceURL string
-	cluster    string
+	access           internal.ConfigAccess
+	authInfo         string
+	brokerServiceURL string
+	bookieServiceURL string
 }
 
 func (o *createContextOptions) modifyContext(existingContext internal.Context) internal.Context {
@@ -104,12 +104,12 @@ func (o *createContextOptions) modifyContext(existingContext internal.Context) i
 		modifiedContext.AuthInfo = o.authInfo
 	}
 
-	if o.serviceURL != "" {
-		modifiedContext.WebServiceURL = o.serviceURL
+	if o.brokerServiceURL != "" {
+		modifiedContext.BrokerServiceURL = o.brokerServiceURL
 	}
 
-	if o.cluster != "" {
-		modifiedContext.BrokerServiceURL = o.cluster
+	if o.bookieServiceURL != "" {
+		modifiedContext.BookieServiceURL = o.bookieServiceURL
 	}
 
 	return modifiedContext

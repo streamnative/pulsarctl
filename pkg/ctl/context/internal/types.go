@@ -37,8 +37,8 @@ type AuthInfo struct {
 
 type Context struct {
 	AuthInfo         string `yaml:"user"`
-	WebServiceURL    string `yaml:"web-service-url"`
-	BrokerServiceURL string `yaml:"broker-service-url"`
+	BrokerServiceURL string `yaml:"admin-service-url"`
+	BookieServiceURL string `yaml:"bookie-service-url"`
 }
 
 type ConfigOverrides struct {
