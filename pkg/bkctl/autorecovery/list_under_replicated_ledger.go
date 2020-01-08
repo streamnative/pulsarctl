@@ -25,31 +25,31 @@ import (
 
 func listUnderReplicatedLedgerCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for listing all the underreplicated ledgers which have been marked " +
-		"for rereplication."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for getting all the under-replicated ledgers which have been marked " +
+		"for re-replication."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	list := cmdutils.Example{
-		Desc:    "List all the underreplicated ledgers which have been marked for rereplication",
-		Command: "pulsarctl bookkeeper autorecovery listunderreplicatedledger",
+		Desc:    "Get all the under-replicated ledgers which have been marked for re-replication.",
+		Command: "pulsarctl bookkeeper auto-recovery list-under-replicated-ledger",
 	}
 
 	li := cmdutils.Example{
-		Desc:    "List all the underreplicated ledgers of a bookie which have been marked for rereplication",
-		Command: "pulsarctl bookkeeper autorecovery listunderreplicatedledger --include (bookie-ip:bookie-port)",
+		Desc:    "Get all the under-replicated ledgers of a bookie which have been marked for re-replication.",
+		Command: "pulsarctl bookkeeper auto-recovery list-under-replicated-ledger --include (bookie-ip:bookie-port)",
 	}
 
 	le := cmdutils.Example{
-		Desc:    "List all the underreplicated ledgers except a bookie which have been marked for rereplication",
-		Command: "pulsarctl bookkeeper autorecovery listunderreplicatedledger --exclude (bookie-ip:bookie-port)",
+		Desc:    "Get all the under-replicated ledgers except a bookie which have been marked for re-replication.",
+		Command: "pulsarctl bookkeeper auto-recovery list-under-replicated-ledger --exclude (bookie-ip:bookie-port)",
 	}
 	examples = append(examples, list, li, le)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Get the under-replicated ledgers successfully.",
 		Out: `{
     [ledgerId1, ledgerId2...]
 }`,
@@ -58,8 +58,8 @@ func listUnderReplicatedLedgerCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"listunderreplicatedledger",
-		"List all the underreplicated ledgers which have been marked for rereplication",
+		"list-under-replicated-ledger",
+		"Get all the under-replicated ledgers which have been marked for re-replication.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -71,18 +71,18 @@ func listUnderReplicatedLedgerCmd(vc *cmdutils.VerbCmd) {
 		return doListUnderReplicatedLedger(vc, include, exclude, show)
 	})
 
-	vc.FlagSetGroup.InFlagSet("List Under Replicated Ledger", func(set *pflag.FlagSet) {
-		set.StringVar(&include, "include", "", "show the underreplicated ledger of the bookie")
-		set.StringVar(&exclude, "exclude", "", "show the underreplicated ledger exclude the bookie")
-		set.BoolVar(&show, "show", false, "show the ledgers replica list")
+	vc.FlagSetGroup.InFlagSet("List under replicated ledgers", func(set *pflag.FlagSet) {
+		set.StringVar(&include, "include", "", "Show the under-replicated ledger of the bookie.")
+		set.StringVar(&exclude, "exclude", "", "Show the under-replicated ledger exclude the bookie.")
+		set.BoolVar(&show, "show", false, "Show the replicate ledger list.")
 	})
 }
 
-func doListUnderReplicatedLedger(vc *cmdutils.VerbCmd, include, exclude string, print bool) error {
+func doListUnderReplicatedLedger(vc *cmdutils.VerbCmd, include, exclude string, show bool) error {
 	admin := cmdutils.NewBookieClient()
 	var l interface{}
 	var err error
-	if print {
+	if show {
 		l, err = admin.AutoRecovery().PrintListUnderReplicatedLedger(include, exclude)
 	} else {
 		l, err = admin.AutoRecovery().ListUnderReplicatedLedger(include, exclude)

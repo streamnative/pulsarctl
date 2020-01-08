@@ -18,29 +18,31 @@
 package autorecovery
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"auto-recovery",
-		"Operations about auto recovering",
-		"",
-		"")
-
-	commands := []func(*cmdutils.VerbCmd){
-		recoverBookieCmd,
-		listUnderReplicatedLedgerCmd,
-		whoIsAuditorCmd,
-		triggerAuditCmd,
-		setLostBookieRecoveryDelayCmd,
-		getLostBookieRecoveryDelayCmd,
-		decommissionCmd,
+func TestDecommissionArgsErr(t *testing.T) {
+	// no args specified
+	args := []string{"decommission"}
+	_, _, nameErr, err := testAutoRecoveryCommands(decommissionCmd, args)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 
-	return resourceCmd
+	// more than one args specified
+	args = []string{"decommission", "bookie-1:3181", "bookie-2:3181"}
+	_, _, nameErr, err = testAutoRecoveryCommands(decommissionCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 }

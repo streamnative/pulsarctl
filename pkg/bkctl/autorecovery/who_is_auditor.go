@@ -24,19 +24,19 @@ import (
 func whoIsAuditorCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting who is the auditor."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
 		Desc:    "Get who is the auditor",
-		Command: "pulsarctl bookkeeper autorecovery whoisauditor",
+		Command: "pulsarctl bookkeeper auto-recovery who-is-auditor",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Get the auditor successfully.",
 		Out: `{
     "Auditor": "hostname/hostAddress:Port"
 }`,
@@ -45,8 +45,8 @@ func whoIsAuditorCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"whoisauditor",
-		"Get who is the auditor",
+		"who-is-auditor",
+		"Get the auditor of the bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

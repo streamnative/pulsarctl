@@ -24,27 +24,27 @@ import (
 func getLostBookieRecoveryDelayCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting the lost bookie recovery delay in second of a bookie."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	get := cmdutils.Example{
-		Desc:    "Get the lost Bookie Recovery Delay of a bookie",
-		Command: "pulsarctl bookkeeeper autorecovery getdelay",
+		Desc:    "Get the lost Bookie Recovery Delay of a bookie.",
+		Command: "pulsarctl bookkeeper auto-recovery get-lost-bookie-recovery-delay",
 	}
 	examples = append(examples, get)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Get the lost bookie recovery delay of a bookie. ",
 		Out:  "lostBookieRecoveryDelay value: (delay)",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"getdelay",
-		"Get the lost bookie recovery delay of a bookie",
+		"get-lost-bookie-recovery-delay",
+		"Get the lost bookie recovery delay of a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 

@@ -28,32 +28,32 @@ import (
 func setLostBookieRecoveryDelayCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for setting the lost bookie recovery delay in second."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	set := cmdutils.Example{
-		Desc:    "Set the lost Bookie Recovery Delay",
-		Command: "pulsarctl bookkeeper autorecovery setdelay (delay)",
+		Desc:    "Set the lost bookie recovery delay.",
+		Command: "pulsarctl bookkeeper auto-recovery set-lost-bookie-recovery-delay (delay)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Set the lost bookie recovery delay to the new delay successfully.",
 		Out:  "Successfully set the lost bookie recovery delay to (delay)(second)",
 	}
 
 	argError := cmdutils.Output{
-		Desc: "the specified delay time is not specified or the delay time is specified more than one",
+		Desc: "The specified delay time is not specified or the delay time is specified more than one.",
 		Out:  "[✖]  the specified delay time is not specified or the delay time is specified more than one",
 	}
 	out = append(out, successOut, argError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"setdelay",
-		"Set the lost bookie recovery delay",
+		"set-lost-bookie-recovery-delay",
+		"Set the lost bookie recovery delay.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -64,14 +64,14 @@ func setLostBookieRecoveryDelayCmd(vc *cmdutils.VerbCmd) {
 
 func doLostBookieRecoveryDelay(vc *cmdutils.VerbCmd) error {
 	delay, err := strconv.Atoi(vc.NameArg)
-	if err != nil {
+	if err != nil || delay < 0 {
 		return errors.Errorf("invalid delay times %s", vc.NameArg)
 	}
 
 	admin := cmdutils.NewBookieClient()
 	err = admin.AutoRecovery().SetLostBookieRecoveryDelay(delay)
 	if err == nil {
-		vc.Command.Printf("Successfully set the lost bookie recovery delay to %d(second)\n", delay)
+		vc.Command.Printf("Successfully set the lost bookie recovery delay to %d(second).\n", delay)
 	}
 
 	return err

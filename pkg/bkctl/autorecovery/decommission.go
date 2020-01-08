@@ -23,25 +23,25 @@ import (
 
 func decommissionCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for decommission a bookie."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for decommissioning a bookie."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	c := cmdutils.Example{
-		Desc:    "Decommission a bookie",
-		Command: "pulsarctl bookkeeper autorecovery (bk-ip:bk-port)",
+		Desc:    "Decommission a bookie.",
+		Command: "pulsarctl bookkeeper auto-recovery (bk-ip:bk-port)",
 	}
 	examples = append(examples, c)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
+		Desc: "Successfully decommission a bookie.",
 		Out:  "Successfully decommission the bookie (bookie-ip:bookie-port)",
 	}
 
 	argError := cmdutils.Output{
-		Desc: "the bookie address is not specified or the bookie address is specified more than one",
+		Desc: "The bookie address is not specified or the bookie address is specified more than one.",
 		Out:  "[✖]  the bookie address is not specified or the bookie address is specified more than one",
 	}
 	out = append(out, successOut, argError)
@@ -49,7 +49,7 @@ func decommissionCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"decommission",
-		"Decommission a bookie",
+		"Decommission a bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -62,7 +62,7 @@ func doDecommission(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
 	err := admin.AutoRecovery().Decommission(vc.NameArg)
 	if err == nil {
-		vc.Command.Printf("Successfully decommission the bookie %s\n", vc.NameArg)
+		vc.Command.Printf("Successfully decommission the bookie %s.\n", vc.NameArg)
 	}
 
 	return err
