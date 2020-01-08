@@ -23,28 +23,28 @@ import (
 
 func triggerAuditCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for triggering audit by resetting the lostBookieRecoveryDelay."
-	desc.CommandPermission = "none"
+	desc.CommandUsedFor = "This command is used for triggering audit by resetting the lost bookie recovery delay."
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	trigger := cmdutils.Example{
-		Desc:    "Trigger audit by resetting the lostBookieRecoveryDelay",
-		Command: "pulsarctl bookkeeper autorecovery triggeraudit",
+		Desc:    "Trigger audit by resetting the lost bookie recovery delay",
+		Command: "pulsarctl bookkeeper auto-recovery trigger-audit",
 	}
 	examples = append(examples, trigger)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
-		Out:  "Successfully trigger audit by resetting the lostBookieRecoveryDelay",
+		Desc: "Trigger audit by resetting the lost bookie recovery delay successfully.",
+		Out:  "Successfully trigger audit by resetting the lost bookie recovery delay.",
 	}
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"triggeraudit",
-		"Trigger audit by resetting the lostBookieRecoveryDelay",
+		"trigger-audit",
+		"Trigger audit by resetting the lost bookie recovery delay.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -57,7 +57,7 @@ func doTriggerAudit(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
 	err := admin.AutoRecovery().TriggerAudit()
 	if err == nil {
-		vc.Command.Println("Successfully trigger audit by resetting the lostBookieRecoveryDelay")
+		vc.Command.Println("Successfully trigger audit by resetting the lost bookie recovery delay.")
 	}
 
 	return err

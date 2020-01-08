@@ -18,6 +18,8 @@
 package autorecovery
 
 import (
+	"errors"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/spf13/pflag"
@@ -26,27 +28,32 @@ import (
 func recoverBookieCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for recovering the ledger data of a failed bookie."
-	desc.CommandPermission = "none"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 	rb := cmdutils.Example{
-		Desc:    "Recover the ledger data of a failed bookie",
-		Command: "pulsarctl bookkeeper autorecovery recoverbookie (bookie-1) (bookie-2)",
+		Desc:    "Recover the ledger data of a failed bookie.",
+		Command: "pulsarctl bookkeeper auto-recovery recover-bookie (bookie-1) (bookie-2)",
 	}
 	examples = append(examples, rb)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
-		Desc: "normal output",
-		Out:  "Successfully recover the bookies (bookie-1) (bookie-2)",
+		Desc: "Recover the bookies successfully.",
+		Out:  "Successfully recover the bookies (bookie-1) (bookie-2).",
 	}
-	out = append(out, successOut)
+
+	IDNotSpecified := cmdutils.Output{
+		Desc: "The recover bookie id is not specified.",
+		Out:  "[✖]  you need to specify the recover bookies id",
+	}
+	out = append(out, successOut, IDNotSpecified)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"recoverbookie",
-		"Recover the ledger data of a failed bookie",
+		"recover-bookie",
+		"Recover the ledger data of a failed bookie.",
 		desc.ToString(),
 		desc.ExampleToString())
 
@@ -55,11 +62,15 @@ func recoverBookieCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doRecoverBookie(vc, deleteCookie)
 	}, func(args []string) error {
+		if len(args) == 0 {
+			return errors.New("you need to specify the recover bookies id")
+		}
 		return nil
 	})
 
-	vc.FlagSetGroup.InFlagSet("Recover Bookie", func(set *pflag.FlagSet) {
-		set.BoolVar(&deleteCookie, "delelte-cookie", false, "delete cookie")
+	vc.FlagSetGroup.InFlagSet("Recover bookie", func(set *pflag.FlagSet) {
+		set.BoolVar(&deleteCookie, "delete-cookie", false,
+			"Delete cookie when recovering the failed bookies.")
 	})
 }
 
@@ -68,9 +79,9 @@ func doRecoverBookie(vc *cmdutils.VerbCmd, deleteCookie bool) error {
 	err := admin.AutoRecovery().RecoverBookie(vc.NameArgs, deleteCookie)
 	if err == nil {
 		if deleteCookie {
-			vc.Command.Printf("Successfully recover the bookies %v and delete the cookie\n", vc.NameArgs)
+			vc.Command.Printf("Successfully recover the bookies %v and delete the cookie.\n", vc.NameArgs)
 		} else {
-			vc.Command.Printf("Successfully recover the bookie %v\n", vc.NameArgs)
+			vc.Command.Printf("Successfully recover the bookie %v.\n", vc.NameArgs)
 		}
 	}
 

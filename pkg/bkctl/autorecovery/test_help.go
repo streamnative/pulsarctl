@@ -18,29 +18,41 @@
 package autorecovery
 
 import (
+	"bytes"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/spf13/cobra"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+func testAutoRecoveryCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
+	execErr, nameErr, err error) {
+
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
+	}
+
+	var nameError error
+	cmdutils.CheckNameArgError = func(err error) {
+		nameError = err
+	}
+
+	var rootCmd = &cobra.Command{}
+
+	buf := new(bytes.Buffer)
+	rootCmd.SetOut(buf)
+	rootCmd.SetArgs(append([]string{"auto-recovery"}, args...))
+
 	resourceCmd := cmdutils.NewResourceCmd(
 		"auto-recovery",
 		"Operations about auto recovering",
 		"",
 		"")
+	flagGrouping := cmdutils.NewGrouping()
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
+	rootCmd.AddCommand(resourceCmd)
+	err = rootCmd.Execute()
 
-	commands := []func(*cmdutils.VerbCmd){
-		recoverBookieCmd,
-		listUnderReplicatedLedgerCmd,
-		whoIsAuditorCmd,
-		triggerAuditCmd,
-		setLostBookieRecoveryDelayCmd,
-		getLostBookieRecoveryDelayCmd,
-		decommissionCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+	return buf, execError, nameError, err
 }

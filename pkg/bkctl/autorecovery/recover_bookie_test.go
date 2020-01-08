@@ -18,29 +18,18 @@
 package autorecovery
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"auto-recovery",
-		"Operations about auto recovering",
-		"",
-		"")
-
-	commands := []func(*cmdutils.VerbCmd){
-		recoverBookieCmd,
-		listUnderReplicatedLedgerCmd,
-		whoIsAuditorCmd,
-		triggerAuditCmd,
-		setLostBookieRecoveryDelayCmd,
-		getLostBookieRecoveryDelayCmd,
-		decommissionCmd,
+func TestRecoverBookieArgsErr(t *testing.T) {
+	args := []string{"recover-bookie"}
+	_, _, nameErr, err := testAutoRecoveryCommands(recoverBookieCmd, args)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-
-	return resourceCmd
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "you need to specify the recover bookies id", nameErr.Error())
 }
