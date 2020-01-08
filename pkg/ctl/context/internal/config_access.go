@@ -19,6 +19,7 @@ package internal
 
 import (
 	"errors"
+	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"os"
 	"path"
 	"reflect"
@@ -30,7 +31,7 @@ type ConfigAccess interface {
 	GetLoadingPrecedence() []string
 	// GetStartingConfig returns the config that subcommands should being operating against.
 	// It may or may not be merged depending on loading rules
-	GetStartingConfig() (*Config, error)
+	GetStartingConfig() (*cmdutils.Config, error)
 	// GetDefaultFilename returns the name of the file you should write into (create if necessary),
 	// if you're trying to create a new stanza as opposed to updating an existing one.
 	GetDefaultFilename() string
@@ -48,7 +49,7 @@ type PathOptions struct {
 
 type ClientConfig interface {
 	// RawConfig returns the merged result of all overrides
-	RawConfig() (Config, error)
+	RawConfig() (cmdutils.Config, error)
 	// ConfigAccess returns the rules for loading/persisting the config.
 	ConfigAccess() ConfigAccess
 }
@@ -57,15 +58,15 @@ func (o *PathOptions) GetLoadingPrecedence() []string {
 	return []string{o.GlobalFile}
 }
 
-func (o *PathOptions) GetStartingConfig() (*Config, error) {
+func (o *PathOptions) GetStartingConfig() (*cmdutils.Config, error) {
 	// don't mutate the original
 	loadingRules := *o.LoadingRules
 	loadingRules.Precedence = o.GetLoadingPrecedence()
 
-	clientConfig := NewNonInteractiveDeferredLoadingClientConfig(&loadingRules, new(ConfigOverrides))
+	clientConfig := NewNonInteractiveDeferredLoadingClientConfig(&loadingRules, new(cmdutils.ConfigOverrides))
 	rawConfig, err := clientConfig.RawConfig()
 	if os.IsNotExist(err) {
-		return NewConfig(), nil
+		return cmdutils.NewConfig(), nil
 	}
 	if err != nil {
 		return nil, err
@@ -92,7 +93,7 @@ func NewDefaultPathOptions() *PathOptions {
 }
 
 // ModifyConfig takes a Config object and write filed of Config struct to file
-func ModifyConfig(configAccess ConfigAccess, newConfig Config, relativizePaths bool) error {
+func ModifyConfig(configAccess ConfigAccess, newConfig cmdutils.Config, relativizePaths bool) error {
 	possibleSources := configAccess.GetLoadingPrecedence()
 	// sort the possible pulsar config files so we always "lock" in the same order
 	// to avoid deadlock (note: this can fail w/ symlinks, but... come on).
@@ -124,7 +125,7 @@ func ModifyConfig(configAccess ConfigAccess, newConfig Config, relativizePaths b
 	}
 
 	// seenConfigs stores a map of config source filenames to computed config objects
-	seenConfigs := map[string]*Config{}
+	seenConfigs := map[string]*cmdutils.Config{}
 
 	for key, context := range newConfig.Contexts {
 		startingContext, exists := startingConfig.Contexts[key]
@@ -272,13 +273,13 @@ func writeCurrentContext(configAccess ConfigAccess, newCurrentContext string) er
 
 // getConfigFromFile tries to read a pulsarconfig file and if it can't, returns an error.
 // One exception, missing files result in empty configs, not an error.
-func getConfigFromFile(filename string) (*Config, error) {
+func getConfigFromFile(filename string) (*cmdutils.Config, error) {
 	config, err := LoadFromFile(filename)
 	if err != nil && !os.IsNotExist(err) {
 		return nil, err
 	}
 	if config == nil {
-		config = NewConfig()
+		config = cmdutils.NewConfig()
 	}
 	return config, nil
 }

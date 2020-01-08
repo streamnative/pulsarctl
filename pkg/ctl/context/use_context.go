@@ -88,7 +88,7 @@ func doRunUseContext(vc *cmdutils.VerbCmd, ops *useContextOptions) error {
 	return err
 }
 
-func validate(vc *cmdutils.VerbCmd, config *internal.Config) error {
+func validate(vc *cmdutils.VerbCmd, config *cmdutils.Config) error {
 	if len(vc.NameArg) == 0 {
 		return errors.New("empty context names are not allowed")
 	}

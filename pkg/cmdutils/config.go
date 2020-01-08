@@ -18,7 +18,11 @@
 package cmdutils
 
 import (
-	"log"
+	`fmt`
+	`github.com/streamnative/pulsarctl/pkg/pulsar/utils`
+    `gopkg.in/yaml.v2`
+    `io/ioutil`
+    "log"
 	"os"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
@@ -107,8 +111,43 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	)
 }
 
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	}
+	return true
+}
+
+func (c *ClusterConfig) DecodeContext() *Config {
+    cfg := NewConfig()
+
+	defaultPath := fmt.Sprintf("%s/.pulsar/config", utils.HomeDir())
+	if !Exists(defaultPath) {
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(defaultPath)
+    if err != nil {
+        return nil
+    }
+
+	err = yaml.Unmarshal(content, &cfg)
+    if err != nil {
+        return nil
+    }
+
+	return cfg
+}
+
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
+
+	ctxConf := c.DecodeContext()
+    if ctxConf.CurrentContext != "" {
+        ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+        c.WebServiceURL = ctx.BrokerServiceURL
+    }
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {
 		config.WebServiceURL = c.WebServiceURL
@@ -147,6 +186,12 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
+    ctxConf := c.DecodeContext()
+    if ctxConf.CurrentContext != "" {
+        ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+        c.BKWebServiceURL = ctx.BookieServiceURL
+    }
+
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
 	}

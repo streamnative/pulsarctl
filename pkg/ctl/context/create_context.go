@@ -72,7 +72,7 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 
 	startingStanza, exists := config.Contexts[name]
 	if !exists {
-		startingStanza = new(internal.Context)
+		startingStanza = new(cmdutils.Context)
 	}
 	context := o.modifyContext(*startingStanza)
 	config.Contexts[name] = &context
@@ -97,9 +97,11 @@ type createContextOptions struct {
 	bookieServiceURL string
 }
 
-func (o *createContextOptions) modifyContext(existingContext internal.Context) internal.Context {
+func (o *createContextOptions) modifyContext(existingContext cmdutils.Context) cmdutils.Context {
 	modifiedContext := existingContext
 
+	o.brokerServiceURL = cmdutils.PulsarCtlConfig.WebServiceURL
+	o.bookieServiceURL = cmdutils.PulsarCtlConfig.BKWebServiceURL
 	if o.authInfo != "" {
 		modifiedContext.AuthInfo = o.authInfo
 	}

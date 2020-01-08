@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package internal
+package cmdutils
 
 type Config struct {
 	AuthInfos      map[string]*AuthInfo `yaml:"auth-info"`

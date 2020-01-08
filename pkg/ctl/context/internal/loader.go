@@ -19,6 +19,7 @@ package internal
 
 import (
 	"fmt"
+	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"io"
 	"io/ioutil"
 	"os"
@@ -62,7 +63,7 @@ func currentMigrationRules() map[string]string {
 type ClientConfigLoader interface {
 	ConfigAccess
 	// Load returns the latest config
-	Load() (*Config, error)
+	Load() (*cmdutils.Config, error)
 }
 
 // ClientConfigLoadingRules is an ExplicitPath and string slice of specific locations that are used
@@ -134,7 +135,7 @@ func NewDefaultClientConfigLoadingRules() *ClientConfigLoadingRules {
 // non-conflicting entries from the second file's "red-user" are discarded.
 // Relative paths inside of the .pulsarconfig files are resolved against the .pulsarconfig file's parent folder
 // and only absolute file paths are returned.
-func (rules *ClientConfigLoadingRules) Load() (*Config, error) {
+func (rules *ClientConfigLoadingRules) Load() (*cmdutils.Config, error) {
 	if err := rules.Migrate(); err != nil {
 		return nil, err
 	}
@@ -142,7 +143,7 @@ func (rules *ClientConfigLoadingRules) Load() (*Config, error) {
 	missingList := []string{}
 	pulsarConfigFiles := []string{}
 	pulsarConfigFiles = append(pulsarConfigFiles, rules.Precedence...)
-	pulsarconfigs := []*Config{}
+	pulsarconfigs := []*cmdutils.Config{}
 	// read and cache the config files so that we only look at them once
 	for _, filename := range pulsarConfigFiles {
 		if len(filename) == 0 {
@@ -170,7 +171,7 @@ func (rules *ClientConfigLoadingRules) Load() (*Config, error) {
 	}
 
 	// first merge all of our maps
-	mapConfig := NewConfig()
+	mapConfig := cmdutils.NewConfig()
 
 	for _, pulsarconfig := range pulsarconfigs {
 		mergo.MergeWithOverwrite(mapConfig, pulsarconfig)
@@ -178,7 +179,7 @@ func (rules *ClientConfigLoadingRules) Load() (*Config, error) {
 
 	// merge all of the struct values in the reverse order so that priority is given correctly
 	// errors are not added to the list the second time
-	nonMapConfig := NewConfig()
+	nonMapConfig := cmdutils.NewConfig()
 	for i := len(pulsarconfigs) - 1; i >= 0; i-- {
 		pulsarconfig := pulsarconfigs[i]
 		mergo.MergeWithOverwrite(nonMapConfig, pulsarconfig)
@@ -186,7 +187,7 @@ func (rules *ClientConfigLoadingRules) Load() (*Config, error) {
 
 	// since values are overwritten, but maps values are not, we can merge the non-map config on top of the map config and
 	// get the values we expect.
-	config := NewConfig()
+	config := cmdutils.NewConfig()
 	mergo.MergeWithOverwrite(config, mapConfig)
 	mergo.MergeWithOverwrite(config, nonMapConfig)
 
@@ -252,11 +253,11 @@ func (rules *ClientConfigLoadingRules) GetLoadingPrecedence() []string {
 }
 
 // GetStartingConfig implements ConfigAccess
-func (rules *ClientConfigLoadingRules) GetStartingConfig() (*Config, error) {
-	clientConfig := NewNonInteractiveDeferredLoadingClientConfig(rules, &ConfigOverrides{})
+func (rules *ClientConfigLoadingRules) GetStartingConfig() (*cmdutils.Config, error) {
+	clientConfig := NewNonInteractiveDeferredLoadingClientConfig(rules, &cmdutils.ConfigOverrides{})
 	rawConfig, err := clientConfig.RawConfig()
 	if os.IsNotExist(err) {
-		return NewConfig(), nil
+		return cmdutils.NewConfig(), nil
 	}
 	if err != nil {
 		return nil, err
@@ -281,7 +282,7 @@ func (rules *ClientConfigLoadingRules) GetDefaultFilename() string {
 }
 
 // LoadFromFile takes a filename and deserializes the contents into Config object
-func LoadFromFile(filename string) (*Config, error) {
+func LoadFromFile(filename string) (*cmdutils.Config, error) {
 	pulsarconfigBytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -303,11 +304,11 @@ func LoadFromFile(filename string) (*Config, error) {
 	}
 
 	if config.AuthInfos == nil {
-		config.AuthInfos = map[string]*AuthInfo{}
+		config.AuthInfos = map[string]*cmdutils.AuthInfo{}
 	}
 
 	if config.Contexts == nil {
-		config.Contexts = map[string]*Context{}
+		config.Contexts = map[string]*cmdutils.Context{}
 	}
 
 	return config, nil
@@ -315,8 +316,8 @@ func LoadFromFile(filename string) (*Config, error) {
 
 // Load takes a byte slice and deserializes the contents into Config object.
 // Encapsulates deserialization without assuming the source is a file.
-func Load(data []byte) (config *Config, err error) {
-	config = NewConfig()
+func Load(data []byte) (config *cmdutils.Config, err error) {
+	config = cmdutils.NewConfig()
 	// if there's no data in a file, return the default object instead of failing (DecodeInto reject empty input)
 	if len(data) == 0 {
 		return config, nil
@@ -332,7 +333,7 @@ func Load(data []byte) (config *Config, err error) {
 
 // WriteToFile serializes the config to yaml and writes it out to a file.  If not present,
 // it creates the file with the mode 0600.  If it is present it stomps the contents
-func WriteToFile(config Config, filename string) error {
+func WriteToFile(config cmdutils.Config, filename string) error {
 	content, err := Write(config)
 	if err != nil {
 		return err
@@ -379,7 +380,7 @@ func lockName(filename string) string {
 
 // Write serializes the config to yaml.
 // Encapsulates serialization without assuming the destination is a file.
-func Write(config Config) ([]byte, error) {
+func Write(config cmdutils.Config) ([]byte, error) {
 	return yaml.Marshal(&config)
 }
 
@@ -390,7 +391,7 @@ func (rules ClientConfigLoadingRules) ResolvePaths() bool {
 // ResolveLocalPaths resolves all relative paths in the config object with respect to the stanza's LocationOfOrigin
 // this cannot be done directly inside of LoadFromFile because doing so there would make it
 // impossible to load a file without modification of its contents.
-func ResolveLocalPaths(config *Config) error {
+func ResolveLocalPaths(config *cmdutils.Config) error {
 	for _, authInfo := range config.AuthInfos {
 		if len(authInfo.LocationOfOrigin) == 0 {
 			continue
@@ -411,7 +412,7 @@ func ResolveLocalPaths(config *Config) error {
 // RelativizeAuthInfoLocalPaths first absolutizes the paths by calling ResolveLocalPaths.
 // This assumes that any NEW path is already absolute, but any existing path will be
 // resolved relative to LocationOfOrigin
-func RelativizeAuthInfoLocalPaths(authInfo *AuthInfo) error {
+func RelativizeAuthInfoLocalPaths(authInfo *cmdutils.AuthInfo) error {
 	if len(authInfo.LocationOfOrigin) == 0 {
 		return fmt.Errorf("no location of origin for %v", authInfo)
 	}
@@ -430,15 +431,15 @@ func RelativizeAuthInfoLocalPaths(authInfo *AuthInfo) error {
 	return nil
 }
 
-func RelativizeConfigPaths(config *Config, base string) error {
+func RelativizeConfigPaths(config *cmdutils.Config, base string) error {
 	return RelativizePathWithNoBacksteps(GetConfigFileReferences(config), base)
 }
 
-func ResolveConfigPaths(config *Config, base string) error {
+func ResolveConfigPaths(config *cmdutils.Config, base string) error {
 	return ResolvePaths(GetConfigFileReferences(config), base)
 }
 
-func GetConfigFileReferences(config *Config) []*string {
+func GetConfigFileReferences(config *cmdutils.Config) []*string {
 	refs := []*string{}
 
 	for _, authInfo := range config.AuthInfos {
@@ -448,7 +449,7 @@ func GetConfigFileReferences(config *Config) []*string {
 	return refs
 }
 
-func GetAuthInfoFileReferences(authInfo *AuthInfo) []*string {
+func GetAuthInfoFileReferences(authInfo *cmdutils.AuthInfo) []*string {
 	s := []*string{&authInfo.ClientCertificate, &authInfo.ClientKey, &authInfo.TokenFile}
 	// Only resolve exec command if it isn't PATH based.
 	//if authInfo.Exec != nil && strings.ContainsRune(authInfo.Exec.Command, filepath.Separator) {

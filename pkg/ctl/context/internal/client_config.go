@@ -18,6 +18,7 @@
 package internal
 
 import (
+	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"io"
 	"sync"
 )
@@ -25,17 +26,17 @@ import (
 // DeferredLoadingClientConfig is a ClientConfig interface that is backed by a client config loader.
 type DeferredLoadingClientConfig struct {
 	loader         ClientConfigLoader
-	overrides      *ConfigOverrides
+	overrides      *cmdutils.ConfigOverrides
 	fallbackReader io.Reader
 
 	clientConfig ClientConfig
 	loadingLock  sync.Mutex
 }
 
-func (config *DeferredLoadingClientConfig) RawConfig() (Config, error) {
+func (config *DeferredLoadingClientConfig) RawConfig() (cmdutils.Config, error) {
 	mergedConfig, err := config.createClientConfig()
 	if err != nil {
-		return Config{}, err
+		return cmdutils.Config{}, err
 	}
 
 	return mergedConfig.RawConfig()
@@ -47,35 +48,35 @@ func (config *DeferredLoadingClientConfig) ConfigAccess() ConfigAccess {
 }
 
 // NewNonInteractiveDeferredLoadingClientConfig creates a ConfigClientClientConfig using the passed context name
-func NewNonInteractiveDeferredLoadingClientConfig(loader ClientConfigLoader, overrides *ConfigOverrides) ClientConfig {
+func NewNonInteractiveDeferredLoadingClientConfig(loader ClientConfigLoader, overrides *cmdutils.ConfigOverrides) ClientConfig {
 	return &DeferredLoadingClientConfig{loader: loader, overrides: overrides}
 }
 
 // DirectClientConfig is a ClientConfig interface that is backed by a clientcmdapi.Config,
 // options overrides, and an optional fallbackReader for auth information
 type DirectClientConfig struct {
-	config         Config
+	config         cmdutils.Config
 	contextName    string
-	overrides      *ConfigOverrides
+	overrides      *cmdutils.ConfigOverrides
 	fallbackReader io.Reader
 	configAccess   ConfigAccess
 }
 
 // NewNonInteractiveClientConfig creates a DirectClientConfig using the passed context
 // name and does not have a fallback reader for auth information
-func NewNonInteractiveClientConfig(config Config, contextName string, overrides *ConfigOverrides,
+func NewNonInteractiveClientConfig(config cmdutils.Config, contextName string, overrides *cmdutils.ConfigOverrides,
 	configAccess ConfigAccess) ClientConfig {
 	return &DirectClientConfig{config, contextName, overrides, nil, configAccess}
 }
 
 // NewInteractiveClientConfig creates a DirectClientConfig using the passed context
 // name and a reader in case auth information is not provided via files or flags
-func NewInteractiveClientConfig(config Config, contextName string, overrides *ConfigOverrides, fallbackReader io.Reader,
+func NewInteractiveClientConfig(config cmdutils.Config, contextName string, overrides *cmdutils.ConfigOverrides, fallbackReader io.Reader,
 	configAccess ConfigAccess) ClientConfig {
 	return &DirectClientConfig{config, contextName, overrides, fallbackReader, configAccess}
 }
 
-func (config *DirectClientConfig) RawConfig() (Config, error) {
+func (config *DirectClientConfig) RawConfig() (cmdutils.Config, error) {
 	return config.config, nil
 }
 
