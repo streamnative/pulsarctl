@@ -23,7 +23,7 @@ import (
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/test"
-	"github.com/streamnative/pulsarctl/pkg/test/containers"
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar/containers"
 
 	"github.com/pkg/errors"
 	"github.com/testcontainers/testcontainers-go"
