@@ -18,9 +18,10 @@
 package internal
 
 import (
-	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"io"
 	"sync"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 // DeferredLoadingClientConfig is a ClientConfig interface that is backed by a client config loader.
@@ -48,7 +49,8 @@ func (config *DeferredLoadingClientConfig) ConfigAccess() ConfigAccess {
 }
 
 // NewNonInteractiveDeferredLoadingClientConfig creates a ConfigClientClientConfig using the passed context name
-func NewNonInteractiveDeferredLoadingClientConfig(loader ClientConfigLoader, overrides *cmdutils.ConfigOverrides) ClientConfig {
+func NewNonInteractiveDeferredLoadingClientConfig(loader ClientConfigLoader,
+	overrides *cmdutils.ConfigOverrides) ClientConfig {
 	return &DeferredLoadingClientConfig{loader: loader, overrides: overrides}
 }
 
@@ -71,7 +73,8 @@ func NewNonInteractiveClientConfig(config cmdutils.Config, contextName string, o
 
 // NewInteractiveClientConfig creates a DirectClientConfig using the passed context
 // name and a reader in case auth information is not provided via files or flags
-func NewInteractiveClientConfig(config cmdutils.Config, contextName string, overrides *cmdutils.ConfigOverrides, fallbackReader io.Reader,
+func NewInteractiveClientConfig(config cmdutils.Config, contextName string, overrides *cmdutils.ConfigOverrides,
+	fallbackReader io.Reader,
 	configAccess ConfigAccess) ClientConfig {
 	return &DirectClientConfig{config, contextName, overrides, fallbackReader, configAccess}
 }

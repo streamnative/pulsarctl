@@ -19,7 +19,6 @@ package internal
 
 import (
 	"fmt"
-	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"io"
 	"io/ioutil"
 	"os"
@@ -31,6 +30,7 @@ import (
 	"github.com/imdario/mergo"
 	"gopkg.in/yaml.v2"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 

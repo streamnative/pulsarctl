@@ -19,11 +19,12 @@ package internal
 
 import (
 	"errors"
-	`github.com/streamnative/pulsarctl/pkg/cmdutils`
 	"os"
 	"path"
 	"reflect"
 	"sort"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 type ConfigAccess interface {

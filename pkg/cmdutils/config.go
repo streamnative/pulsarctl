@@ -18,19 +18,19 @@
 package cmdutils
 
 import (
-	`fmt`
-	`github.com/streamnative/pulsarctl/pkg/pulsar/utils`
-    `gopkg.in/yaml.v2`
-    `io/ioutil`
-    "log"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
+	"gopkg.in/yaml.v2"
 )
 
 var PulsarCtlConfig = ClusterConfig{}
@@ -120,7 +120,7 @@ func Exists(path string) bool {
 }
 
 func (c *ClusterConfig) DecodeContext() *Config {
-    cfg := NewConfig()
+	cfg := NewConfig()
 
 	defaultPath := fmt.Sprintf("%s/.pulsar/config", utils.HomeDir())
 	if !Exists(defaultPath) {
@@ -128,14 +128,14 @@ func (c *ClusterConfig) DecodeContext() *Config {
 	}
 
 	content, err := ioutil.ReadFile(defaultPath)
-    if err != nil {
-        return nil
-    }
+	if err != nil {
+		return nil
+	}
 
 	err = yaml.Unmarshal(content, &cfg)
-    if err != nil {
-        return nil
-    }
+	if err != nil {
+		return nil
+	}
 
 	return cfg
 }
@@ -144,10 +144,10 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
 
 	ctxConf := c.DecodeContext()
-    if ctxConf.CurrentContext != "" {
-        ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-        c.WebServiceURL = ctx.BrokerServiceURL
-    }
+	if ctxConf.CurrentContext != "" {
+		ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+		c.WebServiceURL = ctx.BrokerServiceURL
+	}
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {
 		config.WebServiceURL = c.WebServiceURL
@@ -186,11 +186,11 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
-    ctxConf := c.DecodeContext()
-    if ctxConf.CurrentContext != "" {
-        ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-        c.BKWebServiceURL = ctx.BookieServiceURL
-    }
+	ctxConf := c.DecodeContext()
+	if ctxConf.CurrentContext != "" {
+		ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+		c.BKWebServiceURL = ctx.BookieServiceURL
+	}
 
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
