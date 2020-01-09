@@ -144,16 +144,18 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
 
 	ctxConf := c.DecodeContext()
-	if ctxConf.CurrentContext != "" {
-		ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-		auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
 
-		c.WebServiceURL = ctx.BrokerServiceURL
+			c.WebServiceURL = ctx.BrokerServiceURL
 
-		c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
-		c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
-		c.Token = auth.Token
-		c.TokenFile = auth.TokenFile
+			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
+			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
+			c.Token = auth.Token
+			c.TokenFile = auth.TokenFile
+		}
 	}
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {
@@ -194,9 +196,12 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
 	ctxConf := c.DecodeContext()
-	if ctxConf.CurrentContext != "" {
-		ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-		c.BKWebServiceURL = ctx.BookieServiceURL
+
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			c.BKWebServiceURL = ctx.BookieServiceURL
+		}
 	}
 
 	if len(c.BKWebServiceURL) > 0 {
