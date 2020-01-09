@@ -30,10 +30,12 @@ import (
 )
 
 var (
-	LatestImage = "apache/bookkeeper:latest"
+	LatestImage      = "apache/bookkeeper:latest"
+	BookKeeper4_10_0 = "apache/bookkeeper:4.10.0"
 )
 
 type ClusterDef struct {
+	test.Cluster
 	clusterSpec      *ClusterSpec
 	networkName      string
 	network          testcontainers.Network
@@ -41,11 +43,12 @@ type ClusterDef struct {
 	bookieContainers map[string]*test.BaseContainer
 }
 
-func DefaultCluster() (test.Cluster, error) {
+func DefaultCluster() (*ClusterDef, error) {
 	return NewBookieCluster(DefaultClusterSpec())
 }
 
-func NewBookieCluster(spec *ClusterSpec) (test.Cluster, error) {
+func NewBookieCluster(spec *ClusterSpec) (*ClusterDef, error) {
+	spec = GetClusterSpec(spec)
 	c := &ClusterDef{clusterSpec: spec}
 	c.networkName = spec.ClusterName + test.RandomSuffix()
 	network, err := test.NewNetwork(c.networkName)
@@ -69,10 +72,12 @@ func getBookieContainers(c *ClusterSpec, networkName, zkServers string) map[stri
 			"BK_zkServers":         zkServers,
 			"BK_httpServerEnabled": "true",
 			"BK_httpServerPort":    strconv.Itoa(c.BookieHTTPServicePort),
+			"BK_httpServerClass":   "org.apache.bookkeeper.http.vertx.VertxHttpServer",
 			"BK_ledgerDirectories": "bk/ledgers",
 			"BK_indexDirectories":  "bk/ledgers",
 			"BK_journalDirectory":  "bk/journal",
 		})
+		bookie.WithEnv(c.BookieEnv)
 		bookies[name] = bookie
 	}
 	return bookies
@@ -139,4 +144,12 @@ func (c *ClusterDef) getABookie() *test.BaseContainer {
 		return v
 	}
 	return nil
+}
+
+func (c *ClusterDef) GetAllBookieContainerID() []string {
+	containerIDs := make([]string, 0)
+	for _, v := range c.bookieContainers {
+		containerIDs = append(containerIDs, v.GetContainerID())
+	}
+	return containerIDs
 }

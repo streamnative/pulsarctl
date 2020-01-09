@@ -17,7 +17,11 @@
 
 package bookkeeper
 
-import "github.com/streamnative/pulsarctl/pkg/test/bookkeeper/containers"
+import (
+	"strings"
+
+	"github.com/streamnative/pulsarctl/pkg/test/bookkeeper/containers"
+)
 
 type ClusterSpec struct {
 	Image                 string
@@ -26,15 +30,50 @@ type ClusterSpec struct {
 	BookieServicePort     int
 	BookieHTTPServicePort int
 	ZookeeperServicePort  int
+	BookieEnv             map[string]string
 }
 
 func DefaultClusterSpec() *ClusterSpec {
 	return &ClusterSpec{
-		Image:                 LatestImage,
+		Image:                 BookKeeper4_10_0,
 		ClusterName:           "default-bookie",
 		NumBookies:            1,
 		BookieServicePort:     containers.DefaultBookieServicePort,
 		BookieHTTPServicePort: containers.DefaultBookieHTTPServicePort,
 		ZookeeperServicePort:  containers.DefaultZookeeperServicePort,
 	}
+}
+
+func GetClusterSpec(spec *ClusterSpec) *ClusterSpec {
+	newSpec := DefaultClusterSpec()
+
+	if spec.NumBookies > 0 {
+		newSpec.NumBookies = spec.NumBookies
+	}
+
+	if strings.TrimSpace(spec.ClusterName) != "" {
+		newSpec.ClusterName = spec.ClusterName
+	}
+
+	if strings.TrimSpace(spec.Image) != "" {
+		newSpec.Image = spec.Image
+	}
+
+	if spec.ZookeeperServicePort > 0 {
+		newSpec.ZookeeperServicePort = spec.ZookeeperServicePort
+	}
+
+	if spec.BookieServicePort > 0 {
+		newSpec.BookieServicePort = spec.BookieServicePort
+	}
+
+	if spec.BookieHTTPServicePort > 0 {
+		newSpec.BookieHTTPServicePort = spec.BookieHTTPServicePort
+	}
+
+	if spec.BookieEnv != nil {
+		newSpec.BookieEnv = spec.BookieEnv
+	}
+
+	return newSpec
 }

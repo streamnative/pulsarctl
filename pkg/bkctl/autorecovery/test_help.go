@@ -43,6 +43,7 @@ func testAutoRecoveryCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
 	rootCmd.SetArgs(append([]string{"auto-recovery"}, args...))
+	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"auto-recovery",

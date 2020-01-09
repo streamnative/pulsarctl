@@ -19,6 +19,7 @@ package test
 
 import (
 	"context"
+	"os/exec"
 	"strconv"
 	"time"
 
@@ -42,4 +43,11 @@ func NewNetwork(name string) (testcontainers.Network, error) {
 
 func RandomSuffix() string {
 	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+}
+
+func ExecCmd(containerID string, cmd []string) (string, error) {
+	args := []string{"exec", containerID}
+	args = append(args, cmd...)
+	out, err := exec.Command("docker", args...).Output()
+	return string(out), err
 }
