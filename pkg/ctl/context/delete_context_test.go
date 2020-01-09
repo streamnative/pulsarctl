@@ -27,7 +27,7 @@ import (
 
 func TestDeleteContextCmd(t *testing.T) {
 	home := utils.HomeDir()
-	path := fmt.Sprintf("%s/.pulsar/config", home)
+	path := fmt.Sprintf("%s/.config/pulsar", home)
 
 	delArgs := []string{"delete", "test-delete-context"}
 	out, execErr, err := TestConfigCommands(deleteContextCmd, delArgs)

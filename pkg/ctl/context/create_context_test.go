@@ -27,7 +27,7 @@ import (
 
 func TestSetContextCmd(t *testing.T) {
 	home := utils.HomeDir()
-	path := fmt.Sprintf("%s/.pulsar/config", home)
+	path := fmt.Sprintf("%s/.config/pulsar", home)
 
 	setArgs := []string{"set", "test-set-context"}
 	out, _, err := TestConfigCommands(setContextCmd, setArgs)

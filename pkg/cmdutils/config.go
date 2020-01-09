@@ -122,7 +122,7 @@ func Exists(path string) bool {
 func (c *ClusterConfig) DecodeContext() *Config {
 	cfg := NewConfig()
 
-	defaultPath := fmt.Sprintf("%s/.pulsar/config", utils.HomeDir())
+	defaultPath := fmt.Sprintf("%s/.config/pulsar", utils.HomeDir())
 	if !Exists(defaultPath) {
 		return nil
 	}
