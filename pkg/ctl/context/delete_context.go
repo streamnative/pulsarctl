@@ -85,12 +85,18 @@ func doRunDeleteContext(vc *cmdutils.VerbCmd, ops *deleteContextOptions) error {
 		return fmt.Errorf("cannot delete context %s, not in %s", name, configFile)
 	}
 
+	_, ok = config.AuthInfos[name]
+	if !ok {
+		return fmt.Errorf("cannot delete auth info %s, not in %s", name, configFile)
+	}
+
 	if config.CurrentContext == name {
 		vc.Command.Printf("warning: this removed your active context, " +
-			"use \"pulsarctl config use-context\" to select a different one\n")
+			"use \"pulsarctl context use\" to select a different one\n")
 	}
 
 	delete(config.Contexts, name)
+	delete(config.AuthInfos, name)
 
 	if err := internal.ModifyConfig(ops.access, *config, true); err != nil {
 		return err
