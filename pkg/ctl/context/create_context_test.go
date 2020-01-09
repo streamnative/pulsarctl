@@ -18,10 +18,11 @@
 package context
 
 import (
-	`fmt`
-	`github.com/streamnative/pulsarctl/pkg/pulsar/utils`
-	`github.com/stretchr/testify/assert`
+	"fmt"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSetContextCmd(t *testing.T) {
