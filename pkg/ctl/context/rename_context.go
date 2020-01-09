@@ -88,13 +88,27 @@ func doRunRenameContext(vc *cmdutils.VerbCmd, ops *renameContextOptions) error {
 		return fmt.Errorf("cannot rename the context %q, it's not in %s", oldName, configFile)
 	}
 
+	auth, exists := config.AuthInfos[oldName]
+	if !exists {
+		return fmt.Errorf("cannot rename the auth info %q, it's not in %s", oldName, configFile)
+	}
+
 	_, newExists := config.Contexts[newName]
 	if newExists {
-		return fmt.Errorf("cannot rename the context %q, the context %q already exists in %s", oldName, newName, configFile)
+		return fmt.Errorf("cannot rename the context %q, the context %q already exists in %s",
+			oldName, newName, configFile)
+	}
+
+	_, newExists = config.AuthInfos[newName]
+	if newExists {
+		return fmt.Errorf("cannot rename the auth info %q, the auth info %q already exists in %s",
+			oldName, newName, configFile)
 	}
 
 	config.Contexts[newName] = context
+	config.AuthInfos[newName] = auth
 	delete(config.Contexts, oldName)
+	delete(config.AuthInfos, oldName)
 
 	if config.CurrentContext == oldName {
 		config.CurrentContext = newName
