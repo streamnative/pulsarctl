@@ -81,7 +81,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 
 	flags.StringVar(
 		&c.TLSTrustCertsFilePath,
-		"tls-trust-cert-pat",
+		"tls-trust-cert-path",
 		"",
 		"Allow TLS trust cert file path")
 
