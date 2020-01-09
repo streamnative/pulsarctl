@@ -94,12 +94,12 @@ $ pulsarctl context get
 The output as follows:
 
 ```text
-+-------------+
-|    NAME     |
-+-------------+
-| development |
-| scratch     |
-+-------------+
++---------+--------+--------------------------+-----------------------+
+| CURRENT |  NAME  |    BROKER SERVICE URL    |  BOOKIE SERVICE URL   |
++---------+--------+--------------------------+-----------------------+
+| *       | test-2 | http://159.65.2.188:8080 | http://localhost:8080 |
+|         | test-1 | http://159.65.9.22:8080  | http://localhost:8080 |
++---------+--------+--------------------------+-----------------------+
 ```
 
 ## Rename the context

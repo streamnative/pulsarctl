@@ -18,8 +18,6 @@
 package context
 
 import (
-	"sort"
-
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
@@ -85,20 +83,15 @@ func doRunGetContext(vc *cmdutils.VerbCmd, ops *getContextOptions) error {
 	}
 
 	table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-	// Build a list of context names to print, and warn if any requested contexts are not found.
-	// Do this before printing the headers so it doesn't look ugly.
-	toPrint := []string{}
-	for name := range config.Contexts {
-		toPrint = append(toPrint, name)
-	}
-
-	sort.Strings(toPrint)
-
-	columnNames := []string{"NAME"}
+	columnNames := []string{"CURRENT", "NAME", "BROKER SERVICE URL", "BOOKIE SERVICE URL"}
 	table.SetHeader(columnNames)
 
-	for _, c := range toPrint {
-		table.Append([]string{c})
+	for name, ctx := range config.Contexts {
+		if name == config.CurrentContext {
+			table.Append([]string{"*", name, ctx.BrokerServiceURL, ctx.BookieServiceURL})
+		} else {
+			table.Append([]string{"", name, ctx.BrokerServiceURL, ctx.BookieServiceURL})
+		}
 	}
 
 	table.Render()
