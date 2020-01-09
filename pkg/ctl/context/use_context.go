@@ -25,10 +25,10 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
-func UseContextCmd(vc *cmdutils.VerbCmd) {
+func useContextCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "use-context CONTEXT_NAME"
-	desc.CommandPermission = "no-op"
+	desc.CommandPermission = "This command does not need any permission"
 
 	var examples []cmdutils.Example
 	currentContext := cmdutils.Example{

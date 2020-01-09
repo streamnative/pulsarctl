@@ -25,30 +25,30 @@ import (
 
 func TestCurrentContextCmd(t *testing.T) {
 	currentArgs := []string{"current"}
-	out, execErr, err := TestConfigCommands(CurrentContextCmd, currentArgs)
+	out, execErr, err := TestConfigCommands(currentContextCmd, currentArgs)
 	assert.Nil(t, err)
 	assert.Equal(t, "", out.String())
 	assert.Equal(t, "current-context is not set", execErr.Error())
 
 	setArgs := []string{"set", "test-current-context"}
-	out, execErr, err = TestConfigCommands(SetContextCmd, setArgs)
+	out, execErr, err = TestConfigCommands(setContextCmd, setArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Context \"test-current-context\" created.\n", out.String())
 
 	useArgs := []string{"use", "test-current-context"}
-	out, execErr, err = TestConfigCommands(UseContextCmd, useArgs)
+	out, execErr, err = TestConfigCommands(useContextCmd, useArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Switched to context \"test-current-context\".\n", out.String())
 
-	out, execErr, err = TestConfigCommands(CurrentContextCmd, currentArgs)
+	out, execErr, err = TestConfigCommands(currentContextCmd, currentArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "test-current-context\n", out.String())
 
 	getArgs := []string{"get"}
-	out, execErr, err = TestConfigCommands(GetContextsCmd, getArgs)
+	out, execErr, err = TestConfigCommands(getContextsCmd, getArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	expectedOut := "+----------------------+\n|         NAME         " +

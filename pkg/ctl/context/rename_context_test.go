@@ -30,7 +30,7 @@ func TestRenameContextCmd(t *testing.T) {
 	path := fmt.Sprintf("%s/.pulsar/config", home)
 
 	renameArgs := []string{"rename", "test-old-context", "test-new-context"}
-	out, execErr, err := TestConfigCommands(RenameContextCmd, renameArgs)
+	out, execErr, err := TestConfigCommands(renameContextCmd, renameArgs)
 	assert.Nil(t, err)
 
 	expectedErr := fmt.Sprintf("cannot rename the context \"test-old-context\", it's not in %s", path)
@@ -38,18 +38,18 @@ func TestRenameContextCmd(t *testing.T) {
 	assert.Equal(t, "", out.String())
 
 	setArgs := []string{"set", "test-old-context"}
-	out, execErr, err = TestConfigCommands(SetContextCmd, setArgs)
+	out, execErr, err = TestConfigCommands(setContextCmd, setArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Context \"test-old-context\" created.\n", out.String())
 
-	out, execErr, err = TestConfigCommands(RenameContextCmd, renameArgs)
+	out, execErr, err = TestConfigCommands(renameContextCmd, renameArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Context \"test-old-context\" renamed to \"test-new-context\".\n", out.String())
 
 	delArgs := []string{"delete", "test-new-context"}
-	out, execErr, err = TestConfigCommands(DeleteContextCmd, delArgs)
+	out, execErr, err = TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	expectedOut := fmt.Sprintf("deleted context test-new-context from %s\n", path)

@@ -23,10 +23,10 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
-func CurrentContextCmd(vc *cmdutils.VerbCmd) {
+func currentContextCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Displays the current-context"
-	desc.CommandPermission = "no-op"
+	desc.CommandPermission = "This command does not need any permission"
 
 	var examples []cmdutils.Example
 	currentContext := cmdutils.Example{
@@ -55,7 +55,7 @@ func CurrentContextCmd(vc *cmdutils.VerbCmd) {
 	ops := new(currentContextOptions)
 	ops.access = internal.NewDefaultPathOptions()
 
-	// set the run function with name argument
+	// set the run function without name argument
 	vc.SetRunFunc(func() error {
 		return doRunCurrentContext(vc, ops)
 	})

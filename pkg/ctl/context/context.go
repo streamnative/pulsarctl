@@ -30,12 +30,12 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"ctx",
 	)
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, CurrentContextCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetContextCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, DeleteContextCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetContextsCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UseContextCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RenameContextCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, currentContextCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setContextCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteContextCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getContextsCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, useContextCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, renameContextCmd)
 
 	return resourceCmd
 }

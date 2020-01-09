@@ -25,10 +25,10 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
-func RenameContextCmd(vc *cmdutils.VerbCmd) {
+func renameContextCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "rename-context CONTEXT_NAME NEW_NAME"
-	desc.CommandPermission = "no-op"
+	desc.CommandPermission = "This command does not need any permission"
 
 	var examples []cmdutils.Example
 	renameContext := cmdutils.Example{

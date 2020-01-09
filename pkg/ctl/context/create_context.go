@@ -22,12 +22,12 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
-func SetContextCmd(vc *cmdutils.VerbCmd) {
+func setContextCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Sets a context entry in pulsarconfig, " +
 		"Specifying a name that already exists will merge new fields " +
 		"on top of existing values for those fields."
-	desc.CommandPermission = "no-op"
+	desc.CommandPermission = "This command does not need any permission"
 
 	var examples []cmdutils.Example
 	setContext := cmdutils.Example{

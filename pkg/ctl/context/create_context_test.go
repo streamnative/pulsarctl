@@ -18,11 +18,10 @@
 package context
 
 import (
-	"fmt"
+	`fmt`
+	`github.com/streamnative/pulsarctl/pkg/pulsar/utils`
+	`github.com/stretchr/testify/assert`
 	"testing"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestSetContextCmd(t *testing.T) {
@@ -30,16 +29,16 @@ func TestSetContextCmd(t *testing.T) {
 	path := fmt.Sprintf("%s/.pulsar/config", home)
 
 	setArgs := []string{"set", "test-set-context"}
-	out, _, err := TestConfigCommands(SetContextCmd, setArgs)
+	out, _, err := TestConfigCommands(setContextCmd, setArgs)
 	assert.Nil(t, err)
 	assert.Equal(t, "Context \"test-set-context\" created.\n", out.String())
 
-	out, _, err = TestConfigCommands(SetContextCmd, setArgs)
+	out, _, err = TestConfigCommands(setContextCmd, setArgs)
 	assert.Nil(t, err)
 	assert.Equal(t, "Context \"test-set-context\" modified.\n", out.String())
 
 	delArgs := []string{"delete", "test-set-context"}
-	out, execErr, err := TestConfigCommands(DeleteContextCmd, delArgs)
+	out, execErr, err := TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	expectedOut := fmt.Sprintf("deleted context test-set-context from %s\n", path)

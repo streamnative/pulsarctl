@@ -24,10 +24,10 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
-func DeleteContextCmd(vc *cmdutils.VerbCmd) {
+func deleteContextCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "Delete the specified context from the pulsarconfig"
-	desc.CommandPermission = "no-op"
+	desc.CommandPermission = "This command does not need any permission"
 
 	var examples []cmdutils.Example
 	deleteContext := cmdutils.Example{

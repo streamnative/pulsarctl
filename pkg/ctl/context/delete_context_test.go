@@ -30,7 +30,7 @@ func TestDeleteContextCmd(t *testing.T) {
 	path := fmt.Sprintf("%s/.pulsar/config", home)
 
 	delArgs := []string{"delete", "test-delete-context"}
-	out, execErr, err := TestConfigCommands(DeleteContextCmd, delArgs)
+	out, execErr, err := TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 
 	expectedErr := fmt.Sprintf("cannot delete context test-delete-context, not in %s", path)
@@ -38,12 +38,12 @@ func TestDeleteContextCmd(t *testing.T) {
 	assert.Equal(t, "", out.String())
 
 	setArgs := []string{"set", "test-delete-context"}
-	out, execErr, err = TestConfigCommands(SetContextCmd, setArgs)
+	out, execErr, err = TestConfigCommands(setContextCmd, setArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Context \"test-delete-context\" created.\n", out.String())
 
-	out, execErr, err = TestConfigCommands(DeleteContextCmd, delArgs)
+	out, execErr, err = TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 	expectedOut := fmt.Sprintf("deleted context test-delete-context from %s\n", path)
