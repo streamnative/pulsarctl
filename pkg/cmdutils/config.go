@@ -146,7 +146,14 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	ctxConf := c.DecodeContext()
 	if ctxConf.CurrentContext != "" {
 		ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+		auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+
 		c.WebServiceURL = ctx.BrokerServiceURL
+
+		c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
+		c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
+		c.Token = auth.Token
+		c.TokenFile = auth.TokenFile
 	}
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {

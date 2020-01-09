@@ -24,19 +24,14 @@ type Config struct {
 }
 
 type AuthInfo struct {
-	// LocationOfOrigin indicates where this object came from.  It is used for round tripping
-	// config post-merge, but never serialized.
-	LocationOfOrigin      string
-	ClientCertificate     string `yaml:"client-certificate,omitempty"`
-	ClientCertificateData []byte `yaml:"client-certificate-data,omitempty"`
-	ClientKey             string `yaml:"client-key,omitempty"`
-	ClientKeyData         []byte `yaml:"client-key-data,omitempty"`
-	Token                 string `yaml:"token,omitempty"`
-	TokenFile             string `yaml:"tokenFile,omitempty"`
+	LocationOfOrigin           string
+	TLSTrustCertsFilePath      string `yaml:"tls_trust_certs_file_path"`
+	TLSAllowInsecureConnection bool   `yaml:"tls_allow_insecure_connection"`
+	Token                      string `yaml:"token"`
+	TokenFile                  string `yaml:"tokenFile"`
 }
 
 type Context struct {
-	AuthInfo         string `yaml:"user"`
 	BrokerServiceURL string `yaml:"admin-service-url"`
 	BookieServiceURL string `yaml:"bookie-service-url"`
 }

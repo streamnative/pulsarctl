@@ -74,8 +74,15 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	if !exists {
 		startingStanza = new(cmdutils.Context)
 	}
-	context := o.modifyContext(*startingStanza)
+
+	startingAuth, exists := config.AuthInfos[name]
+	if !exists {
+		startingAuth = new(cmdutils.AuthInfo)
+	}
+
+	context, authInfo := o.modifyContextConf(*startingStanza, *startingAuth)
 	config.Contexts[name] = &context
+	config.AuthInfos[name] = &authInfo
 
 	if err := internal.ModifyConfig(o.access, *config, true); err != nil {
 		return err
@@ -92,18 +99,31 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 
 type createContextOptions struct {
 	access           internal.ConfigAccess
-	authInfo         string
+	authInfo         *cmdutils.AuthInfo
 	brokerServiceURL string
 	bookieServiceURL string
 }
 
-func (o *createContextOptions) modifyContext(existingContext cmdutils.Context) cmdutils.Context {
+func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Context,
+	existingAuth cmdutils.AuthInfo) (cmdutils.Context, cmdutils.AuthInfo) {
+
 	modifiedContext := existingContext
+	modifiedAuth := existingAuth
 
 	o.brokerServiceURL = cmdutils.PulsarCtlConfig.WebServiceURL
 	o.bookieServiceURL = cmdutils.PulsarCtlConfig.BKWebServiceURL
-	if o.authInfo != "" {
-		modifiedContext.AuthInfo = o.authInfo
+
+	o.authInfo = new(cmdutils.AuthInfo)
+	o.authInfo.TokenFile = cmdutils.PulsarCtlConfig.TokenFile
+	o.authInfo.Token = cmdutils.PulsarCtlConfig.Token
+	o.authInfo.TLSTrustCertsFilePath = cmdutils.PulsarCtlConfig.TLSTrustCertsFilePath
+	o.authInfo.TLSAllowInsecureConnection = cmdutils.PulsarCtlConfig.TLSAllowInsecureConnection
+
+	if o.authInfo != nil {
+		modifiedAuth.TokenFile = o.authInfo.TokenFile
+		modifiedAuth.Token = o.authInfo.Token
+		modifiedAuth.TLSAllowInsecureConnection = o.authInfo.TLSAllowInsecureConnection
+		modifiedAuth.TLSTrustCertsFilePath = o.authInfo.TLSTrustCertsFilePath
 	}
 
 	if o.brokerServiceURL != "" {
@@ -114,5 +134,5 @@ func (o *createContextOptions) modifyContext(existingContext cmdutils.Context) c
 		modifiedContext.BookieServiceURL = o.bookieServiceURL
 	}
 
-	return modifiedContext
+	return modifiedContext, modifiedAuth
 }
