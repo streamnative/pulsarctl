@@ -60,6 +60,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.PersistentFlags().BoolP("help", "h", false, "help for this command")
 	rootCmd.PersistentFlags().StringVarP(&colorValue, "color", "C", "true", "toggle colorized logs (true,false,fabulous)")
 	rootCmd.PersistentFlags().IntVarP(&logger.Level, "verbose", "v", 3, "set log level, use 0 to silence, 4 for debugging")
+	rootCmd.PersistentFlags().AddFlagSet(cmdutils.GlobalOutputConfig.FlagSet())
 	// add the common pulsarctl flags
 	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
