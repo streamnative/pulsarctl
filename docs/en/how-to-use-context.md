@@ -94,12 +94,12 @@ $ pulsarctl context get
 The output as follows:
 
 ```text
-+---------+--------+--------------------------+-----------------------+
-| CURRENT |  NAME  |    BROKER SERVICE URL    |  BOOKIE SERVICE URL   |
-+---------+--------+--------------------------+-----------------------+
-| *       | test-2 | http://159.65.2.188:8080 | http://localhost:8080 |
-|         | test-1 | http://159.65.9.22:8080  | http://localhost:8080 |
-+---------+--------+--------------------------+-----------------------+
++---------+-------------+---------------------+---------------------+
+| CURRENT |    NAME     | BROKER SERVICE URL  | BOOKIE SERVICE URL  |
++---------+-------------+---------------------+---------------------+
+|         | development | http://1.2.3.4:8080 | http://1.2.3.4:8083 |
+|   *     | scratch     | http://5.6.7.8:8080 | http://5.6.7.8:8083 |
++---------+-------------+---------------------+---------------------+
 ```
 
 ## Rename the context
@@ -117,5 +117,3 @@ If the current cluster information is invalid, you want to delete it(suppose the
 ```bash
 $ pulsarctl context delete scratch
 ```
-
-
