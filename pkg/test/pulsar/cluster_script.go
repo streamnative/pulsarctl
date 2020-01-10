@@ -23,7 +23,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
-// InitConf is a configuration for the initialize the pulsar cluster.
+// InitConf is a configuration for the initialization of the pulsar cluster.
 type InitConf struct {
 	ClusterName        string
 	ConfigurationStore string
