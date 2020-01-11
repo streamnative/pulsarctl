@@ -51,10 +51,10 @@ func deleteTenantCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"delete",
-		"d",
+		"Delete a tenant",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"")
+		"delete")
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doDeleteTenant(vc)
