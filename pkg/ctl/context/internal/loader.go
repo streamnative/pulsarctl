@@ -37,7 +37,7 @@ import (
 const (
 	RecommendedConfigPathEnvVar = "PULSARCONFIG"
 	RecommendedHomeDir          = ".config"
-	RecommendedFileName         = "pulsar"
+	RecommendedFileName         = "pulsar/config"
 )
 
 var (
