@@ -15,28 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bookie
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"fmt"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+func TestListDiskFileArgError(t *testing.T) {
+	args := []string{"list-disk-file"}
+	_, _, nameErr, _ := testBookieCommands(listDiskFileCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the file type is not specified or the file type is specified more than one",
+		nameErr.Error())
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+	args = []string{"list-disk-file", "invalid"}
+	_, execErr, _, _ := testBookieCommands(listDiskFileCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, fmt.Sprintf("invalid file type %s, the file type only can be specified as 'journal', "+
+		"'entrylog', 'index'", "invalid"), execErr.Error())
 }

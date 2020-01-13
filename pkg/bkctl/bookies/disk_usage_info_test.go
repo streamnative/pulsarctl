@@ -15,28 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bookies
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"strings"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func TestDiskUsageInfoCmd(t *testing.T) {
+	args := []string{"disk-usage-info"}
+	out, execErr, nameErr, err := testBookiesCommands(args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.True(t, strings.Contains(out.String(), "3181"))
 }

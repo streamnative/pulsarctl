@@ -15,28 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bkdata
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"strings"
 
-	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+type BookieType string
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+const (
+	rw BookieType = "rw"
+	ro BookieType = "ro"
+)
 
-	return resourceCmd
+func ParseBookieType(t string) (BookieType, error) {
+	switch strings.ToLower(t) {
+	case rw.String():
+		return rw, nil
+	case ro.String():
+		return ro, nil
+	default:
+		return "", errors.Errorf("invalid bookie type %s, the bookie type only can "+
+			"be specified as 'rw' or 'ro'", t)
+	}
+}
+
+func (t BookieType) String() string {
+	return string(t)
 }

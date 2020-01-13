@@ -15,28 +15,39 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bkdata
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+var testParseBookieTypeData = []struct {
+	bookieType       string
+	parsedBookieType BookieType
+	errString        string
+}{
+	{"rw", rw, ""},
+	{"ro", ro, ""},
+	{"", "", bookieTypeErrStr("")},
+	{"r", "", bookieTypeErrStr("r")},
+}
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+func TestParseBookieType(t *testing.T) {
+	for _, data := range testParseBookieTypeData {
+		bkt, err := ParseBookieType(data.bookieType)
+		if data.errString != "" {
+			assert.NotNil(t, err)
+			assert.Equal(t, data.errString, err.Error())
+			continue
+		}
+		assert.Equal(t, data.parsedBookieType, bkt)
+	}
+}
 
-	return resourceCmd
+func bookieTypeErrStr(bookieType string) string {
+	return errors.Errorf(
+		"invalid bookie type %s, the bookie type only can be specified as 'rw' or 'ro'", bookieType).Error()
 }
