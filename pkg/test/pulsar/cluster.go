@@ -49,6 +49,23 @@ type ClusterDef struct {
 	brokerContainers map[string]*test.BaseContainer
 }
 
+type Cluster interface {
+	// Start a pulsar cluster.
+	Start(ctx context.Context) error
+
+	// Stop a pulsar cluster.
+	Stop(ctx context.Context) error
+
+	// GetPlainTextServiceURL gets the pulsar service connect string.
+	GetPlainTextServiceURL(ctx context.Context) (string, error)
+
+	// GetHTTPServiceURL gets the pulsar HTTP service connect string.
+	GetHTTPServiceURL(ctx context.Context) (string, error)
+
+	// Close closes resources used for starting the cluster.
+	Close(ctx context.Context)
+}
+
 // DefaultPulsarCluster creates a pulsar cluster using the default cluster spec.
 func DefaultPulsarCluster() (test.Cluster, error) {
 	return NewPulsarCluster(DefaultClusterSpec())

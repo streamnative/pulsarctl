@@ -15,12 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bookie
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/spf13/cobra"
@@ -28,15 +25,20 @@ import (
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+		"bookie",
+		"Operations about one bookie",
+		"")
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+	commands := []func(*cmdutils.VerbCmd){
+		lastLogMarkCmd,
+		listDiskFileCmd,
+		expandStorageCmd,
+		gcCmd,
+		gcStatusCmd,
+		gcDetailsCmd,
+		stateCmd,
+	}
 
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
 	return resourceCmd
 }

@@ -15,28 +15,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bkdata
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"strings"
 
-	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+type FileType string
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+const (
+	journal  FileType = "journal"
+	entryLog FileType = "entrylog"
+	index    FileType = "index"
+)
 
-	return resourceCmd
+func ParseFileType(fileType string) (FileType, error) {
+	switch strings.ToLower(fileType) {
+	case journal.String():
+		return journal, nil
+	case entryLog.String():
+		return entryLog, nil
+	case index.String():
+		return index, nil
+	default:
+		return "", errors.Errorf("invalid file type %s, the file type only can be specified as 'journal', "+
+			"'entrylog', 'index'", fileType)
+	}
+}
+
+func (t FileType) String() string {
+	return string(t)
 }
