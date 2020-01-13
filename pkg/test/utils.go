@@ -15,28 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package test
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"context"
 
-	"github.com/spf13/cobra"
+	"github.com/testcontainers/testcontainers-go"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+// NewNetwork creates a network.
+func NewNetwork(name string) (testcontainers.Network, error) {
+	ctx := context.Background()
+	dp, err := testcontainers.NewDockerProvider()
+	if err != nil {
+		return nil, err
+	}
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
+		Name:           name,
+		CheckDuplicate: true,
+	})
+	return net, err
 }

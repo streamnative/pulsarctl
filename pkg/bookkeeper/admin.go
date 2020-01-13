@@ -33,6 +33,8 @@ type Client interface {
 	Bookies() Bookies
 	// Ledger related commands
 	Ledger() Ledger
+	// AutoRecovery related commands
+	AutoRecovery() AutoRecovery
 }
 
 type bookieClient struct {

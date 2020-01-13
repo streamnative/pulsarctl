@@ -15,28 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package bkdata
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+type RecoveryRequest struct {
+	BookieSrc    []string `json:"bookie_src"`
+	DeleteCookie bool     `json:"delete_cookie"`
+}
 
-	"github.com/spf13/cobra"
-)
+type LostBookieRecoverDelayRequest struct {
+	DelaySeconds int `json:"delay_seconds"`
+}
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+type DecommissionRequest struct {
+	BookieSrc string `json:"bookie_src"`
 }

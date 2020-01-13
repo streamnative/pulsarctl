@@ -15,28 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package containers
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/spf13/cobra"
-)
+const ProxyName = "proxy"
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func NewProxyContainer(image, network string) *test.BaseContainer {
+	proxy := test.NewContainer(image)
+	proxy.WithNetwork([]string{network})
+	proxy.WithNetworkAliases(map[string][]string{network: {ProxyName}})
+	proxy.ExposedPorts([]string{"8080", "6650"})
+	proxy.WithCmd([]string{
+		"bash", "-c",
+		"bin/apply-config-from-env.py conf/proxy.conf && bin/pulsar proxy",
+	})
+	proxy.WaitForLog("Server started at end point")
+	return proxy
 }

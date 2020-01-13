@@ -181,7 +181,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 
 	vc.SetDescription(
 		"create",
-		"",
+		"Create a Pulsar Function to run on a Pulsar cluster",
 		desc.ToString(),
 		desc.ExampleToString(),
 		"create",

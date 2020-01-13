@@ -15,28 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package containers
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/spf13/cobra"
-)
+const ZookeeperName = "zookeeper"
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func NewZookeeperContainer(image, network string) *test.BaseContainer {
+	zookeeper := test.NewContainer(image)
+	zookeeper.WithNetwork([]string{network})
+	zookeeper.WithNetworkAliases(map[string][]string{network: {ZookeeperName}})
+	zookeeper.ExposedPorts([]string{"2181"})
+	zookeeper.WithCmd([]string{
+		"bin/pulsar", "zookeeper",
+	})
+	zookeeper.WaitForPort("2181")
+	return zookeeper
 }

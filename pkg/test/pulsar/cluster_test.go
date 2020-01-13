@@ -15,28 +15,42 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package pulsar
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"context"
+	"net/http"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+func TestDefaultPulsarCluster(t *testing.T) {
+	ctx := context.Background()
+	pulsar, err := DefaultPulsarCluster()
+	// nolint
+	defer pulsar.Close(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+	err = pulsar.Start(ctx)
+	defer pulsar.Stop(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	return resourceCmd
+	path, err := pulsar.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	resp, err := http.Get(path + "/admin/v2/tenants")
+	// nolint
+	defer resp.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, 200, resp.StatusCode)
 }

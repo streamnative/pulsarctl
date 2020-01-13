@@ -15,28 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package containers
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/spf13/cobra"
-)
+const BrokerName = "broker"
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func NewBrokerContainer(image, network string) *test.BaseContainer {
+	broker := test.NewContainer(image)
+	broker.WithNetwork([]string{network})
+	broker.WithNetworkAliases(map[string][]string{network: {BrokerName}})
+	broker.ExposedPorts([]string{"8080", "6650"})
+	broker.WithCmd([]string{
+		"bash", "-c",
+		"bin/apply-config-from-env.py conf/broker.conf && bin/pulsar broker",
+	})
+	broker.WaitForPort("8080")
+	return broker
 }

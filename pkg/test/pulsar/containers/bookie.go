@@ -15,28 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package containers
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/spf13/cobra"
-)
+const BookieName = "bookie"
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func NewBookieContainer(image, network string) *test.BaseContainer {
+	bk := test.NewContainer(image)
+	bk.WithNetwork([]string{network})
+	bk.WithNetworkAliases(map[string][]string{network: {BookieName}})
+	bk.WithCmd([]string{
+		"bash", "-c",
+		"bin/apply-config-from-env.py conf/bookkeeper.conf && bin/pulsar bookie",
+	})
+	bk.WaitForLog("Started component bookie-server")
+	return bk
 }

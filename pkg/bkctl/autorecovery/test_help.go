@@ -15,28 +15,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package autorecovery
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
+	"bytes"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/spf13/cobra"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+func testAutoRecoveryCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
+	execErr, nameErr, err error) {
+
+	var execError error
+	cmdutils.ExecErrorHandler = func(err error) {
+		execError = err
+	}
+
+	var nameError error
+	cmdutils.CheckNameArgError = func(err error) {
+		nameError = err
+	}
+
+	var rootCmd = &cobra.Command{}
+
+	buf := new(bytes.Buffer)
+	rootCmd.SetOut(buf)
+	rootCmd.SetArgs(append([]string{"auto-recovery"}, args...))
+
 	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
+		"auto-recovery",
+		"Operations about auto recovering",
 		"",
-		"bk",
-	)
+		"")
+	flagGrouping := cmdutils.NewGrouping()
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
+	rootCmd.AddCommand(resourceCmd)
+	err = rootCmd.Execute()
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+	return buf, execError, nameError, err
 }

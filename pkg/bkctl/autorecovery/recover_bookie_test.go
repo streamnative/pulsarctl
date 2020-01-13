@@ -15,28 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package autorecovery
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+func TestRecoverBookieArgsErr(t *testing.T) {
+	args := []string{"recover-bookie"}
+	_, _, nameErr, err := testAutoRecoveryCommands(recoverBookieCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "you need to specify the recover bookies id", nameErr.Error())
 }

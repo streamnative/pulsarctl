@@ -15,28 +15,34 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package autorecovery
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-  "github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
+func TestDecommissionArgsErr(t *testing.T) {
+	// no args specified
+	args := []string{"decommission"}
+	_, _, nameErr, err := testAutoRecoveryCommands(decommissionCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	resourceCmd.AddCommand(bookie.Command(flagGrouping))
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 
-	return resourceCmd
+	// more than one args specified
+	args = []string{"decommission", "bookie-1:3181", "bookie-2:3181"}
+	_, _, nameErr, err = testAutoRecoveryCommands(decommissionCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 }
