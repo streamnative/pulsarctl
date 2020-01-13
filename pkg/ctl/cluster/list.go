@@ -19,6 +19,7 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -69,15 +70,23 @@ func doListClusters(vc *cmdutils.VerbCmd) error {
 	clusters, err := admin.Clusters().List()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Cluster Name"})
-
-		for _, c := range clusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(clusters).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Cluster Name"})
+
+			for _, c := range clusters {
+				table.Append([]string{c})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

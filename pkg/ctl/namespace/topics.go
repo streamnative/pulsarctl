@@ -19,6 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -82,13 +83,23 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 	tenantAndNamespace := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(listTopics).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+			table.SetHeader([]string{"Topics Name"})
+			for _, topic := range listTopics {
+				table.Append([]string{topic})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

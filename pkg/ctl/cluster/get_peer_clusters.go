@@ -19,6 +19,7 @@ package cluster
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -68,15 +69,25 @@ func doGetPeerClusters(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	peerClusters, err := admin.Clusters().GetPeerClusters(clusterName)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Peer clusters"})
-
-		for _, c := range peerClusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(peerClusters).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Peer clusters"})
+
+			for _, c := range peerClusters {
+				table.Append([]string{c})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

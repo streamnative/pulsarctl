@@ -19,6 +19,7 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -79,13 +80,22 @@ func doListNamespaces(vc *cmdutils.VerbCmd) error {
 	tenant := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	listNamespaces, err := admin.Namespaces().GetNamespaces(tenant)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Namespace Name"})
-		for _, ns := range listNamespaces {
-			table.Append([]string{ns})
-		}
-		table.Render()
+	if err != nil {
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(listNamespaces).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+			table.SetHeader([]string{"Namespace Name"})
+			for _, ns := range listNamespaces {
+				table.Append([]string{ns})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

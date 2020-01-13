@@ -30,6 +30,7 @@ type VerbCmd struct {
 	FlagSetGroup *NamedFlagSetGroup
 	NameArg      string
 	NameArgs     []string
+	OutputConfig  *OutputConfig
 
 	// for testing
 	NameError error
@@ -39,6 +40,7 @@ type VerbCmd struct {
 func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd func(*VerbCmd)) {
 	verb := &VerbCmd{
 		Command: &cobra.Command{},
+		OutputConfig: &GlobalOutputConfig,
 	}
 	verb.FlagSetGroup = flagGrouping.New(verb.Command)
 	newVerbCmd(verb)

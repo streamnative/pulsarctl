@@ -19,6 +19,7 @@ package tenant
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -64,7 +65,14 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 func doListTenant(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	tenants, err := admin.Tenants().List()
-	if err == nil {
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return nil
+	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(tenants).
+		WithTextFunc(func(w io.Writer) error {
 		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
 		table.SetHeader([]string{"Tenant Name"})
 
@@ -73,6 +81,9 @@ func doListTenant(vc *cmdutils.VerbCmd) error {
 		}
 
 		table.Render()
-	}
+		return nil
+	})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

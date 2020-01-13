@@ -19,6 +19,7 @@ package subscription
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
@@ -78,14 +79,23 @@ func doList(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	r, err := admin.Subscriptions().List(*topic)
-	if err == nil {
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
+	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(r).
+		WithTextFunc(func(w io.Writer) error {
 		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
 		table.SetHeader([]string{"Subscriptions"})
 		for _, v := range r {
 			table.Append([]string{v})
 		}
 		table.Render()
-	}
+		return nil
+	})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
 	return err
 }

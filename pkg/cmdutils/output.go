@@ -18,13 +18,21 @@
 package cmdutils
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/ghodss/yaml"
 	"github.com/spf13/pflag"
+	"io"
 )
 
+// region OutputConfig
+
+// GlobalOutputConfig represents the global output configuration
 var GlobalOutputConfig = OutputConfig{}
 
+// OutputConfig represents an output configuration
 type OutputConfig struct {
-	// the output format (Table, Plain, Json)
+	// the output format (Table, Plain, Json, Yaml)
 	Format string
 }
 
@@ -37,45 +45,140 @@ func (c *OutputConfig) FlagSet() *pflag.FlagSet {
 		&c.Format,
 		"output",
 		"o",
-		string(Table),
+		string(TextOutputFormat),
 		"The output format")
 
 	return flags
 }
 
-func (c *OutputConfig) IsTableFormat() bool {
-	return c.Format == string(Table)
+// WriteOutput writes output based on the configured output format and on available content
+func (c *OutputConfig) WriteOutput(w io.Writer, f OutputNegotiable) error {
+	ow := f.Negotiate(OutputFormat(c.Format))
+	if ow == nil {
+		return fmt.Errorf("unsupported output format: %s", c.Format)
+	}
+	err := ow.WriteTo(w)
+	if err != nil {
+		return fmt.Errorf("output error: %v", err)
+	}
+	return nil
 }
 
-func (c *OutputConfig) IsJsonFormat() bool {
-	return c.Format == string(Json)
+// OutputNegotiable facilitates content negotiation
+type OutputNegotiable interface {
+	// Negotiate produces an OutputWritable for the given output format, or nil if the format isn't supported
+	Negotiate(format OutputFormat) OutputWritable
 }
 
-func (c *OutputConfig) IsPlainFormat() bool {
-	return c.Format == string(Plain)
+type OutputNegotiableFunc func(format OutputFormat) OutputWritable
+
+func (f OutputNegotiableFunc) Negotiate(format OutputFormat) OutputWritable {
+	return f(format)
 }
 
+// endregion
+
+// region OutputFormat
+
+// OutputFormat represents a user-configured output format
 type OutputFormat string
 
 const (
-	Table OutputFormat = "table"
-	Plain OutputFormat = "plain"
-	Json  OutputFormat = "json"
+	TextOutputFormat OutputFormat = "text"
+	JsonOutputFormat OutputFormat = "json"
+	YamlOutputFormat OutputFormat = "yaml"
 )
 
 func (fmt OutputFormat) String() string {
 	return string(fmt)
 }
 
-func validateOutputFormat(v string) OutputFormat {
-	switch v {
-	case string(Table):
-		return Table
-	case string(Plain):
-		return Plain
-	case string(Json):
-		return Json
-	default:
-		return ""
-	}
+// endregion
+
+// region OutputWritable
+
+// OutputWritable indicates an object that is writable to a given io.Writer
+type OutputWritable interface {
+	WriteTo(w io.Writer) error
 }
+
+// OutputWritableFunc adapts a function as an OutputWritable
+type OutputWritableFunc func(w io.Writer) error
+
+func (f OutputWritableFunc) WriteTo(w io.Writer) error {
+	return f(w)
+}
+
+// byteOutputFunc adapts a function which produces bytes as an OutputWritable
+type byteOutputFunc func() ([]byte, error)
+
+func (f byteOutputFunc) WriteTo(w io.Writer) error {
+	b, err := f()
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(b)
+	return err
+}
+
+// endregion
+
+// region OutputContent
+var _ OutputNegotiable = &OutputContent{}
+
+// OutputContent adapts various Go types to output format(s)
+type OutputContent struct {
+	text OutputWritable
+	obj  func() interface{}
+}
+
+func NewOutputContent() *OutputContent {
+	return &OutputContent{}
+}
+
+func (o *OutputContent) WithText(text string) *OutputContent {
+	o.text = OutputWritableFunc(func(w io.Writer) error { _, err := fmt.Fprint(w, text); return err })
+	return o
+}
+
+func (o *OutputContent) WithTextFunc(f func(w io.Writer) error) *OutputContent {
+	o.text = OutputWritableFunc(f)
+	return o
+}
+
+func (o *OutputContent) WithObject(obj interface{}) *OutputContent {
+	o.obj = func() interface{} { return obj }
+	return o
+}
+
+func (o *OutputContent) WithObjectFunc(f func() interface{}) *OutputContent {
+	o.obj = f
+	return o
+}
+
+// Negotiate produces an OutputWritable based on available content
+func (o OutputContent) Negotiate(format OutputFormat) OutputWritable {
+	switch format {
+	case TextOutputFormat:
+		if o.text != nil {
+			return o.text
+		}
+	case JsonOutputFormat:
+		if o.obj != nil {
+			return byteOutputFunc(func() ([]byte, error) {
+				return json.MarshalIndent(o.obj(), "", "  ")
+			})
+		}
+	case YamlOutputFormat:
+		if o.obj != nil {
+			return byteOutputFunc(func() ([]byte, error) {
+				return yaml.Marshal(o.obj())
+			})
+		}
+	default:
+		return nil
+	}
+	return nil
+}
+
+// endregion
