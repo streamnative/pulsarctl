@@ -67,7 +67,7 @@ type Cluster interface {
 }
 
 // DefaultPulsarCluster creates a pulsar cluster using the default cluster spec.
-func DefaultPulsarCluster() (test.Cluster, error) {  
+func DefaultPulsarCluster() (test.Cluster, error) {
 	return NewPulsarCluster(DefaultClusterSpec())
 }
 
