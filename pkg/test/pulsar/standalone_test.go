@@ -18,28 +18,36 @@
 package pulsar
 
 import (
-	"fmt"
+	"context"
+	"net/http"
+	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/test"
+	"github.com/stretchr/testify/assert"
 )
 
-// InitConf is a configuration for the initialization of the pulsar cluster.
-type InitConf struct {
-	ClusterName        string
-	ConfigurationStore string
-	Zookeeper          string
-	Broker             string
-}
+func TestNewStandalone(t *testing.T) {
+	ctx := context.Background()
+	standalone := NewStandalone("apachepulsar/pulsar:latest")
+	err := standalone.Start(ctx)
+	// nolint
+	defer standalone.Stop(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// InitCluster returns a container for executing init pulsar cluster.
-func InitCluster(conf *InitConf, image, network string) *test.BaseContainer {
-	pulsarInit := test.NewContainer(image)
-	pulsarInit.WithNetwork([]string{network})
-	pulsarInit.WaitForLog(fmt.Sprintf("Cluster metadata for '%s' setup correctly", conf.ClusterName))
-	pulsarInit.WithCmd([]string{
-		"bash", "-c",
-		fmt.Sprintf("bin/pulsar initialize-cluster-metadata  -c %s -cs %s -uw  %s -zk %s",
-			conf.ClusterName, conf.ConfigurationStore, conf.Broker, conf.Zookeeper),
-	})
-	return pulsarInit
+	port, err := standalone.MappedPort(ctx, "8080")
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := "http://localhost:" + port.Port() + "/admin/v2/tenants"
+
+	resp, err := http.Get(path)
+	// nolint
+	defer resp.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, 200, resp.StatusCode)
+
 }

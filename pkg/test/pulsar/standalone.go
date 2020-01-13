@@ -15,26 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package bkctl
+package pulsar
 
-import (
-	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
-	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/spf13/cobra"
-)
-
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookkeeper",
-		"Operations about bookKeeper",
-		"",
-		"bk",
-	)
-
-	resourceCmd.AddCommand(ledger.Command(flagGrouping))
-	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
-
-	return resourceCmd
+func NewStandalone(image string) *test.BaseContainer {
+	s := test.NewContainer(image)
+	s.ExposedPorts([]string{"8080", "6650"})
+	s.WithCmd([]string{
+		"bin/pulsar", "standalone",
+	})
+	s.WaitForPort("8080")
+	return s
 }
