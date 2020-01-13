@@ -15,31 +15,41 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookkeeper
 
 import (
 	"context"
-	"strconv"
-	"time"
+	"net/http"
+	"testing"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/stretchr/testify/assert"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
+func TestDefaultCluster(t *testing.T) {
 	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
+	bkCluster, err := DefaultCluster()
+	// nolint
+	defer bkCluster.Close(ctx)
 	if err != nil {
-		return nil, err
+		t.Fatal(err)
+	}
+	err = bkCluster.Start(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer bkCluster.Stop(ctx)
+
+	path, err := bkCluster.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
+	resp, err := http.Get(path + "/api/v1/bookie/list_bookie_info")
+	// nolint
+	defer resp.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	assert.Equal(t, 200, resp.StatusCode)
 }

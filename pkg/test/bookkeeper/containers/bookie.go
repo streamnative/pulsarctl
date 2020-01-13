@@ -15,31 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package containers
 
-import (
-	"context"
-	"strconv"
-	"time"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/testcontainers/testcontainers-go"
+const (
+	BookieName                   = "bookie"
+	DefaultBookieServicePort     = 3181
+	DefaultBookieHTTPServicePort = 8080
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
-
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+func NewBookieContainer(image, network string) *test.BaseContainer {
+	bk := test.NewContainer(image)
+	bk.WithNetwork([]string{network})
+	bk.WithNetworkAliases(map[string][]string{network: {BookieName}})
+	bk.ExposedPorts([]string{"8080"})
+	bk.WithCmd([]string{"bookie"})
+	bk.WaitForPort("8080")
+	return bk
 }
