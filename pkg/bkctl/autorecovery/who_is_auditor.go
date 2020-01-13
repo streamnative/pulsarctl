@@ -59,7 +59,7 @@ func doWhoIsAuditor(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewBookieClient()
 	auditor, err := admin.AutoRecovery().WhoIsAuditor()
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), auditor)
+		vc.Command.Println(auditor)
 	}
 
 	return err

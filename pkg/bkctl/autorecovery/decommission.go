@@ -29,7 +29,7 @@ func decommissionCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	c := cmdutils.Example{
 		Desc:    "Decommission a bookie.",
-		Command: "pulsarctl bookkeeper auto-recovery (bk-ip:bk-port)",
+		Command: "pulsarctl bookkeeper auto-recovery decommission (bk-ip:bk-port)",
 	}
 	examples = append(examples, c)
 	desc.CommandExamples = examples

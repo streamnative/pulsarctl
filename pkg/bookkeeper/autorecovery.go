@@ -31,7 +31,7 @@ type AutoRecovery interface {
 	PrintListUnderReplicatedLedger(string, string) (map[int64][]string, error)
 
 	// WhoIsAuditor is used to getting which bookie is the auditor
-	WhoIsAuditor() (map[string]string, error)
+	WhoIsAuditor() (string, error)
 
 	// TriggerAudit is used to triggering audit by resetting the lostBookieRecoveryDelay
 	TriggerAudit() error
@@ -90,10 +90,10 @@ func (a *autoRecovery) PrintListUnderReplicatedLedger(missingReplica,
 	return resp, err
 }
 
-func (a *autoRecovery) WhoIsAuditor() (map[string]string, error) {
+func (a *autoRecovery) WhoIsAuditor() (string, error) {
 	endpoint := a.bk.endpoint(a.basePath, "/who_is_auditor")
-	resp := make(map[string]string)
-	return resp, a.bk.Client.Get(endpoint, &resp)
+	resp, err := a.bk.Client.GetWithQueryParams(endpoint, nil, nil, false)
+	return string(resp), err
 }
 
 func (a *autoRecovery) TriggerAudit() error {
