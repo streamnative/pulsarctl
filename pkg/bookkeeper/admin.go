@@ -61,8 +61,8 @@ func New(config *Config) (Client, error) {
 	return bkClient, nil
 }
 
-func (b *bookieClient) endpoint(componentPath string, parts ...string) string {
-	return path.Join(makeHTTPPath(b.APIVersion.String(), componentPath), path.Join(parts...))
+func (c *bookieClient) endpoint(componentPath string, parts ...string) string {
+	return path.Join(makeHTTPPath(c.APIVersion.String(), componentPath), path.Join(parts...))
 }
 
 func makeHTTPPath(apiVersion string, componentPath string) string {

@@ -20,9 +20,10 @@ package cmdutils
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+
 	"github.com/ghodss/yaml"
 	"github.com/spf13/pflag"
-	"io"
 )
 
 // region OutputConfig
@@ -79,8 +80,8 @@ type OutputFormat string
 
 const (
 	TextOutputFormat OutputFormat = "text"
-	JsonOutputFormat OutputFormat = "json"
-	YamlOutputFormat OutputFormat = "yaml"
+	JSONOutputFormat OutputFormat = "json"
+	YAMLOutputFormat OutputFormat = "yaml"
 )
 
 func (fmt OutputFormat) String() string {
@@ -157,13 +158,13 @@ func (o OutputContent) Negotiate(format OutputFormat) OutputWritable {
 		if o.text != nil {
 			return o.text
 		}
-	case JsonOutputFormat:
+	case JSONOutputFormat:
 		if o.obj != nil {
 			return byteOutputFunc(func() ([]byte, error) {
 				return json.MarshalIndent(o.obj(), "", "  ")
 			})
 		}
-	case YamlOutputFormat:
+	case YAMLOutputFormat:
 		if o.obj != nil {
 			return byteOutputFunc(func() ([]byte, error) {
 				return yaml.Marshal(o.obj())

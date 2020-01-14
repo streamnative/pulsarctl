@@ -18,10 +18,10 @@
 package cluster
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func ListClustersCmd(vc *cmdutils.VerbCmd) {
@@ -65,7 +65,7 @@ func ListClustersCmd(vc *cmdutils.VerbCmd) {
 	})
 
 	// register the params
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListClusters(vc *cmdutils.VerbCmd) error {

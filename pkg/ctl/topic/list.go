@@ -18,12 +18,11 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"io"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ListTopicsCmd(vc *cmdutils.VerbCmd) {
@@ -66,7 +65,7 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 		return doListTopics(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {

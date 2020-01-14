@@ -18,13 +18,13 @@
 package functions
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -85,7 +85,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The namespace of a Pulsar Function")
 	})
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

@@ -18,10 +18,10 @@
 package tenant
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func listTenantCmd(vc *cmdutils.VerbCmd) {
@@ -61,7 +61,7 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 		return doListTenant(vc)
 	})
 
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListTenant(vc *cmdutils.VerbCmd) error {
@@ -75,16 +75,16 @@ func doListTenant(vc *cmdutils.VerbCmd) error {
 	oc := cmdutils.NewOutputContent().
 		WithObject(tenants).
 		WithTextFunc(func(w io.Writer) error {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Tenant Name"})
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Tenant Name"})
 
-		for _, t := range tenants {
-			table.Append([]string{t})
-		}
+			for _, t := range tenants {
+				table.Append([]string{t})
+			}
 
-		table.Render()
-		return nil
-	})
+			table.Render()
+			return nil
+		})
 	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
 	return err

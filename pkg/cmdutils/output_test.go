@@ -20,10 +20,11 @@ package cmdutils
 import (
 	"errors"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestOutputConfig(t *testing.T) {
@@ -66,8 +67,8 @@ func TestOutputContent(t *testing.T) {
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
 				TextOutputFormat:    "foobar",
-				JsonOutputFormat:    "",
-				YamlOutputFormat:    "",
+				JSONOutputFormat:    "",
+				YAMLOutputFormat:    "",
 			},
 		},
 		"WithTextFunc": {
@@ -80,8 +81,8 @@ func TestOutputContent(t *testing.T) {
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
 				TextOutputFormat:    "foobar",
-				JsonOutputFormat:    "",
-				YamlOutputFormat:    "",
+				JSONOutputFormat:    "",
+				YAMLOutputFormat:    "",
 			},
 		},
 		"WithObject": {
@@ -91,11 +92,11 @@ func TestOutputContent(t *testing.T) {
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
 				TextOutputFormat:    "",
-				JsonOutputFormat: `[
+				JSONOutputFormat: `[
   "foo",
   "bar"
 ]`,
-				YamlOutputFormat: `- foo
+				YAMLOutputFormat: `- foo
 - bar
 `,
 			},
@@ -107,11 +108,11 @@ func TestOutputContent(t *testing.T) {
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
 				TextOutputFormat:    "",
-				JsonOutputFormat: `[
+				JSONOutputFormat: `[
   "foo",
   "bar"
 ]`,
-				YamlOutputFormat: `- foo
+				YAMLOutputFormat: `- foo
 - bar
 `,
 			},

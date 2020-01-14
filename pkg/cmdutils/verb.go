@@ -30,10 +30,8 @@ type VerbCmd struct {
 	FlagSetGroup *NamedFlagSetGroup
 	NameArg      string
 	NameArgs     []string
-	OutputConfig  *OutputConfig
-
-	// for testing
-	NameError error
+	NameError    error // for testing
+	OutputConfig *OutputConfig
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
@@ -84,8 +82,8 @@ func (vc *VerbCmd) SetRunFuncWithMultiNameArgs(cmd func() error, checkArgs func(
 	}
 }
 
-// EnableOutputConfig adds the output configuration flagset to the command
-func (vc *VerbCmd) EnableOutputConfig() {
+// EnableOutputFlagSet adds the output flagset to the command
+func (vc *VerbCmd) EnableOutputFlagSet() {
 	vc.OutputConfig = &OutputConfig{}
 	vc.OutputConfig.AddTo(vc.FlagSetGroup)
 }

@@ -18,10 +18,10 @@
 package cluster
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
@@ -63,7 +63,7 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 		return doGetPeerClusters(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
 
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doGetPeerClusters(vc *cmdutils.VerbCmd) error {

@@ -18,13 +18,13 @@
 package sinks
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func listSinksCmd(vc *cmdutils.VerbCmd) {
@@ -85,7 +85,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink's namespace")
 	})
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
@@ -101,7 +101,7 @@ func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	oc := cmdutils.NewOutputContent().
 		WithObject(sinks).
 		WithTextFunc(func(w io.Writer) error {
-			table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+			table := tablewriter.NewWriter(w)
 			table.SetHeader([]string{"Pulsar Sinks Name"})
 
 			for _, f := range sinks {

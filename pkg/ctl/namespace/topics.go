@@ -18,10 +18,10 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getTopics(vc *cmdutils.VerbCmd) {
@@ -78,7 +78,7 @@ func getTopics(vc *cmdutils.VerbCmd) {
 		return doListTopics(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 
-	vc.EnableOutputConfig()
+	vc.EnableOutputFlagSet()
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {
@@ -93,7 +93,7 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 	oc := cmdutils.NewOutputContent().
 		WithObject(listTopics).
 		WithTextFunc(func(w io.Writer) error {
-			table := tablewriter.NewWriter(vc.Command.OutOrStdout())
+			table := tablewriter.NewWriter(w)
 			table.SetHeader([]string{"Topics Name"})
 			for _, topic := range listTopics {
 				table.Append([]string{topic})
