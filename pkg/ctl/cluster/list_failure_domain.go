@@ -61,6 +61,8 @@ func listFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListFailureDomain(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doListFailureDomain(vc *cmdutils.VerbCmd) error {
@@ -74,7 +76,8 @@ func doListFailureDomain(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	domainData, err := admin.Clusters().ListFailureDomains(clusterName)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), domainData)
+		oc := cmdutils.NewOutputContent().WithObject(domainData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

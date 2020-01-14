@@ -158,6 +158,12 @@ func (o OutputContent) Negotiate(format OutputFormat) OutputWritable {
 		if o.text != nil {
 			return o.text
 		}
+		if o.obj != nil {
+			// fallback to a JSON representation
+			return byteOutputFunc(func() ([]byte, error) {
+				return json.MarshalIndent(o.obj(), "", "  ")
+			})
+		}
 	case JSONOutputFormat:
 		if o.obj != nil {
 			return byteOutputFunc(func() ([]byte, error) {
