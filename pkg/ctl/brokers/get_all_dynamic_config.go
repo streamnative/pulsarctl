@@ -54,6 +54,8 @@ func getAllDynamicConfigsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetAllDynamicConfigs(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetAllDynamicConfigs(vc *cmdutils.VerbCmd) error {
@@ -62,7 +64,8 @@ func doGetAllDynamicConfigs(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), brokersData)
+		oc := cmdutils.NewOutputContent().WithObject(brokersData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }
