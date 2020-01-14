@@ -74,6 +74,8 @@ func monitoringMetrics(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doMonitoringMetrics(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doMonitoringMetrics(vc *cmdutils.VerbCmd) error {
@@ -82,7 +84,8 @@ func doMonitoringMetrics(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), metrics)
+		oc := cmdutils.NewOutputContent().WithObject(metrics)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
