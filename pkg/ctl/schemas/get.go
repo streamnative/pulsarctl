@@ -18,11 +18,11 @@
 package schemas
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"io"
 
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func getSchema(vc *cmdutils.VerbCmd) {
@@ -116,6 +116,7 @@ func getSchema(vc *cmdutils.VerbCmd) {
 			0,
 			"the schema version info")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
@@ -125,13 +126,20 @@ func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
 	if schemaData.Version == 0 {
 		schemaInfoWithVersion, err := admin.Schemas().GetSchemaInfoWithVersion(topic)
 		if err == nil {
-			PrintSchema(vc.Command.OutOrStdout(), schemaInfoWithVersion)
+			oc := cmdutils.NewOutputContent().
+				WithObject(schemaInfoWithVersion).
+				WithTextFunc(func(w io.Writer) error {
+					PrintSchema(w, schemaInfoWithVersion)
+					return nil
+				})
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 		}
 		return err
 	}
 	info, err := admin.Schemas().GetSchemaInfoByVersion(topic, schemaData.Version)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
+		oc := cmdutils.NewOutputContent().WithObject(info)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
