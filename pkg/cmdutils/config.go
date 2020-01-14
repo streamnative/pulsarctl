@@ -18,15 +18,19 @@
 package cmdutils
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
+	"gopkg.in/yaml.v2"
 )
 
 var PulsarCtlConfig = ClusterConfig{}
@@ -77,7 +81,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 
 	flags.StringVar(
 		&c.TLSTrustCertsFilePath,
-		"tls-trust-cert-pat",
+		"tls-trust-cert-path",
 		"",
 		"Allow TLS trust cert file path")
 
@@ -107,8 +111,52 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	)
 }
 
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	}
+	return true
+}
+
+func (c *ClusterConfig) DecodeContext() *Config {
+	cfg := NewConfig()
+
+	defaultPath := fmt.Sprintf("%s/.config/pulsar", utils.HomeDir())
+	if !Exists(defaultPath) {
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(defaultPath)
+	if err != nil {
+		return nil
+	}
+
+	err = yaml.Unmarshal(content, &cfg)
+	if err != nil {
+		return nil
+	}
+
+	return cfg
+}
+
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := pulsar.DefaultConfig()
+
+	ctxConf := c.DecodeContext()
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+
+			c.WebServiceURL = ctx.BrokerServiceURL
+
+			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
+			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
+			c.Token = auth.Token
+			c.TokenFile = auth.TokenFile
+		}
+	}
 
 	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {
 		config.WebServiceURL = c.WebServiceURL
@@ -147,6 +195,15 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
+	ctxConf := c.DecodeContext()
+
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			c.BKWebServiceURL = ctx.BookieServiceURL
+		}
+	}
+
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
 	}

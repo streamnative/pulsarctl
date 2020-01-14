@@ -37,4 +37,5 @@ categories:
   - functions-worker
   - ns-isolation-policy
   - token
+  - context
   - bookkeeper

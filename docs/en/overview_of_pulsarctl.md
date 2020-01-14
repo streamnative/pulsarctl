@@ -129,7 +129,7 @@ Common flags:
   -C, --color string                toggle colorized logs (true,false,fabulous) (default "true")
   -h, --help                        help for this command
       --tls-allow-insecure          Allow TLS insecure connection
-      --tls-trust-cert-pat string   Allow TLS trust cert file path
+      --tls-trust-cert-path string   Allow TLS trust cert file path
       --token string                Using the token to authentication
       --token-file string           Using the token file to authentication
   -v, --verbose int                 set log level, use 0 to silence, 4 for debugging (default 3)
@@ -142,7 +142,7 @@ Flags | Description
 `--admin-service-url` | The admin web service URL that pulsarctl connects to
 `--auth-params` | Authentication parameters are used to configure the public and private key files required by TLS
 `--tls-allow-insecur` | Allow TLS insecure connection
-`--tls-trust-cert-pat` | Allow TLS trust cert file path
+`--tls-trust-cert-path` | Allow TLS trust cert file path
 
 **Example**
 
@@ -151,7 +151,7 @@ pulsarctl \
     --admin-service-url https://localhost:8443 \
     --auth-params "{\"tlsCertFile\":\"/test/auth/certs/client-cert.pem\",\"tlsKeyFile\":\"/test/auth/certs/client-key.pem\"}" \
 	--tls-allow-insecure \
-	--tls-trust-cert-pat /test/auth/certs/cacert.pem \
+	--tls-trust-cert-path /test/auth/certs/cacert.pem \
 	topics list public/default
 ```
 
@@ -192,7 +192,7 @@ Common flags:
   -C, --color string                toggle colorized logs (true,false,fabulous) (default "true")
   -h, --help                        help for this command
       --tls-allow-insecure          Allow TLS insecure connection
-      --tls-trust-cert-pat string   Allow TLS trust cert file path
+      --tls-trust-cert-path string   Allow TLS trust cert file path
       --token string                Using the token to authentication
       --token-file string           Using the token file to authentication
   -v, --verbose int                 set log level, use 0 to silence, 4 for debugging (default 3)
