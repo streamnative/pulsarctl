@@ -18,8 +18,6 @@
 package cluster
 
 import (
-	"encoding/json"
-
 	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -64,6 +62,8 @@ func getClusterDataCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetClusterData(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetClusterData(vc *cmdutils.VerbCmd) error {
@@ -75,11 +75,8 @@ func doGetClusterData(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	clusterData, err := admin.Clusters().Get(clusterName)
 	if err == nil {
-		s, err := json.MarshalIndent(clusterData, "", "    ")
-		if err != nil {
-			return err
-		}
-		vc.Command.Println(string(s))
+		oc := cmdutils.NewOutputContent().WithObject(clusterData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
