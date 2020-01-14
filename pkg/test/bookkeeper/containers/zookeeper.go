@@ -15,39 +15,28 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package containers
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"fmt"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
+const (
+	ZookeeperName               = "zookeeper"
+	DefaultZookeeperServicePort = 2181
+)
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
+func NewZookeeperContainer(image, network string) *test.BaseContainer {
+	zookeeper := test.NewContainer(image)
+	zookeeper.WithNetwork([]string{network})
+	zookeeper.WithNetworkAliases(map[string][]string{network: {ZookeeperName}})
+	zookeeper.WithCmd([]string{"zookeeper"})
+	zookeeper.WaitForLog("binding to port 0.0.0.0/0.0.0.0:2181")
+	return zookeeper
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func DefaultZookeeperServiceString() string {
+	return fmt.Sprintf("%s:%d", ZookeeperName, DefaultZookeeperServicePort)
 }

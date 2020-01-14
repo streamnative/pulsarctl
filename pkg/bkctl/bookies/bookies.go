@@ -15,39 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookies
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/spf13/cobra"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
+func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+	resourceCmd := cmdutils.NewResourceCmd(
+		"bookies",
+		"Operations about BookKeeper cluster",
+		"")
+
+	commands := []func(*cmdutils.VerbCmd){
+		listCmd,
+		diskUsageInfoCmd,
 	}
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
-
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
+	return resourceCmd
 }

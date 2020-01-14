@@ -15,39 +15,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bkdata
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"strings"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/pkg/errors"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
+type BookieType string
+
+const (
+	rw BookieType = "rw"
+	ro BookieType = "ro"
+)
+
+func ParseBookieType(t string) (BookieType, error) {
+	switch strings.ToLower(t) {
+	case rw.String():
+		return rw, nil
+	case ro.String():
+		return ro, nil
+	default:
+		return "", errors.Errorf("invalid bookie type %s, the bookie type only can "+
+			"be specified as 'rw' or 'ro'", t)
 	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func (t BookieType) String() string {
+	return string(t)
 }

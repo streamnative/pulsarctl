@@ -15,39 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bkdata
 
-import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
-
-	"github.com/testcontainers/testcontainers-go"
-)
-
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
+type RecoveryRequest struct {
+	BookieSrc    []string `json:"bookie_src"`
+	DeleteCookie bool     `json:"delete_cookie"`
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+type LostBookieRecoverDelayRequest struct {
+	DelaySeconds int `json:"delay_seconds"`
 }
 
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+type DecommissionRequest struct {
+	BookieSrc string `json:"bookie_src"`
 }

@@ -15,39 +15,34 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package autorecovery
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"testing"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/stretchr/testify/assert"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
+func TestDecommissionArgsErr(t *testing.T) {
+	// no args specified
+	args := []string{"decommission"}
+	_, _, nameErr, err := testAutoRecoveryCommands(decommissionCmd, args)
 	if err != nil {
-		return nil, err
+		t.Fatal(err)
 	}
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
+	// more than one args specified
+	args = []string{"decommission", "bookie-1:3181", "bookie-2:3181"}
+	_, _, nameErr, err = testAutoRecoveryCommands(decommissionCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the bookie address is not specified or the bookie address is specified more than one",
+		nameErr.Error())
 }

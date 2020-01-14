@@ -15,39 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookie
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"fmt"
+	"testing"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/stretchr/testify/assert"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
+func TestListDiskFileArgError(t *testing.T) {
+	args := []string{"list-disk-file"}
+	_, _, nameErr, _ := testBookieCommands(listDiskFileCmd, args)
+	assert.NotNil(t, nameErr)
+	assert.Equal(t, "the file type is not specified or the file type is specified more than one",
+		nameErr.Error())
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
-
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+	args = []string{"list-disk-file", "invalid"}
+	_, execErr, _, _ := testBookieCommands(listDiskFileCmd, args)
+	assert.NotNil(t, execErr)
+	assert.Equal(t, fmt.Sprintf("invalid file type %s, the file type only can be specified as 'journal', "+
+		"'entrylog', 'index'", "invalid"), execErr.Error())
 }

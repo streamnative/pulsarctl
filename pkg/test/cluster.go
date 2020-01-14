@@ -17,37 +17,21 @@
 
 package test
 
-import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+import "context"
 
-	"github.com/testcontainers/testcontainers-go"
-)
+type Cluster interface {
+	// Start a cluster.
+	Start(ctx context.Context) error
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
+	// Stop a cluster.
+	Stop(ctx context.Context) error
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
+	// GetPlainTextServiceURL gets the service connect string.
+	GetPlainTextServiceURL(ctx context.Context) (string, error)
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
+	// GetHTTPServiceURL gets the HTTP service connect string.
+	GetHTTPServiceURL(ctx context.Context) (string, error)
 
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+	// Close closes the resources used for starting cluster.
+	Close(ctx context.Context)
 }

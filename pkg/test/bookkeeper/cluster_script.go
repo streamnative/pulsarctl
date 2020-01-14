@@ -15,39 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookkeeper
 
-import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+import "github.com/streamnative/pulsarctl/pkg/test"
 
-	"github.com/testcontainers/testcontainers-go"
-)
-
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
-
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func InitBookieCluster(image, network, zookeeper string) *test.BaseContainer {
+	bookieInit := test.NewContainer(image)
+	bookieInit.WithNetwork([]string{network})
+	bookieInit.WithEnv(map[string]string{"BK_zkServers": zookeeper})
+	bookieInit.WithCmd([]string{"/opt/bookkeeper/bin/bookkeeper", "shell", "metaformat"})
+	bookieInit.WaitForLog("/opt/bookkeeper/bin/bookkeeper shell metaformat")
+	return bookieInit
 }

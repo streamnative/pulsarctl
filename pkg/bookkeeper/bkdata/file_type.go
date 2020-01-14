@@ -15,39 +15,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bkdata
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"strings"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/pkg/errors"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
+type FileType string
+
+const (
+	journal  FileType = "journal"
+	entryLog FileType = "entrylog"
+	index    FileType = "index"
+)
+
+func ParseFileType(fileType string) (FileType, error) {
+	switch strings.ToLower(fileType) {
+	case journal.String():
+		return journal, nil
+	case entryLog.String():
+		return entryLog, nil
+	case index.String():
+		return index, nil
+	default:
+		return "", errors.Errorf("invalid file type %s, the file type only can be specified as 'journal', "+
+			"'entrylog', 'index'", fileType)
 	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func (t FileType) String() string {
+	return string(t)
 }

@@ -15,39 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bookies
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"strings"
+	"testing"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/stretchr/testify/assert"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
-}
-
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func TestDiskUsageInfoCmd(t *testing.T) {
+	args := []string{"disk-usage-info"}
+	out, execErr, nameErr, err := testBookiesCommands(args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.True(t, strings.Contains(out.String(), "3181"))
 }

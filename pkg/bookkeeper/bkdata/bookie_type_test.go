@@ -15,39 +15,39 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package test
+package bkdata
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
-	"time"
+	"testing"
 
-	"github.com/testcontainers/testcontainers-go"
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
-// NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
-	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
+var testParseBookieTypeData = []struct {
+	bookieType       string
+	parsedBookieType BookieType
+	errString        string
+}{
+	{"rw", rw, ""},
+	{"ro", ro, ""},
+	{"", "", bookieTypeErrStr("")},
+	{"r", "", bookieTypeErrStr("r")},
+}
+
+func TestParseBookieType(t *testing.T) {
+	for _, data := range testParseBookieTypeData {
+		bkt, err := ParseBookieType(data.bookieType)
+		if data.errString != "" {
+			assert.NotNil(t, err)
+			assert.Equal(t, data.errString, err.Error())
+			continue
+		}
+		assert.Equal(t, data.parsedBookieType, bkt)
 	}
-
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
-	return net, err
 }
 
-func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
-}
-
-func ExecCmd(containerID string, cmd []string) (string, error) {
-	args := []string{"exec", containerID}
-	args = append(args, cmd...)
-	out, err := exec.Command("docker", args...).Output()
-	return string(out), err
+func bookieTypeErrStr(bookieType string) string {
+	return errors.Errorf(
+		"invalid bookie type %s, the bookie type only can be specified as 'rw' or 'ro'", bookieType).Error()
 }
