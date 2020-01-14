@@ -123,6 +123,7 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The name of a Pulsar Function")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
@@ -137,7 +138,8 @@ func doGetFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionConfig)
+		oc := cmdutils.NewOutputContent().WithObject(functionConfig)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

@@ -91,7 +91,10 @@ func TestOutputContent(t *testing.T) {
 			},
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
-				TextOutputFormat:    "",
+				TextOutputFormat: `[
+  "foo",
+  "bar"
+]`,
 				JSONOutputFormat: `[
   "foo",
   "bar"
@@ -107,7 +110,10 @@ func TestOutputContent(t *testing.T) {
 			},
 			tests: map[OutputFormat]string{
 				OutputFormat("bad"): "",
-				TextOutputFormat:    "",
+				TextOutputFormat: `[
+  "foo",
+  "bar"
+]`,
 				JSONOutputFormat: `[
   "foo",
   "bar"
