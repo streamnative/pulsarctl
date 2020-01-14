@@ -85,6 +85,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The namespace of a Pulsar Function")
 	})
+	vc.EnableOutputConfig()
 }
 
 func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

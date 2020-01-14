@@ -58,6 +58,8 @@ func getDynamicConfigListNameCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetDynamicConfigListName(vc)
 	})
+
+	vc.EnableOutputConfig()
 }
 
 func doGetDynamicConfigListName(vc *cmdutils.VerbCmd) error {

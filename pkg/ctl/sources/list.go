@@ -85,6 +85,7 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source's namespace")
 	})
+	vc.EnableOutputConfig()
 }
 
 func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {

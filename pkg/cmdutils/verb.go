@@ -40,7 +40,6 @@ type VerbCmd struct {
 func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd func(*VerbCmd)) {
 	verb := &VerbCmd{
 		Command: &cobra.Command{},
-		OutputConfig: &GlobalOutputConfig,
 	}
 	verb.FlagSetGroup = flagGrouping.New(verb.Command)
 	newVerbCmd(verb)
@@ -83,6 +82,12 @@ func (vc *VerbCmd) SetRunFuncWithMultiNameArgs(cmd func() error, checkArgs func(
 		vc.NameArgs, vc.NameError = GetNameArgs(args, checkArgs)
 		run(cmd)
 	}
+}
+
+// EnableOutputConfig adds the output configuration flagset to the command
+func (vc *VerbCmd) EnableOutputConfig() {
+	vc.OutputConfig = &OutputConfig{}
+	vc.OutputConfig.AddTo(vc.FlagSetGroup)
 }
 
 var ExecErrorHandler = defaultExecErrorHandler

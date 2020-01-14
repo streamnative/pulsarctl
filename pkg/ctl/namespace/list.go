@@ -74,6 +74,8 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListNamespaces(vc)
 	}, "the tenant name is not specified or the tenant name is specified more than one")
+
+	vc.EnableOutputConfig()
 }
 
 func doListNamespaces(vc *cmdutils.VerbCmd) error {

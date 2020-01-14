@@ -62,6 +62,8 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPeerClusters(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputConfig()
 }
 
 func doGetPeerClusters(vc *cmdutils.VerbCmd) error {

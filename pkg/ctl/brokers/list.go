@@ -62,6 +62,8 @@ func getBrokerListCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListCluster(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputConfig()
 }
 
 func doListCluster(vc *cmdutils.VerbCmd) error {

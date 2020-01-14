@@ -85,6 +85,7 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink's namespace")
 	})
+	vc.EnableOutputConfig()
 }
 
 func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {

@@ -77,6 +77,8 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListTopics(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputConfig()
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {

@@ -63,6 +63,9 @@ func ListClustersCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doListClusters(vc)
 	})
+
+	// register the params
+	vc.EnableOutputConfig()
 }
 
 func doListClusters(vc *cmdutils.VerbCmd) error {

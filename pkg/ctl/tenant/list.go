@@ -60,6 +60,8 @@ func listTenantCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doListTenant(vc)
 	})
+
+	vc.EnableOutputConfig()
 }
 
 func doListTenant(vc *cmdutils.VerbCmd) error {

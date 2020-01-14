@@ -27,28 +27,22 @@ import (
 
 // region OutputConfig
 
-// GlobalOutputConfig represents the global output configuration
-var GlobalOutputConfig = OutputConfig{}
-
 // OutputConfig represents an output configuration
 type OutputConfig struct {
 	// the output format (Table, Plain, Json, Yaml)
 	Format string
 }
 
-func (c *OutputConfig) FlagSet() *pflag.FlagSet {
-	flags := pflag.NewFlagSet(
-		"Output Config",
-		pflag.ContinueOnError)
-
-	flags.StringVarP(
-		&c.Format,
-		"output",
-		"o",
-		string(TextOutputFormat),
-		"The output format")
-
-	return flags
+// AddTo registers the output flagset into a group
+func (c *OutputConfig) AddTo(group *NamedFlagSetGroup) {
+	group.InFlagSet("Output", func(flags *pflag.FlagSet) {
+		flags.StringVarP(
+			&c.Format,
+			"output",
+			"o",
+			string(TextOutputFormat),
+			"The output format (text,json,yaml)")
+	})
 }
 
 // WriteOutput writes output based on the configured output format and on available content
