@@ -18,20 +18,33 @@
 package sinks
 
 import (
+	"context"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRestartSink(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-restart",
@@ -44,7 +57,7 @@ func TestRestartSink(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully\n")
 
-	restartArgs := []string{"restart",
+	restartArgs := []string{"--admin-service-url", requestURL, "restart",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-restart",
@@ -54,13 +67,13 @@ func TestRestartSink(t *testing.T) {
 	assert.Nil(t, err)
 
 	// test failure case
-	failureArgs := []string{"restart",
+	failureArgs := []string{"--admin-service-url", requestURL, "restart",
 		"--name", "not-exist",
 	}
 	_, execErr, _ := TestSinksCommands(restartSinksCmd, failureArgs)
 	assert.Equal(t, execErr.Error(), "code: 404 reason: Sink not-exist doesn't exist")
 
-	notExistInstanceIDArgs := []string{"restart",
+	notExistInstanceIDArgs := []string{"--admin-service-url", requestURL, "restart",
 		"--name", "test-sink-restart",
 		"--instance-id", "12345678",
 	}

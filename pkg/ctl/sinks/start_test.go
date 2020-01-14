@@ -18,20 +18,33 @@
 package sinks
 
 import (
+	"context"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStartAndStopSink(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-start",
@@ -44,7 +57,7 @@ func TestStartAndStopSink(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, createOut.String(), "Created test-sink-start successfully\n")
 
-	stopArgs := []string{"stop",
+	stopArgs := []string{"--admin-service-url", requestURL, "stop",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-start",
@@ -53,7 +66,7 @@ func TestStartAndStopSink(t *testing.T) {
 	_, _, err = TestSinksCommands(stopSinksCmd, stopArgs)
 	assert.Nil(t, err)
 
-	startArgs := []string{"start",
+	startArgs := []string{"--admin-service-url", requestURL, "start",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-start",
@@ -62,7 +75,7 @@ func TestStartAndStopSink(t *testing.T) {
 	assert.Nil(t, err)
 
 	// test failure case
-	failureStartArgs := []string{"start",
+	failureStartArgs := []string{"--admin-service-url", requestURL, "start",
 		"--name", "not-exist",
 	}
 	_, err, _ = TestSinksCommands(startSinksCmd, failureStartArgs)
@@ -71,7 +84,7 @@ func TestStartAndStopSink(t *testing.T) {
 	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
 
 	// test the --name args not exist
-	notExistNameOrFqfnArgs := []string{"start",
+	notExistNameOrFqfnArgs := []string{"--admin-service-url", requestURL, "start",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
@@ -81,7 +94,7 @@ func TestStartAndStopSink(t *testing.T) {
 	assert.True(t, strings.ContainsAny(err.Error(), failNameMsg))
 
 	// test the instance id not exist
-	notExistInstanceIDArgs := []string{"start",
+	notExistInstanceIDArgs := []string{"--admin-service-url", requestURL, "start",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-start",

@@ -18,20 +18,33 @@
 package sinks
 
 import (
+	"context"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestListSinks(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-list",
@@ -40,28 +53,50 @@ func TestListSinks(t *testing.T) {
 		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
 	}
 
-	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-list successfully\n")
+	createOut, execErr, err := TestSinksCommands(createSinksCmd, args)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if execErr != nil {
+		t.Fatal(execErr)
+	}
+	assert.Equal(t, "Created test-sink-list successfully\n", createOut.String())
 
-	listArgs := []string{"list",
+	listArgs := []string{"--admin-service-url", requestURL, "list",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
-	listOut, _, _ := TestSinksCommands(listSinksCmd, listArgs)
-	t.Logf("pulsar sink name:%s", listOut.String())
+	listOut, execErr, err := TestSinksCommands(listSinksCmd, listArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if execErr != nil {
+		t.Fatal(execErr)
+	}
 	assert.True(t, strings.Contains(listOut.String(), "test-sink-list"))
 
-	deleteArgs := []string{"delete",
+	deleteArgs := []string{"--admin-service-url", requestURL, "delete",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-list",
 	}
 
-	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
+	deleteOut, execErr, err := TestSinksCommands(deleteSinksCmd, deleteArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if execErr != nil {
+		t.Fatal(execErr)
+	}
 	assert.Equal(t, deleteOut.String(), "Deleted test-sink-list successfully\n")
 
-	listArgsAgain := []string{"list"}
-	sinks, _, _ := TestSinksCommands(listSinksCmd, listArgsAgain)
+	listArgsAgain := []string{"--admin-service-url", requestURL, "list"}
+	sinks, execErr, err := TestSinksCommands(listSinksCmd, listArgsAgain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if execErr != nil {
+		t.Fatal(execErr)
+	}
 	assert.False(t, strings.Contains(sinks.String(), "test-sink-list"))
 }

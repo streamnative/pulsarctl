@@ -46,6 +46,7 @@ func TestSinksCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out 
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
 	rootCmd.SetArgs(append([]string{"sinks"}, args...))
+	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sinks",

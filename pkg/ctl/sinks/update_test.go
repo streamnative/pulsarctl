@@ -18,23 +18,36 @@
 package sinks
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdateSink(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sinks-update",
@@ -47,7 +60,7 @@ func TestUpdateSink(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, createOut.String(), "Created test-sinks-update successfully\n")
 
-	updateArgs := []string{"update",
+	updateArgs := []string{"--admin-service-url", requestURL, "update",
 		"--name", "test-sinks-update",
 		"--parallelism", "3",
 	}
@@ -55,7 +68,7 @@ func TestUpdateSink(t *testing.T) {
 	updateOut, _, err := TestSinksCommands(updateSinksCmd, updateArgs)
 	fmt.Println(updateOut.String())
 	assert.Nil(t, err)
-	getArgs := []string{"get",
+	getArgs := []string{"--admin-service-url", requestURL, "get",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sinks-update",
@@ -67,11 +80,10 @@ func TestUpdateSink(t *testing.T) {
 	var sinkConf utils.SinkConfig
 	err = json.Unmarshal(out.Bytes(), &sinkConf)
 	assert.Nil(t, err)
-	t.Log(sinkConf)
 	assert.Equal(t, sinkConf.Parallelism, 3)
 
 	// test the sink name not exist
-	failureUpdateArgs := []string{"update",
+	failureUpdateArgs := []string{"--admin-service-url", requestURL, "update",
 		"--name", "not-exist",
 	}
 	_, err, _ = TestSinksCommands(updateSinksCmd, failureUpdateArgs)

@@ -18,22 +18,34 @@
 package sinks
 
 import (
+	"context"
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetSink(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-get",
@@ -45,7 +57,7 @@ func TestGetSink(t *testing.T) {
 	_, _, err = TestSinksCommands(createSinksCmd, args)
 	assert.Nil(t, err)
 
-	getArgs := []string{"get",
+	getArgs := []string{"--admin-service-url", requestURL, "get",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-get",
@@ -70,24 +82,29 @@ func TestGetSink(t *testing.T) {
 		"tableName": "test_jdbc",
 	}
 	assert.Equal(t, sinkConf.Configs, sinkConfMap)
-	t.Logf("get sink value:%s", out.String())
 }
 
 func TestGetFailureSink(t *testing.T) {
-	deleteArgs := []string{"delete",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-get",
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully\n")
-
-	failureGetArgs := []string{"get",
+	failureGetArgs := []string{"--admin-service-url", requestURL, "get",
 		"--name", "test-sink-get",
 	}
-	getOut, execErr, _ := TestSinksCommands(getSinksCmd, failureGetArgs)
+	_, execErr, err := TestSinksCommands(getSinksCmd, failureGetArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	assert.NotNil(t, execErr)
-	exceptedErr := "Sink test-sink-get doesn't exist"
-	assert.True(t, strings.Contains(getOut.String(), exceptedErr))
+	exceptedErr := "code: 404 reason: Sink test-sink-get doesn't exist"
+	assert.Equal(t, exceptedErr, execErr.Error())
 }

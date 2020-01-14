@@ -27,7 +27,7 @@ import (
 
 func TestNewStandalone(t *testing.T) {
 	ctx := context.Background()
-	standalone := NewStandalone("apachepulsar/pulsar:latest")
+	standalone := DefaultStandalone()
 	err := standalone.Start(ctx)
 	// nolint
 	defer standalone.Stop(ctx)

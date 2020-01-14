@@ -18,6 +18,7 @@
 package sinks
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -25,17 +26,29 @@ import (
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test/pulsar"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusSink(t *testing.T) {
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
-	args := []string{"create",
+	args := []string{"--admin-service-url", requestURL, "create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-status",
@@ -48,7 +61,7 @@ func TestStatusSink(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, createOut.String(), "Created test-sink-status successfully\n")
 
-	statusArgs := []string{"status",
+	statusArgs := []string{"--admin-service-url", requestURL, "status",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-sink-status",
@@ -81,7 +94,18 @@ func TestStatusSink(t *testing.T) {
 }
 
 func TestFailureStatus(t *testing.T) {
-	statusArgs := []string{"status",
+	ctx := context.Background()
+	c := pulsar.DefaultStandalone()
+	c.WaitForLog("Function worker service started")
+	c.Start(ctx)
+	defer c.Stop(ctx)
+
+	requestURL, err := c.GetHTTPServiceURL(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	statusArgs := []string{"--admin-service-url", requestURL, "status",
 		"--name", "not-exist",
 	}
 
@@ -89,6 +113,5 @@ func TestFailureStatus(t *testing.T) {
 	assert.Nil(t, err)
 
 	errMsg := "Sink not-exist doesn't exist"
-	t.Logf(out.String())
 	assert.True(t, strings.Contains(out.String(), errMsg))
 }
