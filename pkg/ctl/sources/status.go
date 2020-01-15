@@ -120,6 +120,7 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source instanceId (stop all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
@@ -138,14 +139,24 @@ func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 			sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceInstanceStatusData)
+		oc := cmdutils.NewOutputContent().WithObject(sourceInstanceStatusData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	} else {
 		sourceStatus, err := admin.Sources().GetSourceStatus(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceStatus)
+		oc := cmdutils.NewOutputContent().WithObject(sourceStatus)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err
