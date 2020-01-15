@@ -105,6 +105,7 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source's name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
@@ -119,7 +120,8 @@ func doGetSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sourceConfig)
+		oc := cmdutils.NewOutputContent().WithObject(sourceConfig)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
