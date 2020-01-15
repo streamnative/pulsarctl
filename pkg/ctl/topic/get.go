@@ -59,6 +59,8 @@ func GetTopicCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTopic(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetTopic(vc *cmdutils.VerbCmd) error {
@@ -75,7 +77,8 @@ func doGetTopic(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	meta, err := admin.Topics().GetMetadata(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), meta)
+		oc := cmdutils.NewOutputContent().WithObject(meta)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

@@ -153,6 +153,7 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&perPartition, "per-partition", "", false,
 			"Get the per partition topic stats")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error {
@@ -171,14 +172,16 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error
 	if partitionedTopic {
 		stats, err := admin.Topics().GetPartitionedStats(*topic, perPartition)
 		if err == nil {
-			cmdutils.PrintJSON(vc.Command.OutOrStdout(), stats)
+			oc := cmdutils.NewOutputContent().WithObject(stats)
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 		}
 		return err
 	}
 
 	topicStats, err := admin.Topics().GetStats(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), topicStats)
+		oc := cmdutils.NewOutputContent().WithObject(topicStats)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

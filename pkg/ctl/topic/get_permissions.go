@@ -61,6 +61,8 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetPermissions(vc *cmdutils.VerbCmd) error {
@@ -77,7 +79,8 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	permissions, err := admin.Topics().GetPermissions(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), permissions)
+		oc := cmdutils.NewOutputContent().WithObject(permissions)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

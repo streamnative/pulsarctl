@@ -18,12 +18,13 @@
 package topic
 
 import (
+	"fmt"
+	"io"
 	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -87,6 +88,7 @@ func OffloadStatusCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("OffloadStatus", func(set *pflag.FlagSet) {
 		set.BoolVarP(&wait, "wait", "w", false, "Wait for offloading to complete")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doOffloadStatus(vc *cmdutils.VerbCmd, wait bool) error {
@@ -118,16 +120,23 @@ func doOffloadStatus(vc *cmdutils.VerbCmd, wait bool) error {
 		}
 	}
 
-	switch status.Status {
-	case utils.NOTRUN:
-		vc.Command.Printf("Offloading topic %s is not running\n", topic.String())
-	case utils.RUNNING:
-		vc.Command.Printf("Offloading topic %s is running\n", topic.String())
-	case utils.SUCCESS:
-		vc.Command.Printf("Offloading topic %s is done successfully\n", topic.String())
-	case utils.ERROR:
-		vc.Command.Printf("Offloading topic %s is done with error %s\n", topic.String(), status.LastError)
-	}
+	oc := cmdutils.NewOutputContent().
+		WithObject(status).
+		WithTextFunc(func(w io.Writer) error {
+			var err error
+			switch status.Status {
+			case utils.NOTRUN:
+				_, err = fmt.Fprintf(w, "Offloading topic %s is not running\n", topic.String())
+			case utils.RUNNING:
+				_, err = fmt.Fprintf(w, "Offloading topic %s is running\n", topic.String())
+			case utils.SUCCESS:
+				_, err = fmt.Fprintf(w, "Offloading topic %s is done successfully\n", topic.String())
+			case utils.ERROR:
+				_, err = fmt.Fprintf(w, "Offloading topic %s is done with error %s\n", topic.String(), status.LastError)
+			}
+			return err
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
 	return err
 }
