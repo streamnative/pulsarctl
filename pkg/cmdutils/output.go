@@ -131,8 +131,9 @@ func NewOutputContent() *OutputContent {
 	return &OutputContent{}
 }
 
-func (o *OutputContent) WithText(text string) *OutputContent {
-	o.text = OutputWritableFunc(func(w io.Writer) error { _, err := fmt.Fprint(w, text); return err })
+// WithText produces the given formatted string
+func (o *OutputContent) WithText(format string, i ...interface{}) *OutputContent {
+	o.text = OutputWritableFunc(func(w io.Writer) error { _, err := fmt.Fprintf(w, format, i...); return err })
 	return o
 }
 

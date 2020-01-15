@@ -87,6 +87,7 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetLastMessageID(vc *cmdutils.VerbCmd, partition int) error {
@@ -110,7 +111,8 @@ func doGetLastMessageID(vc *cmdutils.VerbCmd, partition int) error {
 	admin := cmdutils.NewPulsarClient()
 	messageID, err := admin.Topics().GetLastMessageID(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), messageID)
+		oc := cmdutils.NewOutputContent().WithObject(messageID)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
