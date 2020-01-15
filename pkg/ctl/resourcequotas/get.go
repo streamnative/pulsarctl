@@ -74,11 +74,16 @@ func getResourceQuota(vc *cmdutils.VerbCmd) {
 		}
 		return nil
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 	var namespace, bundle string
 	if len(vc.NameArgs) > 0 {
+		if len(vc.NameArgs) < 2 {
+			return errors.New("Namespace and bundle must be provided together")
+		}
 		namespace = vc.NameArgs[0]
 		bundle = vc.NameArgs[1]
 	}
@@ -92,7 +97,11 @@ func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			cmdutils.PrintJSON(vc.Command.OutOrStdout(), resourceQuotaData)
+			oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+			if err != nil {
+				return err
+			}
 		}
 	case bundle != "" && namespace != "":
 		nsName, err := utils.GetNamespaceName(namespace)
@@ -104,7 +113,11 @@ func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			cmdutils.PrintJSON(vc.Command.OutOrStdout(), resourceQuotaData)
+			oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+			if err != nil {
+				return err
+			}
 		}
 	default:
 		return errors.New("Namespace and bundle must be provided together")

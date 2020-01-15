@@ -58,6 +58,8 @@ func getClusterLeader(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetClusterLeader(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetClusterLeader(vc *cmdutils.VerbCmd) error {
@@ -66,7 +68,8 @@ func doGetClusterLeader(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), workerInfo)
+		oc := cmdutils.NewOutputContent().WithObject(workerInfo)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

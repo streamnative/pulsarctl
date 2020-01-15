@@ -58,6 +58,8 @@ func getInternalConfigCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetInternalConfig(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetInternalConfig(vc *cmdutils.VerbCmd) error {
@@ -66,7 +68,8 @@ func doGetInternalConfig(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), brokersData)
+		oc := cmdutils.NewOutputContent().WithObject(brokersData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

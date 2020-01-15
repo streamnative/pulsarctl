@@ -57,6 +57,8 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetBundleRange(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetBundleRange(vc *cmdutils.VerbCmd) error {
@@ -73,7 +75,10 @@ func doGetBundleRange(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	bundleRange, err := admin.Topics().GetBundleRange(*topic)
 	if err == nil {
-		vc.Command.Printf("The bundle range of the topic %s is: %s\n", topic.String(), bundleRange)
+		oc := cmdutils.NewOutputContent().
+			WithObject(bundleRange).
+			WithText("The bundle range of the topic %s is: %s\n", topic.String(), bundleRange)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

@@ -153,6 +153,7 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(flagSet, "key")
 		cobra.MarkFlagRequired(flagSet, "name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
@@ -169,7 +170,11 @@ func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) er
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
-			cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionState)
+			oc := cmdutils.NewOutputContent().WithObject(functionState)
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+			if err != nil {
+				return err
+			}
 		}
 
 		if funcData.Watch {

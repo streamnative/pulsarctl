@@ -58,6 +58,8 @@ func getFailureDomainCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithMultiNameArgs(func() error {
 		return doGetFailureDomain(vc)
 	}, checkFailureDomainArgs)
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetFailureDomain(vc *cmdutils.VerbCmd) error {
@@ -72,7 +74,8 @@ func doGetFailureDomain(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	resFailureDomain, err := admin.Clusters().GetFailureDomain(clusterName, domainName)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), resFailureDomain)
+		oc := cmdutils.NewOutputContent().WithObject(resFailureDomain)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err
