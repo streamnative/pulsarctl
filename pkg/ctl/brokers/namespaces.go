@@ -93,6 +93,7 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 
 		cobra.MarkFlagRequired(flagSet, "url")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doOwnedNamespaces(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
@@ -106,7 +107,8 @@ func doOwnedNamespaces(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), namespaces)
+		oc := cmdutils.NewOutputContent().WithObject(namespaces)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }
