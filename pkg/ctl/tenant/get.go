@@ -62,6 +62,8 @@ func getTenantCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetTenant(vc)
 	}, "the tenant name is not specified or the tenant name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetTenant(vc *cmdutils.VerbCmd) error {
@@ -73,7 +75,8 @@ func doGetTenant(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Tenants().Get(vc.NameArg)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), data)
+		oc := cmdutils.NewOutputContent().WithObject(data)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }
