@@ -39,7 +39,7 @@ type Transport struct {
 }
 
 func GetAuthProvider(config *common.Config) (*Provider, error) {
-	var provider Provider = nil
+	var provider Provider
 	defaultTransport := getDefaultTransport(config)
 	var err error
 	switch config.AuthPlugin {
