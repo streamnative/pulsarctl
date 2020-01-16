@@ -1,4 +1,4 @@
-// Licensed to the Apache Software Foundation (ASF) under one
+// Licensed to the Apgolangci-lint run -c ./golangci.yml ./...ache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
 // regarding copyright ownership.  The ASF licenses this file
@@ -39,7 +39,7 @@ type Transport struct {
 }
 
 func GetAuthProvider(config *common.Config) (*Provider, error) {
-	var provider Provider
+	var provider Provider = nil
 	defaultTransport := getDefaultTransport(config)
 	var err error
 	switch config.AuthPlugin {
@@ -48,11 +48,12 @@ func GetAuthProvider(config *common.Config) (*Provider, error) {
 	case TokenPluginName:
 		provider, err = NewAuthenticationTokenFromAuthParams(config.AuthParams, defaultTransport)
 	default:
-		if len(config.TLSCertFile) > 0 && len(config.TLSKeyFile) > 0 {
+		switch {
+		case len(config.TLSCertFile) > 0 && len(config.TLSKeyFile) > 0:
 			provider, err = NewAuthenticationTLS(config.TLSCertFile, config.TLSKeyFile, defaultTransport)
-		} else if len(config.Token) > 0 {
+		case len(config.Token) > 0:
 			provider, err = NewAuthenticationToken(config.Token, defaultTransport)
-		} else if len(config.TokenFile) > 0 {
+		case len(config.TokenFile) > 0:
 			provider, err = NewAuthenticationTokenFromFile(config.TokenFile, defaultTransport)
 		}
 	}

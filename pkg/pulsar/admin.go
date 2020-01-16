@@ -18,6 +18,7 @@
 package pulsar
 
 import (
+	"fmt"
 	"net/http"
 	"path"
 
@@ -63,7 +64,7 @@ func New(config *common.Config) (Client, error) {
 	}
 
 	c := &pulsarClient{
-		APIVersion: config.PulsarApiVersion,
+		APIVersion: config.PulsarAPIVersion,
 		Client: &cli.Client{
 			ServiceURL:  config.WebServiceURL,
 			VersionInfo: ReleaseVersion,
@@ -75,7 +76,10 @@ func New(config *common.Config) (Client, error) {
 
 	authProvider, err := auth.GetAuthProvider(config)
 	if authProvider != nil {
+		fmt.Printf("Found Auth provider %T", authProvider)
 		c.Client.HTTPClient.Transport = *authProvider
+	} else {
+		fmt.Printf("No Auth Provider found")
 	}
 	return c, err
 }

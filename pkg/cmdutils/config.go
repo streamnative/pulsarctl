@@ -155,7 +155,7 @@ func (c *ClusterConfig) DecodeContext() *Config {
 }
 
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
-	c.PulsarApiVersion = version
+	c.PulsarAPIVersion = version
 
 	ctxConf := c.DecodeContext()
 	if ctxConf != nil {

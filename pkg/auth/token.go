@@ -55,14 +55,16 @@ func NewAuthenticationTokenFromFile(tokenFilePath string, transport http.RoundTr
 	return NewAuthenticationToken(token, transport)
 }
 
-func NewAuthenticationTokenFromAuthParams(encodedAuthParam string, transport http.RoundTripper) (*TokenAuthProvider, error) {
+func NewAuthenticationTokenFromAuthParams(encodedAuthParam string,
+	transport http.RoundTripper) (*TokenAuthProvider, error) {
 	var tokenAuthProvider *TokenAuthProvider
 	var err error
-	if strings.HasPrefix(encodedAuthParam, tokenPrefix) {
+	switch {
+	case strings.HasPrefix(encodedAuthParam, tokenPrefix):
 		tokenAuthProvider, err = NewAuthenticationToken(strings.TrimPrefix(encodedAuthParam, tokenPrefix), transport)
-	} else if strings.HasPrefix(encodedAuthParam, filePrefix) {
+	case strings.HasPrefix(encodedAuthParam, filePrefix):
 		tokenAuthProvider, err = NewAuthenticationTokenFromFile(strings.TrimPrefix(encodedAuthParam, filePrefix), transport)
-	} else {
+	default:
 		tokenAuthProvider, err = NewAuthenticationToken(encodedAuthParam, transport)
 	}
 	return tokenAuthProvider, err

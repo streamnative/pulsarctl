@@ -41,5 +41,5 @@ type Config struct {
 	// Token and TokenFile is used to config the pulsarctl using token to authentication
 	Token            string
 	TokenFile        string
-	PulsarApiVersion APIVersion
+	PulsarAPIVersion APIVersion
 }
