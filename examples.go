@@ -19,13 +19,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 // nolint
 func Examples() {
-	config := &pulsar.Config{
+	config := &common.Config{
 		WebServiceURL: "http://localhost:8080",
 
 		// If the server enable the TLSAuth
