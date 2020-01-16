@@ -22,13 +22,26 @@ import (
 	"os"
 
 	"github.com/streamnative/pulsarctl/pkg"
+	"github.com/streamnative/pulsarctl/pkg/plugin"
 )
 
 func main() {
 	rootCmd := pkg.NewPulsarctlCmd()
+	handler := plugin.NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err) // outputs cobra errors
-		os.Exit(-1)
+		err := plugin.HandlePluginCommand(handler, getArgs())
+		if err != nil {
+			fmt.Println(err) // outputs cobra errors
+			os.Exit(-1)
+		}
 	}
+}
+
+func getArgs() []string {
+	args := os.Args
+	if len(args) > 1 {
+		return args[1:]
+	}
+	return []string{}
 }
