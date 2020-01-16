@@ -18,14 +18,12 @@
 package pulsar
 
 import (
-	"net/http"
-	"path"
-	"strings"
-
 	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"net/http"
+	"path"
 )
 
 type TLSOptions struct {
@@ -58,13 +56,13 @@ type pulsarClient struct {
 }
 
 // New returns a new client
-func New(config *Config) (Client, error) {
+func New(config *common.Config) (Client, error) {
 	if len(config.WebServiceURL) == 0 {
 		config.WebServiceURL = DefaultWebServiceURL
 	}
 
 	c := &pulsarClient{
-		APIVersion: config.APIVersion,
+		APIVersion: config.PulsarApiVersion,
 		Client: &cli.Client{
 			ServiceURL:  config.WebServiceURL,
 			VersionInfo: ReleaseVersion,
@@ -74,52 +72,11 @@ func New(config *Config) (Client, error) {
 		},
 	}
 
-	err := c.initAuth(config)
-	if err != nil {
-		return nil, err
+	authProvider, err := auth.GetAuthProvider(config)
+	if authProvider != nil {
+		c.Client.HTTPClient.Transport = *authProvider
 	}
-
-	return c, nil
-}
-
-func (c *pulsarClient) initAuth(config *Config) error {
-	if strings.HasPrefix(config.WebServiceURL, "https") {
-		err := c.initTLS(config)
-		if err != nil {
-			return err
-		}
-	}
-
-	if config.TokenFile != "" || config.Token != "" {
-		c.initToken(config)
-	}
-
-	return nil
-}
-
-func (c *pulsarClient) initTLS(config *Config) error {
-	tlsAuth := auth.NewAuthenticationTLS(config.TLSCertFile, config.TLSKeyFile, config.TLSAllowInsecureConnection)
-	tlsConf, err := tlsAuth.GetTLSConfig(config.TLSCertFile, config.TLSAllowInsecureConnection)
-	if err != nil {
-		return err
-	}
-
-	c.Client.HTTPClient.Transport = &http.Transport{
-		MaxIdleConnsPerHost: 10,
-		TLSClientConfig:     tlsConf,
-	}
-
-	return nil
-}
-
-func (c *pulsarClient) initToken(config *Config) {
-	if config.Token != "" {
-		c.Client.AuthProvider = auth.NewAuthenticationToken(config.Token)
-	}
-
-	if config.TokenFile != "" {
-		c.Client.AuthProvider = auth.NewAuthenticationTokenFromFile(config.TokenFile)
-	}
+	return c, err
 }
 
 func (c *pulsarClient) endpoint(componentPath string, parts ...string) string {

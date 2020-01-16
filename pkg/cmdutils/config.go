@@ -18,37 +18,21 @@
 package cmdutils
 
 import (
-	"log"
-	"os"
-
+	"github.com/magiconair/properties"
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"log"
+	"os"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
 )
 
-var PulsarCtlConfig = ClusterConfig{}
+var PulsarCtlConfig = loadFromEnv()
 
 // the configuration of the cluster that pulsarctl connects to
-type ClusterConfig struct {
-	// the web service url that pulsarctl connects to. Default is http://localhost:8080
-	WebServiceURL string
-
-	// the bookkeeper service url that pulsarctl connects to.
-	BKWebServiceURL string
-	// Set the path to the trusted TLS certificate file
-	TLSTrustCertsFilePath string
-	// Configure whether the Pulsar client accept untrusted TLS certificate from broker (default: false)
-	TLSAllowInsecureConnection bool
-
-	AuthParams string
-
-	// Token and TokenFile is used to config the pulsarctl using token to authentication
-	Token     string
-	TokenFile string
-}
+type ClusterConfig common.Config
 
 func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet(
@@ -59,39 +43,67 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		&c.WebServiceURL,
 		"admin-service-url",
 		"s",
-		pulsar.DefaultWebServiceURL,
+		c.WebServiceURL,
 		"The admin web service url that pulsarctl connects to.")
+
+	flags.StringVar(
+		&c.AuthPlugin,
+		"auth-plugin",
+		c.AuthPlugin,
+		"AuthPlugin is used to specify the plugin to use for authentication,\n"+
+			" the supported values are \"org.apache.pulsar.client.impl.auth.AuthenticationTls\"\n"+
+			" and \"org.apache.pulsar.client.impl.auth.AuthenticationToken\"")
 
 	flags.StringVar(
 		&c.AuthParams,
 		"auth-params",
-		"",
-		"Authentication parameters are used to configure the public and private key files required by tls\n"+
-			" For example: \"tlsCertFile:val1,tlsKeyFile:val2\"")
+		c.AuthParams,
+		"Authentication parameters are used to configure the authentication provider specified by"+
+			" \"AuthPlugin\".\n"+
+			" Tls example: \"tlsCertFile:val1,tlsKeyFile:val2\"\n"+
+			" Token example: \"authParams=file:///path/to/token/file\" or \"authParams=token:tokenVal\"")
 
 	flags.BoolVar(
 		&c.TLSAllowInsecureConnection,
 		"tls-allow-insecure",
-		false,
+		c.TLSAllowInsecureConnection,
 		"Allow TLS insecure connection")
+
+	flags.BoolVar(
+		&c.TLSEnableHostnameVerification,
+		"tls-enable-hostname-verification",
+		c.TLSEnableHostnameVerification,
+		"Enable TLS hostname verification")
 
 	flags.StringVar(
 		&c.TLSTrustCertsFilePath,
-		"tls-trust-cert-pat",
-		"",
+		"tls-trust-cert-path",
+		c.TLSTrustCertsFilePath,
 		"Allow TLS trust cert file path")
 
 	flags.StringVar(
 		&c.Token,
 		"token",
-		"",
+		c.Token,
 		"Using the token to authentication")
 
 	flags.StringVar(
 		&c.TokenFile,
 		"token-file",
-		"",
+		c.TokenFile,
 		"Using the token file to authentication")
+
+	flags.StringVar(
+		&c.TLSCertFile,
+		"tls-cert-file",
+		c.TLSCertFile,
+		"File path for TLS cert used for authentication")
+
+	flags.StringVar(
+		&c.TLSKeyFile,
+		"tls-key-file",
+		c.TLSKeyFile,
+		"File path for TLS key used for authentication")
 
 	c.addBKFlags(flags)
 
@@ -108,18 +120,10 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 }
 
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
-	config := pulsar.DefaultConfig()
+	c.PulsarApiVersion = version
 
-	if len(c.WebServiceURL) > 0 && c.WebServiceURL != config.WebServiceURL {
-		config.WebServiceURL = c.WebServiceURL
-	}
-
-	if len(c.TLSTrustCertsFilePath) > 0 && c.TLSTrustCertsFilePath != config.TLSCertFile {
-		config.TLSCertFile = c.TLSTrustCertsFilePath
-	}
-
-	if c.TLSAllowInsecureConnection {
-		config.TLSAllowInsecureConnection = true
+	if len(c.WebServiceURL) == 0 {
+		c.WebServiceURL = pulsar.DefaultWebServiceURL
 	}
 
 	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
@@ -127,18 +131,17 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		os.Exit(1)
 	}
 
-	if len(c.Token) > 0 || len(c.TokenFile) > 0 {
-		if len(c.TLSTrustCertsFilePath) > 0 {
-			logger.Critical("the token and tls can not be specified at the same time")
-			os.Exit(1)
-		}
-		config.TokenFile = c.TokenFile
-		config.Token = c.Token
+	if len(c.TLSKeyFile) > 0 && len(c.TLSCertFile) == 0{
+		logger.Critical("tls-cert-file provided but tls-key-file missing. Both must be provided for TLS auth")
+		os.Exit(1)
+	}
+	if len(c.TLSCertFile) > 0 && len(c.TLSKeyFile) == 0{
+		logger.Critical("tls-key-file provided but tls-cert-file missing. Both must be provided for TLS auth")
+		os.Exit(1)
 	}
 
-	config.APIVersion = version
-
-	client, err := pulsar.New(config)
+	config := common.Config(*c)
+	client, err := pulsar.New(&config)
 	if err != nil {
 		log.Fatalf("create pulsar client error: %s", err.Error())
 	}
@@ -157,4 +160,20 @@ func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	}
 
 	return bk
+}
+
+func loadFromEnv() *ClusterConfig {
+	config := ClusterConfig{}
+	if envConf, ok := os.LookupEnv("PULSAR_CLIENT_CONF"); ok {
+		if props, err := properties.LoadFile(envConf, properties.UTF8); err == nil && props != nil {
+			config.WebServiceURL = props.GetString("webServiceUrl", pulsar.DefaultWebServiceURL)
+			config.TLSAllowInsecureConnection = props.GetBool("tlsAllowInsecureConnection", false)
+			config.TLSTrustCertsFilePath = props.GetString("tlsTrustCertsFilePath", "")
+			config.BKWebServiceURL = props.GetString("brokerServiceUrl", bookkeeper.DefaultWebServiceURL)
+			config.AuthParams = props.GetString("authParams", "")
+			config.AuthPlugin = props.GetString("authPlugin", "")
+			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
+		}
+	}
+	return &config
 }
