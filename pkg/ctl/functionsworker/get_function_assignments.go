@@ -54,6 +54,8 @@ func getFunctionAssignments(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetFunctionAssignments(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetFunctionAssignments(vc *cmdutils.VerbCmd) error {
@@ -62,7 +64,8 @@ func doGetFunctionAssignments(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), fnStats)
+		oc := cmdutils.NewOutputContent().WithObject(fnStats)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

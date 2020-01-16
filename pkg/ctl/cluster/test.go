@@ -104,7 +104,7 @@ func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes
 		"--auth-params",
 		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
 			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
-		"--tls-trust-cert-pat", basePath + "/test/auth/certs/cacert.pem",
+		"--tls-trust-cert-path", basePath + "/test/auth/certs/cacert.pem",
 		"--admin-service-url", "https://localhost:8443",
 		"--tls-allow-insecure"}
 

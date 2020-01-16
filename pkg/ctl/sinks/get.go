@@ -110,6 +110,7 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink's name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
@@ -124,7 +125,8 @@ func doGetSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkConfig)
+		oc := cmdutils.NewOutputContent().WithObject(sinkConfig)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

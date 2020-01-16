@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getTopics(vc *cmdutils.VerbCmd) {
@@ -76,19 +77,31 @@ func getTopics(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListTopics(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {
 	tenantAndNamespace := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Topics Name"})
-		for _, topic := range listTopics {
-			table.Append([]string{topic})
-		}
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(listTopics).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Topics Name"})
+			for _, topic := range listTopics {
+				table.Append([]string{topic})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

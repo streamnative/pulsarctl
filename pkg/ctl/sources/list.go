@@ -18,12 +18,13 @@
 package sources
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func listSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -84,6 +85,7 @@ func listSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source's namespace")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
@@ -93,15 +95,23 @@ func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Pulsar Sources Name"})
-
-		for _, f := range sources {
-			table.Append([]string{f})
-		}
-
-		table.Render()
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(sources).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Pulsar Sources Name"})
+
+			for _, f := range sources {
+				table.Append([]string{f})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

@@ -18,12 +18,13 @@
 package functions
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func listFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -84,6 +85,7 @@ func listFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The namespace of a Pulsar Function")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
@@ -93,15 +95,23 @@ func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	functions, err := admin.Functions().GetFunctions(funcData.Tenant, funcData.Namespace)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Pulsar Function Name"})
-
-		for _, f := range functions {
-			table.Append([]string{f})
-		}
-
-		table.Render()
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(functions).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Pulsar Function Name"})
+
+			for _, f := range functions {
+				table.Append([]string{f})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

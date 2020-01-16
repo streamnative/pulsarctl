@@ -18,9 +18,10 @@
 package cluster
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
@@ -61,6 +62,8 @@ func getPeerClustersCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPeerClusters(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetPeerClusters(vc *cmdutils.VerbCmd) error {
@@ -68,15 +71,25 @@ func doGetPeerClusters(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	peerClusters, err := admin.Clusters().GetPeerClusters(clusterName)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Peer clusters"})
-
-		for _, c := range peerClusters {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(peerClusters).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Peer clusters"})
+
+			for _, c := range peerClusters {
+				table.Append([]string{c})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

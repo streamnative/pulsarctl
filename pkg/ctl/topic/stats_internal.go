@@ -99,6 +99,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetInternalStats(vc *cmdutils.VerbCmd, partition int) error {
@@ -122,7 +123,8 @@ func doGetInternalStats(vc *cmdutils.VerbCmd, partition int) error {
 	admin := cmdutils.NewPulsarClient()
 	stats, err := admin.Topics().GetInternalStats(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), stats)
+		oc := cmdutils.NewOutputContent().WithObject(stats)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

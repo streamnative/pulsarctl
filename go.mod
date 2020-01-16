@@ -3,11 +3,12 @@ module github.com/streamnative/pulsarctl
 go 1.12
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0 // indirect
-	github.com/golang/protobuf v1.3.1
-	github.com/google/go-cmp v0.3.1 // indirect
+	github.com/ghodss/yaml v1.0.0
+	github.com/golang/protobuf v1.3.2
+	github.com/imdario/mergo v0.3.8
 	github.com/kris-nova/logger v0.0.0-20181127235838-fd0d87064b06
 	github.com/kris-nova/lolgopher v0.0.0-20180921204813-313b3abb0d9b // indirect
 	github.com/magiconair/properties v1.8.0
@@ -16,8 +17,10 @@ require (
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v0.0.5
-	github.com/spf13/pflag v1.0.3
-	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/stretchr/testify v1.3.0
-	gopkg.in/yaml.v2 v2.2.2
+	github.com/spf13/pflag v1.0.5
+	github.com/stretchr/testify v1.4.0
+	github.com/testcontainers/testcontainers-go v0.0.10
+	golang.org/x/sys v0.0.0-20190826190057-c7b8b68b1456 // indirect
+	golang.org/x/tools v0.0.0-20200114191411-189207f339b7 // indirect
+	gopkg.in/yaml.v2 v2.2.4
 )

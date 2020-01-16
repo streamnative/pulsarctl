@@ -20,6 +20,7 @@ package cmdutils
 import (
 	"fmt"
 	"strings"
+	"text/tabwriter"
 	"unicode"
 
 	"github.com/spf13/cobra"
@@ -91,9 +92,13 @@ func (g *FlagGrouping) Usage(cmd *cobra.Command) error {
 
 	if cmd.HasAvailableSubCommands() {
 		usage = append(usage, "\nCommands:")
+		buf := strings.Builder{}
+		w := tabwriter.NewWriter(&buf, 10, 0, 3, ' ', 0)
 		for _, subCommand := range cmd.Commands() {
-			usage = append(usage, fmt.Sprintf("  %-10s  %s", subCommand.Name(), subCommand.Short))
+			_, _ = fmt.Fprintf(w, "  %s\t%s\n", subCommand.Name(), subCommand.Short)
 		}
+		_ = w.Flush()
+		usage = append(usage, strings.Split(strings.TrimRight(buf.String(), "\n"), "\n")...)
 	}
 
 	if cmd.HasExample() {

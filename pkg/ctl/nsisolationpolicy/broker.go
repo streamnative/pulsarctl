@@ -74,6 +74,8 @@ func getBrokerWithPolicies(vc *cmdutils.VerbCmd) {
 		}
 		return nil
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetBrokerWithPolicies(vc *cmdutils.VerbCmd) error {
@@ -85,7 +87,8 @@ func doGetBrokerWithPolicies(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), nsIsolationData)
+		oc := cmdutils.NewOutputContent().WithObject(nsIsolationData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

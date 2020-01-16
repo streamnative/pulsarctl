@@ -18,11 +18,11 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func ListTopicsCmd(vc *cmdutils.VerbCmd) {
@@ -64,6 +64,8 @@ func ListTopicsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListTopics(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doListTopics(vc *cmdutils.VerbCmd) error {
@@ -79,19 +81,33 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	partitionedTopics, nonPartitionedTopics, err := admin.Topics().List(*namespace)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"topic name", "partitioned ?"})
-
-		for _, v := range partitionedTopics {
-			table.Append([]string{v, "Y"})
-		}
-
-		for _, v := range nonPartitionedTopics {
-			table.Append([]string{v, "N"})
-		}
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
 
+	oc := cmdutils.NewOutputContent().
+		WithObject(listOutput{partitionedTopics, nonPartitionedTopics}).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"topic name", "partitioned ?"})
+
+			for _, v := range partitionedTopics {
+				table.Append([]string{v, "Y"})
+			}
+
+			for _, v := range nonPartitionedTopics {
+				table.Append([]string{v, "N"})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
+}
+
+type listOutput struct {
+	PartitionedTopics    []string `json:"partitionedTopics"`
+	NonPartitionedTopics []string `json:"nonPartitionedTopics"`
 }

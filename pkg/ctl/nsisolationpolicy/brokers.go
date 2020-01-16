@@ -74,6 +74,8 @@ func getAllBrokersWithPolicies(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetAllBrokersWithPolicies(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetAllBrokersWithPolicies(vc *cmdutils.VerbCmd) error {
@@ -84,7 +86,8 @@ func doGetAllBrokersWithPolicies(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), nsIsolationData)
+		oc := cmdutils.NewOutputContent().WithObject(nsIsolationData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

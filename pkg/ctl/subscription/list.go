@@ -18,11 +18,11 @@
 package subscription
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 var o = `+----------------------+
@@ -63,6 +63,8 @@ func ListCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doList(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doList(vc *cmdutils.VerbCmd) error {
@@ -78,14 +80,23 @@ func doList(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	r, err := admin.Subscriptions().List(*topic)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Subscriptions"})
-		for _, v := range r {
-			table.Append([]string{v})
-		}
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(r).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Subscriptions"})
+			for _, v := range r {
+				table.Append([]string{v})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
 	return err
 }

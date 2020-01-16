@@ -31,24 +31,36 @@ A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project
 
 | Version | Reference |
 | --------| --------- |
-| [0.1.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.1.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) |
 | [0.2.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.2.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.2.0/) |
+| [0.1.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.1.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.1.0/) |
 
 ## Install
 
-#### Install pulsarctl binary with curl on Linux or macOS
+#### Mac
+
+You can install `pulsarctl` using [homebrew](https://brew.sh/) on Mac.
+
+
+```bash
+brew tap streamnative/streamnative
+```
+```bash
+brew install pulsarctl
+```
+
+#### Linux
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/streamnative/pulsarctl/master/install.sh)"
 ```
 
-#### Install pulsarctl binary on Windows
+#### Windows
 
 1. Download the executable from https://github.com/streamnative/pulsarctl/releases. 
 2. Add the pulsarctl directory to your system PATH.
 3. Type `pulsarctl -h` at CMD to test pulsarctl is work.
 
-## Install by code
+## Build from code
 
 ### Prerequisite
 

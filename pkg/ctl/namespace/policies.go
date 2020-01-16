@@ -128,6 +128,8 @@ func getPolicies(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPolicies(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetPolicies(vc *cmdutils.VerbCmd) error {
@@ -135,7 +137,8 @@ func doGetPolicies(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	policies, err := admin.Namespaces().GetPolicies(namespace)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), policies)
+		oc := cmdutils.NewOutputContent().WithObject(policies)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

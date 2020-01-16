@@ -95,6 +95,8 @@ func GetInternalInfoCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetInternalInfo(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetInternalInfo(vc *cmdutils.VerbCmd) error {
@@ -111,7 +113,8 @@ func doGetInternalInfo(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	info, err := admin.Topics().GetInternalInfo(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), info)
+		oc := cmdutils.NewOutputContent().WithObject(info)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

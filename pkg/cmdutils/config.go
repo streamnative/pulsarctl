@@ -18,12 +18,17 @@
 package cmdutils
 
 import (
+	"fmt"
 	"github.com/magiconair/properties"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
+	"os"
+
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"log"
-	"os"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/pflag"
@@ -119,8 +124,52 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	)
 }
 
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	}
+	return true
+}
+
+func (c *ClusterConfig) DecodeContext() *Config {
+	cfg := NewConfig()
+
+	defaultPath := fmt.Sprintf("%s/.config/pulsar/config", utils.HomeDir())
+	if !Exists(defaultPath) {
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(defaultPath)
+	if err != nil {
+		return nil
+	}
+
+	err = yaml.Unmarshal(content, &cfg)
+	if err != nil {
+		return nil
+	}
+
+	return cfg
+}
+
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	c.PulsarApiVersion = version
+
+	ctxConf := c.DecodeContext()
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+
+			c.WebServiceURL = ctx.BrokerServiceURL
+
+			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
+			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
+			c.Token = auth.Token
+			c.TokenFile = auth.TokenFile
+		}
+	}
 
 	if len(c.WebServiceURL) == 0 {
 		c.WebServiceURL = pulsar.DefaultWebServiceURL
@@ -150,6 +199,15 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
+	ctxConf := c.DecodeContext()
+
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			c.BKWebServiceURL = ctx.BookieServiceURL
+		}
+	}
+
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
 	}
