@@ -83,6 +83,7 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	context, authInfo := o.modifyContextConf(*startingStanza, *startingAuth)
 	config.Contexts[name] = &context
 	config.AuthInfos[name] = &authInfo
+	config.CurrentContext = name
 
 	if err := internal.ModifyConfig(o.access, *config, true); err != nil {
 		return err
