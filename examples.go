@@ -19,9 +19,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 // nolint

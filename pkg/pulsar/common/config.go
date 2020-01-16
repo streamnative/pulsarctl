@@ -36,10 +36,10 @@ type Config struct {
 
 	// TLS Cert and Key Files for authentication
 	TLSCertFile string
-	TLSKeyFile string
+	TLSKeyFile  string
 
 	// Token and TokenFile is used to config the pulsarctl using token to authentication
-	Token     string
-	TokenFile string
+	Token            string
+	TokenFile        string
 	PulsarApiVersion APIVersion
 }

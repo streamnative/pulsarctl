@@ -19,12 +19,13 @@ package cmdutils
 
 import (
 	"fmt"
-	"github.com/magiconair/properties"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/magiconair/properties"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"gopkg.in/yaml.v2"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -180,11 +181,11 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		os.Exit(1)
 	}
 
-	if len(c.TLSKeyFile) > 0 && len(c.TLSCertFile) == 0{
+	if len(c.TLSKeyFile) > 0 && len(c.TLSCertFile) == 0 {
 		logger.Critical("tls-cert-file provided but tls-key-file missing. Both must be provided for TLS auth")
 		os.Exit(1)
 	}
-	if len(c.TLSCertFile) > 0 && len(c.TLSKeyFile) == 0{
+	if len(c.TLSCertFile) > 0 && len(c.TLSKeyFile) == 0 {
 		logger.Critical("tls-key-file provided but tls-cert-file missing. Both must be provided for TLS auth")
 		os.Exit(1)
 	}

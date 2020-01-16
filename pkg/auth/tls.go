@@ -35,10 +35,10 @@ type TLSAuthProvider struct {
 
 // NewAuthenticationTLS initialize the authentication provider
 func NewAuthenticationTLS(certificatePath string, privateKeyPath string, transport http.RoundTripper) (*TLSAuthProvider, error) {
-	provider :=  &TLSAuthProvider{
-		certificatePath:         certificatePath,
-		privateKeyPath:          privateKeyPath,
-		T: transport,
+	provider := &TLSAuthProvider{
+		certificatePath: certificatePath,
+		privateKeyPath:  privateKeyPath,
+		T:               transport,
 	}
 	if err := provider.configTLS(); err != nil {
 		return nil, err
@@ -46,10 +46,10 @@ func NewAuthenticationTLS(certificatePath string, privateKeyPath string, transpo
 	return provider, nil
 }
 
-func NewAuthenticationTLSFromAuthParams(encodedAuthParams string, transport http.RoundTripper) (*TLSAuthProvider, error){
+func NewAuthenticationTLSFromAuthParams(encodedAuthParams string, transport http.RoundTripper) (*TLSAuthProvider, error) {
 	var certificatePath string
 	var privateKeyPath string
-	parts  := strings.Split(encodedAuthParams, ",")
+	parts := strings.Split(encodedAuthParams, ",")
 	for _, part := range parts {
 		kv := strings.Split(part, ":")
 		switch kv[0] {
@@ -75,7 +75,7 @@ func (p *TLSAuthProvider) Transport() http.RoundTripper {
 	return p.T
 }
 
-func (p *TLSAuthProvider) configTLS() error{
+func (p *TLSAuthProvider) configTLS() error {
 	cert, err := p.GetTLSCertificate()
 	if err != nil {
 		return err

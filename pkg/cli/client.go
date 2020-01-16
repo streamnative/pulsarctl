@@ -29,9 +29,9 @@ import (
 
 // Client is a base client that is used to make http request to the ServiceURL
 type Client struct {
-	ServiceURL   string
-	HTTPClient   *http.Client
-	VersionInfo  string
+	ServiceURL  string
+	HTTPClient  *http.Client
+	VersionInfo string
 }
 
 func (c *Client) newRequest(method, path string) (*request, error) {

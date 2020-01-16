@@ -21,16 +21,17 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 // Provider provide a general method to add auth message
 type Provider interface {
-  RoundTrip(req *http.Request) (*http.Response, error)
-  Transport() http.RoundTripper
+	RoundTrip(req *http.Request) (*http.Response, error)
+	Transport() http.RoundTripper
 }
 
 type Transport struct {
@@ -52,7 +53,7 @@ func GetAuthProvider(config *common.Config) (*Provider, error) {
 		} else if len(config.Token) > 0 {
 			provider, err = NewAuthenticationToken(config.Token, defaultTransport)
 		} else if len(config.TokenFile) > 0 {
-			provider, err = NewAuthenticationTokenFromFile(config.TokenFile,defaultTransport)
+			provider, err = NewAuthenticationTokenFromFile(config.TokenFile, defaultTransport)
 		}
 	}
 	return &provider, err

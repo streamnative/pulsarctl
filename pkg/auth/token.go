@@ -33,7 +33,7 @@ const (
 )
 
 type TokenAuthProvider struct {
-	T http.RoundTripper
+	T     http.RoundTripper
 	token string
 }
 
@@ -55,7 +55,6 @@ func NewAuthenticationTokenFromFile(tokenFilePath string, transport http.RoundTr
 	return NewAuthenticationToken(token, transport)
 }
 
-
 func NewAuthenticationTokenFromAuthParams(encodedAuthParam string, transport http.RoundTripper) (*TokenAuthProvider, error) {
 	var tokenAuthProvider *TokenAuthProvider
 	var err error
@@ -74,8 +73,6 @@ func (p *TokenAuthProvider) RoundTrip(req *http.Request) (*http.Response, error)
 	return p.T.RoundTrip(req)
 }
 
-func (p *TokenAuthProvider) Transport() http.RoundTripper{
+func (p *TokenAuthProvider) Transport() http.RoundTripper {
 	return p.T
 }
-
-

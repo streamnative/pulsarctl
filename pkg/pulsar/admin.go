@@ -18,12 +18,13 @@
 package pulsar
 
 import (
+	"net/http"
+	"path"
+
 	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"net/http"
-	"path"
 )
 
 type TLSOptions struct {
