@@ -279,7 +279,8 @@ After finishing the steps above, add the relevant command group in `main.go`.
 
 ### Write a test
 
-To simplify testing, pulsarctl intercepts the error information. By default, when an error is triggered, the program calls `os.Exit(1)` to release process resource.
+To simplify testing, pulsarctl intercepts the error information. By default, when an error is triggered, 
+the program calls `os.Exit(1)` to release process resource.
 You can specify an output location for an error when writing a test as follows:
 
 ```
@@ -291,3 +292,52 @@ cmdutils.ExecErrorHandler = func(err error) {
 
 When writing a test case, you need to mock a test runner. If the test needs to use an associated function, 
 name the file as `test_help.go` and write relevant code in this file.
+
+## Implementing Output Formats
+The tool has a built-in framework for producing various output formats for a given command.
+
+### Output Configuration
+The output configuration (`cmdutils.OutputConfig`) defines possible output formats to be used by a command.
+The available output formats are `text`, `json`, and `yaml`.  The default output format is `text`.
+
+A flagset is defined for the output configuration, as seen in the help text for commands which support it:
+```
+Output flags:
+  -o, --output string   The output format (text,json,yaml) (default "text")
+``` 
+
+### Writing a command with output format support
+A command may opt-in to output formatting during the initialization stage of a `VerbCmd`.  Most commands
+set a description, "run" function to be executed, and optionally define a flagset.  To enable the output flagset, 
+do this last:
+```
+vc.EnableOutputFlagSet()
+```
+
+### Writing Output
+When a command is ready to emit output, it calls `vc.OutputConfig.WriteOutput(...)` (where `vc` is 
+the `VerbCmd` associated with the command).
+
+The principle of output formatting is that the command _negotiates_ with the framework to supply the type of 
+output that the user requested.  The core interface is `cmdutils.OutputNegotiable`, which yields 
+a `cmdutils.OutputWritable` for the requested format (`text`,`json`,`yaml`).  The `OutputWritable` then emits 
+the content to the given `io.Writer` (i.e. to `stdout`).
+
+Since most of the relevant commands work with Go structs containing JSON tags, the framework makes it easy to 
+use Go structs to provide both a JSON and YAML representation, and to serve as the default text representation. 
+Meanwhile the framework makes it easy to develop a prettier text representation, such as a table layout.
+
+These conveniences are provided with a built-in implementation of `cmdutils.OutputNegotiable` called `cmdutils.OutputContent`.
+The `OutputContent` type implements the JSON and YAML formats using standard Go marshaling, and provides 
+a convenient way to generate a text representation using a format string (see `WithText`) or using a function 
+(see `WithTextFunc`).
+
+### Caveats
+Note that some commands emit JSON text for both the `text` and the `json` format.  Users should specify `-o json` for 
+scripting purposes, because a given command's `text` representation may change at any time.
+
+### Examples
+Some commands which make non-trivial use of the output format framework:
+- [`pulsarctl clusters list`](../../pkg/ctl/cluster/list.go) # uses `TextFunc` to produce a table representation
+- [`pulsarctl schemas get`](../../pkg/ctl/schemas/get.go) # uses `TextFunc` to produce a text representation
+- [`pulsarctl topic bundle-range`](../../pkg/ctl/topic/bundle_range.go) # uses `Text` with format strings
