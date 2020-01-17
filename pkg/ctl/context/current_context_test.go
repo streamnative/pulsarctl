@@ -27,8 +27,8 @@ func TestCurrentContextCmd(t *testing.T) {
 	currentArgs := []string{"current"}
 	out, execErr, err := TestConfigCommands(currentContextCmd, currentArgs)
 	assert.Nil(t, err)
-	assert.Equal(t, "test-set-context\n", out.String())
-	assert.Nil(t, execErr)
+	assert.Equal(t, "", out.String())
+	assert.Equal(t, "current-context is not set", execErr.Error())
 
 	setArgs := []string{"set", "test-current-context"}
 	out, execErr, err = TestConfigCommands(setContextCmd, setArgs)

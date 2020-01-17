@@ -19,6 +19,7 @@ package context
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -28,6 +29,7 @@ import (
 func TestDeleteContextCmd(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
+	defer os.Remove(path)
 
 	delArgs := []string{"delete", "test-delete-context"}
 	out, execErr, err := TestConfigCommands(deleteContextCmd, delArgs)
