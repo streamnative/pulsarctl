@@ -42,6 +42,8 @@ func TestSetContextCmd(t *testing.T) {
 	out, execErr, err := TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
+	warnOut := "warning: this removed your active context, " +
+		"use \"pulsarctl context use\" to select a different one\n"
 	expectedOut := fmt.Sprintf("deleted context test-set-context from %s\n", path)
-	assert.Equal(t, expectedOut, out.String())
+	assert.Equal(t, warnOut+expectedOut, out.String())
 }
