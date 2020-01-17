@@ -19,6 +19,7 @@ package context
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -28,6 +29,7 @@ import (
 func TestRenameContextCmd(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
+	defer os.Remove(path)
 
 	renameArgs := []string{"rename", "test-old-context", "test-new-context"}
 	out, execErr, err := TestConfigCommands(renameContextCmd, renameArgs)
@@ -52,6 +54,8 @@ func TestRenameContextCmd(t *testing.T) {
 	out, execErr, err = TestConfigCommands(deleteContextCmd, delArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
+	warnOut := "warning: this removed your active context, " +
+		"use \"pulsarctl context use\" to select a different one\n"
 	expectedOut := fmt.Sprintf("deleted context test-new-context from %s\n", path)
-	assert.Equal(t, expectedOut, out.String())
+	assert.Equal(t, warnOut+expectedOut, out.String())
 }
