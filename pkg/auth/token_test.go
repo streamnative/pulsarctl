@@ -41,6 +41,7 @@ func TestUseToken(t *testing.T) {
 	execErr, err := BaseCmd(cluster.ListClustersCmd, args)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
+	cmdutils.PulsarCtlConfig = &cmdutils.ClusterConfig{} // Clear the config
 
 	args = []string{
 		"clusters",
