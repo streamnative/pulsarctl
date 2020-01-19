@@ -60,7 +60,7 @@ func getFunctionAssignments(vc *cmdutils.VerbCmd) {
 
 func doGetFunctionAssignments(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
-	fnStats, err := admin.FunctionsWorker().GetFunctionsStats()
+	fnStats, err := admin.FunctionsWorker().GetAssignments()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
