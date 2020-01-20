@@ -75,10 +75,10 @@ func New(config *common.Config) (Client, error) {
 	}
 
 	authProvider, err := auth.GetAuthProvider(config)
-	if authProvider != nil {
+	if !utils.IsNilFixed(authProvider) {
 		c.Client.HTTPClient.Transport = *authProvider
 	} else {
-		fmt.Printf("No Auth Provider found")
+		fmt.Printf("No Auth Provider found\n")
 	}
 	return c, err
 }
