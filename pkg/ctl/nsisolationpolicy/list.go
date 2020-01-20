@@ -75,6 +75,8 @@ func getNsIsolationPolicies(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetNsIsolationPolicies(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetNsIsolationPolicies(vc *cmdutils.VerbCmd) error {
@@ -85,7 +87,8 @@ func doGetNsIsolationPolicies(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), nsIsolationData)
+		oc := cmdutils.NewOutputContent().WithObject(nsIsolationData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

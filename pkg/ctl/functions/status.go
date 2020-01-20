@@ -143,6 +143,7 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The function instanceId (Get-status of all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
@@ -161,14 +162,24 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error 
 			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionInstanceStatusData)
+		oc := cmdutils.NewOutputContent().WithObject(functionInstanceStatusData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	} else {
 		functionStatus, err := admin.Functions().GetFunctionStatus(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionStatus)
+		oc := cmdutils.NewOutputContent().WithObject(functionStatus)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err

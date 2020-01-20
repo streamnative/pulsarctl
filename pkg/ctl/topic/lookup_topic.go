@@ -62,6 +62,8 @@ func LookUpTopicCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doLookupTopic(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doLookupTopic(vc *cmdutils.VerbCmd) error {
@@ -78,7 +80,8 @@ func doLookupTopic(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	lookup, err := admin.Topics().Lookup(*topic)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), lookup)
+		oc := cmdutils.NewOutputContent().WithObject(lookup)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 	return err
 }

@@ -19,6 +19,7 @@ package brokers
 
 import (
 	"errors"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -61,6 +62,8 @@ func getBrokerListCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListCluster(vc)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doListCluster(vc *cmdutils.VerbCmd) error {
@@ -73,15 +76,23 @@ func doListCluster(vc *cmdutils.VerbCmd) error {
 	brokersData, err := admin.Brokers().GetActiveBrokers(clusterName)
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Brokers List"})
-
-		for _, c := range brokersData {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(brokersData).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Brokers List"})
+
+			for _, c := range brokersData {
+				table.Append([]string{c})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

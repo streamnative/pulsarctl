@@ -18,6 +18,8 @@
 package brokers
 
 import (
+	"io"
+
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -57,6 +59,8 @@ func getDynamicConfigListNameCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetDynamicConfigListName(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetDynamicConfigListName(vc *cmdutils.VerbCmd) error {
@@ -64,15 +68,23 @@ func doGetDynamicConfigListName(vc *cmdutils.VerbCmd) error {
 	nameListData, err := admin.Brokers().GetDynamicConfigurationNames()
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Dynamic Config Names"})
-
-		for _, c := range nameListData {
-			table.Append([]string{c})
-		}
-
-		table.Render()
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(nameListData).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Dynamic Config Names"})
+
+			for _, c := range nameListData {
+				table.Append([]string{c})
+			}
+
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

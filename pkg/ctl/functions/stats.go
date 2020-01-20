@@ -172,6 +172,7 @@ func statsFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The function instanceId (Get-stats of all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStatsFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
@@ -190,15 +191,24 @@ func doStatsFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionInstanceStatsData)
+		oc := cmdutils.NewOutputContent().WithObject(functionInstanceStatsData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	} else {
 		functionStats, err := admin.Functions().GetFunctionStats(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), functionStats)
+		oc := cmdutils.NewOutputContent().WithObject(functionStats)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err

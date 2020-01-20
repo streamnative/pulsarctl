@@ -60,6 +60,8 @@ func getCluster(vc *cmdutils.VerbCmd) {
 	vc.SetRunFunc(func() error {
 		return doGetCluster(vc)
 	})
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetCluster(vc *cmdutils.VerbCmd) error {
@@ -68,7 +70,8 @@ func doGetCluster(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 	} else {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), workersInfo)
+		oc := cmdutils.NewOutputContent().WithObject(workersInfo)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

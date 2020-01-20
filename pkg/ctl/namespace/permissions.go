@@ -58,6 +58,8 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetPermissions(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doGetPermissions(vc *cmdutils.VerbCmd) error {
@@ -74,7 +76,8 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Namespaces().GetNamespacePermissions(*ns)
 	if err == nil {
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), data)
+		oc := cmdutils.NewOutputContent().WithObject(data)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
 
 	return err

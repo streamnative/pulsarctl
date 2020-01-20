@@ -18,9 +18,12 @@
 package bkctl
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsarctl/pkg/bkctl/autorecovery"
+	"github.com/streamnative/pulsarctl/pkg/bkctl/bookie"
 	"github.com/streamnative/pulsarctl/pkg/bkctl/ledger"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+
+	"github.com/spf13/cobra"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -31,7 +34,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"bk",
 	)
 
+	resourceCmd.AddCommand(bookie.Command(flagGrouping))
 	resourceCmd.AddCommand(ledger.Command(flagGrouping))
+	resourceCmd.AddCommand(autorecovery.Command(flagGrouping))
 
 	return resourceCmd
 }

@@ -120,6 +120,7 @@ func statusSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink instanceId (stop all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStatusSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
@@ -138,14 +139,24 @@ func doStatusSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 			sinkData.Tenant, sinkData.Namespace, sinkData.Name, instanceID)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkInstanceStatusData)
+		oc := cmdutils.NewOutputContent().WithObject(sinkInstanceStatusData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	} else {
 		sinkStatus, err := admin.Sinks().GetSinkStatus(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+			return nil
 		}
-		cmdutils.PrintJSON(vc.Command.OutOrStdout(), sinkStatus)
+		oc := cmdutils.NewOutputContent().WithObject(sinkStatus)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err

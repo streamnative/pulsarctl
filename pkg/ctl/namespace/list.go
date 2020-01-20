@@ -18,9 +18,10 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
@@ -73,19 +74,31 @@ func getNamespacesFromTenant(vc *cmdutils.VerbCmd) {
 	vc.SetRunFuncWithNameArg(func() error {
 		return doListNamespaces(vc)
 	}, "the tenant name is not specified or the tenant name is specified more than one")
+
+	vc.EnableOutputFlagSet()
 }
 
 func doListNamespaces(vc *cmdutils.VerbCmd) error {
 	tenant := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	listNamespaces, err := admin.Namespaces().GetNamespaces(tenant)
-	if err == nil {
-		table := tablewriter.NewWriter(vc.Command.OutOrStdout())
-		table.SetHeader([]string{"Namespace Name"})
-		for _, ns := range listNamespaces {
-			table.Append([]string{ns})
-		}
-		table.Render()
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+		return err
 	}
+
+	oc := cmdutils.NewOutputContent().
+		WithObject(listNamespaces).
+		WithTextFunc(func(w io.Writer) error {
+			table := tablewriter.NewWriter(w)
+			table.SetHeader([]string{"Namespace Name"})
+			for _, ns := range listNamespaces {
+				table.Append([]string{ns})
+			}
+			table.Render()
+			return nil
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
 	return err
 }

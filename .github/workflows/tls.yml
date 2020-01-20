@@ -1,5 +1,12 @@
 name: Pulsarctl Security TLS Check
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+    path-ignores:
+      - 'docs/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
 jobs:
 
   tls-build:

@@ -18,14 +18,14 @@
 package topic
 
 import (
+	"fmt"
+	"io"
 	"time"
-
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func StatusCmd(vc *cmdutils.VerbCmd) {
@@ -91,6 +91,7 @@ func StatusCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCompactStatus(vc *cmdutils.VerbCmd, wait bool, partition int) error {
@@ -129,16 +130,23 @@ func doCompactStatus(vc *cmdutils.VerbCmd, wait bool, partition int) error {
 		}
 	}
 
-	switch status.Status {
-	case utils.NOTRUN:
-		vc.Command.Printf("Compacting the topic %s is not running\n", topic.String())
-	case utils.RUNNING:
-		vc.Command.Printf("Compacting the topic %s is running\n", topic.String())
-	case utils.SUCCESS:
-		vc.Command.Printf("Compacting the topic %s is done successfully\n", topic.String())
-	case utils.ERROR:
-		vc.Command.Printf("Compacting the topic %s is done with error %s\n", topic.String(), status.LastError)
-	}
+	oc := cmdutils.NewOutputContent().
+		WithObject(status).
+		WithTextFunc(func(w io.Writer) error {
+			var err error
+			switch status.Status {
+			case utils.NOTRUN:
+				_, err = fmt.Fprintf(w, "Compacting the topic %s is not running\n", topic.String())
+			case utils.RUNNING:
+				_, err = fmt.Fprintf(w, "Compacting the topic %s is running\n", topic.String())
+			case utils.SUCCESS:
+				_, err = fmt.Fprintf(w, "Compacting the topic %s is done successfully\n", topic.String())
+			case utils.ERROR:
+				_, err = fmt.Fprintf(w, "Compacting the topic %s is done with error %s\n", topic.String(), status.LastError)
+			}
+			return err
+		})
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
 	return err
 }
