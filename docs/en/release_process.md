@@ -11,7 +11,8 @@ The steps for releasing are as follows:
 3. Push the release
 4. Write a release note
 5. Check the release
-6. Announce the release
+6. Update the homebrew formula
+7. Announce the release
 
 ## Steps in detail
 
@@ -88,7 +89,13 @@ to install the Pulsarctl and make sure the version of the downloaded Pulsarctl i
 
 (4) Close the previous milestone.
 
-6. Announce the release
+6. Update the homebrew formula
+
+Create a pull request to the [homebrew-streamnatve](https://github.com/streamnative/homebrew-streamnative) 
+for updating the `tag` and `revision` in the 
+[pulsarctl formula](https://github.com/streamnative/homebrew-streamnative/blob/master/Formula/pulsarctl.rb).
+
+7. Announce the release
 
 After publishing and checking the release, work with Growth team
 to announce that a new version of Pulsarctl is released.
