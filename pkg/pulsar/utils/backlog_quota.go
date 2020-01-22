@@ -47,8 +47,6 @@ func ParseRetentionPolicy(str string) (RetentionPolicy, error) {
 	switch str {
 	case ProducerException.String():
 		return ProducerException, nil
-	case ProducerException.String():
-		return ProducerException, nil
 	case ConsumerBacklogEviction.String():
 		return ConsumerBacklogEviction, nil
 	default:
