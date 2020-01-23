@@ -19,14 +19,14 @@ package common
 
 type AuthPolicies struct {
 	NamespaceAuth         map[string][]AuthAction          `json:"namespace_auth"`
-	DestinationAuth       map[string]map[string]AuthAction `json:"destination_auth"`
+	DestinationAuth       map[string]map[string][]AuthAction `json:"destination_auth"`
 	SubscriptionAuthRoles map[string][]string              `json:"subscription_auth_roles"`
 }
 
 func NewAuthPolicies() *AuthPolicies {
 	return &AuthPolicies{
 		NamespaceAuth:         make(map[string][]AuthAction),
-		DestinationAuth:       make(map[string]map[string]AuthAction),
+		DestinationAuth:       make(map[string]map[string][]AuthAction),
 		SubscriptionAuthRoles: make(map[string][]string),
 	}
 }
