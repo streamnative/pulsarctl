@@ -19,7 +19,6 @@ package resourcequotas
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 
 	"github.com/pkg/errors"
@@ -95,13 +94,12 @@ func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 	case bundle == "" && namespace == "":
 		resourceQuotaData, err := admin.ResourceQuotas().GetDefaultResourceQuota()
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		} else {
-			oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
-			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
-			if err != nil {
-				return err
-			}
+			return err
+		}
+		oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
 		}
 	case bundle != "" && namespace != "":
 		nsName, err := utils.GetNamespaceName(namespace)
@@ -111,13 +109,12 @@ func doGetResourceQuota(vc *cmdutils.VerbCmd) error {
 		resourceQuotaData, err := admin.ResourceQuotas().GetNamespaceBundleResourceQuota(
 			nsName.String(), bundle)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		} else {
-			oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
-			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
-			if err != nil {
-				return err
-			}
+			return err
+		}
+		oc := cmdutils.NewOutputContent().WithObject(resourceQuotaData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
 		}
 	default:
 		return errors.New("Namespace and bundle must be provided together")

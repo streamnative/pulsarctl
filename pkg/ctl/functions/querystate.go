@@ -159,7 +159,6 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
@@ -168,13 +167,12 @@ func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) er
 		functionState, err := admin.Functions().GetFunctionState(
 			funcData.Tenant, funcData.Namespace, funcData.FuncName, funcData.Key)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		} else {
-			oc := cmdutils.NewOutputContent().WithObject(functionState)
-			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
-			if err != nil {
-				return err
-			}
+			return err
+		}
+		oc := cmdutils.NewOutputContent().WithObject(functionState)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+		if err != nil {
+			return err
 		}
 
 		if funcData.Watch {

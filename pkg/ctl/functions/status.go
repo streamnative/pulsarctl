@@ -149,7 +149,6 @@ func statusFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
@@ -161,7 +160,6 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error 
 		functionInstanceStatusData, err := admin.Functions().GetFunctionStatusWithInstanceID(
 			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 			return nil
 		}
 		oc := cmdutils.NewOutputContent().WithObject(functionInstanceStatusData)
@@ -172,7 +170,6 @@ func doStatusFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error 
 	} else {
 		functionStatus, err := admin.Functions().GetFunctionStatus(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 			return nil
 		}
 		oc := cmdutils.NewOutputContent().WithObject(functionStatus)

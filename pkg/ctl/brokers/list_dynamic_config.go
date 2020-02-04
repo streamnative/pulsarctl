@@ -67,7 +67,6 @@ func doGetDynamicConfigListName(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	nameListData, err := admin.Brokers().GetDynamicConfigurationNames()
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

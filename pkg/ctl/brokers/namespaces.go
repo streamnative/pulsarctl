@@ -104,9 +104,7 @@ func doOwnedNamespaces(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error
 
 	admin := cmdutils.NewPulsarClient()
 	namespaces, err := admin.Brokers().GetOwnedNamespaces(clusterName, brokerData.URL)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(namespaces)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

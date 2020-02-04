@@ -138,8 +138,7 @@ func doStatusSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 		sinkInstanceStatusData, err := admin.Sinks().GetSinkStatusWithID(
 			sinkData.Tenant, sinkData.Namespace, sinkData.Name, instanceID)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(sinkInstanceStatusData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
@@ -149,8 +148,7 @@ func doStatusSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	} else {
 		sinkStatus, err := admin.Sinks().GetSinkStatus(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(sinkStatus)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)

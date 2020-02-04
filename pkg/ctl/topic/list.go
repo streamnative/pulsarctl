@@ -82,7 +82,6 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	partitionedTopics, nonPartitionedTopics, err := admin.Topics().List(*namespace)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

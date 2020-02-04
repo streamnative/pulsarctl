@@ -68,8 +68,7 @@ func doListTenant(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	tenants, err := admin.Tenants().List()
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		return nil
+		return err
 	}
 
 	oc := cmdutils.NewOutputContent().

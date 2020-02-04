@@ -126,7 +126,6 @@ func statusSourcesCmd(vc *cmdutils.VerbCmd) {
 func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
@@ -138,8 +137,7 @@ func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 		sourceInstanceStatusData, err := admin.Sources().GetSourceStatusWithID(
 			sourceData.Tenant, sourceData.Namespace, sourceData.Name, instanceID)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(sourceInstanceStatusData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
@@ -149,8 +147,7 @@ func doStatusSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	} else {
 		sourceStatus, err := admin.Sources().GetSourceStatus(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(sourceStatus)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)

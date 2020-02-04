@@ -116,15 +116,12 @@ func getSinksCmd(vc *cmdutils.VerbCmd) {
 func doGetSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sinkConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(sinkConfig)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

@@ -94,7 +94,6 @@ func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

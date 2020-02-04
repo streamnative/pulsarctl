@@ -57,9 +57,7 @@ func healthCheckCmd(vc *cmdutils.VerbCmd) {
 func doHealthCheck(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Brokers().HealthCheck()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		vc.Command.Println("ok")
 	}
 	return err

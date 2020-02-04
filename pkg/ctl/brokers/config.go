@@ -65,9 +65,7 @@ func getInternalConfigCmd(vc *cmdutils.VerbCmd) {
 func doGetInternalConfig(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	brokersData, err := admin.Brokers().GetInternalConfigurationData()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(brokersData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

@@ -57,9 +57,7 @@ func dumpLoadReport(vc *cmdutils.VerbCmd) {
 func doDumpLoadReport(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	loadReport, err := admin.BrokerStats().GetLoadReport()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), loadReport)
 	}
 	return err

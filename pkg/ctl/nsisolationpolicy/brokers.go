@@ -83,9 +83,7 @@ func doGetAllBrokersWithPolicies(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	nsIsolationData, err := admin.NsIsolationPolicy().GetBrokersWithNamespaceIsolationPolicy(clusterName)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(nsIsolationData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

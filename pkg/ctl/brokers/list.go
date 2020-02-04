@@ -75,7 +75,6 @@ func doListCluster(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	brokersData, err := admin.Brokers().GetActiveBrokers(clusterName)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

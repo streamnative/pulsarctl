@@ -57,9 +57,7 @@ func dumpMonitoringMetrics(vc *cmdutils.VerbCmd) {
 func doDumpMonitoringMetrics(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	metrics, err := admin.BrokerStats().GetMetrics()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), metrics)
 	}
 	return err
