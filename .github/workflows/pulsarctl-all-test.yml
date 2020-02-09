@@ -56,4 +56,4 @@ jobs:
       run: |
         docker ps
         ./pulsarctl clusters list
-        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl)
+        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks)
