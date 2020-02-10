@@ -18,7 +18,6 @@
 package sinks
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -41,7 +40,9 @@ func TestRestartSink(t *testing.T) {
 	}
 
 	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully\n")
 
 	restartArgs := []string{"restart",
@@ -50,22 +51,32 @@ func TestRestartSink(t *testing.T) {
 		"--name", "test-sink-restart",
 	}
 
-	_, _, err = TestSinksCommands(restartSinksCmd, restartArgs)
-	assert.Nil(t, err)
-
-	// test failure case
-	failureArgs := []string{"restart",
-		"--name", "not-exist",
+	out, execErr, err := TestSinksCommands(restartSinksCmd, restartArgs)
+	if err != nil {
+		t.Fatal(err)
 	}
-	_, execErr, _ := TestSinksCommands(restartSinksCmd, failureArgs)
-	assert.Equal(t, execErr.Error(), "code: 404 reason: Sink not-exist doesn't exist")
+	assert.Nil(t, execErr)
+	assert.NotEmpty(t, out.String())
 
 	notExistInstanceIDArgs := []string{"restart",
 		"--name", "test-sink-restart",
 		"--instance-id", "12345678",
 	}
-	_, err, _ = TestSinksCommands(restartSinksCmd, notExistInstanceIDArgs)
-	assert.NotNil(t, err)
-	failInstanceIDMsg := "Operation not permitted"
-	assert.True(t, strings.ContainsAny(err.Error(), failInstanceIDMsg))
+	_, execErr, err = TestSinksCommands(restartSinksCmd, notExistInstanceIDArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.NotNil(t, execErr)
+}
+
+func TestRestartFailed(t *testing.T) {
+	// test failure case
+	failureArgs := []string{"restart",
+		"--name", "not-exist",
+	}
+	_, execErr, err := TestSinksCommands(restartSinksCmd, failureArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.NotNil(t, execErr)
 }

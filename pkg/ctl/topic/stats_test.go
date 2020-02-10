@@ -112,7 +112,7 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 }
 
 func TestGetPerPartitionedStatsCmd(t *testing.T) {
-	args := []string{"create", "test-topic-per-partitioned-stats", "2"}
+	args := []string{"create", "test-topic-per-partitioned-stats", "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
@@ -137,9 +137,9 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 		Subscriptions:       map[string]utils.SubscriptionStats{},
 		Replication:         map[string]utils.ReplicatorStats{},
 		DeDuplicationStatus: "",
-		Metadata:            utils.PartitionedTopicMetadata{Partitions: 2},
+		Metadata:            utils.PartitionedTopicMetadata{Partitions: 1},
 		Partitions: map[string]utils.TopicStats{
-			"persistent://public/default/test-topic-per-partitioned-stats": {
+			"persistent://public/default/test-topic-per-partitioned-stats-partition-0": {
 				MsgRateIn:           0,
 				MsgRateOut:          0,
 				MsgThroughputIn:     0,
@@ -149,7 +149,7 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 				Publishers:          []utils.PublisherStats{},
 				Subscriptions:       map[string]utils.SubscriptionStats{},
 				Replication:         map[string]utils.ReplicatorStats{},
-				DeDuplicationStatus: "",
+				DeDuplicationStatus: "Disabled",
 			},
 		},
 	}
