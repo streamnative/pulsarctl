@@ -25,35 +25,15 @@ jobs:
 
     - name: Get dependencies
       run: |
-        wget https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/0.10.2.1/kafka-clients-0.10.2.1.jar
-        wget https://archive.apache.org/dist/pulsar/pulsar-2.4.0/connectors/pulsar-io-kafka-2.4.0.nar
-        wget https://archive.apache.org/dist/pulsar/pulsar-2.4.0/connectors/pulsar-io-jdbc-2.4.0.nar
-
-        docker network create kafka-pulsar
-        docker pull wurstmeister/zookeeper
-        docker run -d -it -p 2181:2181 --name pulsar-kafka-zookeeper --network kafka-pulsar wurstmeister/zookeeper
-        docker pull wurstmeister/kafka:2.11-1.0.2
-        docker run -d -it --network kafka-pulsar -p 6667:6667 -p 9092:9092 -e KAFKA_ADVERTISED_HOST_NAME=pulsar-kafka -e KAFKA_ZOOKEEPER_CONNECT=pulsar-kafka-zookeeper:2181 --name pulsar-kafka wurstmeister/kafka:2.11-1.0.2
-
-        docker pull apachepulsar/pulsar:2.4.0
         docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}:/pulsar_test -v ${PWD}/data:/pulsar/data --name pulsarctl apachepulsar/pulsar:latest bin/pulsar standalone
-        docker cp pulsar-io-kafka-2.4.0.nar pulsarctl:/pulsar
-        docker cp pulsar-io-jdbc-2.4.0.nar pulsarctl:/pulsar
-        docker cp pulsarctl:/pulsar/pulsar-io-kafka-2.4.0.nar ${PWD}/test/sources/
-        docker cp pulsarctl:/pulsar/pulsar-io-jdbc-2.4.0.nar ${PWD}/test/sinks/
-        docker cp ${PWD}/test/sources/kafkaSourceConfig.yaml pulsarctl:/pulsar/conf
-        docker cp ${PWD}/test/sinks/mysql-jdbc-sink.yaml pulsarctl:/pulsar/conf
-        docker cp kafka-clients-0.10.2.1.jar pulsarctl:/pulsar/lib
-        docker cp pulsarctl:/pulsar/examples/api-examples.jar ${PWD}/test/functions/
 
-        ls -al test/functions/
         sleep 10
 
     - name: Build
       run: go build .
-      
+
     - name: Test
       run: |
         docker ps
         ./pulsarctl clusters list
-        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl)
+        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks)
