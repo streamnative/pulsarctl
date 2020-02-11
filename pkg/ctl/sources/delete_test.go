@@ -20,6 +20,7 @@ package sources
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -58,18 +59,12 @@ func TestDeleteSources(t *testing.T) {
 
 func TestFailureDeleteSource(t *testing.T) {
 	failureDeleteArgs := []string{"delete",
-		"--name", "test-source-delete",
+		"--name", "bad-delete-sources-" + time.Now().String(),
 	}
 
-	exceptedErr := "Source test-source-delete doesn't exist"
-	_, execErrMsg, _ := TestSourcesCommands(deleteSourcesCmd, failureDeleteArgs)
-	assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
-	assert.NotNil(t, execErrMsg)
-
-	nameNotExist := []string{"delete",
-		"--name", "not-exist",
+	_, execErr, err := TestSourcesCommands(deleteSourcesCmd, failureDeleteArgs)
+	if err != nil {
+		t.Fatal(err)
 	}
-	_, execErrMsg, _ = TestSourcesCommands(deleteSourcesCmd, nameNotExist)
-	nameErr := "Source not-exist doesn't exist"
-	assert.True(t, strings.Contains(execErrMsg.Error(), nameErr))
+	assert.NotNil(t, execErr)
 }

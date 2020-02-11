@@ -102,9 +102,11 @@ func TestFailureStatus(t *testing.T) {
 		"--name", "test-functions-status-failure",
 	}
 
-	out, _, err := TestFunctionsCommands(statusFunctionsCmd, statusArgs)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(statusFunctionsCmd, statusArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	errMsg := "Function test-functions-status-failure doesn't exist"
-	assert.True(t, strings.Contains(out.String(), errMsg))
+	assert.True(t, strings.Contains(execErr.Error(), errMsg))
 }

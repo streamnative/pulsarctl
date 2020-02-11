@@ -19,7 +19,6 @@ package sources
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
 	"time"
 
@@ -81,13 +80,12 @@ func TestStatusSource(t *testing.T) {
 
 func TestFailureStatus(t *testing.T) {
 	statusArgs := []string{"status",
-		"--name", "not-exist",
+		"--name", "bad-sources" + time.Now().String(),
 	}
 
-	out, _, err := TestSourcesCommands(statusSourcesCmd, statusArgs)
-	assert.Nil(t, err)
-
-	errMsg := "Source not-exist doesn't exist"
-	t.Logf(out.String())
-	assert.True(t, strings.Contains(out.String(), errMsg))
+	_, execErr, err := TestSourcesCommands(statusSourcesCmd, statusArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.NotNil(t, execErr)
 }

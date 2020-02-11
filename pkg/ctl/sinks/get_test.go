@@ -19,8 +19,8 @@ package sinks
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
@@ -77,17 +77,21 @@ func TestGetFailureSink(t *testing.T) {
 	deleteArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-sink-get",
+		"--name", "bad-delete-sinks" + time.Now().String(),
 	}
 
-	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-sink-get successfully\n")
+	_, execErr, err := TestSinksCommands(deleteSinksCmd, deleteArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.NotNil(t, execErr)
 
 	failureGetArgs := []string{"get",
-		"--name", "test-sink-get",
+		"--name", "bad-get-sinks" + time.Now().String(),
 	}
-	getOut, execErr, _ := TestSinksCommands(getSinksCmd, failureGetArgs)
+	_, execErr, err = TestSinksCommands(getSinksCmd, failureGetArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.NotNil(t, execErr)
-	exceptedErr := "Sink test-sink-get doesn't exist"
-	assert.True(t, strings.Contains(getOut.String(), exceptedErr))
 }

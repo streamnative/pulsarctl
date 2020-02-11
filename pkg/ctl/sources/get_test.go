@@ -20,6 +20,7 @@ package sources
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
@@ -75,20 +76,12 @@ func TestGetSource(t *testing.T) {
 }
 
 func TestGetFailureSource(t *testing.T) {
-	deleteArgs := []string{"delete",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-get",
-	}
-
-	deleteOut, _, _ := TestSourcesCommands(deleteSourcesCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-source-get successfully\n")
-
 	failureGetArgs := []string{"get",
-		"--name", "test-source-get",
+		"--name", "bad-get-sources-" + time.Now().String(),
 	}
-	_, execErr, _ := TestSourcesCommands(getSourcesCmd, failureGetArgs)
+	_, execErr, err := TestSourcesCommands(getSourcesCmd, failureGetArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.NotNil(t, execErr)
-	exceptedErr := "code: 404 reason: Source test-source-get doesn't exist"
-	assert.Equal(t, exceptedErr, execErr.Error())
 }
