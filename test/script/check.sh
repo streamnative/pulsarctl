@@ -16,10 +16,25 @@ function checkBookieHTTP() {
     done
 }
 
+function checkFunctionWorker() {
+    failed=0
+    until curl localhost:8080/admin/v2/persistent/public/functions/coordinate/stats; do
+        echo "waiting function worker service start..."
+        failed=`expr ${failed} + 1`
+        if [[]]; then
+            echo "function worker service start up was failed"
+            exit 1
+        fi
+        sleep 1
+    done
+}
+
 case $1 in
     bookieHTTP) checkBookieHTTP
     ;;
+    functionWorker) checkFunctionWorker
+    ;;
     *) echo Which service you would like to check?
-       echo Available service: bookieHTTP
+       echo Available service: bookieHTTP, functionWorker
     ;;
 esac

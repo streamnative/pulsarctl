@@ -123,7 +123,7 @@ func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
 	topic := vc.NameArg
 
 	admin := cmdutils.NewPulsarClient()
-	if schemaData.Version == 0 {
+	if !vc.Command.Flag("version").Changed {
 		schemaInfoWithVersion, err := admin.Schemas().GetSchemaInfoWithVersion(topic)
 		if err == nil {
 			oc := cmdutils.NewOutputContent().

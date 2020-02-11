@@ -33,7 +33,7 @@ import (
 func TestStateFunctions(t *testing.T) {
 	basePath, err := getDirHelp()
 	if basePath == "" || err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	t.Logf("base path: %s", basePath)
 	args := []string{"create",
@@ -49,7 +49,7 @@ func TestStateFunctions(t *testing.T) {
 	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
 	assert.Nil(t, err)
 	if execErr != nil {
-		t.Errorf("create functions error value: %s", execErr.Error())
+		t.Fatal(execErr)
 	}
 	assert.Equal(t, out.String(), "Created test-functions-putstate successfully\n")
 
@@ -105,27 +105,37 @@ func TestStateFunctions(t *testing.T) {
 	}
 
 	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.Equal(t, "pulsar", state.Key)
 	assert.Equal(t, "hello", state.StringValue)
 	assert.Equal(t, int64(0), state.Version)
 	// put state again
 	outPutStateAgain, _, err := TestFunctionsCommands(putstateFunctionsCmd, putstateArgs)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.True(t, strings.Contains(outPutStateAgain.String(), "successfully\n"))
 
 	// query state again
 	outQueryStateAgain, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	var stateAgain utils.FunctionState
 	err = json.Unmarshal(outQueryStateAgain.Bytes(), &stateAgain)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.Equal(t, int64(1), stateAgain.Version)
 }
@@ -147,20 +157,20 @@ func TestByteValue(t *testing.T) {
 	}
 
 	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	if execErr != nil {
-		t.Errorf("create functions error value: %s", execErr.Error())
+	if err != nil {
+		t.Fatal(err)
 	}
+	assert.Nil(t, execErr)
 	assert.Equal(t, out.String(), "Created test-functions-putstate-byte-value successfully\n")
 
 	buf := "hello pulsar!"
-	file, err := ioutil.TempFile("", "tmpfile")
+	file, err := ioutil.TempFile("", "byte-value-functions")
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	defer os.Remove(file.Name())
 	if _, err := file.Write([]byte(buf)); err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	t.Logf("file name:%s", file.Name())
@@ -194,12 +204,16 @@ func TestByteValue(t *testing.T) {
 	}
 
 	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 	t.Logf("outQueryState:%s", outQueryState.String())
 
 	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.Equal(t, "pulsar", state.Key)
 	assert.Equal(t, "hello pulsar!", state.StringValue)
