@@ -39,14 +39,13 @@ func TestCreateNonPersistentTopic(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestCreateTopicAlreadExists(t *testing.T) {
+func TestCreateTopicAlreadyExists(t *testing.T) {
 	args := []string{"create", "test-duplicate-topic", "2"}
 	_, _, _, err := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, err)
 
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 409 reason: Partitioned topic already exists", execErr.Error())
 }
 
 func TestCreateTopicArgsError(t *testing.T) {
