@@ -86,7 +86,6 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	listTopics, err := admin.Namespaces().GetTopics(tenantAndNamespace)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

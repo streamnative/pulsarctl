@@ -111,15 +111,12 @@ func getSourcesCmd(vc *cmdutils.VerbCmd) {
 func doGetSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sourceConfig, err := admin.Sources().GetSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(sourceConfig)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

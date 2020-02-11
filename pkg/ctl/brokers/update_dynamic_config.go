@@ -86,9 +86,7 @@ func updateDynamicConfig(vc *cmdutils.VerbCmd) {
 func doUpdateDynamic(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Brokers().UpdateDynamicConfiguration(brokerData.ConfigName, brokerData.ConfigValue)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		vc.Command.Printf("Update dynamic config: %s successful\n", brokerData.ConfigName)
 	}
 	return err

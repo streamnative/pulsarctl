@@ -129,15 +129,12 @@ func getFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doGetFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
-		vc.Command.Help()
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	functionConfig, err := admin.Functions().GetFunction(funcData.Tenant, funcData.Namespace, funcData.FuncName)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(functionConfig)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

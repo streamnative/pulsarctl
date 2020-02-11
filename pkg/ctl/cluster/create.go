@@ -100,9 +100,7 @@ func doCreateCluster(vc *cmdutils.VerbCmd, clusterData *utils.ClusterData) error
 
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Clusters().Create(*clusterData)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		vc.Command.Printf("Cluster %s added\n", clusterData.Name)
 	}
 	return err

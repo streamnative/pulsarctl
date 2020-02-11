@@ -190,8 +190,7 @@ func doStatsFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 		functionInstanceStatsData, err := admin.Functions().GetFunctionStatsWithInstanceID(
 			funcData.Tenant, funcData.Namespace, funcData.FuncName, instanceID)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(functionInstanceStatsData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
@@ -201,8 +200,7 @@ func doStatsFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	} else {
 		functionStats, err := admin.Functions().GetFunctionStats(funcData.Tenant, funcData.Namespace, funcData.FuncName)
 		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-			return nil
+			return err
 		}
 		oc := cmdutils.NewOutputContent().WithObject(functionStats)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)

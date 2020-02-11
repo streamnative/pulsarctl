@@ -63,9 +63,7 @@ func doDumpAllocatorStats(vc *cmdutils.VerbCmd) error {
 	allocatorName := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 	stats, err := admin.BrokerStats().GetAllocatorStats(allocatorName)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), stats)
 	}
 	return err

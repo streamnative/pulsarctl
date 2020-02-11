@@ -57,9 +57,7 @@ func dumpTopics(vc *cmdutils.VerbCmd) {
 func doDumpTopics(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	topicsStats, err := admin.BrokerStats().GetTopics()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), topicsStats)
 	}
 	return err

@@ -78,9 +78,7 @@ func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
 func doDeleteDynamicConf(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {
 	admin := cmdutils.NewPulsarClient()
 	err := admin.Brokers().DeleteDynamicConfiguration(brokerData.ConfigName)
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		vc.Command.Printf("Deleted dynamic config: %s successful\n", brokerData.ConfigName)
 	}
 	return err

@@ -61,9 +61,7 @@ func functionsStats(vc *cmdutils.VerbCmd) {
 func doFunctionStats(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	fnStats, err := admin.FunctionsWorker().GetFunctionsStats()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(fnStats)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

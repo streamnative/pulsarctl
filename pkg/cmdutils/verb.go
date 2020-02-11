@@ -20,6 +20,7 @@ package cmdutils
 import (
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 )
@@ -91,7 +92,7 @@ func (vc *VerbCmd) EnableOutputFlagSet() {
 var ExecErrorHandler = defaultExecErrorHandler
 
 var defaultExecErrorHandler = func(err error) {
-	logger.Critical("%s\n", err.Error())
+	logger.Critical("%s\n", color.RedString(err.Error()))
 	os.Exit(1)
 }
 

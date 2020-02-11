@@ -94,7 +94,6 @@ func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	functions, err := admin.Functions().GetFunctions(funcData.Tenant, funcData.Namespace)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

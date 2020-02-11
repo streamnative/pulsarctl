@@ -61,9 +61,7 @@ func getAllDynamicConfigsCmd(vc *cmdutils.VerbCmd) {
 func doGetAllDynamicConfigs(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	brokersData, err := admin.Brokers().GetAllDynamicConfigurations()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(brokersData)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

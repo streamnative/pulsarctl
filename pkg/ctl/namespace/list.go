@@ -83,7 +83,6 @@ func doListNamespaces(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	listNamespaces, err := admin.Namespaces().GetNamespaces(tenant)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

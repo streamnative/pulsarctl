@@ -41,6 +41,9 @@ import (
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+
+	colorOutput "github.com/fatih/color"
+	lol "github.com/kris-nova/lolgopher"
 )
 
 func NewPulsarctlCmd() *cobra.Command {
@@ -58,15 +61,25 @@ func NewPulsarctlCmd() *cobra.Command {
 	}
 
 	rootCmd.PersistentFlags().BoolP("help", "h", false, "help for this command")
-	rootCmd.PersistentFlags().StringVarP(&colorValue, "color", "C", "true", "toggle colorized logs (true,false,fabulous)")
-	rootCmd.PersistentFlags().IntVarP(&logger.Level, "verbose", "v", 3, "set log level, use 0 to silence, 4 for debugging")
+	rootCmd.PersistentFlags().StringVarP(
+		&colorValue,
+		"fabulous",
+		"C",
+		"true",
+		"toggle colorized logs (true,false,fabulous)")
+	rootCmd.PersistentFlags().IntVarP(
+		&logger.Level,
+		"verbose",
+		"v",
+		3,
+		"set log level, use 0 to silence, 4 for debugging")
 	// add the common pulsarctl flags
 	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
 	cobra.OnInitialize(func() {
 		// Control colored output
-		color := true
-		fabulous := false
+		color := false
+		fabulous := true
 		switch colorValue {
 		case "false":
 			color = false
@@ -76,6 +89,13 @@ func NewPulsarctlCmd() *cobra.Command {
 		}
 		logger.Color = color
 		logger.Fabulous = fabulous
+
+		if fabulous {
+			logger.FabulousWriter = &lol.Writer{
+				Output:    colorOutput.Error,
+				ColorMode: 2,
+			}
+		}
 
 		// Add timestamps for debugging
 		logger.Timestamps = false

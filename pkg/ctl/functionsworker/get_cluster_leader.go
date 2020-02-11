@@ -65,9 +65,7 @@ func getClusterLeader(vc *cmdutils.VerbCmd) {
 func doGetClusterLeader(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	workerInfo, err := admin.FunctionsWorker().GetClusterLeader()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(workerInfo)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

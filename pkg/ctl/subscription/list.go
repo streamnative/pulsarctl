@@ -81,7 +81,6 @@ func doList(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	r, err := admin.Subscriptions().List(*topic)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

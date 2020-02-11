@@ -72,7 +72,6 @@ func doGetPeerClusters(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	peerClusters, err := admin.Clusters().GetPeerClusters(clusterName)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 

@@ -67,9 +67,11 @@ func TestFailureStats(t *testing.T) {
 		"--name", "test-functions-stats-failure",
 	}
 
-	out, _, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	errMsg := "Function test-functions-stats-failure doesn't exist"
-	assert.True(t, strings.Contains(out.String(), errMsg))
+	assert.True(t, strings.Contains(execErr.Error(), errMsg))
 }

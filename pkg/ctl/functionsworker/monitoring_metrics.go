@@ -81,9 +81,7 @@ func monitoringMetrics(vc *cmdutils.VerbCmd) {
 func doMonitoringMetrics(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	metrics, err := admin.FunctionsWorker().GetMetrics()
-	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-	} else {
+	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(metrics)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}

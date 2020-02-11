@@ -94,7 +94,6 @@ func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 	sources, err := admin.Sources().ListSources(sourceData.Tenant, sourceData.Namespace)
 	if err != nil {
-		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		return err
 	}
 
