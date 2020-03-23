@@ -58,6 +58,11 @@ func NewDefaultPluginHandler(validPrefixes []string) *DefaultPluginHandler {
 
 // Lookup implements PluginHandler
 func (h *DefaultPluginHandler) Lookup(filename string) (string, bool) {
+	// add default plugins dir
+	currentDir, _ := os.Getwd()
+	defaultPath := currentDir + "/plugins"
+	_ = os.Setenv("PATH", os.Getenv("PATH")+":"+defaultPath)
+
 	for _, prefix := range h.ValidPrefixes {
 		path, err := exec.LookPath(fmt.Sprintf("%s-%s", prefix, filename))
 		if err != nil || len(path) == 0 {
