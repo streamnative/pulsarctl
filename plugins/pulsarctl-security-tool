@@ -1,0 +1,361 @@
+#!/usr/bin/env bash
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+# 
+#   http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+set -e
+
+OPEN_SSL_CNF=${OPEN_SSL_CNF:-"https://raw.githubusercontent.com/apache/pulsar/master/site2/website/static/examples/openssl.cnf"}
+PULSAR_CONF_DIR=${PULSAR_CONF_DIR:-"${HOME}/.config/pulsar"}
+PULSAR_SECURITY_DIR=${PULSAR_CONF_DIR}/security_tool/gen
+OPENSSL="openssl"
+
+## `export` is required since we are using environment variable for generating certificates
+export CA_HOME=${PULSAR_SECURITY_DIR}/ca
+
+CA_PRIVATE_KEY=private/ca.key.pem
+CA_PUBLIC_CERT=certs/ca.cert.pem
+
+function ensure_dir_exists() {
+  local dir=$1
+  if [[ ! -d ${dir} ]]; then
+    mkdir -p ${dir}
+  fi
+}
+
+function file_exists_and_exit() {
+  if [[ -d $1 ]]; then
+    echo "'$1' cannot exist. Run 'security_tool clean' to clean up "
+    echo "the generated files before re-running this script."
+    exit 1
+  fi
+}
+
+function security_tool_help() {
+  cat <<EOF
+Usage: security_tool_help <command>
+where command is one of:
+  gen                           Generate CA, broker and proxy certificates, admin certificates
+  gen-ca                        Generate certificate authority (CA)
+  del-ca                        Delete certificate authority (CA)
+  gen-server-cert <component>   Generate server certificate
+  del-server-cert <component>   Delete server certificate
+  gen-client-cert <component>   Generate client certificate
+  del-client-cert <component>   Delete client certificate
+  clean                         Clean 
+EOF
+}
+
+## LibRessl doesn't support generate certificates using environment variables anymore
+## So we have to switch to `openssl` for generating the certificates.
+function fix_mac_openssl() {
+  local ssl_version=$(openssl version | grep -i libressl)
+  if [[ $? == 0 ]]; then
+    echo "'openssl' is not the right ssl tool."
+    if [[ ! -d /usr/local/Cellar/openssl/ ]]; then
+      echo "OpenSSL is not installed. Please install it using 'brew install openssl'."
+      exit 1
+    else  
+      for version in $(ls /usr/local/Cellar/openssl/); do
+        OPENSSL="/usr/local/Cellar/openssl/${version}/bin/openssl"
+        echo "openssl version: '${OPENSSL}'"
+        return
+      done
+    fi 
+  else
+    echo "openssl version: '${ssl_version}'"
+  fi
+}
+
+function generate_ca() {
+  file_exists_and_exit ${CA_HOME}/private
+  file_exists_and_exit ${CA_HOME}/certs
+
+  mkdir -p ${CA_HOME}
+  cd ${CA_HOME}
+  wget --no-check-certificate ${OPEN_SSL_CNF}
+
+  echo
+  echo "OK, we'll generate a certificate authority..."
+  echo
+
+  mkdir certs private newcerts crl
+  chmod 700 private/
+  touch index.txt
+  echo 1000 > serial
+
+  
+  echo "First, the private key."
+  echo
+  echo "You will be prompted for:"
+  echo " - A password for the private key. Remember this."
+  echo ""
+
+  ${OPENSSL} genrsa -aes256 -out ${CA_PRIVATE_KEY} 4096
+  chmod 400 ${CA_PRIVATE_KEY}
+
+  echo ""
+  echo "Now, the public certificate."
+  echo
+  echo "You will be prompted for:"
+  echo " - A password to access the private key."
+  echo " - Information about you and your company."
+  echo " - NOTE that the Common Name (CN) is currently not important."
+
+  ${OPENSSL} req -config openssl.cnf -key ${CA_PRIVATE_KEY} \
+      -new -x509 -days 7300 -sha256 -extensions v3_ca \
+      -out ${CA_PUBLIC_CERT}
+  chmod 444 ${CA_PUBLIC_CERT}
+
+  echo
+  echo "Two files were created:"
+  echo " - ${CA_HOME}/${CA_PRIVATE_KEY} -- the private key used later to"
+  echo "   sign certificates"
+  echo " - ${CA_HOME}/${CA_PUBLIC_CERT} -- the public certificate to be "
+  echo "   distributed to all parties involved"
+  echo
+}
+
+function delete_ca() {
+  if [[ -d ${CA_HOME}/private ]]; then
+    rm -rf ${CA_HOME}/private
+  fi
+  if [[ -d ${CA_HOME}/certs ]]; then
+    rm -rf ${CA_HOME}/certs
+  fi
+}
+
+function generate_server_certificate() {
+  if [[ ! -d ${CA_HOME}/private ]]; then
+    echo "Certificate authority is not generated yet. Please generate CA first."
+    security_tool_help
+    exit 1
+  fi
+
+  local component=$1
+  local server_cert_path=${CA_HOME}/servers/${component}
+
+  if [[ "x${component}" == "x" ]]; then
+    echo "Component ${component} is not provided for generating the server certificate."
+    security_tool_help
+    exit 1
+  fi
+
+  cd ${CA_HOME}
+
+  file_exists_and_exit ${server_cert_path}
+  mkdir -p ${server_cert_path}
+
+  echo
+  echo "OK, we'll generate a server certificate for '${component}' ..."
+  echo
+
+  ${OPENSSL} genrsa -out ${server_cert_path}/${component}.key.pem 2048
+  ${OPENSSL} pkcs8 -topk8 -inform PEM -outform PEM \
+    -in ${server_cert_path}/${component}.key.pem \
+    -out ${server_cert_path}/${component}.key-pk8.pem -nocrypt
+
+  echo
+  echo "Now, generate the certificate request and you will be prompted for the following:"
+  echo " - Personal information, such as your name."
+  echo "   NOTE: When you are asked for the common name, you should match the hostname of the server component."
+  echo "         You can also use a wildcard to match a group of server component hostnames, for example,"
+  echo "         '*.${component}.usw.example.com'. This ensures that multiple machines can reuse the same certificate."
+  echo
+  ${OPENSSL} req -config openssl.cnf \
+    -key ${server_cert_path}/${component}.key.pem -new -sha256 \
+    -out ${server_cert_path}/${component}.csr.pem
+
+  echo
+  echo "Finally, sign the certificate request with the certificate authority."
+  echo "You will be promoted to type the password of the private key of certificate authority."
+  echo
+  ${OPENSSL} ca -config openssl.cnf -extensions server_cert \
+    -days 1000 -notext -md sha256 \
+    -in ${server_cert_path}/${component}.csr.pem \
+    -out ${server_cert_path}/${component}.cert.pem
+
+  echo
+  echo "Two files were created for component '${component}':"
+  echo " - ${server_cert_path}/${component}.key-pk8.pem -- the TLS private key file"
+  echo " - ${server_cert_path}/${component}.cert.pem -- the trusted TLS certificate file"
+  echo "   The cert is used to verify that any certs presented by connecting clients are"
+  echo "   signed by a certificate authority."
+  echo
+}
+
+function delete_server_cert() {
+  local component=$1
+  local server_cert_path=${CA_HOME}/servers/${component}
+
+  if [[ "x${component}" == "x" ]]; then
+    echo "Component ${component} is not provided for deleting the server certificate."
+    security_tool_help
+    exit 1
+  fi
+  if [[ -d ${server_cert_path} ]]; then
+    rm -rf ${server_cert_path}
+  fi
+}
+
+function generate_client_certificate() {
+  if [[ ! -d ${CA_HOME}/private ]]; then
+    echo "Certificate authority is not generated yet. Please generate CA first."
+    security_tool_help
+    exit 1
+  fi
+
+  local component=$1
+  local client_cert_path=${CA_HOME}/clients/${component}
+
+  if [[ "x${component}" == "x" ]]; then
+    echo "Component ${component} is not provided for generating the client certificate."
+    security_tool_help
+    exit 1
+  fi
+
+  cd ${CA_HOME}
+
+  file_exists_and_exit ${client_cert_path}
+  mkdir -p ${client_cert_path}
+
+  echo
+  echo "OK, we'll generate a client certificate for '${component}' ..."
+  echo
+
+  ${OPENSSL} genrsa -out ${client_cert_path}/${component}.key.pem 2048
+  ${OPENSSL} pkcs8 -topk8 -inform PEM -outform PEM \
+    -in ${client_cert_path}/${component}.key.pem \
+    -out ${client_cert_path}/${component}.key-pk8.pem -nocrypt
+
+  echo
+  echo "Now, generate the certificate request and you will be prompted for the following:"
+  echo " - Personal information, such as your name."
+  echo "   NOTE: When you are asked for the common name, you should match the hostname of the component."
+  echo "         You can also use a wildcard to match a group of component hostnames, for example,"
+  echo "         '*.${component}.usw.example.com'. This ensures that multiple machines can reuse the same certificate."
+  echo
+  ${OPENSSL} req -config openssl.cnf \
+    -key ${client_cert_path}/${component}.key.pem -new -sha256 \
+    -out ${client_cert_path}/${component}.csr.pem
+
+  echo
+  echo "Finally, sign the certificate request with the certificate authority."
+  echo "You will be promoted to type the password of the private key of certificate authority."
+  echo
+  ${OPENSSL} ca -config openssl.cnf -extensions usr_cert \
+    -days 1000 -notext -md sha256 \
+    -in ${client_cert_path}/${component}.csr.pem \
+    -out ${client_cert_path}/${component}.cert.pem
+
+  echo
+  echo "Two files were created for component '${component}':"
+  echo " - ${client_cert_path}/${component}.key-pk8.pem -- the TLS private key file"
+  echo " - ${client_cert_path}/${component}.cert.pem -- the trusted TLS certificate file"
+  echo "   The cert is used to verify that any certs presented by connecting clients are"
+  echo "   signed by a certificate authority."
+  echo "--------------------------------------------------------------------------------"
+  echo "You can use this key and cert file to authenticate the components to the servers"
+  echo "(brokers or proxies) as the role specified in 'Common Name'."
+}
+
+function delete_client_cert() {
+  local component=$1
+  local client_cert_path=${CA_HOME}/clients/${component}
+
+  if [[ "x${component}" == "x" ]]; then
+    echo "Component ${component} is not provided for deleting the client certificate."
+    security_tool_help
+    exit 1
+  fi
+  if [[ -d ${client_cert_path} ]]; then
+    rm -rf ${client_cert_path}
+  fi
+}
+
+function generate() {
+  file_exists_and_exit ${PULSAR_SECURITY_DIR}
+  ensure_dir_exists ${PULSAR_CONF_DIR}
+  ensure_dir_exists ${PULSAR_SECURITY_DIR}
+  generate_ca
+  generate_server_certificate broker 
+  generate_server_certificate proxy
+  generate_client_certificate admin
+}
+
+function clean() {
+  if [[ -d ${PULSAR_SECURITY_DIR} ]]; then
+    rm -rf ${PULSAR_SECURITY_DIR}
+  fi
+}
+
+function ensure_dependencies() {
+  # check requirements
+  for requirement in openssl wget
+  do
+    echo "############ check ${requirement} ##############"
+    if hash ${requirement} 2>/dev/null;then
+      echo "${requirement} have installed"
+    else
+      echo "this script needs ${requirement}, please install ${requirement} first."
+      exit 1
+    fi
+  done
+  # fix open ssl if needed
+  fix_mac_openssl
+}
+
+# if no args specified, show usage
+if [ $# = 0 ]; then
+  security_tool_help
+  exit 1
+fi
+
+# get arguments
+COMMAND=$1
+shift
+
+if [ $COMMAND == "clean" ]; then
+  clean
+elif [ $COMMAND == "gen" ]; then
+  ensure_dependencies
+  generate
+elif [ $COMMAND == "gen-ca" ]; then
+  ensure_dependencies
+  generate_ca
+elif [ $COMMAND == "del-ca" ]; then
+  delete_ca
+elif [ $COMMAND == "gen-server-cert" ]; then
+  ensure_dependencies
+  generate_server_certificate $@
+elif [ $COMMAND == "del-server-cert" ]; then
+  delete_server_cert $@
+elif [ $COMMAND == "gen-client-cert" ]; then
+  ensure_dependencies
+  generate_client_certificate $@
+elif [ $COMMAND == "del-client-cert" ]; then
+  delete_client_cert $@
+elif [ $COMMAND == "help" -o $COMMAND == "--help" -o $COMMAND == "-h" ]; then
+  security_tool_help
+else
+  echo "Unknown command : ${COMMAND}"
+  security_tool_help
+fi
+
+
+
