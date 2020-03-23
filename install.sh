@@ -35,7 +35,18 @@ discoverArch() {
 discoverArch
 
 OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
-curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}
-mv pulsarctl-${ARCH}-${OS} pulsarctl
+TARFILE=pulsarctl-${ARCH}-${OS}.tar.gz
+UNTARFILE=pulsarctl-${ARCH}-${OS}
+curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
+tar -xf ${TARFILE}
+
+pushd ${UNTARFILE}
 chmod +x pulsarctl
 mv pulsarctl /usr/local/bin
+mkdir -p ~/.pulsarctl
+mv plugins ~/.pulsarctl
+export PATH=${PATH}:~/.pulsarctl/plugins
+popd
+
+rm -rf ${TARFILE}
+rm -rf ${UNTARFILE}
