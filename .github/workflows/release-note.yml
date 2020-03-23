@@ -15,6 +15,6 @@ jobs:
 
     steps:
       - name: release note
-        uses: toolmantim/release-drafter@master
+        uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
