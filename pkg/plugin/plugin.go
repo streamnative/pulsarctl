@@ -27,6 +27,7 @@ import (
 )
 
 var ValidPluginFilenamePrefixes = []string{"pulsarctl"}
+var DefaultPluginsPaths = []string{"~/.pulsarctl/plugins"}
 
 // Handler is capable of parsing command line arguments
 // and performing executable filename lookups to search
@@ -61,7 +62,11 @@ func (h *DefaultPluginHandler) Lookup(filename string) (string, bool) {
 	// add default plugins dir
 	currentDir, _ := os.Getwd()
 	defaultPath := currentDir + "/plugins"
-	_ = os.Setenv("PATH", os.Getenv("PATH")+":"+defaultPath)
+	DefaultPluginsPaths = append(DefaultPluginsPaths, defaultPath)
+
+	for _, p := range DefaultPluginsPaths {
+		_ = os.Setenv("PATH", os.Getenv("PATH")+":"+p)
+	}
 
 	for _, prefix := range h.ValidPrefixes {
 		path, err := exec.LookPath(fmt.Sprintf("%s-%s", prefix, filename))
