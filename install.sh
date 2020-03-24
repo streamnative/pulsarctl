@@ -55,7 +55,7 @@ installNew() {
   UNTARFILE=pulsarctl-${ARCH}-${OS}
 
   curl --retry 10 -L -o ${TARFILE} https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
-  tar xf ${TARFILE}
+  tar -xzf ${TARFILE}
 
   pushd ${UNTARFILE}
 
