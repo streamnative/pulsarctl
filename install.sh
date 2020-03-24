@@ -34,25 +34,83 @@ discoverArch() {
   esac
 }
 
+usage() {
+    cat <<EOF
+This script is used to install pulsarctl
+Options:
+       -h,--help               Prints the usage message
+       -u,--user               Install to the user install directory for your platform. Typically '$HOME/.pulsarctl/pulsarctl'.
+       -v,--version            Install a specific version of pulsarctl
+EOF
+}
+
+userOnly=false
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -u|--user)
+    userOnly=true
+    shift
+    ;;
+    -v|--version)
+    version="$2"
+    shift
+    shift
+    ;;
+    -h|--help)
+    usage
+    exit 0
+    ;;
+    *)
+    echo "unknown option: $key"
+    usage
+    exit 1
+    ;;
+esac
+done
+
+
 discoverArch
 OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
 
 copyBinary() {
+  target_dir=/usr/local/bin
+  if [[ "${userOnly}" == "true" ]]; then
+      target_dir=${HOME}/.pulsarctl
+      mkdir -p ${target_dir}
+  fi
+    
   target_binary_file=pulsarctl${version}
-  target_binary_file_path=/usr/local/bin/${target_binary_file}
+  target_binary_file_path=${target_dir}/${target_binary_file}
   if [[ -f ${target_binary_file_path} ]]; then
     rm ${target_binary_file_path}
   fi
   mv pulsarctl ${target_binary_file_path}
-  if [[ -f /usr/local/bin/pulsarctl ]];then
-    rm /usr/local/bin/pulsarctl
+  chmod +x ${target_binary_file_path}
+  if [[ -f ${target_dir}/pulsarctl ]];then
+    rm ${target_dir}/pulsarctl
   fi
-  ln -s ${target_binary_file} /usr/local/bin/pulsarctl
+  ln -s ${target_binary_file} ${target_dir}/pulsarctl
 }
 
 installNew() {
   TARFILE=pulsarctl-${ARCH}-${OS}.tar.gz
   UNTARFILE=pulsarctl-${ARCH}-${OS}
+
+  if [[ -f ${TARFILE} ]]; then
+    rm -f ${TARFILE} 
+  fi
+
+  if [[ -d ${UNTARFILE} ]]; then
+    rm -rf ${UNTARFILE} 
+  fi
+
+  if [[ -f ${UNTARFILE} ]]; then
+    rm -f ${UNTARFILE} 
+  fi
 
   curl --retry 10 -L -o ${TARFILE} https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
   tar -xzf ${TARFILE}
@@ -76,13 +134,23 @@ installNew() {
   echo
   echo "Happy Pulsaring!"
 
-  export PATH=${PATH}:~/.pulsarctl/plugins
+  export PATH=${HOME}/.pulsarctl:${HOME}/.pulsarctl/plugins:${PATH}
   popd
 }
 
 installOld() {
-  curl --retry 10 -L -o pulsarctl-${ARCH}-${OS} https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
-  mv pulsarctl-${ARCH}-${OS} pulsarctl
+  binary=pulsarctl-${ARCH}-${OS}
+
+  if [[ -d ${binary} ]]; then
+    rm -rf ${binary} 
+  fi
+
+  if [[ -f ${binary} ]]; then
+    rm -f ${binary} 
+  fi
+
+  curl --retry 10 -L -o ${binary} https://github.com/streamnative/pulsarctl/releases/download/${version}/${binary}
+  mv ${binary} pulsarctl
 
   copyBinary
 
@@ -92,13 +160,13 @@ installOld() {
 case $version in
   v0.1.0)
     installOld
-  ;;
+    ;;
   v0.2.0)
     installOld
-  ;;
+    ;;
   v0.3.0)
     installOld
-  ;;
+    ;;
   *)
     installNew
 esac
