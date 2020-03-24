@@ -34,19 +34,44 @@ discoverArch() {
 
 discoverArch
 
-OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
-TARFILE=pulsarctl-${ARCH}-${OS}.tar.gz
-UNTARFILE=pulsarctl-${ARCH}-${OS}
-curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
-tar -xf ${TARFILE}
+installNew() {
+  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+  TARFILE=pulsarctl-${ARCH}-${OS}.tar.gz
+  UNTARFILE=pulsarctl-${ARCH}-${OS}
+  curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
+  tar -xf ${TARFILE}
 
-pushd ${UNTARFILE}
-chmod +x pulsarctl
-mv pulsarctl /usr/local/bin
-mkdir -p ~/.pulsarctl
-mv plugins ~/.pulsarctl
-export PATH=${PATH}:~/.pulsarctl/plugins
-popd
+  pushd ${UNTARFILE}
+  chmod +x pulsarctl
+  mv pulsarctl /usr/local/bin
+  mkdir -p ~/.pulsarctl
+  mv plugins ~/.pulsarctl
+  export PATH=${PATH}:~/.pulsarctl/plugins
+  popd
 
-rm -rf ${TARFILE}
-rm -rf ${UNTARFILE}
+  rm -rf ${TARFILE}
+  rm -rf ${UNTARFILE}
+}
+
+installOld() {
+  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+  curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/$version/pulsarctl-${ARCH}-${OS}
+  mv pulsarctl-${ARCH}-${OS} pulsarctl
+  chmod +x pulsarctl
+  mv pulsarctl /usr/local/bin
+}
+
+case $version in
+  0.0.1)
+    installOld
+  ;;
+  0.0.2)
+    installOld
+  ;;
+  0.0.3)
+    installOld
+  ;;
+  *)
+    installNew
+esac
+
