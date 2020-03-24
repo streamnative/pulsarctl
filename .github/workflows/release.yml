@@ -64,7 +64,7 @@ jobs:
           mkdir ${DIR}
           version=`cat VERSION`
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o  pulsarctl.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          mv pulsarctl ${DIR}
+          mv pulsarctl.exe ${DIR}
           cp -r plugins ${DIR}
           tar -czf ${DIR}.tar.gz ${DIR}
 
@@ -75,7 +75,7 @@ jobs:
           mkdir ${DIR}
           version=`cat VERSION`
           CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o  pulsarctl.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          mv pulsarctl ${DIR}
+          mv pulsarctl.exe ${DIR}
           cp -r plugins ${DIR}
           tar -czf ${DIR}.tar.gz ${DIR}
 
