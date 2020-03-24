@@ -67,6 +67,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 func doListPlugins(vc *cmdutils.VerbCmd) error {
 	paths := filepath.SplitList(os.Getenv("PATH"))
 	plugins := []string{}
+	cache := make(map[string]bool)
 
 	for _, dir := range paths {
 		files, err := ioutil.ReadDir(dir)
@@ -81,7 +82,10 @@ func doListPlugins(vc *cmdutils.VerbCmd) error {
 			if !hasValidPrefix(f.Name(), plugin.ValidPluginFilenamePrefixes) {
 				continue
 			}
-			plugins = append(plugins, trimPrefix(f.Name(), plugin.ValidPluginFilenamePrefixes))
+			if !cache[trimPrefix(f.Name(), plugin.ValidPluginFilenamePrefixes)] {
+				cache[trimPrefix(f.Name(), plugin.ValidPluginFilenamePrefixes)] = true
+				plugins = append(plugins, trimPrefix(f.Name(), plugin.ValidPluginFilenamePrefixes))
+			}
 		}
 	}
 
