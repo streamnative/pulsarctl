@@ -39,7 +39,7 @@ installNew() {
   TARFILE=pulsarctl-${ARCH}-${OS}.tar.gz
   UNTARFILE=pulsarctl-${ARCH}-${OS}
   curl -# -LO https://github.com/streamnative/pulsarctl/releases/download/${version}/${TARFILE}
-  tar -xf ${TARFILE}
+  tar -xzf ${TARFILE}
 
   pushd ${UNTARFILE}
   chmod +x pulsarctl
@@ -62,13 +62,13 @@ installOld() {
 }
 
 case $version in
-  0.0.1)
+  v0.1.0)
     installOld
   ;;
-  0.0.2)
+  v0.2.0)
     installOld
   ;;
-  0.0.3)
+  v0.3.0)
     installOld
   ;;
   *)
