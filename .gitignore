@@ -26,5 +26,9 @@ site/gen-pulsarctldocs/generators/build/*
 # Intellij
 .idea
 
+# Mac
+.DS_Store
+
 # Binary distribution
+pulsarctl*.tar.gz
 pulsarctl-site-*.tar.gz

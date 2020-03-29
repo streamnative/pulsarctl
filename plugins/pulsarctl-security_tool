@@ -20,7 +20,7 @@
 
 set -e
 
-OPEN_SSL_CNF=${OPEN_SSL_CNF:-"https://raw.githubusercontent.com/apache/pulsar/master/site2/website/static/examples/openssl.cnf"}
+OPEN_SSL_CNF=${OPEN_SSL_CNF:-"https://raw.githubusercontent.com/streamnative/pulsarctl/master/plugins/conf/openssl.cnf"}
 PULSAR_CONF_DIR=${PULSAR_CONF_DIR:-"${HOME}/.config/pulsar"}
 PULSAR_SECURITY_DIR=${PULSAR_CONF_DIR}/security_tool/gen
 OPENSSL="openssl"
@@ -30,6 +30,9 @@ export CA_HOME=${PULSAR_SECURITY_DIR}/ca
 
 CA_PRIVATE_KEY=private/ca.key.pem
 CA_PUBLIC_CERT=certs/ca.cert.pem
+PASSWORD=${PASSWORD:-""}
+SUBJECT_PREFIX=${SUBJECT_PREFIX:-"/C=US/ST=San Francisco/L=San Francisco/O=StreamNative/OU=IT Department/CN="}
+PULSAR_RELEASE=${PULSAR_RELEASE:-"pulsar-dev"}
 
 function ensure_dir_exists() {
   local dir=$1
@@ -51,6 +54,7 @@ function security_tool_help() {
 Usage: security_tool_help <command>
 where command is one of:
   gen                           Generate CA, broker and proxy certificates, admin certificates
+  gen-helm                      Generate TLS certificates for a pulsar helm release
   gen-ca                        Generate certificate authority (CA)
   del-ca                        Delete certificate authority (CA)
   gen-server-cert <component>   Generate server certificate
@@ -82,13 +86,27 @@ function fix_mac_openssl() {
   fi
 }
 
+function generate_helm() {
+  generate_ca
+  generate_server_certificate zookeeper
+  generate_server_certificate bookie
+  generate_server_certificate recovery
+  generate_server_certificate broker
+  generate_server_certificate proxy
+  generate_server_certificate toolset
+}
+
 function generate_ca() {
   file_exists_and_exit ${CA_HOME}/private
   file_exists_and_exit ${CA_HOME}/certs
 
   mkdir -p ${CA_HOME}
   cd ${CA_HOME}
-  wget --no-check-certificate ${OPEN_SSL_CNF}
+  if [[ ${OPEN_SSL_CNF} = \/* ]]; then
+    cp ${OPEN_SSL_CNF} .
+  else
+    wget --no-check-certificate ${OPEN_SSL_CNF}
+  fi
 
   echo
   echo "OK, we'll generate a certificate authority..."
@@ -106,7 +124,14 @@ function generate_ca() {
   echo " - A password for the private key. Remember this."
   echo ""
 
-  ${OPENSSL} genrsa -aes256 -out ${CA_PRIVATE_KEY} 4096
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} genrsa -aes256 -out ${CA_PRIVATE_KEY} 4096
+  else
+    ${OPENSSL} genrsa -aes256 \
+        -out ${CA_PRIVATE_KEY} \
+        -passout "pass:${PASSWORD}" \
+        4096
+  fi
   chmod 400 ${CA_PRIVATE_KEY}
 
   echo ""
@@ -117,9 +142,17 @@ function generate_ca() {
   echo " - Information about you and your company."
   echo " - NOTE that the Common Name (CN) is currently not important."
 
-  ${OPENSSL} req -config openssl.cnf -key ${CA_PRIVATE_KEY} \
-      -new -x509 -days 7300 -sha256 -extensions v3_ca \
-      -out ${CA_PUBLIC_CERT}
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} req -config openssl.cnf -key ${CA_PRIVATE_KEY} \
+        -new -x509 -days 7300 -sha256 -extensions v3_ca \
+        -out ${CA_PUBLIC_CERT}
+  else
+    ${OPENSSL} req -config openssl.cnf -key ${CA_PRIVATE_KEY} \
+        -new -x509 -days 7300 -sha256 -extensions v3_ca \
+        -subj "${SUBJECT_PREFIX}${PULSAR_RELEASE}" \
+        -passin "pass:${PASSWORD}" \
+        -out ${CA_PUBLIC_CERT}
+  fi
   chmod 444 ${CA_PUBLIC_CERT}
 
   echo
@@ -165,7 +198,15 @@ function generate_server_certificate() {
   echo "OK, we'll generate a server certificate for '${component}' ..."
   echo
 
-  ${OPENSSL} genrsa -out ${server_cert_path}/${component}.key.pem 2048
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} genrsa -out ${server_cert_path}/${component}.key.pem 2048
+  else
+    ${OPENSSL} genrsa \
+        -out ${server_cert_path}/${component}.key.pem \
+        -passout "pass:${PASSWORD}" \
+        2048
+  fi
+
   ${OPENSSL} pkcs8 -topk8 -inform PEM -outform PEM \
     -in ${server_cert_path}/${component}.key.pem \
     -out ${server_cert_path}/${component}.key-pk8.pem -nocrypt
@@ -177,18 +218,36 @@ function generate_server_certificate() {
   echo "         You can also use a wildcard to match a group of server component hostnames, for example,"
   echo "         '*.${component}.usw.example.com'. This ensures that multiple machines can reuse the same certificate."
   echo
-  ${OPENSSL} req -config openssl.cnf \
-    -key ${server_cert_path}/${component}.key.pem -new -sha256 \
-    -out ${server_cert_path}/${component}.csr.pem
+
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} req -config openssl.cnf \
+      -key ${server_cert_path}/${component}.key.pem -new -sha256 \
+      -out ${server_cert_path}/${component}.csr.pem
+  else
+    ${OPENSSL} req -config openssl.cnf \
+      -key ${server_cert_path}/${component}.key.pem -new -sha256 \
+      -out ${server_cert_path}/${component}.csr.pem \
+      -passin "pass:${PASSWORD}" \
+      -subj "${SUBJECT_PREFIX}${PULSAR_RELEASE}-${component}"
+  fi
 
   echo
   echo "Finally, sign the certificate request with the certificate authority."
   echo "You will be promoted to type the password of the private key of certificate authority."
   echo
-  ${OPENSSL} ca -config openssl.cnf -extensions server_cert \
-    -days 1000 -notext -md sha256 \
-    -in ${server_cert_path}/${component}.csr.pem \
-    -out ${server_cert_path}/${component}.cert.pem
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} ca -config openssl.cnf -extensions server_cert \
+      -days 1000 -notext -md sha256 \
+      -in ${server_cert_path}/${component}.csr.pem \
+      -out ${server_cert_path}/${component}.cert.pem
+  else
+    ${OPENSSL} ca -config openssl.cnf -extensions server_cert \
+      -days 1000 -notext -md sha256 \
+      -in ${server_cert_path}/${component}.csr.pem \
+      -out ${server_cert_path}/${component}.cert.pem \
+      -passin "pass:${PASSWORD}" \
+      -batch
+  fi
 
   echo
   echo "Two files were created for component '${component}':"
@@ -238,7 +297,15 @@ function generate_client_certificate() {
   echo "OK, we'll generate a client certificate for '${component}' ..."
   echo
 
-  ${OPENSSL} genrsa -out ${client_cert_path}/${component}.key.pem 2048
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} genrsa -out ${client_cert_path}/${component}.key.pem 2048
+  else
+    ${OPENSSL} genrsa \
+      -out ${client_cert_path}/${component}.key.pem \
+      -passout "pass:${PASSWORD}" \
+      2048
+  fi
+
   ${OPENSSL} pkcs8 -topk8 -inform PEM -outform PEM \
     -in ${client_cert_path}/${component}.key.pem \
     -out ${client_cert_path}/${component}.key-pk8.pem -nocrypt
@@ -250,18 +317,37 @@ function generate_client_certificate() {
   echo "         You can also use a wildcard to match a group of component hostnames, for example,"
   echo "         '*.${component}.usw.example.com'. This ensures that multiple machines can reuse the same certificate."
   echo
-  ${OPENSSL} req -config openssl.cnf \
-    -key ${client_cert_path}/${component}.key.pem -new -sha256 \
-    -out ${client_cert_path}/${component}.csr.pem
+
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} req -config openssl.cnf \
+      -key ${client_cert_path}/${component}.key.pem -new -sha256 \
+      -out ${client_cert_path}/${component}.csr.pem
+  else
+    ${OPENSSL} req -config openssl.cnf \
+      -key ${client_cert_path}/${component}.key.pem -new -sha256 \
+      -out ${client_cert_path}/${component}.csr.pem \
+      -passin "pass:${PASSWORD}" \
+      -subj "${SUBJECT_PREFIX}${PULSAR_RELEASE}-${component}"
+  fi
 
   echo
   echo "Finally, sign the certificate request with the certificate authority."
   echo "You will be promoted to type the password of the private key of certificate authority."
   echo
-  ${OPENSSL} ca -config openssl.cnf -extensions usr_cert \
-    -days 1000 -notext -md sha256 \
-    -in ${client_cert_path}/${component}.csr.pem \
-    -out ${client_cert_path}/${component}.cert.pem
+
+  if [[ "${PASSWORD}" == "" ]]; then
+    ${OPENSSL} ca -config openssl.cnf -extensions usr_cert \
+      -days 1000 -notext -md sha256 \
+      -in ${client_cert_path}/${component}.csr.pem \
+      -out ${client_cert_path}/${component}.cert.pem
+  else
+    ${OPENSSL} ca -config openssl.cnf -extensions usr_cert \
+      -days 1000 -notext -md sha256 \
+      -in ${client_cert_path}/${component}.csr.pem \
+      -out ${client_cert_path}/${component}.cert.pem \
+      -passin "pass:${PASSWORD}" \
+      -batch
+  fi
 
   echo
   echo "Two files were created for component '${component}':"
@@ -338,6 +424,9 @@ elif [ $COMMAND == "gen" ]; then
 elif [ $COMMAND == "gen-ca" ]; then
   ensure_dependencies
   generate_ca
+elif [ $COMMAND == "gen-helm" ]; then
+  ensure_dependencies
+  generate_helm
 elif [ $COMMAND == "del-ca" ]; then
   delete_ca
 elif [ $COMMAND == "gen-server-cert" ]; then
