@@ -1,7 +1,9 @@
 name: Pulsarctl Release
 
 on:
-  release:
+  push:
+    tags:
+      - '*'
 
 jobs:
   upload:
@@ -9,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
       - uses: actions/setup-go@v1
         with:
           go-version: 1.12
@@ -47,7 +52,6 @@ jobs:
           cp -r plugins ${DIR}
           tar -czf ${DIR}.tar.gz ${DIR}
 
-
       - name: Build 386 darwin files
         run: |
           DIR=pulsarctl-386-darwin
@@ -68,7 +72,6 @@ jobs:
           cp -r plugins ${DIR}
           tar -czf ${DIR}.tar.gz ${DIR}
 
-
       - name: Build 386 windows files
         run: |
           DIR=pulsarctl-386-windows
@@ -83,9 +86,18 @@ jobs:
         run: |
           make cli
 
+      - name: Sign all files
+        env:
+          SNBOT_SECRET_PASSPHRASE: ${{ secrets.SNBOT_SECRET_PASSPHRASE }}
+        run: |
+          mv pulsarctl*.tar.gz release
+          ./.github/bot-git/setup-git.sh
+          ./scripts/bot-git/sign.sh ${PWD}/release
+          cd release
+
       - name: publish
         uses: skx/github-action-publish-binaries@release-0.11
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: 'pulsarctl*.tar.gz'
+          args: 'pulsarctl*.tar.gz*'
