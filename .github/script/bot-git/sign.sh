@@ -10,7 +10,7 @@ fi
 
 pushd $DEST_PATH
 echo "Sign files in path ${DEST_PATH}"
-ls $DEST_PATH
+ls .
 FILES=`find . -type f | grep -v LICENSE | grep -v README`
 
 export GPG_TTY=$(tty)
