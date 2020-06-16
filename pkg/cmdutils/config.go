@@ -160,7 +160,11 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	ctxConf := c.DecodeContext()
 	if ctxConf != nil {
 		if ctxConf.CurrentContext != "" {
-			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
+			ctx, ok := ctxConf.Contexts[ctxConf.CurrentContext]
+			if !ok {
+				logger.Critical("wrong context:%s\n", ctxConf.CurrentContext)
+				os.Exit(1)
+			}
 			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
 
 			c.WebServiceURL = ctx.BrokerServiceURL
