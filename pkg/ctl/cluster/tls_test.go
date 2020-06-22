@@ -20,6 +20,7 @@
 package cluster
 
 import (
+	"os"
 	"strings"
 	"testing"
 
@@ -27,22 +28,48 @@ import (
 )
 
 func TestTLS(t *testing.T) {
-	args := []string{"clusters", "add", "tls"}
-	_, err := TestTLSHelp(CreateClusterCmd, args)
+	// There is no tls configuration, the execErr should not nil
+	args := []string{"cluster", "add", "tls"}
+	_, execErr, _ := TestTLSHelp(CreateClusterCmd, args)
+	assert.NotNil(t, execErr)
+
+	basePath, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	// The allowInsecureConnection is not specified. So the test should failed with 'doesn't contain any IP SANs'
+	args = []string{
+		"--auth-params",
+		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
+			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
+		"cluster", "add", "tls"}
+	_, execErr, _ = TestTLSHelp(CreateClusterCmd, args)
+	assert.NotNil(t, execErr)
+
+	allArgs := []string{
+		"--auth-params",
+		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
+			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
+		"--tls-trust-cert-path", basePath + "/test/auth/certs/cacert.pem",
+		"--tls-allow-insecure",
+	}
+	args = append(allArgs, []string{"clusters", "add", "tls"}...)
+	_, _, err = TestTLSHelp(CreateClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"clusters", "list"}
-	out, err := TestTLSHelp(ListClustersCmd, args)
+	args = append(allArgs, []string{"clusters", "list"}...)
+	out, _, err := TestTLSHelp(ListClustersCmd, args)
 	assert.Nil(t, err)
 	clusters := out.String()
 	assert.True(t, strings.Contains(clusters, "tls"))
 
-	args = []string{"clusters", "delete", "tls"}
-	_, err = TestTLSHelp(deleteClusterCmd, args)
+	args = append(allArgs, []string{"clusters", "delete", "tls"}...)
+	_, _, err = TestTLSHelp(deleteClusterCmd, args)
 	assert.Nil(t, err)
 
-	args = []string{"clusters", "list"}
-	out, err = TestTLSHelp(ListClustersCmd, args)
+	args = append(allArgs, []string{"clusters", "list"}...)
+	out, _, err = TestTLSHelp(ListClustersCmd, args)
 	assert.Nil(t, err)
 	clusters = out.String()
 	assert.False(t, strings.Contains(clusters, "tls"))
