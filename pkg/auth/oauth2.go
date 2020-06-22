@@ -18,6 +18,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -30,7 +31,7 @@ type OAuth2Provider struct {
 	T       http.RoundTripper
 }
 
-func NewAuthenticationOAuth2(issueEndpoint, clientID, audience, keyFile string, transport http.RoundTripper) *OAuth2Provider {
+func NewAuthenticationOAuth2(issueEndpoint, clientID, audience, keyFile string, transport http.RoundTripper) (*OAuth2Provider, error) {
 	return &OAuth2Provider{
 		issuer: &oauth2.Issuer{
 			IssuerEndpoint: issueEndpoint,
@@ -39,7 +40,7 @@ func NewAuthenticationOAuth2(issueEndpoint, clientID, audience, keyFile string, 
 		},
 		keyFile: keyFile,
 		T:       transport,
-	}
+	}, nil
 }
 
 func (o *OAuth2Provider) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -67,8 +68,9 @@ func (o *OAuth2Provider) getFlow(issuer *oauth2.Issuer) (oauth2.Flow, error) {
 		if err != nil {
 			return nil, err
 		}
+		return flow, err
 	}
-	return flow, nil
+	return flow, errors.New("the key file must be specified")
 }
 
 func (o *OAuth2Provider) getToken(issuer *oauth2.Issuer) (string, error) {

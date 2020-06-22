@@ -112,6 +112,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"File path for TLS key used for authentication")
 
 	c.addBKFlags(flags)
+	c.addOAuth2Flags(flags)
 
 	return flags
 }
@@ -123,6 +124,29 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 		bookkeeper.DefaultWebServiceURL,
 		"The bookie web service url that pulsarctl connects to.",
 	)
+}
+
+func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet)  {
+	flags.StringVar(
+		&c.IssueEndpoint,
+		"issue-endpoint",
+		"",
+		"")
+
+	flags.StringVar(
+		&c.ClientID,
+		"clientID",
+		"","")
+
+	flags.StringVar(
+		&c.Audience,
+		"audience",
+		"","")
+
+	flags.StringVar(
+		&c.KeyFile,
+		"keyfile",
+		"", "")
 }
 
 func Exists(path string) bool {
