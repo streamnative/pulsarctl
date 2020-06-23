@@ -56,7 +56,12 @@ func GetAuthProvider(config *common.Config) (*Provider, error) {
 		case len(config.TokenFile) > 0:
 			provider, err = NewAuthenticationTokenFromFile(config.TokenFile, defaultTransport)
 		case len(config.KeyFile) > 0:
-			provider, err = NewAuthenticationOAuth2(config.IssueEndpoint, config.ClientID, config.Audience, config.KeyFile, defaultTransport)
+			provider, err = NewAuthenticationOAuth2(
+				config.IssueEndpoint,
+				config.ClientID,
+				config.Audience,
+				config.KeyFile,
+				defaultTransport)
 		}
 	}
 	return &provider, err

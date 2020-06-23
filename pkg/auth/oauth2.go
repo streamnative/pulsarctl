@@ -31,7 +31,13 @@ type OAuth2Provider struct {
 	T       http.RoundTripper
 }
 
-func NewAuthenticationOAuth2(issueEndpoint, clientID, audience, keyFile string, transport http.RoundTripper) (*OAuth2Provider, error) {
+func NewAuthenticationOAuth2(
+	issueEndpoint,
+	clientID,
+	audience,
+	keyFile string,
+	transport http.RoundTripper) (*OAuth2Provider, error) {
+
 	return &OAuth2Provider{
 		issuer: &oauth2.Issuer{
 			IssuerEndpoint: issueEndpoint,

@@ -126,7 +126,7 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	)
 }
 
-func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet)  {
+func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 	flags.StringVar(
 		&c.IssueEndpoint,
 		"issue-endpoint",
@@ -136,12 +136,12 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet)  {
 	flags.StringVar(
 		&c.ClientID,
 		"clientID",
-		"","")
+		"", "")
 
 	flags.StringVar(
 		&c.Audience,
 		"audience",
-		"","")
+		"", "")
 
 	flags.StringVar(
 		&c.KeyFile,

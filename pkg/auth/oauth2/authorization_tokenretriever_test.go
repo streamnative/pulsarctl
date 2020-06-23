@@ -133,7 +133,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.handleAuthTokensResponse(response)
 			Expect(result).To(BeNil())
 			Expect(err.Error()).To(Equal(
-				"json: cannot unmarshal string into Go value of type auth.AuthorizationTokenResponse"))
+				"json: cannot unmarshal string into Go value of type oauth2.AuthorizationTokenResponse"))
 		})
 	})
 
