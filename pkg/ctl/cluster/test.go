@@ -71,7 +71,7 @@ var (
 	basePath string
 )
 
-func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, err error) {
+func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, err error) {
 	var rootCmd = &cobra.Command{
 		Use:   "pulsarctl [command]",
 		Short: "a CLI for Apache Pulsar",
@@ -82,31 +82,31 @@ func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes
 		},
 	}
 
+	cmdutils.ExecErrorHandler = func(err error) {
+		execErr = err
+	}
+
 	if !flag {
 		basePath, err = os.Getwd()
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		err = os.Chdir("../../../")
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		basePath, err = os.Getwd()
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		flag = true
 	}
 
 	baseArgs := []string{
-		"--auth-params",
-		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
-			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
-		"--tls-trust-cert-path", basePath + "/test/auth/certs/cacert.pem",
 		"--admin-service-url", "https://localhost:8443",
-		"--tls-allow-insecure"}
+	}
 
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
@@ -123,5 +123,5 @@ func TestTLSHelp(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 	err = rootCmd.Execute()
-	return buf, err
+	return buf, execErr, err
 }
