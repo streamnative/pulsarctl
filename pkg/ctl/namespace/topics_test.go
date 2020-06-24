@@ -53,5 +53,4 @@ func TestListNonExistTenant(t *testing.T) {
 	args := []string{"topics", "non-exist-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(getTopics, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
 }
