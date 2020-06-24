@@ -23,19 +23,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGrantSubPermissionsCmd(t *testing.T) {
-	ns := "public/test-grant-sub-permissions-ns"
-
-	args := []string{"create", ns}
-	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
-	assert.Nil(t, execErr)
-
-	args = []string{"grant-subscription-permission", "--role", "test-permissions", ns, "test-grant-sub"}
-	_, execErr, _, _ = TestNamespaceCommands(GrantSubPermissionsCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 501 reason: Authorization is not enabled", execErr.Error())
-}
-
 func TestGrantSubPermissionsArgsError(t *testing.T) {
 	ns := "public/grant-sub-permissions-args-tests"
 
