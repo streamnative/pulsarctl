@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	ClaimNameUserName = "https://streamnative.io/username"
+	ClaimNameUserName = "https://pulsar.apache.org/username"
 )
 
 // Flow abstracts an OAuth 2.0 authentication and authorization flow

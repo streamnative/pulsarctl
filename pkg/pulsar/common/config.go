@@ -44,8 +44,8 @@ type Config struct {
 	PulsarAPIVersion APIVersion
 
 	// OAuth2 configuration
-	IssueEndpoint string
-	ClientID      string
-	Audience      string
-	KeyFile       string
+	IssuerEndpoint string
+	ClientID       string
+	Audience       string
+	KeyFile        string
 }

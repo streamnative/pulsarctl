@@ -128,8 +128,8 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 
 func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 	flags.StringVar(
-		&c.IssueEndpoint,
-		"issue-endpoint",
+		&c.IssuerEndpoint,
+		"issuer-endpoint",
 		"",
 		"")
 
@@ -186,13 +186,16 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		if ctxConf.CurrentContext != "" {
 			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
 			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
-
 			c.WebServiceURL = ctx.BrokerServiceURL
-
 			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
 			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
 			c.Token = auth.Token
 			c.TokenFile = auth.TokenFile
+			c.IssuerEndpoint = auth.LocationOfOrigin
+			c.IssuerEndpoint = auth.IssuerEndpoint
+			c.ClientID = auth.ClientID
+			c.Audience = auth.Audience
+			c.KeyFile = auth.KeyFile
 		}
 	}
 

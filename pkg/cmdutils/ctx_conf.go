@@ -29,6 +29,12 @@ type AuthInfo struct {
 	TLSAllowInsecureConnection bool   `yaml:"tls_allow_insecure_connection"`
 	Token                      string `yaml:"token"`
 	TokenFile                  string `yaml:"tokenFile"`
+
+	// OAuth2 configuration
+	IssuerEndpoint string `yaml:"issuer_endpoint"`
+	ClientID       string `yaml:"clientID"`
+	Audience       string `yaml:"audience"`
+	KeyFile        string `yaml:"key_file"`
 }
 
 type Context struct {
