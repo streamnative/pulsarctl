@@ -48,4 +48,6 @@ type Config struct {
 	ClientID       string
 	Audience       string
 	KeyFile        string
+	NoRefreshToken bool
+	SkipOpen       bool
 }

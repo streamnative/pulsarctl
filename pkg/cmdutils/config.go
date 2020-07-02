@@ -147,6 +147,16 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 		&c.KeyFile,
 		"keyfile",
 		"", "")
+
+	flags.BoolVar(
+		&c.NoRefreshToken,
+		"no-refresh-token",
+		false, "")
+
+	flags.BoolVar(
+		&c.SkipOpen,
+		"skip-open",
+		false, "")
 }
 
 func Exists(path string) bool {

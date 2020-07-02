@@ -93,14 +93,35 @@ func TestOauth2(t *testing.T) {
 
 	transport := http.DefaultTransport.(*http.Transport)
 
-	auth, err := NewAuthenticationOAuth2(server.URL, "client-id", "audience", kf, transport)
+	auth, err := NewAuthenticationOAuth2(&OAuth2Configuration{
+		SkipOpen:  true,
+		NoRefresh: false,
+	}, server.URL, "client-id", "audience", kf, transport)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	token, err := auth.getToken(auth.issuer)
+	token, err := auth.getToken()
 	if err != nil {
 		t.Fatal(err)
 	}
 	assert.Equal(t, "token-content", token)
+}
+
+func TestDeviceGetToken(t *testing.T)  {
+	transport := http.DefaultTransport.(*http.Transport)
+	p, err := NewAuthenticationOAuth2(&OAuth2Configuration{
+		SkipOpen:  false,
+		NoRefresh: false,
+	}, "https://streamnative-test.auth0.com/",
+	"9VsTeVqM1vqKieMOyFymFGNWIElNkHE4",
+	"urn:sn:pulsar:mhltest:testinstance", "", transport)
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, err := p.getTokenWithDeviceCodeFlow()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(token)
 }
