@@ -58,6 +58,7 @@ func (RealClock) NewTimer(d time.Duration) Timer {
 }
 
 // Tick is the same as time.Tick(d)
+// nolint
 func (RealClock) Tick(d time.Duration) <-chan time.Time {
 	return time.Tick(d)
 }
