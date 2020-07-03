@@ -32,7 +32,7 @@ type AuthInfo struct {
 
 	// OAuth2 configuration
 	IssuerEndpoint string `yaml:"issuer_endpoint"`
-	ClientID       string `yaml:"clientID"`
+	ClientID       string `yaml:"client_id"`
 	Audience       string `yaml:"audience"`
 	KeyFile        string `yaml:"key_file"`
 }

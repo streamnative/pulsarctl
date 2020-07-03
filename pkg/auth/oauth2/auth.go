@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/streamnative/pulsarctl/pkg/auth/oauth2/plugin"
 	"golang.org/x/oauth2"
-	"k8s.io/utils/clock"
 )
 
 const (
@@ -59,7 +59,7 @@ type Issuer struct {
 	Audience       string
 }
 
-func convertToOAuth2Token(token *TokenResult, clock clock.Clock) oauth2.Token {
+func convertToOAuth2Token(token *TokenResult, clock plugin.Clock) oauth2.Token {
 	return oauth2.Token{
 		AccessToken:  token.AccessToken,
 		TokenType:    "bearer",

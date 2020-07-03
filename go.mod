@@ -27,5 +27,4 @@ require (
 	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
 	gopkg.in/yaml.v2 v2.2.8
-	k8s.io/utils v0.0.0-20200619165400-6e3d28b6ed19
 )

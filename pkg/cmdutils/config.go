@@ -131,22 +131,23 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 		&c.IssuerEndpoint,
 		"issuer-endpoint",
 		"",
-		"")
+		"OAuth 2.0 issuer endpoint.")
 
 	flags.StringVar(
 		&c.ClientID,
-		"clientID",
-		"", "")
+		"client-id",
+		"",
+		"OAuth 2.0 client identifier for the SN Cloud CLI.")
 
 	flags.StringVar(
 		&c.Audience,
 		"audience",
-		"", "")
+		"", "OAuth 2.0 audience identifier for the SN Cloud API.")
 
 	flags.StringVar(
 		&c.KeyFile,
-		"keyfile",
-		"", "")
+		"key-file",
+		"", "Path to the private key file.")
 }
 
 func Exists(path string) bool {
@@ -191,7 +192,6 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
 			c.Token = auth.Token
 			c.TokenFile = auth.TokenFile
-			c.IssuerEndpoint = auth.LocationOfOrigin
 			c.IssuerEndpoint = auth.IssuerEndpoint
 			c.ClientID = auth.ClientID
 			c.Audience = auth.Audience

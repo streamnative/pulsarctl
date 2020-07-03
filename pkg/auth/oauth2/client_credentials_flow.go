@@ -20,8 +20,8 @@ package oauth2
 import (
 	"net/http"
 
+	"github.com/streamnative/pulsarctl/pkg/auth/oauth2/plugin"
 	"golang.org/x/oauth2"
-	"k8s.io/utils/clock"
 
 	"github.com/pkg/errors"
 )
@@ -32,7 +32,7 @@ type ClientCredentialsFlow struct {
 	issuerData Issuer
 	provider   ClientCredentialsProvider
 	exchanger  ClientCredentialsExchanger
-	clock      clock.Clock
+	clock      plugin.Clock
 }
 
 // ClientCredentialsProvider abstracts getting client credentials
@@ -49,7 +49,7 @@ func NewClientCredentialsFlow(
 	issuerData Issuer,
 	provider ClientCredentialsProvider,
 	exchanger ClientCredentialsExchanger,
-	clock clock.Clock) *ClientCredentialsFlow {
+	clock plugin.Clock) *ClientCredentialsFlow {
 	return &ClientCredentialsFlow{
 		issuerData: issuerData,
 		provider:   provider,
@@ -76,7 +76,7 @@ func NewDefaultClientCredentialsFlow(issuerData Issuer, keyFile string) (*Client
 		issuerData,
 		credsProvider,
 		tokenRetriever,
-		clock.RealClock{}), nil
+		plugin.RealClock{}), nil
 }
 
 var _ Flow = &ClientCredentialsFlow{}
@@ -107,11 +107,11 @@ type ClientCredentialsGrant struct {
 	KeyFile    KeyFile
 	issuerData Issuer
 	exchanger  ClientCredentialsExchanger
-	clock      clock.Clock
+	clock      plugin.Clock
 }
 
 func NewDefaultClientCredentialsGrant(issuerData Issuer, keyFile KeyFile,
-	clock clock.Clock) (*ClientCredentialsGrant, error) {
+	clock plugin.Clock) (*ClientCredentialsGrant, error) {
 	wellKnownEndpoints, err := GetOIDCWellKnownEndpointsFromIssuerURL(issuerData.IssuerEndpoint)
 	if err != nil {
 		return nil, err

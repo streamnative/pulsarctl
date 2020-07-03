@@ -21,11 +21,9 @@ import (
 	"errors"
 	"time"
 
-	"k8s.io/utils/clock"
-	"k8s.io/utils/clock/testing"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/streamnative/pulsarctl/pkg/auth/oauth2/plugin"
 )
 
 type MockClientCredentialsProvider struct {
@@ -50,12 +48,12 @@ var _ = Describe("ClientCredentialsFlow", func() {
 
 	Describe("Authorize", func() {
 
-		var mockClock clock.Clock
+		var mockClock plugin.Clock
 		var mockCredsProvider *MockClientCredentialsProvider
 		var mockTokenExchanger *MockTokenExchanger
 
 		BeforeEach(func() {
-			mockClock = testing.NewFakeClock(time.Unix(0, 0))
+			mockClock = plugin.NewFakeClock(time.Unix(0, 0))
 
 			mockCredsProvider = &MockClientCredentialsProvider{
 				ClientCredentialsResult: &KeyFile{

@@ -59,7 +59,7 @@ func TestOauthConfiguration(t *testing.T) {
 
 	setOauthConfigArgs := []string{"set", "oauth",
 		"--issuer-endpoint", "https://test-endpoint",
-		"--clientID", "clientid",
+		"--client-id", "clientid",
 		"--audience", "audience",
 	}
 	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
