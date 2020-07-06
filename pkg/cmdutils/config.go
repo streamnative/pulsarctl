@@ -190,6 +190,8 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		os.Exit(1)
 	}
 
+	c.CommandLine = true
+
 	config := common.Config(*c)
 	client, err := pulsar.New(&config)
 	if err != nil {
