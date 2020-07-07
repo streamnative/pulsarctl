@@ -102,7 +102,6 @@ func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, clientID, keyFile 
 		return err
 	}
 
-	vc.OutputConfig.WriteOutput()
 	vc.Command.Printf(`Logged in as %s.
 Welcome to Pulsar!
 `, userName)

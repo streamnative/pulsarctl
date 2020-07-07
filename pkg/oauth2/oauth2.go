@@ -26,7 +26,7 @@ func Command(grouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"oauth2",
 		"Operations about oauth2",
-		"Login as a user or active a serviceaccount for using oauth2 authentication",
+		"Login as a user or activate a service account using OAuth 2.0 authentication",
 		"o")
 
 	cmdutils.AddVerbCmd(grouping, resourceCmd, activateCmd)

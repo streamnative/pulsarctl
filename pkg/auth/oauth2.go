@@ -34,12 +34,11 @@ const (
 )
 
 type OAuth2Provider struct {
-	isCommandLineTools bool
-	clock              clock2.RealClock
-	issuer             oauth2.Issuer
-	store              store.Store
-	source             cache.CachingTokenSource
-	T                  http.RoundTripper
+	clock  clock2.RealClock
+	issuer oauth2.Issuer
+	store  store.Store
+	source cache.CachingTokenSource
+	T      http.RoundTripper
 }
 
 func NewAuthenticationOauth2(issuer oauth2.Issuer, store store.Store, types, keyFile string) (*OAuth2Provider, error) {
@@ -48,17 +47,14 @@ func NewAuthenticationOauth2(issuer oauth2.Issuer, store store.Store, types, key
 		issuer: issuer,
 		store:  store,
 	}
-	err := p.Init(types, keyFile)
+	err := p.initFlow(types, keyFile)
 	return p, err
 }
 
 func NewAuthenticationOAuth2WithParams(
-	commandLineTool bool,
-	types,
 	issueEndpoint,
 	clientID,
-	audience,
-	keyFile string) (*OAuth2Provider, error) {
+	audience string) (*OAuth2Provider, error) {
 
 	issuer := oauth2.Issuer{
 		IssuerEndpoint: issueEndpoint,
@@ -66,25 +62,48 @@ func NewAuthenticationOAuth2WithParams(
 		Audience:       audience,
 	}
 
-	var st store.Store
-	if commandLineTool {
-		keyringStore, err := store.MakeKeyringStore()
-		if err != nil {
-			return nil, err
-		}
-		st = keyringStore
-	} else {
-		st = store.NewMemoryStore()
+	keyringStore, err := store.MakeKeyringStore()
+	if err != nil {
+		return nil, err
 	}
 
-	return NewAuthenticationOauth2(issuer, st, types, keyFile)
+	p := &OAuth2Provider{
+		clock:  clock2.RealClock{},
+		issuer: issuer,
+		store:  keyringStore,
+	}
+
+	err = p.loadGrant()
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }
 
-func (o *OAuth2Provider) Load() {
-
+func (o *OAuth2Provider) loadGrant() error {
+	grant, err := o.store.LoadGrant(o.issuer.Audience)
+	if err != nil {
+		return err
+	}
+	return o.initCache(grant)
 }
 
-func (o *OAuth2Provider) Init(types, keyFile string) error {
+func (o *OAuth2Provider) initCache(grant *oauth2.AuthorizationGrant) error {
+	refresher, err := o.getRefresher(o.issuer, grant.Type)
+	if err != nil {
+		return err
+	}
+
+	source, err := cache.NewDefaultTokenCache(o.store, o.issuer.Audience, refresher)
+	if err != nil {
+		return err
+	}
+	o.source = source
+	return nil
+}
+
+func (o *OAuth2Provider) initFlow(types, keyFile string) error {
 	var grant *oauth2.AuthorizationGrant
 	switch types {
 	case TypeClientCredential:
@@ -92,20 +111,13 @@ func (o *OAuth2Provider) Init(types, keyFile string) error {
 		if err != nil {
 			return err
 		}
-		if o.isCommandLineTools {
-			grant, err = o.store.LoadGrant(o.issuer.Audience)
-			if err != nil {
-				return err
-			}
-		} else {
-			grant, err := flow.Authorize()
-			if err != nil {
-				return err
-			}
-			err = o.store.SaveGrant(o.issuer.Audience, *grant)
-			if err != nil {
-				return err
-			}
+		grant, err := flow.Authorize()
+		if err != nil {
+			return err
+		}
+		err = o.store.SaveGrant(o.issuer.Audience, *grant)
+		if err != nil {
+			return err
 		}
 	default:
 		return fmt.Errorf("unsupported authentication type: %s", types)
