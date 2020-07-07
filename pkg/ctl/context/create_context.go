@@ -119,12 +119,20 @@ func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Contex
 	o.authInfo.Token = cmdutils.PulsarCtlConfig.Token
 	o.authInfo.TLSTrustCertsFilePath = cmdutils.PulsarCtlConfig.TLSTrustCertsFilePath
 	o.authInfo.TLSAllowInsecureConnection = cmdutils.PulsarCtlConfig.TLSAllowInsecureConnection
+	o.authInfo.IssuerEndpoint = cmdutils.PulsarCtlConfig.IssuerEndpoint
+	o.authInfo.ClientID = cmdutils.PulsarCtlConfig.ClientID
+	o.authInfo.Audience = cmdutils.PulsarCtlConfig.Audience
+	o.authInfo.KeyFile = cmdutils.PulsarCtlConfig.KeyFile
 
 	if o.authInfo != nil {
 		modifiedAuth.TokenFile = o.authInfo.TokenFile
 		modifiedAuth.Token = o.authInfo.Token
 		modifiedAuth.TLSAllowInsecureConnection = o.authInfo.TLSAllowInsecureConnection
 		modifiedAuth.TLSTrustCertsFilePath = o.authInfo.TLSTrustCertsFilePath
+		modifiedAuth.IssuerEndpoint = o.authInfo.IssuerEndpoint
+		modifiedAuth.ClientID = o.authInfo.ClientID
+		modifiedAuth.Audience = o.authInfo.Audience
+		modifiedAuth.KeyFile = o.authInfo.KeyFile
 	}
 
 	if o.brokerServiceURL != "" {

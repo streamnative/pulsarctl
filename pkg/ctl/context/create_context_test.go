@@ -22,6 +22,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -48,4 +50,27 @@ func TestSetContextCmd(t *testing.T) {
 		"use \"pulsarctl context use\" to select a different one\n"
 	expectedOut := fmt.Sprintf("deleted context test-set-context from %s\n", path)
 	assert.Equal(t, warnOut+expectedOut, out.String())
+}
+
+func TestOauthConfiguration(t *testing.T) {
+	home := utils.HomeDir()
+	path := fmt.Sprintf("%s/.config/pulsar/config", home)
+	defer os.Remove(path)
+
+	setOauthConfigArgs := []string{"set", "oauth",
+		"--issuer-endpoint", "https://test-endpoint",
+		"--client-id", "clientid",
+		"--audience", "audience",
+	}
+	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	assert.Nil(t, execErr)
+
+	config := &cmdutils.ClusterConfig{}
+	_ = config.Client(common.V2)
+	assert.Equal(t, "https://test-endpoint", config.IssuerEndpoint)
+	assert.Equal(t, "clientid", config.ClientID)
+	assert.Equal(t, "audience", config.Audience)
 }

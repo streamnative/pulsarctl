@@ -51,9 +51,11 @@ func TestCurrentContextCmd(t *testing.T) {
 	out, execErr, err = TestConfigCommands(getContextsCmd, getArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
-	expectedOut := "+---------+----------------------+--------------------+--------------------+\n| CURRENT |    " +
-		"     NAME         | BROKER SERVICE URL | BOOKIE SERVICE URL |\n+---------+----------------------+-----" +
-		"---------------+--------------------+\n| *       | test-current-context |                    |          " +
-		"          |\n+---------+----------------------+--------------------+--------------------+\n"
+	expectedOut := `+---------+----------------------+--------------------+-----------------------+
+| CURRENT |         NAME         | BROKER SERVICE URL |  BOOKIE SERVICE URL   |
++---------+----------------------+--------------------+-----------------------+
+| *       | test-current-context |                    | http://localhost:8080 |
++---------+----------------------+--------------------+-----------------------+
+`
 	assert.Equal(t, expectedOut, out.String())
 }
