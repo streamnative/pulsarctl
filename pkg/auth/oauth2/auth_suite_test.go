@@ -27,7 +27,7 @@ import (
 
 func TestAuth(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "cloud-cli Auth Suite")
+	RunSpecs(t, "pulsarctl Auth Suite")
 }
 
 type MockTokenExchanger struct {

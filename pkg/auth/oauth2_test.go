@@ -26,6 +26,8 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
+	"github.com/streamnative/pulsarctl/pkg/auth/oauth2"
+	store2 "github.com/streamnative/pulsarctl/pkg/auth/oauth2/store"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -91,16 +93,22 @@ func TestOauth2(t *testing.T) {
 		t.Fatal(errors.Wrap(err, "create mocked key file failed"))
 	}
 
-	transport := http.DefaultTransport.(*http.Transport)
+	issuer := oauth2.Issuer{
+		IssuerEndpoint: server.URL,
+		ClientID:       "client-id",
+		Audience:       "audience",
+	}
 
-	auth, err := NewAuthenticationOAuth2(server.URL, "client-id", "audience", kf, transport)
+	store := store2.NewMemoryStore()
+
+	auth, err := NewAuthenticationOauth2(issuer, store,  TypeClientCredential, kf)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	token, err := auth.getToken(auth.issuer)
+	token, err := auth.source.Token()
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, "token-content", token)
+	assert.Equal(t, "token-content", token.AccessToken)
 }

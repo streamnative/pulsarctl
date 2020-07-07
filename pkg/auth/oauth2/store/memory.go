@@ -33,6 +33,7 @@ type MemoryStore struct {
 func NewMemoryStore() Store {
 	return &MemoryStore{
 		clock: clock.RealClock{},
+		grants: make(map[string]*oauth2.AuthorizationGrant),
 	}
 }
 

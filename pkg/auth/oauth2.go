@@ -111,7 +111,7 @@ func (o *OAuth2Provider) initFlow(types, keyFile string) error {
 		if err != nil {
 			return err
 		}
-		grant, err := flow.Authorize()
+		grant, err = flow.Authorize()
 		if err != nil {
 			return err
 		}

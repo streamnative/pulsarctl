@@ -81,7 +81,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.newExchangeCodeRequest(AuthorizationCodeExchangeRequest{})
 
 			Expect(result).To(BeNil())
-			Expect(err.Error()).To(Equal("parse ://issuer/oauth/token: missing protocol scheme"))
+			Expect(err.Error()).To(Equal("parse \"://issuer/oauth/token\": missing protocol scheme"))
 		})
 	})
 
@@ -133,7 +133,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.handleAuthTokensResponse(response)
 			Expect(result).To(BeNil())
 			Expect(err.Error()).To(Equal(
-				"json: cannot unmarshal string into Go value of type auth.AuthorizationTokenResponse"))
+				"json: cannot unmarshal string into Go value of type oauth2.AuthorizationTokenResponse"))
 		})
 	})
 
@@ -167,7 +167,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.newRefreshTokenRequest(RefreshTokenExchangeRequest{})
 
 			Expect(result).To(BeNil())
-			Expect(err.Error()).To(Equal("parse ://issuer/oauth/token: missing protocol scheme"))
+			Expect(err.Error()).To(Equal("parse \"://issuer/oauth/token\": missing protocol scheme"))
 		})
 	})
 
@@ -203,7 +203,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.newClientCredentialsRequest(ClientCredentialsExchangeRequest{})
 
 			Expect(result).To(BeNil())
-			Expect(err.Error()).To(Equal("parse ://issuer/oauth/token: missing protocol scheme"))
+			Expect(err.Error()).To(Equal("parse \"://issuer/oauth/token\": missing protocol scheme"))
 		})
 	})
 
@@ -238,7 +238,7 @@ var _ = Describe("CodetokenExchanger", func() {
 			result, err := tokenRetriever.newClientCredentialsRequest(ClientCredentialsExchangeRequest{})
 
 			Expect(result).To(BeNil())
-			Expect(err.Error()).To(Equal("parse ://issuer/oauth/token: missing protocol scheme"))
+			Expect(err.Error()).To(Equal("parse \"://issuer/oauth/token\": missing protocol scheme"))
 		})
 	})
 
