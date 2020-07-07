@@ -172,6 +172,11 @@ func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
 		return t.wrapped.Base.RoundTrip(req)
 	}
 
+	token, err := t.source.Token()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(token.AccessToken)
 	res, err := t.wrapped.RoundTrip(req)
 	if err != nil {
 		return nil, err

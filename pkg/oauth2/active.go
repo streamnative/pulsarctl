@@ -19,7 +19,6 @@ package oauth2
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/spf13/pflag"
 	o "github.com/streamnative/pulsarctl/pkg/auth/oauth2"
@@ -84,8 +83,6 @@ func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, clientID, keyFile 
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(grant.Token.AccessToken)
 
 	store, err := store2.MakeKeyringStore()
 	if err != nil {

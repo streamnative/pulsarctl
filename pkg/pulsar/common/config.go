@@ -48,6 +48,4 @@ type Config struct {
 	ClientID       string
 	Audience       string
 	KeyFile        string
-
-	CommandLine bool
 }

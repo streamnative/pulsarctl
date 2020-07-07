@@ -91,8 +91,6 @@ func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, no
 		return errors.New("login failed: " + err.Error())
 	}
 
-	fmt.Println(grant.Token.AccessToken)
-
 	store, err := store2.MakeKeyringStore()
 	if err != nil {
 		return err
