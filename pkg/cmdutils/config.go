@@ -112,6 +112,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"File path for TLS key used for authentication")
 
 	c.addBKFlags(flags)
+	c.addOAuth2Flags(flags)
 
 	return flags
 }
@@ -123,6 +124,30 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 		bookkeeper.DefaultWebServiceURL,
 		"The bookie web service url that pulsarctl connects to.",
 	)
+}
+
+func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
+	flags.StringVar(
+		&c.IssuerEndpoint,
+		"issuer-endpoint",
+		"",
+		"OAuth 2.0 issuer endpoint.")
+
+	flags.StringVar(
+		&c.ClientID,
+		"client-id",
+		"",
+		"OAuth 2.0 client identifier for the SN Cloud CLI.")
+
+	flags.StringVar(
+		&c.Audience,
+		"audience",
+		"", "OAuth 2.0 audience identifier for the SN Cloud API.")
+
+	flags.StringVar(
+		&c.KeyFile,
+		"key-file",
+		"", "Path to the private key file.")
 }
 
 func Exists(path string) bool {
@@ -167,13 +192,15 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 				logger.Critical("wrong context:%s\n", ctxConf.CurrentContext)
 				os.Exit(1)
 			}
-
 			c.WebServiceURL = ctx.BrokerServiceURL
-
 			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
 			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
 			c.Token = auth.Token
 			c.TokenFile = auth.TokenFile
+			c.IssuerEndpoint = auth.IssuerEndpoint
+			c.ClientID = auth.ClientID
+			c.Audience = auth.Audience
+			c.KeyFile = auth.KeyFile
 		}
 	}
 

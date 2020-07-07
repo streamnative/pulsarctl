@@ -45,6 +45,7 @@ func TestConfigCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out
 	buf := new(bytes.Buffer)
 	rootCmd.SetOut(buf)
 	rootCmd.SetArgs(append([]string{"context"}, args...))
+	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"context",
