@@ -122,7 +122,7 @@ installNew() {
   local plugins_dir=${HOME}/.pulsarctl/plugins
   
   mkdir -p ${plugins_dir}
-  cp plugins/* ${plugins_dir}
+  cp -r plugins/* ${plugins_dir}
   rm -rf ${TARFILE}
   rm -rf ${UNTARFILE}
 

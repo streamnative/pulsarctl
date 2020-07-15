@@ -185,8 +185,13 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	ctxConf := c.DecodeContext()
 	if ctxConf != nil {
 		if ctxConf.CurrentContext != "" {
-			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-			auth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+			ctx, exist := ctxConf.Contexts[ctxConf.CurrentContext]
+			auth, existAuth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+
+			if !exist || !existAuth {
+				logger.Critical("wrong context:%s\n", ctxConf.CurrentContext)
+				os.Exit(1)
+			}
 			c.WebServiceURL = ctx.BrokerServiceURL
 			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
 			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
