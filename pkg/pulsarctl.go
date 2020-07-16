@@ -34,6 +34,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
+	"github.com/streamnative/pulsarctl/pkg/oauth2"
 
 	function "github.com/streamnative/pulsarctl/pkg/ctl/functions"
 	schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
@@ -130,6 +131,9 @@ func NewPulsarctlCmd() *cobra.Command {
 
 	// plugins related commands
 	rootCmd.AddCommand(plugin.Command(flagGrouping))
+
+	// oauth2 related commands
+	rootCmd.AddCommand(oauth2.Command(flagGrouping))
 
 	return rootCmd
 }

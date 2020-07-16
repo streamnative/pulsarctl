@@ -137,12 +137,12 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 		&c.ClientID,
 		"client-id",
 		"",
-		"OAuth 2.0 client identifier for the SN Cloud CLI.")
+		"OAuth 2.0 client identifier.")
 
 	flags.StringVar(
 		&c.Audience,
 		"audience",
-		"", "OAuth 2.0 audience identifier for the SN Cloud API.")
+		"", "OAuth 2.0 audience identifier.")
 
 	flags.StringVar(
 		&c.KeyFile,
