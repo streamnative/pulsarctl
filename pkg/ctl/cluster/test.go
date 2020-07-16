@@ -67,7 +67,8 @@ func TestClusterCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 }
 
 var (
-	flag     bool
+	flag bool
+	// nolint
 	basePath string
 )
 

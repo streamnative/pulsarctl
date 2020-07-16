@@ -108,19 +108,19 @@ Welcome to Pulsar!
 	return nil
 }
 
-type promptFunc struct {
+type PromptFunc struct {
 	SkipOpen     bool
 	osInteractor os.Interactor
 }
 
-func NewPrompt(skipOpen bool) *promptFunc {
-	return &promptFunc{
+func NewPrompt(skipOpen bool) *PromptFunc {
+	return &PromptFunc{
 		SkipOpen:     skipOpen,
 		osInteractor: &os.DefaultInteractor{},
 	}
 }
 
-func (p *promptFunc) Prompt(code *o.DeviceCodeResult) error {
+func (p *PromptFunc) Prompt(code *o.DeviceCodeResult) error {
 	if !p.SkipOpen {
 		err := p.osInteractor.OpenURL(code.VerificationURIComplete)
 		if err == nil {

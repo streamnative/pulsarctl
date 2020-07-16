@@ -46,10 +46,10 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"activate")
 
-	var issuerEndpoint, clientID, audience, keyFile string
+	var issuerEndpoint, audience, keyFile string
 
 	vc.SetRunFunc(func() error {
-		return doActive(vc, issuerEndpoint, audience, clientID, keyFile)
+		return doActive(vc, issuerEndpoint, audience, keyFile)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
@@ -57,14 +57,12 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 			"The OAuth 2.0 issuer endpoint")
 		set.StringVarP(&audience, "audience", "a", "",
 			"The audience identifier for the API server")
-		set.StringVarP(&clientID, "client-id", "c", "",
-			"The client ID to user for authorization grants")
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
 	})
 }
 
-func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, clientID, keyFile string) error {
+func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string) error {
 	if issuerEndpoint == "" || audience == "" || keyFile == "" {
 		return errors.New("the arguments issuer-endpoint, audience, key-file can not be empty")
 	}

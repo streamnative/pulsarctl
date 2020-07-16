@@ -98,43 +98,7 @@ func (o *OAuth2Provider) loadGrant() error {
 }
 
 func (o *OAuth2Provider) initCache(grant *oauth2.AuthorizationGrant) error {
-	refresher, err := o.getRefresher(o.issuer, grant.Type)
-	if err != nil {
-		return err
-	}
-
-	source, err := cache.NewDefaultTokenCache(o.store, o.issuer.Audience, refresher)
-	if err != nil {
-		return err
-	}
-	o.source = source
-	return nil
-}
-
-func (o *OAuth2Provider) initFlow(types, keyFile string) error {
-	var grant *oauth2.AuthorizationGrant
-	switch types {
-	case TypeClientCredential:
-		flow, err := oauth2.NewDefaultClientCredentialsFlow(oauth2.ClientCredentialsFlowOptions{
-			KeyFile:          keyFile,
-			AdditionalScopes: nil,
-		})
-		if err != nil {
-			return err
-		}
-		grant, err = flow.Authorize(o.issuer.Audience)
-		if err != nil {
-			return err
-		}
-		err = o.store.SaveGrant(o.issuer.Audience, *grant)
-		if err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("unsupported authentication type: %s", types)
-	}
-
-	refresher, err := o.getRefresher(o.issuer, grant.Type)
+	refresher, err := o.getRefresher(grant.Type)
 	if err != nil {
 		return err
 	}
@@ -161,8 +125,7 @@ func (o *OAuth2Provider) Transport() http.RoundTripper {
 	}
 }
 
-func (o *OAuth2Provider) getRefresher(issuerData oauth2.Issuer,
-	t oauth2.AuthorizationGrantType) (oauth2.AuthorizationGrantRefresher, error) {
+func (o *OAuth2Provider) getRefresher(t oauth2.AuthorizationGrantType) (oauth2.AuthorizationGrantRefresher, error) {
 	switch t {
 	case oauth2.GrantTypeClientCredentials:
 		return oauth2.NewDefaultClientCredentialsGrantRefresher(o.clock)
@@ -232,4 +195,3 @@ func makeKeyring() (keyring.Keyring, error) {
 func keyringPrompt(prompt string) (string, error) {
 	return "", nil
 }
-
