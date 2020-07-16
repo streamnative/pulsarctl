@@ -58,7 +58,7 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&issuerEndpoint, "issuer-endpoint", "i", "",
 			"The OAuth 2.0 issuer endpoint")
 		set.StringVarP(&audience, "audience", "a", "",
-			"The audience identifier for the API server")
+			"The audience identifier for the Pulsar instance")
 		set.StringVarP(&clientID, "client-id", "c", "",
 			"The client ID to user for authorization grants")
 		set.StringVarP(&keyFile, "key-file", "k", "",

@@ -34,7 +34,7 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	activate := cmdutils.Example{
 		Desc:    "Activate a service account by supplying its credentials.",
-		Command: "pulsarctl oauth2 active --issuer-endpoint (issuer) --audience (audience) --key-file (key file path)",
+		Command: "pulsarctl oauth2 activate --issuer-endpoint (issuer) --audience (audience) --key-file (key file path)",
 	}
 	examples = append(examples, activate)
 	desc.CommandExamples = examples
@@ -49,20 +49,20 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 	var issuerEndpoint, audience, keyFile string
 
 	vc.SetRunFunc(func() error {
-		return doActive(vc, issuerEndpoint, audience, keyFile)
+		return doActivate(vc, issuerEndpoint, audience, keyFile)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
 		set.StringVarP(&issuerEndpoint, "issuer-endpoint", "i", "",
 			"The OAuth 2.0 issuer endpoint")
 		set.StringVarP(&audience, "audience", "a", "",
-			"The audience identifier for the API server")
+			"The audience identifier for the Pulsar instance")
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
 	})
 }
 
-func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string) error {
+func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string) error {
 	if issuerEndpoint == "" || audience == "" || keyFile == "" {
 		return errors.New("the arguments issuer-endpoint, audience, key-file can not be empty")
 	}
