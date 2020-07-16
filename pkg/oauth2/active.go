@@ -20,9 +20,9 @@ package oauth2
 import (
 	"errors"
 
+	o "github.com/apache/pulsar-client-go/oauth2"
 	"github.com/spf13/pflag"
-	o "github.com/streamnative/pulsarctl/pkg/auth/oauth2"
-	store2 "github.com/streamnative/pulsarctl/pkg/auth/oauth2/store"
+	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -68,23 +68,21 @@ func doActive(vc *cmdutils.VerbCmd, issuerEndpoint, audience, clientID, keyFile 
 	if issuerEndpoint == "" || audience == "" || keyFile == "" {
 		return errors.New("the arguments issuer-endpoint, audience, key-file can not be empty")
 	}
-	issuer := o.Issuer{
-		IssuerEndpoint: issuerEndpoint,
-		ClientID:       clientID,
-		Audience:       audience,
-	}
 
-	flow, err := o.NewDefaultClientCredentialsFlow(issuer, keyFile)
+	flow, err := o.NewDefaultClientCredentialsFlow(o.ClientCredentialsFlowOptions{
+		KeyFile:          keyFile,
+		AdditionalScopes: nil,
+	})
 	if err != nil {
 		return err
 	}
 
-	grant, err := flow.Authorize()
+	grant, err := flow.Authorize(audience)
 	if err != nil {
 		return err
 	}
 
-	store, err := store2.MakeKeyringStore()
+	store, err := auth.MakeKeyringStore()
 	if err != nil {
 		return err
 	}

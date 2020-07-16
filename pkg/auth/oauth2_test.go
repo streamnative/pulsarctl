@@ -25,9 +25,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/apache/pulsar-client-go/oauth2"
+	"github.com/apache/pulsar-client-go/oauth2/store"
 	"github.com/pkg/errors"
-	"github.com/streamnative/pulsarctl/pkg/auth/oauth2"
-	store2 "github.com/streamnative/pulsarctl/pkg/auth/oauth2/store"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,7 +61,7 @@ func mockOAuthServer() *httptest.Server {
 }
 
 // mockKeyFile will mock a temp key file for testing.
-func mockKeyFile() (string, error) {
+func mockKeyFile(server string) (string, error) {
 	pwd, err := os.Getwd()
 	if err != nil {
 		return "", err
@@ -70,13 +70,14 @@ func mockKeyFile() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	_, err = kf.WriteString(`{
+	_, err = kf.WriteString(fmt.Sprintf(`{
   "type":"sn_service_account",
   "client_id":"client-id",
   "client_secret":"client-secret",
   "client_email":"oauth@test.org",
-  "issuer_url":"http://issue-url"
-}`)
+  "issuer_url":"%s"
+}`, server))
+
 	if err != nil {
 		return "", err
 	}
@@ -87,7 +88,7 @@ func mockKeyFile() (string, error) {
 func TestOauth2(t *testing.T) {
 	server := mockOAuthServer()
 	defer server.Close()
-	kf, err := mockKeyFile()
+	kf, err := mockKeyFile(server.URL)
 	defer os.Remove(kf)
 	if err != nil {
 		t.Fatal(errors.Wrap(err, "create mocked key file failed"))
@@ -96,12 +97,16 @@ func TestOauth2(t *testing.T) {
 	issuer := oauth2.Issuer{
 		IssuerEndpoint: server.URL,
 		ClientID:       "client-id",
-		Audience:       "audience",
+		Audience:       server.URL,
 	}
 
-	store := store2.NewMemoryStore()
+	memoryStore := store.NewMemoryStore()
+	err = saveGrant(memoryStore, kf, issuer.Audience)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	auth, err := NewAuthenticationOauth2(issuer, store,  TypeClientCredential, kf)
+	auth, err := NewAuthenticationOauth2(issuer, memoryStore)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,4 +116,21 @@ func TestOauth2(t *testing.T) {
 		t.Fatal(err)
 	}
 	assert.Equal(t, "token-content", token.AccessToken)
+}
+
+func saveGrant(store store.Store, keyFile, audience string) error {
+	flow, err := oauth2.NewDefaultClientCredentialsFlow(oauth2.ClientCredentialsFlowOptions{
+		KeyFile:          keyFile,
+		AdditionalScopes: nil,
+	})
+	if err != nil {
+		return err
+	}
+
+	grant, err := flow.Authorize(audience)
+	if err != nil {
+		return err
+	}
+
+	return store.SaveGrant(audience, *grant)
 }

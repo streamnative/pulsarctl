@@ -21,9 +21,9 @@ import (
 	"errors"
 	"fmt"
 
+	o "github.com/apache/pulsar-client-go/oauth2"
 	"github.com/spf13/pflag"
-	o "github.com/streamnative/pulsarctl/pkg/auth/oauth2"
-	store2 "github.com/streamnative/pulsarctl/pkg/auth/oauth2/store"
+	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/oauth2/os"
 )
@@ -70,28 +70,25 @@ func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, no
 	if issuerEndpoint == "" || clientID == "" || audience == "" {
 		return errors.New("the arguments issuer-endpoint, client-id, audience can not be empty")
 	}
-	issuer := o.Issuer{
-		IssuerEndpoint: issuerEndpoint,
-		ClientID:       clientID,
-		Audience:       audience,
-	}
 
 	options := o.DeviceCodeFlowOptions{
+		IssuerEndpoint:   issuerEndpoint,
+		ClientID:         clientID,
 		AdditionalScopes: nil,
 		AllowRefresh:     noRefresh,
 	}
 
 	prompt := NewPrompt(false)
-	flow, err := o.NewDefaultDeviceCodeFlow(issuer, options, prompt.Prompt)
+	flow, err := o.NewDefaultDeviceCodeFlow(options, prompt.Prompt)
 	if err != nil {
 		return errors.New("configuration error: unable to use device code flow: " + err.Error())
 	}
-	grant, err := flow.Authorize()
+	grant, err := flow.Authorize(audience)
 	if err != nil {
 		return errors.New("login failed: " + err.Error())
 	}
 
-	store, err := store2.MakeKeyringStore()
+	store, err := auth.MakeKeyringStore()
 	if err != nil {
 		return err
 	}
@@ -144,4 +141,3 @@ Waiting for login to complete...
 
 	return nil
 }
-
