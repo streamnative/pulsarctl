@@ -50,7 +50,6 @@ func TestDeleteNonExistentTenant(t *testing.T) {
 	args := []string{"delete", "non-existent-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(deleteNs, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Tenant does not exist", execErr.Error())
 }
 
 func TestDeleteNonExistentNamespace(t *testing.T) {

@@ -29,12 +29,10 @@ func TestGrantPermissionsCmd(t *testing.T) {
 	args := []string{"create", ns}
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, execErr)
-
 	args = []string{"grant-permission", "--role", "test-permissions",
 		"--actions", "produce", "--actions", "consume", "--actions", "functions", ns}
 	_, execErr, _, _ = TestNamespaceCommands(GrantPermissionsCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 501 reason: Authorization is not enabled", execErr.Error())
+	assert.Nil(t, execErr)
 }
 
 func TestGrantPermissionsArgsError(t *testing.T) {

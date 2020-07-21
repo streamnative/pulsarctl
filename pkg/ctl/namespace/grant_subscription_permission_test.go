@@ -32,8 +32,7 @@ func TestGrantSubPermissionsCmd(t *testing.T) {
 
 	args = []string{"grant-subscription-permission", "--role", "test-permissions", ns, "test-grant-sub"}
 	_, execErr, _, _ = TestNamespaceCommands(GrantSubPermissionsCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 501 reason: Authorization is not enabled", execErr.Error())
+	assert.Nil(t, execErr)
 }
 
 func TestGrantSubPermissionsArgsError(t *testing.T) {
