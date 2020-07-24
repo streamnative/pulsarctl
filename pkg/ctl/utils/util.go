@@ -132,6 +132,10 @@ func ParseRelativeTimeInSeconds(relativeTime string) (time.Duration, error) {
 		return -1, errors.New("time can not be empty")
 	}
 
+	if relativeTime == "-1" {
+		return -1, nil
+	}
+
 	unitTime := relativeTime[len(relativeTime)-1:]
 	t := relativeTime[:len(relativeTime)-1]
 	timeValue, err := strconv.ParseInt(t, 10, 64)

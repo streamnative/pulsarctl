@@ -35,14 +35,14 @@ func setRetention(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	setRetentionWithTime := cmdutils.Example{
 		Desc:    "Set the retention policy for a namespace",
-		Command: "pulsarctl namespaces set-retention tenant/namespace --time 100m",
+		Command: "pulsarctl namespaces set-retention tenant/namespace --time 100m --size 1G",
 	}
 
-	setRetentionWithSize := cmdutils.Example{
-		Desc:    "Set the retention policy for a namespace",
-		Command: "pulsarctl namespaces set-retention tenant/namespace --size 1G",
+	setInfiniteTime := cmdutils.Example{
+		Desc:    "Set the infinite time retention policy for a namespace",
+		Command: "pulsarctl namespaces set-retention tenant/namespace --size -1",
 	}
-	examples = append(examples, setRetentionWithTime, setRetentionWithSize)
+	examples = append(examples, setRetentionWithTime, setInfiniteTime)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
@@ -138,7 +138,8 @@ func doSetRetention(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 	}
 	err = admin.Namespaces().SetRetention(ns, util.NewRetentionPolicies(retentionTimeInMin, retentionSizeInMB))
 	if err == nil {
-		vc.Command.Printf("Set retention successfully for [%s]\n", ns)
+		vc.Command.Printf("Set retention successfully for [%s]."+
+			" The retention policy is: time = %d min, size = %d MB\n", ns, retentionTimeInMin, retentionSizeInMB)
 	}
 
 	return err
