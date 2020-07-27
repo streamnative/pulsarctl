@@ -19,6 +19,7 @@ package namespace
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -44,7 +45,8 @@ func TestRetention(t *testing.T) {
 	setArgs := []string{"set-retention", "public/test-retention", "--time", "10m", "--size", "10M"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setRetention, setArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set retention successfully for [public/test-retention]\n")
+	assert.Equal(t, setOut.String(), fmt.Sprintf("Set retention successfully for [%s]."+
+		" The retention policy is: time = %d min, size = %d MB\n", "public/test-retention", 10, 10))
 
 	getArgs = []string{"get-retention", "public/test-retention"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getRetention, getArgs)
@@ -68,4 +70,21 @@ func TestRetention(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, int64(10), retention.RetentionSizeInMB)
 	assert.Equal(t, -10, retention.RetentionTimeInMinutes)
+}
+
+func TestSetNegativeTimeRetention(t *testing.T) {
+	ns := "public/test-negative-retention"
+
+	args := []string{"create", ns}
+	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"set-retention", ns, "--size", "1G", "--time", "-1"}
+	out, execErr, _, _ := TestNamespaceCommands(setRetention, args)
+	if execErr != nil {
+		assert.FailNow(t, "set retention failed: %s", execErr.Error())
+	}
+
+	assert.Equal(t, fmt.Sprintf("Set retention successfully for [%s]."+
+		" The retention policy is: time = %d min, size = %d MB\n", ns, -1, 1024), out.String())
 }
