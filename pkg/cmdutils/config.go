@@ -225,7 +225,7 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := common.Config(*c)
 	client, err := pulsar.New(&config)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, "Get pulsar client failed: " + err.Error())
+		fmt.Fprintln(os.Stdout, "Get pulsar client failed: "+err.Error())
 	}
 	return client
 }

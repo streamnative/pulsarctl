@@ -90,4 +90,3 @@ func (p *TLSAuthProvider) configTLS() error {
 func (p *TLSAuthProvider) WithTransport(tripper http.RoundTripper) {
 	p.T = tripper
 }
-
