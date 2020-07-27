@@ -86,3 +86,8 @@ func (p *TLSAuthProvider) configTLS() error {
 	transport.TLSClientConfig.Certificates = []tls.Certificate{*cert}
 	return nil
 }
+
+func (p *TLSAuthProvider) WithTransport(tripper http.RoundTripper) {
+	p.T = tripper
+}
+
