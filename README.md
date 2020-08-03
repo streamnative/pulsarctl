@@ -31,6 +31,7 @@ A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project
 
 | Version | Reference |
 | --------| --------- |
+| [0.5.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.5.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.5.0/) |
 | [0.4.1](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.1) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.4.1/) |
 | [0.4.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.4.0/) |
 | [0.3.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.3.0) | [Command Reference](https://streamnative.io/docs/pulsarctl/v0.3.0/) |
