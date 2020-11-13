@@ -20,7 +20,8 @@ package common
 type APIVersion int
 
 const (
-	V1 APIVersion = iota
+	undefined APIVersion = iota
+	V1
 	V2
 	V3
 )
