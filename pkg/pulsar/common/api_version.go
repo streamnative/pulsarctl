@@ -30,6 +30,8 @@ const DefaultAPIVersion = "v2"
 
 func (v APIVersion) String() string {
 	switch v {
+	case undefined:
+		return DefaultAPIVersion
 	case V1:
 		return ""
 	case V2:
