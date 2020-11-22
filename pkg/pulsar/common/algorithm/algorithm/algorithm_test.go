@@ -41,6 +41,7 @@ var testData = []struct {
 }
 
 func TestGetSignatureAlgorithm(t *testing.T) {
+	// test ci status
 	for _, data := range testData {
 		t.Logf("test case: %+v", data)
 		switch data.name {
