@@ -75,7 +75,6 @@ var keyFiles = []string{
 func TestCreateTokenWithSecretKeyFileCmd(t *testing.T) {
 	for _, sa := range algorithmList {
 		for _, keyFile := range keyFiles {
-			t.Logf("Signature algorithm: %s, key file: %s", sa, keyFile)
 			if strings.Contains(keyFile, "secret") {
 				doTestCreateTokenWithSecretKey(t, sa, keyFile)
 			} else {

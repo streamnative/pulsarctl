@@ -31,7 +31,6 @@ func TestGetSource(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	args := []string{"create",
 		"--tenant", "public",
@@ -72,7 +71,6 @@ func TestGetSource(t *testing.T) {
 		"topic":             "my-topic",
 	}
 	assert.Equal(t, sourceConf.Configs, sourceConfMap)
-	t.Logf("get source value:%s", out.String())
 }
 
 func TestGetFailureSource(t *testing.T) {

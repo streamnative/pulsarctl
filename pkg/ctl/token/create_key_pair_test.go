@@ -41,7 +41,6 @@ var testData = []struct {
 
 func TestCreateKeyPair(t *testing.T) {
 	for _, data := range testData {
-		t.Logf("test case: %+v", data)
 		args := []string{"create-key-pair", "--signature-algorithm", data.signatureAlgorithm,
 			"--output-private-key", data.outputPrivateFilePath, "--output-public-key", data.outputPublicFilePath}
 		out, execErr, err := testTokenCommands(createKeyPair, args)

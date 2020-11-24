@@ -125,7 +125,6 @@ var testTokenData = []struct {
 
 func TestShowCmd(t *testing.T) {
 	for _, data := range testTokenData {
-		t.Logf("test case: %+v", data)
 		doTestShowCmd(t, data.signatureAlgorithm, data.subject, data.tokenString)
 	}
 }

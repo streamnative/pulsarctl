@@ -35,7 +35,6 @@ func TestStateFunctions(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("base path: %s", basePath)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -93,7 +92,6 @@ func TestStateFunctions(t *testing.T) {
 	_, errMsg, _ := TestFunctionsCommands(putstateFunctionsCmd, stateArgsErrInFormat)
 	assert.NotNil(t, errMsg)
 	exceptErrMsg := "error input format"
-	t.Logf("err message:%s", errMsg.Error())
 	assert.True(t, strings.Contains(errMsg.Error(), exceptErrMsg))
 
 	// query state
@@ -145,7 +143,6 @@ func TestByteValue(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
@@ -173,7 +170,6 @@ func TestByteValue(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Logf("file name:%s", file.Name())
 
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
@@ -207,7 +203,6 @@ func TestByteValue(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("outQueryState:%s", outQueryState.String())
 
 	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
