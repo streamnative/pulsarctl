@@ -15,18 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package common
+package pulsar
 
 import (
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestApiVersion_String(t *testing.T) {
-	assert.Equal(t, "", V1.String())
-	assert.Equal(t, "v2", V2.String())
-	assert.Equal(t, "v3", V3.String())
-	var undefinedAPIVersion APIVersion
-	assert.Equal(t, DefaultAPIVersion, undefinedAPIVersion.String())
+func TestPulsarClientEndpointEscapes(t *testing.T) {
+	client := pulsarClient{Client: nil, APIVersion: common.V2}
+	actual := client.endpoint("/myendpoint", "abc%? /def", "ghi")
+	expected := "/admin/v2/myendpoint/abc%25%3F%20%2Fdef/ghi"
+	assert.Equal(t, expected, actual)
 }
