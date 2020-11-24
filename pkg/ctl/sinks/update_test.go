@@ -66,7 +66,7 @@ func TestUpdateSink(t *testing.T) {
 	var sinkConf utils.SinkConfig
 	err = json.Unmarshal(out.Bytes(), &sinkConf)
 	assert.Nil(t, err)
-	t.Log(sinkConf)
+	fmt.Print(sinkConf)
 	assert.Equal(t, sinkConf.Parallelism, 3)
 
 	// test the sink name not exist

@@ -171,7 +171,7 @@ func TestCommand(t *testing.T) {
 	if execErr != nil {
 		t.Fatal()
 	}
-	t.Log(out.String())
+	fmt.Print(out.String())
 }
 
 func TestNoTokenStringOrFileErrInShowCmd(t *testing.T) {

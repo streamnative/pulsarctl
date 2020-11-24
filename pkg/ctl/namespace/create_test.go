@@ -55,9 +55,8 @@ func TestCreateNs(t *testing.T) {
 
 func TestCreateNsForBundles(t *testing.T) {
 	args := []string{"create", "public/test-namespace-bundles", "--bundles", "0"}
-	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	_, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
-	t.Log(createOut.String())
 
 	policiesArgs := []string{"policies", "public/test-namespace-bundles"}
 	out, execErr, _, _ := TestNamespaceCommands(getPolicies, policiesArgs)
@@ -71,10 +70,9 @@ func TestCreateNsForBundles(t *testing.T) {
 
 func TestCreateNsForNegativeBundles(t *testing.T) {
 	args := []string{"create", "public/test-namespace-negative-bundles", "--bundles", "-1"}
-	createOut, execErr, _, err := TestNamespaceCommands(createNs, args)
+	_, execErr, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
 	exceptedErr := "invalid number of bundles. Number of numBundles has to be in the range of (0, 2^32]"
-	t.Log(createOut.String())
 	assert.Equal(t, exceptedErr, execErr.Error())
 }
 

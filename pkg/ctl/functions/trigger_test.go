@@ -23,6 +23,7 @@ package functions
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 
@@ -83,7 +84,7 @@ func TestTriggerFunctions(t *testing.T) {
 		if execErr != nil {
 			t.Error(execErr.Error())
 		}
-		t.Log(triggerOut.String())
+		fmt.Print(triggerOut.String())
 	}
 }
 

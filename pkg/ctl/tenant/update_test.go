@@ -34,7 +34,6 @@ func TestUpdateTenantCmd(t *testing.T) {
 	out, execErr, _, _ := TestTenantCommands(getTenantCmd, args)
 	assert.Nil(t, execErr)
 
-	t.Log(out.String())
 	var tenantData utils.TenantData
 	err := json.Unmarshal(out.Bytes(), &tenantData)
 	if err != nil {
