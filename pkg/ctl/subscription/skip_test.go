@@ -84,3 +84,12 @@ func TestSkipNonExistingSub(t *testing.T) {
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
 }
+
+func TestSkipNoExistingSubCharactersEscaped(t *testing.T) {
+	// If we didn't escape special characters, this would get a "404 reason: Unknown error"
+	// Because the endpoint doesn't exist, not just the subscription doesn't exist
+	args := []string{"skip", "--all", "test-skip-messages-non-existing-sub-topic",
+		"test-skip-messages-non-existing-sub-non-existing/with/special chars"}
+	_, execErr, _, _ := TestSubCommands(SkipCmd, args)
+	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+}
