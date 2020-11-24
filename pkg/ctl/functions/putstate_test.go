@@ -170,7 +170,6 @@ func TestByteValue(t *testing.T) {
 		t.Fatal(err)
 	}
 
-
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
 		"--namespace", "default",
