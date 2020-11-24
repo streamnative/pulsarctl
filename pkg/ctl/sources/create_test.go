@@ -30,7 +30,6 @@ func TestCreateSources(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	// $ ./pulsarctl source create
 	// --archive ./pulsar-io-kafka-2.4.0.nar
@@ -60,7 +59,6 @@ func TestFailureCreateSources(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	narName := "dummy-pulsar-io-kafka.nar"
 	_, err = os.Create(narName)

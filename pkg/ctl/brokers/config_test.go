@@ -37,7 +37,6 @@ func TestGetInternalConfig(t *testing.T) {
 	assert.Equal(t, "127.0.0.1:2181", internalData.ZookeeperServers)
 	assert.Equal(t, "127.0.0.1:2181", internalData.ConfigurationStoreServers)
 	assert.Equal(t, "/ledgers", internalData.LedgersRootPath)
-	assert.Equal(t, "bk://127.0.0.1:4181", internalData.StateStorageServiceURL)
 }
 
 func TestGetRuntimeConfig(t *testing.T) {

@@ -49,9 +49,7 @@ func TestUnsubscribeCmd(t *testing.T) {
 	args = []string{"bundle-range", ns + "/test-unsubscribe-with-bundle"}
 	out, execErr, _, _ = topic.TestTopicCommands(topic.GetBundleRangeCmd, args)
 	assert.Nil(t, execErr)
-	t.Logf(out.String())
 	bundle := strings.Split(out.String(), ":")[2]
-	t.Logf(strings.TrimSpace(bundle))
 	assert.True(t, strings.HasPrefix(strings.TrimSpace(bundle), "0x"))
 
 	args = []string{"unsubscribe", "--bundle", strings.TrimSpace(bundle), ns, "non-existing-sub-name"}

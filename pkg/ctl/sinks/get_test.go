@@ -31,7 +31,6 @@ func TestGetSink(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	args := []string{"create",
 		"--tenant", "public",
@@ -70,7 +69,6 @@ func TestGetSink(t *testing.T) {
 		"tableName": "test_jdbc",
 	}
 	assert.Equal(t, sinkConf.Configs, sinkConfMap)
-	t.Logf("get sink value:%s", out.String())
 }
 
 func TestGetFailureSink(t *testing.T) {

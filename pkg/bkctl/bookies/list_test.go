@@ -38,7 +38,6 @@ var testListData = []struct {
 
 func TestListCmd(t *testing.T) {
 	for _, data := range testListData {
-		t.Logf("test case: %+v\n", data)
 		args := []string{"list", data.bookieType}
 		if data.showHostName {
 			args = append(args, "--show-hostname")

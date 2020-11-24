@@ -18,6 +18,7 @@
 package schemas
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -52,7 +53,7 @@ func TestSchema(t *testing.T) {
 	getArgs := []string{"get", "test-schema"}
 	getOut, _, err := TestSchemasCommands(getSchema, getArgs)
 
-	t.Log(getOut.String())
+	fmt.Print(getOut.String())
 	assert.Nil(t, err)
 	assert.True(t, strings.Contains(getOut.String(), "AVRO"))
 	assert.True(t, strings.Contains(getOut.String(), "test-schema"))

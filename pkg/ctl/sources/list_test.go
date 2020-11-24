@@ -29,7 +29,6 @@ func TestListSources(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	args := []string{"create",
 		"--tenant", "public",
@@ -50,7 +49,6 @@ func TestListSources(t *testing.T) {
 		"--namespace", "default",
 	}
 	listOut, _, _ := TestSourcesCommands(listSourcesCmd, listArgs)
-	t.Logf("pulsar source name:%s", listOut.String())
 	assert.True(t, strings.Contains(listOut.String(), "test-source-list"))
 
 	deleteArgs := []string{"delete",

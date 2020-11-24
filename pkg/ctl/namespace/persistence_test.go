@@ -63,7 +63,7 @@ func TestFailurePersistence(t *testing.T) {
 	}
 	_, execErr, _, _ := TestNamespaceCommands(setPersistence, setArgs)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Bookkeeper Ensemble (2) >= WriteQuorum (5) >= AckQuoru (2)")
+	assert.Equal(t, execErr.Error(), "code: 400 reason: Bookkeeper Ensemble (2) >= WriteQuorum (5) >= AckQuoru (2)")
 
 	setArgs = []string{"set-persistence", "public/test-persistent-namespace",
 		"--ensemble-size", "2",
@@ -73,5 +73,5 @@ func TestFailurePersistence(t *testing.T) {
 	}
 	_, execErr, _, _ = TestNamespaceCommands(setPersistence, setArgs)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Bookkeeper Ensemble (2) >= WriteQuorum (2) >= AckQuoru (3)")
+	assert.Equal(t, execErr.Error(), "code: 400 reason: Bookkeeper Ensemble (2) >= WriteQuorum (2) >= AckQuoru (3)")
 }

@@ -125,7 +125,6 @@ var testTokenData = []struct {
 
 func TestShowCmd(t *testing.T) {
 	for _, data := range testTokenData {
-		t.Logf("test case: %+v", data)
 		doTestShowCmd(t, data.signatureAlgorithm, data.subject, data.tokenString)
 	}
 }
@@ -143,7 +142,6 @@ func doTestShowCmd(t *testing.T, signatureAlgorithm, subject, tokenString string
 
 func TestShowWithEnvToken(t *testing.T) {
 	for _, data := range testTokenData {
-		t.Logf("test case: %+v", data)
 		os.Setenv("TOKEN", data.tokenString)
 		defer os.Unsetenv("TOKEN")
 		doTestShowWithEnvToken(t, data.signatureAlgorithm, data.subject)
@@ -173,7 +171,7 @@ func TestCommand(t *testing.T) {
 	if execErr != nil {
 		t.Fatal()
 	}
-	t.Log(out.String())
+	fmt.Print(out.String())
 }
 
 func TestNoTokenStringOrFileErrInShowCmd(t *testing.T) {

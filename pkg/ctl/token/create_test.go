@@ -75,7 +75,6 @@ var keyFiles = []string{
 func TestCreateTokenWithSecretKeyFileCmd(t *testing.T) {
 	for _, sa := range algorithmList {
 		for _, keyFile := range keyFiles {
-			t.Logf("Signature algorithm: %s, key file: %s", sa, keyFile)
 			if strings.Contains(keyFile, "secret") {
 				doTestCreateTokenWithSecretKey(t, sa, keyFile)
 			} else {
@@ -98,12 +97,11 @@ func doTestCreateTokenWithSecretKey(t *testing.T, signatureAlgorithm, secretKeyF
 		args = append(args, "--base64")
 	}
 
-	out, execErr, err := testTokenCommands(create, args)
+	_, execErr, err := testTokenCommands(create, args)
 	assert.Nil(t, err)
 	switch {
 	case strings.HasPrefix(signatureAlgorithm, "HS"):
 		assert.Nil(t, execErr)
-		t.Log(out.String())
 	case strings.HasPrefix(signatureAlgorithm, "RS"):
 		assert.NotNil(t, execErr)
 		assert.Equal(t, "key is invalid", execErr.Error())
@@ -126,7 +124,7 @@ func doTestCreateTokenWithPrivateKey(t *testing.T, signatureAlgorithm, privateKe
 		"--expire", "1s",
 	}
 
-	out, execErr, err := testTokenCommands(create, args)
+	_, execErr, err := testTokenCommands(create, args)
 	assert.Nil(t, err)
 	switch {
 	case strings.HasPrefix(signatureAlgorithm, "HS"):
@@ -136,16 +134,13 @@ func doTestCreateTokenWithPrivateKey(t *testing.T, signatureAlgorithm, privateKe
 		fallthrough
 	case strings.HasPrefix(signatureAlgorithm, "PS") && strings.Contains(privateKeyFile, "ps"):
 		assert.Nil(t, execErr)
-		t.Log(out.String())
 	case strings.HasPrefix(signatureAlgorithm, "ES256") && strings.Contains(privateKeyFile, "es256"):
 		fallthrough
 	case strings.HasPrefix(signatureAlgorithm, "ES384") && strings.Contains(privateKeyFile, "es384"):
 		fallthrough
 	case strings.HasPrefix(signatureAlgorithm, "ES512") && strings.Contains(privateKeyFile, "es512"):
 		assert.Nil(t, execErr)
-		t.Logf(out.String())
 	default:
-		t.Logf("invalid case for testing create token with private key")
 	}
 }
 
