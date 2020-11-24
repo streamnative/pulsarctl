@@ -95,7 +95,6 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("%+v", stats)
 
 	assert.Equal(t, float64(0), stats.MsgRateIn)
 	assert.Equal(t, float64(0), stats.MsgRateOut)

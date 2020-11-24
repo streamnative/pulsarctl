@@ -29,7 +29,6 @@ func TestListSinks(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	args := []string{"create",
 		"--tenant", "public",
@@ -49,7 +48,6 @@ func TestListSinks(t *testing.T) {
 		"--namespace", "default",
 	}
 	listOut, _, _ := TestSinksCommands(listSinksCmd, listArgs)
-	t.Logf("pulsar sink name:%s", listOut.String())
 	assert.True(t, strings.Contains(listOut.String(), "test-sink-list"))
 
 	deleteArgs := []string{"delete",

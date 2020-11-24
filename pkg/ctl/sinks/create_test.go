@@ -31,7 +31,6 @@ func TestCreateSinks(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	args := []string{"create",
 		"--tenant", "public",
@@ -53,7 +52,6 @@ func TestFailureCreateSinks(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	narName := "dummy-pulsar-io-mysql.nar"
 	_, err = os.Create(narName)

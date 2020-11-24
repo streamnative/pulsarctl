@@ -29,7 +29,6 @@ func TestCreateFunctions(t *testing.T) {
 	if basePath == "" || err != nil {
 		t.Error(err)
 	}
-	t.Logf("base path: %s", basePath)
 
 	jarName := "dummyExample.jar"
 	_, err = os.Create(jarName)
