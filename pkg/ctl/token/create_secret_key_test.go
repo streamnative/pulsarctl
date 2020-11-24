@@ -55,7 +55,6 @@ var testSecretKeyData = []struct {
 
 func TestCreateSecretKeyCommand(t *testing.T) {
 	for _, data := range testSecretKeyData {
-		t.Logf("test case: %+v", data)
 		if data.InvalidAlgorithm {
 			switch data.SignatureAlgorithm {
 			case "INVALID":

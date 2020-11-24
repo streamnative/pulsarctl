@@ -163,7 +163,6 @@ var tokenData = []struct {
 
 func TestValidateCmd(t *testing.T) {
 	for _, data := range tokenData {
-		t.Logf("test case: %+v", data)
 		doTestValidateCmd(t, data.secretFile, data.publicFile, data.tokenStr, data.signatureAlgorithm, data.subject)
 	}
 }
