@@ -283,7 +283,7 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 		//proceed
 	default:
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
-			"be specified for the function, Cannot specify more than one")
+			"be specified for the function, cannot specify more than one")
 	}
 
 	if functionConfig.Jar != nil && !utils.IsPackageURLSupported(*functionConfig.Jar) &&
