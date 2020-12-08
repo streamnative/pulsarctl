@@ -191,3 +191,13 @@ func Convert(value string) (map[string]string, error) {
 
 	return tmpMap, nil
 }
+
+func NumProvidedStrings(sPointers ...*string) int {
+	out := 0
+	for _, sp := range sPointers {
+		if sp != nil {
+			out++
+		}
+	}
+	return out
+}
