@@ -32,7 +32,7 @@ var normalOutput = `{
       "ledgerId": 0,
       "entries": 0,
       "size": 0,
-      "timestamp": 0
+      "offloaded": false
     }
   ],
   "terminatedPosition": {
