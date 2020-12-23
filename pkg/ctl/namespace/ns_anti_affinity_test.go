@@ -47,5 +47,5 @@ func TestNsAntiAffinityGroup(t *testing.T) {
 	getArgs = []string{"get-anti-affinity-group", "public/test-anti-namespace"}
 	getOut, execErr, _, _ = TestNamespaceCommands(getAntiAffinityGroup, getArgs)
 	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "")
+	assert.Equal(t, getOut.String(), "test-ns")
 }

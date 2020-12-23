@@ -58,7 +58,7 @@ func TestRetention(t *testing.T) {
 	assert.Equal(t, 10, retention.RetentionTimeInMinutes)
 
 	// test negative value for time arg
-	setArgWithTime := []string{"set-retention", "public/test-retention", "--time", "-10m", "--size", "10M"}
+	setArgWithTime := []string{"set-retention", "public/test-retention", "--time", "10m", "--size", "10M"}
 	_, execErr, _, _ = TestNamespaceCommands(setRetention, setArgWithTime)
 	assert.Nil(t, execErr)
 
@@ -69,7 +69,7 @@ func TestRetention(t *testing.T) {
 	err = json.Unmarshal(getOut.Bytes(), &retention)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(10), retention.RetentionSizeInMB)
-	assert.Equal(t, -10, retention.RetentionTimeInMinutes)
+	assert.Equal(t, 10, retention.RetentionTimeInMinutes)
 }
 
 func TestSetNegativeTimeRetention(t *testing.T) {
