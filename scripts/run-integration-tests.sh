@@ -4,7 +4,7 @@ set -e
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
 
-docker build --build-arg PULSAR_VERSION=2.7.0.1-rc-202012111501 \
+docker build --build-arg PULSAR_VERSION=2.7.0.1 \
              -t ${IMAGE_NAME} \
              -f ${PROJECT_ROOT}/scripts/test-docker/Dockerfile ${PROJECT_ROOT}
 
