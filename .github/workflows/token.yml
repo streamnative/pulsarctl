@@ -25,7 +25,7 @@ jobs:
 
       - name: Get dependencies
         run: |
-          docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}/test/token/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test apachepulsar/pulsar bin/pulsar standalone -nfw
+          docker run -d -p 8080:8080 -p 6650:6650 -v ${PWD}/test/token/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test streamnative/pulsar-all:2.7.0.1 bin/pulsar standalone -nfw
           until curl http://localhost:8080/admin/v2/clusters > /dev/null 2>&1; do sleep 1; echo "Wait for pulsar service to be ready...$(date +%H:%M:%S)"; done
 
       - name: Test TLS

@@ -26,7 +26,7 @@ jobs:
     - name: Get dependencies
       run: |
         docker pull apachepulsar/pulsar
-        docker run -d -p 8443:8443 -p 6651:6651 -v ${PWD}/test/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test apachepulsar/pulsar bin/pulsar standalone
+        docker run -d -p 8443:8443 -p 6651:6651 -v ${PWD}/test/standalone.conf:/pulsar/conf/standalone.conf -v ${PWD}/test:/test streamnative/pulsar-all:2.7.0.1 bin/pulsar standalone
         sleep 10
 
     - name: Test TLS
