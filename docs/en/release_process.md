@@ -2,7 +2,19 @@
 
 This guide illustrates how to perform a release for pulsarctl.
 
-## Making the release
+# Naming convention
+
+All StreamNative repository should following the naming convention:
+
+- Branch name: `branch-X.Y.Z`
+- Tag name: `vX.Y.Z(.M)`(stable)
+- Release candidate tag: `vX.Y.Z(.M)-rc-$(date +%Y%m%d%H%M)` (unstable)
+
+`(.M)`  means our internal version release number, most of our repository is an extensions/tools for apache/pulsar. To keep track on the repository is produced by which version of the apache/pulsar, we will carry the apache/pulsar version number and using the `.M` to represent our internal release version. And all repository should keep align with streamnative/pulsar.
+
+There has two type of the tags, one is stable `vX.Y.Z(.M)`, and another is unstable `vX.Y.Z(.M)-rc-$(date +%y%m%d%H%M)`. A stable tag represent this release is a verified release, and an unstable tag represent this release is not verified.
+
+## Release workflow
 
 The steps for releasing are as follows:
 
@@ -78,7 +90,7 @@ Then the release draft, binary, and command doc will be published
 
 5. Check the release
 
-(1) Visit the Pulsarctl website https://streamnative.io/docs/pulsarctl/vx.y.z/ to
+(1) Visit the Pulsarctl website https://docs.streamnative.io/pulsarctl/vx.y.z/ to
 check the docs have been published successfully. `vx.y.z` is the version of the
 release. For example, https://streamnative.io/docs/publisctl/v0.1.0/.
 
