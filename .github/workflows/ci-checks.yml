@@ -9,7 +9,6 @@ on:
       - 'CONTRIBUTING.md'
 jobs:
   ut-tests:
-    name:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.12

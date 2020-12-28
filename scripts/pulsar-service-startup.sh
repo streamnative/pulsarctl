@@ -5,6 +5,7 @@ readonly PULSAR_HOME=${PULSAR_HOME:-"/pulsar"}
 
 echo "--- Run pulsar service at the directory ${PULSAR_HOME} ---"
 pushd ${PULSAR_HOME}
+bin/apply-config-from-env.py conf/standalone.conf
 bin/pulsar-daemon start standalone -nss -nfw
 until curl http://localhost:8080/admin/v2/tenants > /dev/null 2>&1
 do
