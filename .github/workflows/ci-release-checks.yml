@@ -1,4 +1,4 @@
-name: Pulsarctl Build and Website Check
+name: Pulsarctl
 
 on:
   pull_request:
@@ -10,8 +10,7 @@ on:
       - 'CONTRIBUTING.md'
 
 jobs:
-  check:
-    name: Build and site check
+  release-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

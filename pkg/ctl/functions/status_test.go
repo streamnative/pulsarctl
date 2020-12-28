@@ -87,7 +87,7 @@ func TestStatusFunctions(t *testing.T) {
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
 
-	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)
+	err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute, statusArgs, &status)
 	if err != nil {
 		t.Fatal(err)
 	}

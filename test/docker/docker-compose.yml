@@ -8,7 +8,6 @@ services:
       - /bin/bash
       - /opt/bookkeeper/scripts/entrypoint.sh
       - zookeeper
-
   bookie:
     container_name: bk
     depends_on:
@@ -32,9 +31,6 @@ services:
       - |
         /opt/bookkeeper/bin/bookkeeper bookie
     restart: on-failure
-
-
-
   bookie-init:
     image: "apache/bookkeeper:4.10.0"
     hostname: bookie-client
