@@ -49,11 +49,11 @@ jobs:
     - name: Build
       run: go build .
       
-    - name: Function tests
-      run: go test -test.timeout 20m -v $(go list ./... | grep functions)
-
-    - name: Sink tests
-      run: go test -test.timeout 20m -v $(go list ./... | grep sinks)
+#    - name: Function tests
+#      run: go test -test.timeout 20m -v $(go list ./... | grep functions)
+#
+#    - name: Sink tests
+#      run: go test -test.timeout 20m -v $(go list ./... | grep sinks)
 
     - name: Source tests
       run: go test -test.timeout 20m -v $(go list ./... | grep sources)
