@@ -1,4 +1,4 @@
-name: Pulsarctl BookKeeper Unit Tests Check
+name: Pulsarctl
 on:
   pull_request:
     branches:
@@ -8,40 +8,31 @@ on:
       - 'README.md'
       - 'CONTRIBUTING.md'
 jobs:
-
-  build:
-    name: Build
+  bookie-ut-tests:
     runs-on: ubuntu-latest
     steps:
-
     - name: Set up Go 1.12
       uses: actions/setup-go@v1
       with:
         go-version: 1.12
       id: go
-
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
     - name: Run bookKeeper service
       run: |
         pushd test/docker
         docker-compose pull
         docker-compose up -d
         popd
-
     - name: Check bookKeeper service
       run: |
         ./test/script/check.sh bookieHTTP
-
     - name: Write dummy data
       run: |
         docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
         docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
-
     - name: Test
       run: |
         docker ps
         go test -v ./pkg/bkctl/...
         go test -v ./pkg/bookkeeper/...
-

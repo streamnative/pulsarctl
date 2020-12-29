@@ -21,7 +21,7 @@ function checkFunctionWorker() {
     until curl localhost:8080/admin/v2/persistent/public/functions/coordinate/stats; do
         echo "waiting function worker service start..."
         failed=`expr ${failed} + 1`
-        if [[]]; then
+        if [[ ${failed} == 30 ]]; then
             echo "function worker service start up was failed"
             exit 1
         fi

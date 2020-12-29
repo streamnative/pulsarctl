@@ -1,4 +1,4 @@
-name: Test Install script
+name: Pulsarctl
 on:
   pull_request:
     branches:
@@ -7,15 +7,11 @@ on:
       - 'install.sh'
       - 'stable.txt'
 jobs:
-
-  build:
-    name: Build
+  install-script-check:
     runs-on: ubuntu-latest
     steps:
-
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
     - name: Test install
       run: |
         ./install.sh -u -v v0.3.0
