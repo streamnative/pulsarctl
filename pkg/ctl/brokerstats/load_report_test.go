@@ -18,8 +18,10 @@
 package brokerstats
 
 import (
+	"encoding/json"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,5 +29,11 @@ func TestDumpLoadReport(t *testing.T) {
 	args := []string{"load-report"}
 	loadReportOut, execErr, _, _ := TestBrokerStatsCommands(dumpLoadReport, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, "null\n", loadReportOut.String())
+	getBrokerData := utils.LocalBrokerData{}
+	err := json.Unmarshal(loadReportOut.Bytes(), &getBrokerData)
+	if err != nil {
+		t.FailNow()
+	}
+	defaultBrokerData := utils.NewLocalBrokerData()
+	assert.Equal(t, defaultBrokerData, getBrokerData)
 }
