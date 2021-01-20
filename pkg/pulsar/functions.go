@@ -282,21 +282,23 @@ func (f *functions) DownloadFunction(path, destinationFile string) error {
 	endpoint := f.pulsar.endpoint(f.basePath, "download")
 	_, err := os.Open(destinationFile)
 	if err != nil {
-		_, err = os.Create(destinationFile)
-		if err != nil {
-			return err
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("file %s already exists, please delete " +
+				"the file first or change the file name", destinationFile)
 		}
+	}
+	file, err := os.Create(destinationFile)
+	if err != nil {
+		return err
 	}
 
 	tmpMap := make(map[string]string)
 	tmpMap["path"] = path
 
-	_, err = f.pulsar.Client.GetWithQueryParams(endpoint, nil, tmpMap, false)
-
+	_, err = f.pulsar.Client.GetWithOptions(endpoint, nil, tmpMap, false, file)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -304,13 +306,17 @@ func (f *functions) DownloadFunctionByNs(destinationFile, tenant, namespace, fun
 	endpoint := f.pulsar.endpoint(f.basePath, tenant, namespace, function, "download")
 	_, err := os.Open(destinationFile)
 	if err != nil {
-		_, err = os.Create(destinationFile)
-		if err != nil {
-			return err
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("file %s already exists, please delete " +
+				"the file first or change the file name", destinationFile)
 		}
 	}
+	file, err :=  os.Create(destinationFile)
+	if err != nil {
+		return err
+	}
 
-	err = f.pulsar.Client.Get(endpoint, nil)
+	_, err = f.pulsar.Client.GetWithOptions(endpoint, nil, nil, false, file)
 	if err != nil {
 		return err
 	}
