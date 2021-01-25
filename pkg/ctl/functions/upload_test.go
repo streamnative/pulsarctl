@@ -49,7 +49,7 @@ func TestUploadWithEmptyArguments(t *testing.T) {
 }
 
 func TestUploadAndDownloadCommands(t *testing.T) {
-	testFile := "upload.go"
+	testFile := "example.go"
 	fileHash, err := getFileSha256(testFile)
 	if err != nil {
 		log.Fatal(err)
