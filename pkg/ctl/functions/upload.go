@@ -27,14 +27,14 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
-func uploadFunctionsCmd(vc *cmdutils.VerbCmd)  {
+func uploadFunctionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "This command is used for uploading a local file to Pulsar."
 	desc.CommandPermission = "This command requires super-user permission."
 
 	var examples []cmdutils.Example
 	uploadExample := cmdutils.Example{
-		Desc: "Upload a local file to Pulsar",
+		Desc:    "Upload a local file to Pulsar",
 		Command: `pulsarctl functions upload --source-file <file-path> --path public/default/test`,
 	}
 	examples = append(examples, uploadExample)

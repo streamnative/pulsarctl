@@ -286,7 +286,7 @@ func (f *functions) DownloadFunction(path, destinationFile string) error {
 	_, err := os.Open(destinationFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return fmt.Errorf("file %s already exists, please delete " +
+			return fmt.Errorf("file %s already exists, please delete "+
 				"the file first or change the file name", destinationFile)
 		}
 	}
@@ -310,11 +310,11 @@ func (f *functions) DownloadFunctionByNs(destinationFile, tenant, namespace, fun
 	_, err := os.Open(destinationFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return fmt.Errorf("file %s already exists, please delete " +
+			return fmt.Errorf("file %s already exists, please delete "+
 				"the file first or change the file name", destinationFile)
 		}
 	}
-	file, err :=  os.Create(destinationFile)
+	file, err := os.Create(destinationFile)
 	if err != nil {
 		return err
 	}
@@ -655,7 +655,7 @@ func (f *functions) TriggerFunction(tenant, namespace, name, topic, triggerValue
 	return str, nil
 }
 
-func (f *functions)Upload(sourceFile, path string) error {
+func (f *functions) Upload(sourceFile, path string) error {
 	if strings.TrimSpace(sourceFile) == "" && strings.TrimSpace(path) == "" {
 		return fmt.Errorf("source file or path is empty")
 	}
@@ -679,5 +679,5 @@ func (f *functions)Upload(sourceFile, path string) error {
 	if err != nil {
 		return err
 	}
-	return f.pulsar.Client.PostWithMultiPart(endpoint,nil, &b, w.FormDataContentType())
+	return f.pulsar.Client.PostWithMultiPart(endpoint, nil, &b, w.FormDataContentType())
 }

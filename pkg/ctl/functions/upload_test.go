@@ -28,7 +28,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUploadWithoutRequiredArguments(t *testing.T)  {
+func TestUploadWithoutRequiredArguments(t *testing.T) {
 	args := []string{
 		"upload",
 	}
@@ -36,7 +36,7 @@ func TestUploadWithoutRequiredArguments(t *testing.T)  {
 	assert.NotNil(t, err)
 }
 
-func TestUploadWithEmptyArguments(t *testing.T)  {
+func TestUploadWithEmptyArguments(t *testing.T) {
 	args := []string{
 		"upload",
 		"--path", "    ",
@@ -48,7 +48,7 @@ func TestUploadWithEmptyArguments(t *testing.T)  {
 	assert.True(t, strings.Contains(execErr.Error(), "empty"))
 }
 
-func TestUploadAndDownloadCommands(t *testing.T)  {
+func TestUploadAndDownloadCommands(t *testing.T) {
 	testFile := "upload.go"
 	fileHash, err := getFileSha256(testFile)
 	if err != nil {
