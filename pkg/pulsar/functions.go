@@ -128,6 +128,9 @@ type Functions interface {
 	// File: file:/dir/fileName.jar
 	// Http: http://www.repo.com/fileName.jar
 	UpdateFunctionWithURL(functionConfig *utils.FunctionConfig, pkgURL string, updateOptions *utils.UpdateOptions) error
+
+	// Upload function to Pulsar
+	Upload(sourceFile, path string) error
 }
 
 type functions struct {
@@ -650,4 +653,31 @@ func (f *functions) TriggerFunction(tenant, namespace, name, topic, triggerValue
 	}
 
 	return str, nil
+}
+
+func (f *functions)Upload(sourceFile, path string) error {
+	if strings.TrimSpace(sourceFile) == "" && strings.TrimSpace(path) == "" {
+		return fmt.Errorf("source file or path is empty")
+	}
+	file, err := os.Open(sourceFile)
+	if err != nil {
+		return err
+	}
+	endpoint := f.pulsar.endpoint(f.basePath, "upload")
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	writer, err := w.CreateFormFile("data", file.Name())
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(writer, file)
+	if err != nil {
+		return err
+	}
+	w.WriteField("path", path)
+	err = w.Close()
+	if err != nil {
+		return err
+	}
+	return f.pulsar.Client.PostWithMultiPart(endpoint,nil, &b, w.FormDataContentType())
 }
