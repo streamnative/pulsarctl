@@ -205,7 +205,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"The disk (in bytes) that need to be allocated per source instance (applicable only to Docker runtime)")
 
 		flagSet.StringVar(
-			&sourceData.SourceConfigFile,
+			&sourceData.SourceConfigString,
 			"source-config",
 			"",
 			"Source config key/values")
