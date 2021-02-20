@@ -28,7 +28,9 @@ import (
 func TestDumpLoadReport(t *testing.T) {
 	args := []string{"load-report"}
 	loadReportOut, execErr, _, _ := TestBrokerStatsCommands(dumpLoadReport, args)
-	assert.Nil(t, execErr)
+	if execErr != nil {
+		t.FailNow()
+	}
 	getBrokerData := utils.LocalBrokerData{}
 	err := json.Unmarshal(loadReportOut.Bytes(), &getBrokerData)
 	if err != nil {
