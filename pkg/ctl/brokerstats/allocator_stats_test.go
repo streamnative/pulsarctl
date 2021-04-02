@@ -38,7 +38,4 @@ func TestDumpAllocatorStats(t *testing.T) {
 	var allocatorStats utils.AllocatorStats
 	err := json.Unmarshal(statsOut.Bytes(), &allocatorStats)
 	assert.Nil(t, err)
-	assert.Equal(t, 512, allocatorStats.TinyCacheSize)
-	assert.Equal(t, 256, allocatorStats.SmallCacheSize)
-	assert.Equal(t, 64, allocatorStats.NormalCacheSize)
 }
