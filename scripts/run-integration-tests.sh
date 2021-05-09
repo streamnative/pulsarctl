@@ -3,7 +3,7 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="2.7.1.5-rc-202104301334"
+readonly PULSAR_DEFAULT_VERSION="2.7.1.5-rc-202105090530"
 readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 
 docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
