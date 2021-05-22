@@ -23,6 +23,7 @@ import (
 
 const (
 	DefaultWebServiceURL       = "http://localhost:8080"
+	DefaultBrokerServiceURL       = "pulsar://localhost:6650"
 	DefaultHTTPTimeOutDuration = 5 * time.Minute
 	ReleaseVersion             = "None"
 )

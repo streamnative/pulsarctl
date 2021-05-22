@@ -19,6 +19,7 @@ package cmdutils
 
 import (
 	"fmt"
+	auth2 "github.com/streamnative/pulsarctl/pkg/auth"
 	"io/ioutil"
 	"log"
 	"os"
@@ -27,6 +28,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"gopkg.in/yaml.v2"
 
+	brokerPulsar "github.com/apache/pulsar-client-go/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
@@ -51,6 +53,12 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"s",
 		c.WebServiceURL,
 		"The admin web service url that pulsarctl connects to.")
+
+	flags.StringVar(
+		&c.BrokerServiceURL,
+		"broker-service-url",
+		c.BrokerServiceURL,
+		"The broker service url that pulsarctl connects to.")
 
 	flags.StringVar(
 		&c.AuthPlugin,
@@ -208,6 +216,10 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		c.WebServiceURL = pulsar.DefaultWebServiceURL
 	}
 
+	if len(c.BrokerServiceURL) == 0 {
+		c.BrokerServiceURL = pulsar.DefaultBrokerServiceURL
+	}
+
 	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
 		logger.Critical("the token and token file can not be specified at the same time")
 		os.Exit(1)
@@ -228,6 +240,40 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		fmt.Fprintln(os.Stdout, "Get pulsar client failed: "+err.Error())
 	}
 	return client
+}
+
+
+func (c *ClusterConfig) BrokerClientOpts() (brokerPulsar.ClientOptions, error) {
+	if len(c.BrokerServiceURL) == 0 {
+		c.BrokerServiceURL = pulsar.DefaultBrokerServiceURL
+	}
+
+	auth, err  := auth2.GetAuthProvider((*common.Config)(c))
+	if err != nil {
+		return brokerPulsar.ClientOptions{}, err
+	}
+
+	opts := brokerPulsar.ClientOptions{
+		URL:                        c.BrokerServiceURL,
+		TLSTrustCertsFilePath:      c.TLSTrustCertsFilePath,
+		TLSAllowInsecureConnection: c.TLSAllowInsecureConnection,
+		TLSValidateHostname:        c.TLSEnableHostnameVerification,
+	}
+	if !utils.IsNilFixed(auth) {
+		opts.Authentication = *auth
+	} else {
+		fmt.Printf("No Auth Provider found\n")
+	}
+	return opts, nil
+
+}
+
+func (c *ClusterConfig) BrokerClient() (brokerPulsar.Client, error) {
+	opts, err := c.BrokerClientOpts()
+	if err != nil {
+		return nil, err
+	}
+	return brokerPulsar.NewClient(opts)
 }
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
@@ -258,6 +304,7 @@ func loadFromEnv() *ClusterConfig {
 	if envConf, ok := os.LookupEnv("PULSAR_CLIENT_CONF"); ok {
 		if props, err := properties.LoadFile(envConf, properties.UTF8); err == nil && props != nil {
 			config.WebServiceURL = props.GetString("webServiceUrl", pulsar.DefaultWebServiceURL)
+			config.BrokerServiceURL = props.GetString("brokerServiceUrl", pulsar.DefaultBrokerServiceURL)
 			config.TLSAllowInsecureConnection = props.GetBool("tlsAllowInsecureConnection", false)
 			config.TLSTrustCertsFilePath = props.GetString("tlsTrustCertsFilePath", "")
 			config.BKWebServiceURL = props.GetString("brokerServiceUrl", bookkeeper.DefaultWebServiceURL)

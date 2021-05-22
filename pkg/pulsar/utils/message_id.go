@@ -18,6 +18,7 @@
 package utils
 
 import (
+	"github.com/apache/pulsar-client-go/pulsar"
 	"strconv"
 	"strings"
 
@@ -79,4 +80,8 @@ func (m MessageID) String() string {
 		strconv.FormatInt(m.EntryID, 10) + ":" +
 		strconv.Itoa(m.PartitionedIndex) + ":" +
 		strconv.Itoa(m.BatchIndex)
+}
+
+func (m MessageID) AsPulsarMessageID() pulsar.MessageID {
+	return pulsar.MessageIDFromParts(m.LedgerID, m.EntryID, int32(m.BatchIndex), int32(m.PartitionedIndex))
 }

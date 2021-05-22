@@ -20,6 +20,8 @@ package common
 type Config struct {
 	// the web service url that pulsarctl connects to. Default is http://localhost:8080
 	WebServiceURL string
+	// the broker service url that is used for producing/consume messages. Default is pulsar://localhost:6650
+	BrokerServiceURL string
 
 	// the bookkeeper service url that pulsarctl connects to.
 	BKWebServiceURL string

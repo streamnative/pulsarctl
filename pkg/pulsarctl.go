@@ -22,6 +22,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/brokers"
 	"github.com/streamnative/pulsarctl/pkg/ctl/brokerstats"
+	"github.com/streamnative/pulsarctl/pkg/ctl/cat"
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/completion"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context"
@@ -125,6 +126,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
 	rootCmd.AddCommand(token.Command(flagGrouping))
 	rootCmd.AddCommand(context.Command(flagGrouping))
+	rootCmd.AddCommand(cat.Command(flagGrouping))
 
 	// bookkeeper related commands
 	rootCmd.AddCommand(bkctl.Command(flagGrouping))
@@ -134,6 +136,9 @@ func NewPulsarctlCmd() *cobra.Command {
 
 	// oauth2 related commands
 	rootCmd.AddCommand(oauth2.Command(flagGrouping))
+
+	// cat related commands
+	rootCmd.AddCommand()
 
 	return rootCmd
 }
