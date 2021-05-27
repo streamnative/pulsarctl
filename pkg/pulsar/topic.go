@@ -98,6 +98,9 @@ type Topics interface {
 
 	// CompactStatus checks the status of an ongoing compaction for a topic
 	CompactStatus(utils.TopicName) (utils.LongRunningProcessStatus, error)
+
+	// GetRetention returns the retention configuration for a topic
+	GetRetention(name utils.TopicName) (*utils.RetentionPolicies, error)
 }
 
 type topics struct {
@@ -300,4 +303,11 @@ func (t *topics) CompactStatus(topic utils.TopicName) (utils.LongRunningProcessS
 	var status utils.LongRunningProcessStatus
 	err := t.pulsar.Client.Get(endpoint, &status)
 	return status, err
+}
+
+func (t *topics) GetRetention(topic utils.TopicName) (*utils.RetentionPolicies, error)  {
+	var policy utils.RetentionPolicies
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "retention")
+	err := t.pulsar.Client.Get(endpoint, &policy)
+	return &policy, err
 }
