@@ -238,13 +238,17 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.Py,
 			"py",
 			"",
-			"Path to the main Python file/Python Wheel file for the function (if the function is written in Python)")
+			"Path to the main Python file/Python Wheel file for the function (if the function is written in Python) "+
+				"It also supports URL path [http/https/file (file protocol assumes that file "+
+				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVar(
 			&functionData.Go,
 			"go",
 			"",
-			"Path to the main Go executable binary for the function (if the function is written in Go)")
+			"Path to the main Go executable binary for the function (if the function is written in Go) "+
+				"It also supports URL path [http/https/file (file protocol assumes that file "+
+				"already exists on worker host)] from which worker can download the package.")
 
 		flagSet.StringVarP(
 			&functionData.Inputs,
@@ -420,21 +424,16 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
-	if utils.IsPackageURLSupported(funcData.Jar) {
-		err = admin.Functions().CreateFuncWithURL(funcData.FuncConf, funcData.Jar)
-		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		} else {
-			vc.Command.Printf("Created %s successfully\n", funcData.FuncName)
-		}
+	if utils.IsPackageURLSupported(funcData.UserCodeFile) {
+		err = admin.Functions().CreateFuncWithURL(funcData.FuncConf, funcData.UserCodeFile)
 	} else {
 		err = admin.Functions().CreateFunc(funcData.FuncConf, funcData.UserCodeFile)
-		if err != nil {
-			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
-		} else {
-			vc.Command.Printf("Created %s successfully\n", funcData.FuncName)
-		}
 	}
 
+	if err != nil {
+		cmdutils.PrintError(vc.Command.OutOrStderr(), err)
+	} else {
+		vc.Command.Printf("Created %s successfully\n", funcData.FuncName)
+	}
 	return err
 }

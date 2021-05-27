@@ -35,6 +35,19 @@ func TestCreateFunctions(t *testing.T) {
 	assert.Nil(t, err)
 
 	defer os.Remove(jarName)
+
+	goName := "dummyExample.go"
+	_, err = os.Create(goName)
+	assert.Nil(t, err)
+
+	defer os.Remove(goName)
+
+	pyName := "dummyExample.py"
+	_, err = os.Create(pyName)
+	assert.Nil(t, err)
+
+	defer os.Remove(pyName)
+
 	// $ ./pulsarctl functions create
 	// --tenant public
 	// --namespace default
@@ -44,7 +57,8 @@ func TestCreateFunctions(t *testing.T) {
 	// --classname org.apache.pulsar.functions.api.examples.ExclamationFunction
 	// --jar apache-pulsar-2.4.0/examples/api-examples.jar
 	// --processing-guarantees EFFECTIVELY_ONCE
-	args := []string{"create",
+	args := []string{
+		"create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-functions-create",
@@ -61,7 +75,8 @@ func TestCreateFunctions(t *testing.T) {
 	// $ bin/pulsar-admin functions create
 	// --function-config-file examples/example-function-config.yaml
 	// --jar examples/api-examples.jar
-	argsWithConf := []string{"create",
+	argsWithConf := []string{
+		"create",
 		"--function-config-file", basePath + "/test/functions/example-function-config.yaml",
 		"--jar", jarName,
 	}
@@ -69,7 +84,8 @@ func TestCreateFunctions(t *testing.T) {
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithConf)
 	assert.Nil(t, err)
 
-	argsWithFileURL := []string{"create",
+	argsWithFileURL := []string{
+		"create",
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", "test-functions-create-file",
@@ -81,5 +97,33 @@ func TestCreateFunctions(t *testing.T) {
 	}
 
 	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileURL)
+	assert.Nil(t, err)
+
+	argsWithFileURLGo := []string{
+		"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-create-file-go",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--go", "file:" + "/pulsar_test/" + goName,
+		"--processing-guarantees", "EFFECTIVELY_ONCE",
+	}
+
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileURLGo)
+	assert.Nil(t, err)
+
+	argsWithFileURLPy := []string{
+		"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", "test-functions-create-file-py",
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--py", "file:" + "/pulsar_test/" + pyName,
+		"--processing-guarantees", "EFFECTIVELY_ONCE",
+	}
+
+	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsWithFileURLPy)
 	assert.Nil(t, err)
 }

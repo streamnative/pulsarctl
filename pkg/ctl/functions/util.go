@@ -275,14 +275,15 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 		utils.InferMissingNamespace(functionConfig)
 	}
 
-	if functionConfig.Jar != nil && functionConfig.Py != nil && functionConfig.Go != nil {
-		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
-			"be specified for the function, Cannot specify both")
-	}
-
-	if functionConfig.Jar == nil && functionConfig.Py == nil && functionConfig.Go == nil {
+	switch utils.NumProvidedStrings(functionConfig.Jar, functionConfig.Py, functionConfig.Go) {
+	case 0:
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
 			"be specified for the function. Please specify one")
+	case 1:
+		//proceed
+	default:
+		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
+			"be specified for the function, cannot specify more than one")
 	}
 
 	if functionConfig.Jar != nil && !utils.IsPackageURLSupported(*functionConfig.Jar) &&
