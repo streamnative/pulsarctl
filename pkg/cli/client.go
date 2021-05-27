@@ -98,6 +98,11 @@ func (c *Client) Get(endpoint string, obj interface{}) error {
 
 func (c *Client) GetWithQueryParams(endpoint string, obj interface{}, params map[string]string,
 	decode bool) ([]byte, error) {
+	return c.GetWithOptions(endpoint, obj, params, decode, nil)
+}
+
+func (c *Client) GetWithOptions(endpoint string, obj interface{}, params map[string]string,
+	decode bool, file io.Writer) ([]byte, error) {
 
 	req, err := c.newRequest(http.MethodGet, endpoint)
 	if err != nil {
@@ -120,14 +125,24 @@ func (c *Client) GetWithQueryParams(endpoint string, obj interface{}, params map
 
 	if obj != nil {
 		if err := decodeJSONBody(resp, &obj); err != nil {
+			if err == io.EOF {
+				return nil, nil
+			}
 			return nil, err
 		}
 	} else if !decode {
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
+		if file != nil {
+			_, err := io.Copy(file, resp.Body)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			return body, err
 		}
-		return body, err
 	}
 
 	return nil, err
@@ -331,6 +346,9 @@ func encodeJSONBody(obj interface{}) (io.Reader, error) {
 
 // decodeJSONBody is used to JSON decode a body
 func decodeJSONBody(resp *http.Response, out interface{}) error {
+	if resp.ContentLength == 0 {
+		return nil
+	}
 	dec := json.NewDecoder(resp.Body)
 	return dec.Decode(out)
 }

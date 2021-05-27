@@ -28,17 +28,15 @@ func TestExpireCmd(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(CreateCmd, args)
 	assert.Nil(t, execErr)
 
+	// expired message on the topic without any messages should be failed.
+	// That was introduce by https://github.com/apache/pulsar/pull/9561
 	args = []string{"expire", "--expire-time", "1", "test-expire-messages-topic", "test-expire-messages-sub"}
-	out, execErr, _, _ := TestSubCommands(ExpireCmd, args)
-	assert.Nil(t, execErr)
-	assert.Equal(t, "Expire messages after 1(s) for the subscription test-expire-messages-sub of the topic "+
-		"persistent://public/default/test-expire-messages-topic successfully\n", out.String())
+	_, execErr, _, _ = TestSubCommands(ExpireCmd, args)
+	assert.NotNil(t, execErr)
 
 	args = []string{"expire", "--expire-time", "1", "--all", "test-expire-messages-topic"}
-	out, execErr, _, _ = TestSubCommands(ExpireCmd, args)
-	assert.Nil(t, execErr)
-	assert.Equal(t, "Expire messages after 1(s) for all the subscriptions of the topic "+
-		"persistent://public/default/test-expire-messages-topic successfully\n", out.String())
+	_, execErr, _, _ = TestSubCommands(ExpireCmd, args)
+	assert.NotNil(t, execErr)
 }
 
 func TestExpireArgsError(t *testing.T) {

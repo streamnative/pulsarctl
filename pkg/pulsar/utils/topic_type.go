@@ -15,27 +15,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package brokerstats
+package utils
 
-import (
-	"encoding/json"
-	"testing"
+import "github.com/pkg/errors"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
+type TopicType string
+
+const (
+	Partitioned    TopicType = "partitioned"
+	NonPartitioned TopicType = "non-partitioned"
 )
 
-func TestDumpLoadReport(t *testing.T) {
-	args := []string{"load-report"}
-	loadReportOut, execErr, _, _ := TestBrokerStatsCommands(dumpLoadReport, args)
-	if execErr != nil {
-		t.FailNow()
+func ParseTopicType(topicType string) (TopicType, error) {
+	switch topicType {
+	case "partitioned":
+		return Partitioned, nil
+	case "non-partitioned":
+		return NonPartitioned, nil
+	default:
+		return "", errors.Errorf("The topic type can only be specified as 'partitioned' or "+
+			"'non-partitioned'. Input topic type is '%s'.", topicType)
 	}
-	getBrokerData := utils.LocalBrokerData{}
-	err := json.Unmarshal(loadReportOut.Bytes(), &getBrokerData)
-	if err != nil {
-		t.FailNow()
-	}
-	defaultBrokerData := utils.NewLocalBrokerData()
-	assert.Equal(t, defaultBrokerData, getBrokerData)
+}
+
+func (t TopicType) String() string {
+	return string(t)
 }

@@ -117,9 +117,11 @@ func downloadFunctionsCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doDownloadFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
-	err := processBaseArguments(funcData)
-	if err != nil {
-		return err
+	if funcData.Path == "" {
+		err := processBaseArguments(funcData)
+		if err != nil {
+			return err
+		}
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 

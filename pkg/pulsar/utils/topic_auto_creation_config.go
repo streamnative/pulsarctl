@@ -15,27 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package brokerstats
+package utils
 
-import (
-	"encoding/json"
-	"testing"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
-)
-
-func TestDumpLoadReport(t *testing.T) {
-	args := []string{"load-report"}
-	loadReportOut, execErr, _, _ := TestBrokerStatsCommands(dumpLoadReport, args)
-	if execErr != nil {
-		t.FailNow()
-	}
-	getBrokerData := utils.LocalBrokerData{}
-	err := json.Unmarshal(loadReportOut.Bytes(), &getBrokerData)
-	if err != nil {
-		t.FailNow()
-	}
-	defaultBrokerData := utils.NewLocalBrokerData()
-	assert.Equal(t, defaultBrokerData, getBrokerData)
+type TopicAutoCreationConfig struct {
+	Allow      bool      `json:"allowAutoTopicCreation"`
+	Type       TopicType `json:"topicType"`
+	Partitions int       `json:"defaultNumPartitions"`
 }
