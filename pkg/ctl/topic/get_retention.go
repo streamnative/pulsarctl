@@ -77,7 +77,7 @@ func GetRetentionCmd(vc *cmdutils.VerbCmd) {
 		return doGetRetention(vc)
 	}, "the topic name is not specified or the topic name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("GrantPermissions", func(set *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("GetR", func(set *pflag.FlagSet) {
 		set.BoolVarP(&applied, "applied", "a", false,
 			"Get the applied policy of the topic")
 	})
