@@ -29,7 +29,7 @@ import (
 var printVersion bool
 
 var (
-	Version = ""
+	Version   = ""
 	GoVersion = ""
 	GitCommit = ""
 	BuildTime = ""
