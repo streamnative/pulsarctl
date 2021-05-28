@@ -18,7 +18,7 @@
 # * limitations under the License.
 # */
 
-version="v0.5.0"
+version=`cat Version`
 path="github.com/go-demo/version"
 flags="-X $path.Version=$version -X '$path.GoVersion=$(go version)' -X '$path.BuildTime=`date`' -X $path.GitCommit=`git rev-parse HEAD`"
 go build -ldflags "$flags" -o pulsarctl main.go
