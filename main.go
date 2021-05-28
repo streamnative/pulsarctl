@@ -18,7 +18,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"github.com/go-demo/version"
 	"os"
 
 	"github.com/streamnative/pulsarctl/pkg"
@@ -28,7 +30,9 @@ import (
 func main() {
 	rootCmd := pkg.NewPulsarctlCmd()
 	handler := plugin.NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
-
+	if printVersion {
+		version.PrintVersion()
+	}
 	_, _, err := rootCmd.Find(os.Args)
 	if err != nil {
 		err = plugin.HandlePluginCommand(handler, getArgs())
@@ -44,10 +48,17 @@ func main() {
 	}
 }
 
+var printVersion bool
+
 func getArgs() []string {
 	args := os.Args
 	if len(args) > 1 {
 		return args[1:]
 	}
 	return []string{}
+}
+
+func init() {
+	flag.BoolVar(&printVersion, "version", false, "print program build version")
+	flag.Parse()
 }
