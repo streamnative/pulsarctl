@@ -20,9 +20,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/go-demo/version"
 	"os"
 
+	"github.com/go-demo/version"
 	"github.com/streamnative/pulsarctl/pkg"
 	"github.com/streamnative/pulsarctl/pkg/plugin"
 )
