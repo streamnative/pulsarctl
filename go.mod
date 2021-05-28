@@ -9,7 +9,6 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-demo/version v0.0.0-20200109120206-2cde9473fd92 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/imdario/mergo v0.3.8
 	github.com/kris-nova/logger v0.0.0-20181127235838-fd0d87064b06

@@ -22,16 +22,28 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/go-demo/version"
 	"github.com/streamnative/pulsarctl/pkg"
 	"github.com/streamnative/pulsarctl/pkg/plugin"
+)
+
+var printVersion bool
+
+var (
+	Version = ""
+	GoVersion = ""
+	GitCommit = ""
+	BuildTime = ""
 )
 
 func main() {
 	rootCmd := pkg.NewPulsarctlCmd()
 	handler := plugin.NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
 	if printVersion {
-		version.PrintVersion()
+		fmt.Printf("Version: %s\n", Version)
+		fmt.Printf("Go Version: %s\n", GoVersion)
+		fmt.Printf("Git Commit: %s\n", GitCommit)
+		fmt.Printf("Build Time: %s\n", BuildTime)
+		os.Exit(0)
 	}
 	_, _, err := rootCmd.Find(os.Args)
 	if err != nil {
@@ -47,8 +59,6 @@ func main() {
 		os.Exit(-1)
 	}
 }
-
-var printVersion bool
 
 func getArgs() []string {
 	args := os.Args
