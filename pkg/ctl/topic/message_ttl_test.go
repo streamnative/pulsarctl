@@ -28,6 +28,7 @@ func TestMessageTTL(t *testing.T) {
 	topicName := "persistent://public/default/test-message-ttl-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
 
 	setTTLArgs := []string{"set-message-ttl", topicName, "-t", "20"}
 	setOut, execErr, _, _ := TestTopicCommands(SetMessageTTLCmd, setTTLArgs)

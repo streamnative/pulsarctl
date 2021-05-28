@@ -39,7 +39,7 @@ func SetMessageTTLCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out: "Set message TTL successfully for [topic]",
+		Out:  "Set message TTL successfully for [topic]",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)

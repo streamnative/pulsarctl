@@ -38,7 +38,7 @@ func GetMessageTTLCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out: "(ttl-value)",
+		Out:  "(ttl-value)",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
