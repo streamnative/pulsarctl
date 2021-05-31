@@ -18,6 +18,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -25,10 +26,26 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/plugin"
 )
 
+var printVersion bool
+
+var (
+	Version   = ""
+	GoVersion = ""
+	GitCommit = ""
+	BuildTime = ""
+)
+
 func main() {
+	flag.Parse()
 	rootCmd := pkg.NewPulsarctlCmd()
 	handler := plugin.NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
-
+	if printVersion {
+		fmt.Printf("Version: %s\n", Version)
+		fmt.Printf("Go Version: %s\n", GoVersion)
+		fmt.Printf("Git Commit: %s\n", GitCommit)
+		fmt.Printf("Build Time: %s\n", BuildTime)
+		os.Exit(0)
+	}
 	_, _, err := rootCmd.Find(os.Args)
 	if err != nil {
 		err = plugin.HandlePluginCommand(handler, getArgs())
@@ -50,4 +67,8 @@ func getArgs() []string {
 		return args[1:]
 	}
 	return []string{}
+}
+
+func init() {
+	flag.BoolVar(&printVersion, "version", false, "print program build version")
 }

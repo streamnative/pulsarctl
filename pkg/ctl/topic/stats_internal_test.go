@@ -40,6 +40,15 @@ func TestGetInternalStatsCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	defaultLedgerInfo := []utils.LedgerInfo{
+		{
+			Entries:   0,
+			Size:      0,
+			Timestamp: 0,
+			Offloaded: false,
+		},
+	}
+
 	defaultStats := utils.PersistentTopicInternalStats{
 		EntriesAddedCounter:    0,
 		NumberOfEntries:        0,
@@ -49,6 +58,7 @@ func TestGetInternalStatsCmd(t *testing.T) {
 		WaitingCursorsCount:    0,
 		PendingAddEntriesCount: 0,
 		State:                  "LedgerOpened",
+		Ledgers:                defaultLedgerInfo,
 	}
 
 	assert.Equal(t, defaultStats.EntriesAddedCounter, stats.EntriesAddedCounter)
@@ -59,6 +69,10 @@ func TestGetInternalStatsCmd(t *testing.T) {
 	assert.Equal(t, defaultStats.WaitingCursorsCount, stats.WaitingCursorsCount)
 	assert.Equal(t, defaultStats.PendingAddEntriesCount, stats.PendingAddEntriesCount)
 	assert.Equal(t, defaultStats.State, stats.State)
+	assert.Equal(t, defaultStats.Ledgers[0].Entries, stats.Ledgers[0].Entries)
+	assert.Equal(t, defaultStats.Ledgers[0].Size, stats.Ledgers[0].Size)
+	assert.Equal(t, defaultStats.Ledgers[0].Timestamp, stats.Ledgers[0].Timestamp)
+	assert.Equal(t, defaultStats.Ledgers[0].Offloaded, stats.Ledgers[0].Offloaded)
 }
 
 func TestGetPartitionedTopicInternalStatsError(t *testing.T) {
