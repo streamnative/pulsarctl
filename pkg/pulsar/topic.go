@@ -98,6 +98,16 @@ type Topics interface {
 
 	// CompactStatus checks the status of an ongoing compaction for a topic
 	CompactStatus(utils.TopicName) (utils.LongRunningProcessStatus, error)
+
+	// GetMaxProducers Get max number of producers for a topic
+	GetMaxProducers(utils.TopicName) (int, error)
+
+	// SetMaxProducers Set max number of producers for a topic
+	SetMaxProducers(utils.TopicName, int) error
+
+	// RemoveMaxProducers Remove max number of producers for a topic
+	RemoveMaxProducers(utils.TopicName) error
+
 }
 
 type topics struct {
@@ -300,4 +310,22 @@ func (t *topics) CompactStatus(topic utils.TopicName) (utils.LongRunningProcessS
 	var status utils.LongRunningProcessStatus
 	err := t.pulsar.Client.Get(endpoint, &status)
 	return status, err
+}
+
+func (t *topics) GetMaxProducers(topic utils.TopicName) (int, error) {
+	var ttl int
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxProducers")
+	err := t.pulsar.Client.Get(endpoint, &ttl)
+	return ttl, err
+}
+
+func (t *topics) SetMaxProducers(topic utils.TopicName, maxProducers int)  error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxProducers")
+	err := t.pulsar.Client.Post(endpoint, &maxProducers)
+	return  err
+}
+func (t *topics) RemoveMaxProducers(topic utils.TopicName)  error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxProducers")
+	err := t.pulsar.Client.Delete(endpoint)
+	return  err
 }
