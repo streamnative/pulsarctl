@@ -36,6 +36,7 @@ var (
 )
 
 func main() {
+	flag.Parse()
 	rootCmd := pkg.NewPulsarctlCmd()
 	handler := plugin.NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes)
 	if printVersion {
@@ -70,5 +71,4 @@ func getArgs() []string {
 
 func init() {
 	flag.BoolVar(&printVersion, "version", false, "print program build version")
-	flag.Parse()
 }
