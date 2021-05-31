@@ -107,7 +107,6 @@ type Topics interface {
 
 	// RemoveMessageTTL Remove the message TTL for a topic
 	RemoveMessageTTL(utils.TopicName) error
-
 }
 
 type topics struct {
