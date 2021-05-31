@@ -107,7 +107,6 @@ type Topics interface {
 
 	// RemoveMaxProducers Remove max number of producers for a topic
 	RemoveMaxProducers(utils.TopicName) error
-
 }
 
 type topics struct {
@@ -319,13 +318,13 @@ func (t *topics) GetMaxProducers(topic utils.TopicName) (int, error) {
 	return ttl, err
 }
 
-func (t *topics) SetMaxProducers(topic utils.TopicName, maxProducers int)  error {
+func (t *topics) SetMaxProducers(topic utils.TopicName, maxProducers int) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxProducers")
 	err := t.pulsar.Client.Post(endpoint, &maxProducers)
-	return  err
+	return err
 }
-func (t *topics) RemoveMaxProducers(topic utils.TopicName)  error {
+func (t *topics) RemoveMaxProducers(topic utils.TopicName) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxProducers")
 	err := t.pulsar.Client.Delete(endpoint)
-	return  err
+	return err
 }
