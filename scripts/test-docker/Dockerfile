@@ -9,7 +9,7 @@ ENV PATH /usr/local/go/bin:$PATH
 
 # copy the code into image
 COPY . /pulsarctl
-RUN cp /pulsarctl/test/standalone.conf /pulsar/conf/standalone.conf
+
 ENV PULSAR_HOME /pulsar
 ENV PULSARCTL_HOME /pulsarctl
 
