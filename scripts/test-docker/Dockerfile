@@ -1,6 +1,7 @@
 ARG PULSAR_VERSION
 FROM streamnative/pulsar-all:$PULSAR_VERSION
 
+USER root
 # install golang
 ENV GOLANG_VERSION 1.13.3
 RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz \
