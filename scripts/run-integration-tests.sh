@@ -19,6 +19,7 @@ case ${1} in
         docker run --env-file ${env_file} -e TEST_ARGS=tls ${IMAGE_NAME}
         ;;
     *)
-        docker run ${IMAGE_NAME}
+        env_file=${PROJECT_ROOT}/test/policies/policies.env
+        docker run --env-file ${env_file} ${IMAGE_NAME}
         ;;
 esac
