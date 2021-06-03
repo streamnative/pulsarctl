@@ -408,8 +408,7 @@ func (t *topics) GetMaxUnackMessagesPerConsumer(topic utils.TopicName) (int, err
 
 func (t *topics) SetMaxUnackMessagesPerConsumer(topic utils.TopicName, maxUnackedNum int) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxUnackedMessagesOnConsumer")
-	err := t.pulsar.Client.Post(endpoint, &maxUnackedNum)
-	return err
+	return t.pulsar.Client.Post(endpoint, &maxUnackedNum)
 }
 
 func (t *topics) RemoveMaxUnackMessagesPerConsumer(topic utils.TopicName) error {
