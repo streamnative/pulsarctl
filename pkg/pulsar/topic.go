@@ -132,8 +132,14 @@ type Topics interface {
 	// SetMaxUnackMessagesPerConsumer Set max unacked messages policy on consumer for a topic
 	SetMaxUnackMessagesPerConsumer(utils.TopicName, int) error
 
-	// RemoveMaxUnackMessagesPerConsumer Remove max unacked messages policy on consumer for a topic
-	RemoveMaxUnackMessagesPerConsumer(utils.TopicName) error
+	// GetPersistence Get the persistence policies for a topic
+	GetPersistence(utils.TopicName) (*utils.PersistenceData, error)
+
+	// SetPersistence Set the persistence policies for a topic
+	SetPersistence(utils.TopicName, utils.PersistenceData) error
+
+	// RemovePersistence Remove the persistence policies for a topic
+	RemovePersistence(utils.TopicName) error
 }
 
 type topics struct {
@@ -413,5 +419,22 @@ func (t *topics) SetMaxUnackMessagesPerConsumer(topic utils.TopicName, maxUnacke
 
 func (t *topics) RemoveMaxUnackMessagesPerConsumer(topic utils.TopicName) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "maxUnackedMessagesOnConsumer")
+	return t.pulsar.Client.Delete(endpoint)
+}
+
+func (t *topics) GetPersistence(topic utils.TopicName) (*utils.PersistenceData, error) {
+	var persistenceData utils.PersistenceData
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "persistence")
+	err := t.pulsar.Client.Get(endpoint, &persistenceData)
+	return &persistenceData, err
+}
+
+func (t *topics) SetPersistence(topic utils.TopicName, persistenceData utils.PersistenceData) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "persistence")
+	return t.pulsar.Client.Post(endpoint, &persistenceData)
+}
+
+func (t *topics) RemovePersistence(topic utils.TopicName) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "persistence")
 	return t.pulsar.Client.Delete(endpoint)
 }
