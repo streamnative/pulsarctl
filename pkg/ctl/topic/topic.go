@@ -65,6 +65,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetMaxUnackMessagesPerSubscriptionCmd,
 		SetMaxUnackMessagesPerSubscriptionCmd,
 		RemoveMaxUnackMessagesPerSubscriptionCmd,
+		GetPersistenceCmd,
+		SetPersistenceCmd,
+		RemovePersistenceCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
