@@ -18,6 +18,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -30,7 +31,12 @@ const (
 	tokenPrefix     = "token:"
 	filePrefix      = "file:"
 	TokenPluginName = "org.apache.pulsar.client.impl.auth.AuthenticationToken"
+	TokePluginShortName = "token"
 )
+
+type Token struct {
+	Token string `json:"token"`
+}
 
 type TokenAuthProvider struct {
 	T     http.RoundTripper
@@ -59,13 +65,20 @@ func NewAuthenticationTokenFromAuthParams(encodedAuthParam string,
 	transport http.RoundTripper) (*TokenAuthProvider, error) {
 	var tokenAuthProvider *TokenAuthProvider
 	var err error
-	switch {
-	case strings.HasPrefix(encodedAuthParam, tokenPrefix):
-		tokenAuthProvider, err = NewAuthenticationToken(strings.TrimPrefix(encodedAuthParam, tokenPrefix), transport)
-	case strings.HasPrefix(encodedAuthParam, filePrefix):
-		tokenAuthProvider, err = NewAuthenticationTokenFromFile(strings.TrimPrefix(encodedAuthParam, filePrefix), transport)
-	default:
-		tokenAuthProvider, err = NewAuthenticationToken(encodedAuthParam, transport)
+
+	var tokenJson Token
+	err = json.Unmarshal([]byte(encodedAuthParam), &tokenJson)
+	if err != nil {
+		switch {
+		case strings.HasPrefix(encodedAuthParam, tokenPrefix):
+			tokenAuthProvider, err = NewAuthenticationToken(strings.TrimPrefix(encodedAuthParam, tokenPrefix), transport)
+		case strings.HasPrefix(encodedAuthParam, filePrefix):
+			tokenAuthProvider, err = NewAuthenticationTokenFromFile(strings.TrimPrefix(encodedAuthParam, filePrefix), transport)
+		default:
+			tokenAuthProvider, err = NewAuthenticationToken(encodedAuthParam, transport)
+		}
+	} else {
+		tokenAuthProvider, err = NewAuthenticationToken(tokenJson.Token, transport)
 	}
 	return tokenAuthProvider, err
 }
