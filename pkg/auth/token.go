@@ -28,9 +28,9 @@ import (
 )
 
 const (
-	tokenPrefix     = "token:"
-	filePrefix      = "file:"
-	TokenPluginName = "org.apache.pulsar.client.impl.auth.AuthenticationToken"
+	tokenPrefix         = "token:"
+	filePrefix          = "file:"
+	TokenPluginName     = "org.apache.pulsar.client.impl.auth.AuthenticationToken"
 	TokePluginShortName = "token"
 )
 
@@ -66,8 +66,8 @@ func NewAuthenticationTokenFromAuthParams(encodedAuthParam string,
 	var tokenAuthProvider *TokenAuthProvider
 	var err error
 
-	var tokenJson Token
-	err = json.Unmarshal([]byte(encodedAuthParam), &tokenJson)
+	var tokenJSON Token
+	err = json.Unmarshal([]byte(encodedAuthParam), &tokenJSON)
 	if err != nil {
 		switch {
 		case strings.HasPrefix(encodedAuthParam, tokenPrefix):
@@ -78,7 +78,7 @@ func NewAuthenticationTokenFromAuthParams(encodedAuthParam string,
 			tokenAuthProvider, err = NewAuthenticationToken(encodedAuthParam, transport)
 		}
 	} else {
-		tokenAuthProvider, err = NewAuthenticationToken(tokenJson.Token, transport)
+		tokenAuthProvider, err = NewAuthenticationToken(tokenJSON.Token, transport)
 	}
 	return tokenAuthProvider, err
 }
