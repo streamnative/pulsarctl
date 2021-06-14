@@ -32,6 +32,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func TestUseJsonTokenParams(t *testing.T)  {
+	args := []string{"--auth-plugin", "token",
+		"--auth-params", "{\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXVzZXIifQ.Yb52IE0B5wzooAdSlIlskEgb6_HBXST8k3lINZS5wwg\"}",
+		"clusters", "list"}
+	execErr, err := BaseCmd(cluster.ListClustersCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+	cmdutils.PulsarCtlConfig = &cmdutils.ClusterConfig{} // Clear the config
+
+	args = []string{
+		"clusters",
+		"list",
+	}
+	execErr, _ = BaseCmd(cluster.ListClustersCmd, args)
+	assert.NotNil(t, execErr)
+	assert.True(t, strings.Contains(execErr.Error(), "401"))
+}
+
 func TestUseToken(t *testing.T) {
 	args := []string{"--token",
 		"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXVzZXIifQ.Yb52IE0B5wzooAdSlIlskEgb6_HBXST8k3lINZS5wwg",
