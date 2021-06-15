@@ -27,6 +27,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTLSWithJsonConfiguration(t *testing.T)  {
+	basePath, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	args := []string{
+		"--auth-plugin", "tls",
+		"--auth-params",
+		"{\"tlsCertFile\":\"" + basePath + "/test/auth/certs/client-cert.pem\"" +
+			",\"tlsKeyFile\":\"" + basePath + "/test/auth/certs/client-key.pem\"}",
+		"clusters", "list",
+	}
+	_, execErr, _ = TestTLSHelp(CreateClusterCmd, args)
+	assert.NotNil(t, execErr)
+}
+
 func TestTLS(t *testing.T) {
 	// There is no tls configuration, the execErr should not nil
 	args := []string{"cluster", "add", "tls"}
