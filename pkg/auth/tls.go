@@ -30,8 +30,8 @@ const (
 )
 
 type TLS struct {
-	TlsCertFile string `json:"tlsCertFile"`
-	TlsKeyFile  string `json:"tlsKeyFile"`
+	TLSCertFile string `json:"tlsCertFile"`
+	TLSKeyFile  string `json:"tlsKeyFile"`
 }
 
 type TLSAuthProvider struct {
@@ -73,8 +73,8 @@ func NewAuthenticationTLSFromAuthParams(encodedAuthParams string,
 			}
 		}
 	} else {
-		certificatePath = tlsJSON.TlsCertFile
-		privateKeyPath = tlsJSON.TlsKeyFile
+		certificatePath = tlsJSON.TLSCertFile
+		privateKeyPath = tlsJSON.TLSKeyFile
 	}
 
 	return NewAuthenticationTLS(certificatePath, privateKeyPath, transport)

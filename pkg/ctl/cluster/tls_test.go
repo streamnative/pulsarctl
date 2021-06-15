@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTLSWithJsonConfiguration(t *testing.T)  {
+func TestTLSWithJsonConfiguration(t *testing.T) {
 	basePath, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err.Error())
