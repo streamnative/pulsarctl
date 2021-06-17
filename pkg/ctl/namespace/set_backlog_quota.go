@@ -89,10 +89,17 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
 			&namespaceData.LimitStr,
-			"limit",
+			"limit-size",
 			"l",
 			"",
 			"Size limit (eg: 10M, 16G)")
+
+		flagSet.Int64VarP(
+			&namespaceData.LimitTime,
+			"limit-time",
+			"t",
+			-1,
+			"Time limit in seconds")
 
 		flagSet.StringVarP(
 			&namespaceData.PolicyStr,
@@ -101,7 +108,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 			"",
 			"Retention policy to enforce when the limit is reached.\n"+
 				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
-		cobra.MarkFlagRequired(flagSet, "limit")
+		cobra.MarkFlagRequired(flagSet, "limit-size")
 		cobra.MarkFlagRequired(flagSet, "policy")
 	})
 }
@@ -127,7 +134,7 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
 	}
 
-	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, policy))
+	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, data.LimitTime, policy))
 	if err == nil {
 		vc.Command.Printf("Set backlog quota successfully for [%s]\n", ns)
 	}
