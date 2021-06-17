@@ -20,15 +20,17 @@ package topic
 import (
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestOffloadCmd(t *testing.T) {
-	args := []string{"create", "test-offload-topic", "0"}
+	topicName := "test-offload-topic" + test.RandomSuffix()
+	args := []string{"create", topicName, "0"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"offload", "test-offload-topic", "10M"}
+	args = []string{"offload", topicName, "10M"}
 	out, execErr, _, _ := TestTopicCommands(OffloadCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "Nothing to offload\n", out.String())
