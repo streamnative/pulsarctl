@@ -95,7 +95,7 @@ func TestSetReplicatorDispatchRateOnNonExistingNs(t *testing.T) {
 	args := []string{"set-replicator-dispatch-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace public/non-existing-ns does not exist", execErr.Error())
+	assert.Contains(t, execErr.Error(), "404")
 }
 
 func TestGetReplicatorDispatchRateOnNonExistingNs(t *testing.T) {

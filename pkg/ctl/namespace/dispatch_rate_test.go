@@ -23,11 +23,12 @@ import (
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDispatchRateCmd(t *testing.T) {
-	ns := "public/test-dispatch-rate-ns"
+	ns := "public/test-dispatch-rate-ns" + test.RandomSuffix()
 
 	args := []string{"create", ns}
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
@@ -45,7 +46,7 @@ func TestDispatchRateCmd(t *testing.T) {
 
 	assert.Equal(t, 0, rate.DispatchThrottlingRateInMsg)
 	assert.Equal(t, int64(0), rate.DispatchThrottlingRateInByte)
-	assert.Equal(t, 1, rate.RatePeriodInSecond)
+	assert.Equal(t, 0, rate.RatePeriodInSecond)
 
 	args = []string{"set-dispatch-rate", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetDispatchRateCmd, args)

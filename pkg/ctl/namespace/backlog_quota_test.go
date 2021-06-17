@@ -32,7 +32,7 @@ func TestBacklogQuota(t *testing.T) {
 	assert.Equal(t, createOut.String(), "Created public/test-backlog-namespace successfully\n")
 
 	args = []string{"set-backlog-quota", "public/test-backlog-namespace",
-		"--limit", "2G", "--policy", "producer_request_hold"}
+		"--limit-size", "2G", "--policy", "producer_request_hold"}
 	setOut, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set backlog quota successfully for [public/test-backlog-namespace]\n")
@@ -46,7 +46,7 @@ func TestBacklogQuota(t *testing.T) {
 
 	for key, value := range backlogQuotaMap {
 		assert.Equal(t, key, utils.DestinationStorage)
-		assert.Equal(t, value.Limit, int64(2147483648))
+		assert.Equal(t, value.LimitSize, int64(2147483648))
 		assert.Equal(t, value.Policy, utils.ProducerRequestHold)
 	}
 
