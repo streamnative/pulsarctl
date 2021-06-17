@@ -44,7 +44,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	}
 
 	assert.Equal(t, 0, rate.SubscribeThrottlingRatePerConsumer)
-	assert.Equal(t, 30, rate.RatePeriodInSecond)
+	assert.Equal(t, 0, rate.RatePeriodInSecond)
 
 	args = []string{"set-subscribe-rate", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetSubscribeRateCmd, args)
