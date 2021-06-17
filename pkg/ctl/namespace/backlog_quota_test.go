@@ -58,7 +58,7 @@ func TestBacklogQuota(t *testing.T) {
 
 func TestFailureBacklogQuota(t *testing.T) {
 	args := []string{"set-backlog-quota", "public/test-backlog-namespace",
-		"--limit", "12M", "--policy", "no-support-policy"}
+		"--limit-size", "12M", "--policy", "no-support-policy"}
 	_, execErr, _, _ := TestNamespaceCommands(setBacklogQuota, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "invalid retention policy type: no-support-policy")
