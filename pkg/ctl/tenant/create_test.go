@@ -50,5 +50,5 @@ func TestCreateTenantAlreadyExistError(t *testing.T) {
 	args = []string{"create", "--allowed-clusters", "standalone", "create-tenant-duplicate"}
 	_, execErr, _, _ = TestTenantCommands(createTenantCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 409 reason: Tenant already exists", execErr.Error())
+	assert.Equal(t, "code: 409 reason: Tenant already exist", execErr.Error())
 }

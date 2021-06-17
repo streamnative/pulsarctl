@@ -67,13 +67,6 @@ func TestGetTopicArgsError(t *testing.T) {
 
 func TestGetNonExistTopic(t *testing.T) {
 	args := []string{"get", "non-exist-topic"}
-	out, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
-	assert.Nil(t, execErr)
-
-	var partitions utils.PartitionedTopicMetadata
-	err := json.Unmarshal(out.Bytes(), &partitions)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Equal(t, 0, partitions.Partitions)
+	_, execErr, _, _ := TestTopicCommands(GetTopicCmd, args)
+	assert.NotNil(t, execErr)
 }

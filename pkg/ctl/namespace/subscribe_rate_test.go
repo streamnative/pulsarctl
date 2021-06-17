@@ -44,7 +44,7 @@ func TestSubscribeRateCmd(t *testing.T) {
 	}
 
 	assert.Equal(t, 0, rate.SubscribeThrottlingRatePerConsumer)
-	assert.Equal(t, 30, rate.RatePeriodInSecond)
+	assert.Equal(t, 0, rate.RatePeriodInSecond)
 
 	args = []string{"set-subscribe-rate", ns}
 	out, execErr, _, _ = TestNamespaceCommands(SetSubscribeRateCmd, args)
@@ -96,7 +96,7 @@ func TestSetSubscribeRateOnNonExistingNs(t *testing.T) {
 	args := []string{"set-subscribe-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetSubscribeRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace public/non-existing-ns does not exist", execErr.Error())
+	assert.Contains(t, execErr.Error(), "404")
 }
 
 func TestGetSubscribeRateOnNonExistingNs(t *testing.T) {
