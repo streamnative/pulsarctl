@@ -106,7 +106,7 @@ func doSetDelayedDelivery(vc *cmdutils.VerbCmd, delayedDeliveryCmdData *utils.De
 		if err != nil {
 			return err
 		}
-		delayedDeliveryData.TickTime = retentionTimeInSecond.Seconds()
+		delayedDeliveryData.TickTime = tickTimeInSecond.Seconds()
 		delayedDeliveryData.Active = true
 	}
 	err = admin.Topics().SetDelayedDelivery(*topic, *delayedDeliveryData)
