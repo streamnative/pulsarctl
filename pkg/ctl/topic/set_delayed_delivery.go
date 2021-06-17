@@ -102,7 +102,7 @@ func doSetDelayedDelivery(vc *cmdutils.VerbCmd, delayedDeliveryCmdData *utils.De
 		return errors.Errorf(msg)
 	}
 	if delayedDeliveryCmdData.Enable {
-		retentionTimeInSecond, err := ctlUtil.ParseRelativeTimeInSeconds(delayedDeliveryCmdData.DelayedDeliveryTimeStr)
+		tickTimeInSecond, err := ctlUtil.ParseRelativeTimeInSeconds(delayedDeliveryCmdData.DelayedDeliveryTimeStr)
 		if err != nil {
 			return err
 		}
