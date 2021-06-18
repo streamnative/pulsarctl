@@ -23,11 +23,12 @@ import (
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReplicatorDispatchRateCmd(t *testing.T) {
-	ns := "public/test-replicator-dispatch-rate-ns"
+	ns := "public/test-replicator-dispatch-rate-ns" + test.RandomSuffix()
 
 	args := []string{"create", ns}
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
@@ -35,9 +36,7 @@ func TestReplicatorDispatchRateCmd(t *testing.T) {
 
 	args = []string{"get-replicator-dispatch-rate", ns}
 	_, execErr, _, _ = TestNamespaceCommands(GetReplicatorDispatchRateCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: replicator-Dispatch-rate is not configured "+
-		"for cluster standalone", execErr.Error())
+	assert.Nil(t, execErr)
 
 	args = []string{"set-replicator-dispatch-rate", ns}
 	out, execErr, _, _ := TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
@@ -96,7 +95,7 @@ func TestSetReplicatorDispatchRateOnNonExistingNs(t *testing.T) {
 	args := []string{"set-replicator-dispatch-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetReplicatorDispatchRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace public/non-existing-ns does not exist", execErr.Error())
+	assert.Contains(t, execErr.Error(), "404")
 }
 
 func TestGetReplicatorDispatchRateOnNonExistingNs(t *testing.T) {
