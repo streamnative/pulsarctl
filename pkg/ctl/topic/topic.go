@@ -68,6 +68,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetPersistenceCmd,
 		SetPersistenceCmd,
 		RemovePersistenceCmd,
+		GetDelayedDeliveryCmd,
+		SetDelayedDeliveryCmd,
+		RemoveDelayedDeliveryCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
