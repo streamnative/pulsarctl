@@ -2,7 +2,7 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-      - master
+      - '*'
     path-ignores:
       - 'docs/**'
       - 'README.md'
