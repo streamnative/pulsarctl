@@ -28,11 +28,11 @@ func RemoveMessageTTLCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
-	removeMsgTTL := cmdutils.Example{
+	msg := cmdutils.Example{
 		Desc:    "Remove Message TTL for a topic",
 		Command: "pulsarctl topics remove-message-ttl topic",
 	}
-	examples = append(examples, removeMsgTTL)
+	examples = append(examples, msg)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output

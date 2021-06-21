@@ -28,11 +28,11 @@ func GetMaxProducersCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
-	setMsgMaxProducers := cmdutils.Example{
+	msg := cmdutils.Example{
 		Desc:    "Get max number of producers for a topic",
 		Command: "pulsarctl topics get-max-producers topic",
 	}
-	examples = append(examples, setMsgMaxProducers)
+	examples = append(examples, msg)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output

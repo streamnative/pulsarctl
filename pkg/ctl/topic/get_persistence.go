@@ -29,11 +29,11 @@ func GetPersistenceCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires namespace admin persistence."
 
 	var examples []cmdutils.Example
-	get := cmdutils.Example{
+	msg := cmdutils.Example{
 		Desc:    "Get persistence for a topic",
 		Command: "pulsarctl topic get-persistence (topic-name)",
 	}
-	examples = append(examples, get)
+	examples = append(examples, msg)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output

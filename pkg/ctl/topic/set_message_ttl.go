@@ -29,11 +29,11 @@ func SetMessageTTLCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
-	setMsgTTL := cmdutils.Example{
+	msg := cmdutils.Example{
 		Desc:    "Set Message TTL for a topic",
 		Command: "pulsarctl topics set-message-ttl topic -t 10",
 	}
-	examples = append(examples, setMsgTTL)
+	examples = append(examples, msg)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output

@@ -28,11 +28,11 @@ func RemoveMaxConsumersCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
-	setMsgMaxConsumers := cmdutils.Example{
+	msg := cmdutils.Example{
 		Desc:    "Remove max number of consumers for a topic",
 		Command: "pulsarctl topics remove-max-consumers topic",
 	}
-	examples = append(examples, setMsgMaxConsumers)
+	examples = append(examples, msg)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
