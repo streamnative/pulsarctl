@@ -52,7 +52,7 @@ func TestMaxConsumers(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, getOut.String(), "0")
 
-	// test negative value for ttl arg
+	// test negative value
 	setArgs = []string{"set-max-consumers", topicName, "-c", "-2"}
 	_, execErr, _, _ = TestTopicCommands(SetMaxConsumersCmd, setArgs)
 	assert.NotNil(t, execErr)

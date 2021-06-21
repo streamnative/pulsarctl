@@ -52,7 +52,7 @@ func TestMaxProducers(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, getOut.String(), "0")
 
-	// test negative value for ttl arg
+	// test negative value
 	setArgs = []string{"set-max-producers", topicName, "-p", "-2"}
 	_, execErr, _, _ = TestTopicCommands(SetMaxProducersCmd, setArgs)
 	assert.NotNil(t, execErr)
