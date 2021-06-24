@@ -381,3 +381,13 @@ type DelayedDeliveryData struct {
 	TickTime float64 `json:"tickTime"`
 	Active   bool    `json:"active"`
 }
+
+type BacklogQuotaCmdData struct {
+	LimitStr  string `json:"limitStr"`
+	PolicyStr string `json:"policyStr"`
+}
+
+type BacklogQuotaData struct {
+	Limit  int64  `json:"limit"`
+	Policy string `json:"policy"`
+}

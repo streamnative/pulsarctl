@@ -161,6 +161,15 @@ type Topics interface {
 
 	// RemoveDelayedDelivery Remove the delayed delivery policy on a topic
 	RemoveDelayedDelivery(utils.TopicName) error
+
+	// GetBacklogQuotaMap Get the backlog quota policies for a topic
+	GetBacklogQuotaMap(utils.TopicName) (*map[string]utils.BacklogQuotaData, error)
+
+	// SetBacklogQuota Set a backlog quota policy for a topic
+	SetBacklogQuota(utils.TopicName, utils.BacklogQuotaData) error
+
+	// RemoveBacklogQuota Remove a backlog quota policy from a topic
+	RemoveBacklogQuota(utils.TopicName) error
 }
 
 type topics struct {
@@ -491,5 +500,22 @@ func (t *topics) SetDelayedDelivery(topic utils.TopicName, delayedDeliveryData u
 
 func (t *topics) RemoveDelayedDelivery(topic utils.TopicName) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "delayedDelivery")
+	return t.pulsar.Client.Delete(endpoint)
+}
+
+func (t *topics) GetBacklogQuotaMap(topic utils.TopicName) (*map[string]utils.BacklogQuotaData, error) {
+	var backlogQuotaMap map[string]utils.BacklogQuotaData
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "backlogQuotaMap")
+	err := t.pulsar.Client.Get(endpoint, &backlogQuotaMap)
+	return &backlogQuotaMap, err
+}
+
+func (t *topics) SetBacklogQuota(topic utils.TopicName, backlogQuotaData utils.BacklogQuotaData) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "backlogQuota")
+	return t.pulsar.Client.Post(endpoint, &backlogQuotaData)
+}
+
+func (t *topics) RemoveBacklogQuota(topic utils.TopicName) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "backlogQuota")
 	return t.pulsar.Client.Delete(endpoint)
 }

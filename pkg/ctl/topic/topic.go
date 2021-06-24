@@ -71,6 +71,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetDelayedDeliveryCmd,
 		SetDelayedDeliveryCmd,
 		RemoveDelayedDeliveryCmd,
+		GetBacklogQuotasCmd,
+		SetBacklogQuotaCmd,
+		RemoveBacklogQuotaCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
