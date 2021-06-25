@@ -99,7 +99,7 @@ make pulsarctl
 If you want to print version of `pulsarctl`, you can use follow commands:
 
 ```
-./pulsarctl --version
+.bin/pulsarctl --version
 ```
 
 Output:

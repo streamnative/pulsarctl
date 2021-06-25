@@ -26,5 +26,5 @@ cli: cleancli
 	tar -czvf ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz -C ${PWD}/site/gen-pulsarctldocs/generators/build/ .
 	mv ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz ${PWD}/pulsarctl-site-${VERSION}.tar.gz
 
-pulsarct: 
-	$(GOBUILD) -ldflags '$(LDFLAGS)' -o bin/pulsarct
+pulsarctl: 
+	$(GOBUILD) -ldflags '$(LDFLAGS)' -o bin/pulsarctl
