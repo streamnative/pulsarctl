@@ -35,6 +35,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"github.com/streamnative/pulsarctl/pkg/oauth2"
+	"github.com/streamnative/pulsarctl/pkg/version"
 
 	function "github.com/streamnative/pulsarctl/pkg/ctl/functions"
 	schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
@@ -56,12 +57,16 @@ func NewPulsarctlCmd() *cobra.Command {
 		Use:   "pulsarctl [command]",
 		Short: "a CLI for Apache Pulsar",
 		Run: func(cmd *cobra.Command, _ []string) {
+			if v, err := cmd.Flags().GetBool("version"); err == nil && v {
+				cmd.Println(version.PrintVersionInfo())
+				return
+			}
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())
 			}
 		},
 	}
-
+	rootCmd.PersistentFlags().BoolP("version", "V", false, "Print version information and exit.")
 	rootCmd.PersistentFlags().BoolP("help", "h", false, "help for this command")
 	rootCmd.PersistentFlags().StringVarP(
 		&colorValue,

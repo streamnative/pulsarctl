@@ -93,24 +93,23 @@ After entering the `go mod download` command, if some libs can not be downloaded
 ### Build
 
 ```bash
-export GO111MODULE=on
-
-./build.sh
+make pulsarctl
 ```
 
 If you want to print version of `pulsarctl`, you can use follow commands:
 
 ```
-./pulsarctl -version
+./pulsarctl --version
 ```
 
 Output:
 
 ```
-Version: 0.6.0-SNAPSHOT
-Go Version: go version go1.15.6 darwin/amd64
-Git Commit: 555e6a3076a44c69bd2d1111497515e14f5e302f
-Build Time: Fri May 28 12:13:09 CST 2021
+Release Version: 0.6.0-SNAPSHOT
+Git Commit Hash: 4a7bc2c452cf3a5041a1905548c470899a38e2d4
+Git Branch: master
+UTC Build Time: 2021-06-25 15:19:28
+Go Version: go version go1.16.3 darwin/amd64
 ```
 
 ## Enable Auto-Completion
