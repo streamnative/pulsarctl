@@ -1,7 +1,7 @@
 MINOR_VERSION=1
 VERSION=$(shell cat VERSION)
 
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/version.ReleaseVersion=$(shell git describe --tags --dirty --always)"
+LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/version.ReleaseVersion=$(shell git describe --tags --always)"
 LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/version.BuildTS=$(shell date -u '+%Y-%m-%d %H:%M:%S')"
 LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/version.GitHash=$(shell git rev-parse HEAD)"
 LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/version.GitBranch=$(shell git rev-parse --abbrev-ref HEAD)"

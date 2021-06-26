@@ -105,10 +105,10 @@ If you want to print version of `pulsarctl`, you can use follow commands:
 Output:
 
 ```
-Release Version: 0.6.0-SNAPSHOT
-Git Commit Hash: 4a7bc2c452cf3a5041a1905548c470899a38e2d4
-Git Branch: master
-UTC Build Time: 2021-06-25 15:19:28
+Release Version: v2.8.0.3
+Git Commit Hash: add1e586e8d56fcc1cbd2fe94ed75b10d6c54672
+Git Branch: HEAD
+UTC Build Time: 2021-06-26 06:39:16
 Go Version: go version go1.16.3 darwin/amd64
 ```
 
