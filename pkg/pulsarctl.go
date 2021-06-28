@@ -35,7 +35,6 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"github.com/streamnative/pulsarctl/pkg/oauth2"
-	"github.com/streamnative/pulsarctl/pkg/version"
 
 	function "github.com/streamnative/pulsarctl/pkg/ctl/functions"
 	schema "github.com/streamnative/pulsarctl/pkg/ctl/schemas"
@@ -58,7 +57,7 @@ func NewPulsarctlCmd() *cobra.Command {
 		Short: "a CLI for Apache Pulsar",
 		Run: func(cmd *cobra.Command, _ []string) {
 			if v, err := cmd.Flags().GetBool("version"); err == nil && v {
-				cmd.Println(version.PrintVersionInfo())
+				cmdutils.PrintVersionInfo()
 				return
 			}
 			if err := cmd.Help(); err != nil {
