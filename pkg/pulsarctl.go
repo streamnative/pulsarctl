@@ -56,12 +56,16 @@ func NewPulsarctlCmd() *cobra.Command {
 		Use:   "pulsarctl [command]",
 		Short: "a CLI for Apache Pulsar",
 		Run: func(cmd *cobra.Command, _ []string) {
+			if v, err := cmd.Flags().GetBool("version"); err == nil && v {
+				cmdutils.PrintVersionInfo()
+				return
+			}
 			if err := cmd.Help(); err != nil {
 				logger.Debug("ignoring error %q", err.Error())
 			}
 		},
 	}
-
+	rootCmd.PersistentFlags().BoolP("version", "V", false, "show the pulsarctl version informantion")
 	rootCmd.PersistentFlags().BoolP("help", "h", false, "help for this command")
 	rootCmd.PersistentFlags().StringVarP(
 		&colorValue,
