@@ -65,7 +65,7 @@ func NewPulsarctlCmd() *cobra.Command {
 			}
 		},
 	}
-	rootCmd.PersistentFlags().BoolP("version", "V", false, "Print version information and exit.")
+	rootCmd.PersistentFlags().BoolP("version", "V", false, "show the pulsarctl version informantion")
 	rootCmd.PersistentFlags().BoolP("help", "h", false, "help for this command")
 	rootCmd.PersistentFlags().StringVarP(
 		&colorValue,
