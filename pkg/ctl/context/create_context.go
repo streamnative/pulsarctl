@@ -36,8 +36,9 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 	}
 
 	setClusterContext := cmdutils.Example{
-		Desc:    "Use set of context to define your cluster",
-		Command: "pulsarctl context set development --admin-service-url=\"http://1.2.3.4:8080\" --bookie-service-url=\"http://1.2.3.4:8083\"",
+		Desc: "Use set of context to define your cluster",
+		Command: "pulsarctl context set development --admin-service-url=\"http://{host}:8080\"" +
+			" --bookie-service-url=\"http://{host}:8083\"",
 	}
 
 	examples = append(examples, setContext, setClusterContext)

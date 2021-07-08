@@ -190,7 +190,7 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 			if !exist || !existAuth {
 				logger.Critical("wrong context:%s\n"+
-					"auth-info and contexts in the pulsarctl configuration file must be specified at the same time\n", ctxConf.CurrentContext)
+					"auth-info and contexts must be specified at the same time\n", ctxConf.CurrentContext)
 				os.Exit(1)
 			}
 			c.WebServiceURL = ctx.BrokerServiceURL
