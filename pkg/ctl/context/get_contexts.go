@@ -18,6 +18,7 @@
 package context
 
 import (
+	"github.com/kris-nova/logger"
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
@@ -95,5 +96,10 @@ func doRunGetContext(vc *cmdutils.VerbCmd, ops *getContextOptions) error {
 	}
 
 	table.Render()
+
+	if len(config.CurrentContext) == 0 {
+		logger.Warning("Check content of pulsarctl config: $HOME/.config/pulsar")
+	}
+
 	return nil
 }

@@ -116,6 +116,10 @@ Go Version: go version go1.16.3 darwin/amd64
 
 If you want to enable autocompletion in shell, see [enable_completion](docs/en/enable_completion.md).
 
+## Use contexts
+
+If you want to cache information of multiple clusters, and can switch between multiple clusters, see [How to use pulsarctl context](docs/en/how-to-use-context.md).
+
 ## Project Status
 
 The following is an incomplete list of features that are not yet implemented:
