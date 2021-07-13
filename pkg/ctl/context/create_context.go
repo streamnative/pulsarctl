@@ -34,7 +34,14 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 		Desc:    "Sets the user field on the gce context entry without touching other values",
 		Command: "pulsarctl context set [options]",
 	}
-	examples = append(examples, setContext)
+
+	setClusterContext := cmdutils.Example{
+		Desc: "Use set of context to define your cluster",
+		Command: "pulsarctl context set development --admin-service-url=\"http://{host}:8080\"" +
+			" --bookie-service-url=\"http://{host}:8083\"",
+	}
+
+	examples = append(examples, setContext, setClusterContext)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
