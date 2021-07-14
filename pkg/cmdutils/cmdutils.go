@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	brokerPulsar "github.com/apache/pulsar-client-go/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
@@ -93,6 +94,10 @@ func NewPulsarClientWithAPIVersion(version common.APIVersion) pulsar.Client {
 
 func NewBookieClient() bookkeeper.Client {
 	return PulsarCtlConfig.BookieClient()
+}
+
+func NewBrokerClient() (brokerPulsar.Client, error) {
+	return PulsarCtlConfig.BrokerClient()
 }
 
 func PrintJSON(w io.Writer, obj interface{}) {
