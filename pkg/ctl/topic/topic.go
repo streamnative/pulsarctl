@@ -36,6 +36,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		OffloadStatusCmd,
 		UnloadCmd,
 		StatusCmd,
+		CompactCmd,
 		CreateTopicCmd,
 		DeleteTopicCmd,
 		GetTopicCmd,
