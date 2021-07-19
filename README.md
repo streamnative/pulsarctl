@@ -93,29 +93,32 @@ After entering the `go mod download` command, if some libs can not be downloaded
 ### Build
 
 ```bash
-export GO111MODULE=on
-
-./build.sh
+make pulsarctl
 ```
 
 If you want to print version of `pulsarctl`, you can use follow commands:
 
 ```
-./pulsarctl -version
+.bin/pulsarctl --version
 ```
 
 Output:
 
 ```
-Version: 0.6.0-SNAPSHOT
-Go Version: go version go1.15.6 darwin/amd64
-Git Commit: 555e6a3076a44c69bd2d1111497515e14f5e302f
-Build Time: Fri May 28 12:13:09 CST 2021
+Release Version: v2.8.0.3
+Git Commit Hash: add1e586e8d56fcc1cbd2fe94ed75b10d6c54672
+Git Branch: HEAD
+UTC Build Time: 2021-06-26 06:39:16
+Go Version: go version go1.16.3 darwin/amd64
 ```
 
 ## Enable Auto-Completion
 
 If you want to enable autocompletion in shell, see [enable_completion](docs/en/enable_completion.md).
+
+## Use contexts
+
+If you want to cache information of multiple clusters, and can switch between multiple clusters, see [How to use pulsarctl context](docs/en/how-to-use-context.md).
 
 ## Project Status
 
