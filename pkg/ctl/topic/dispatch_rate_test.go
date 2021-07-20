@@ -32,7 +32,8 @@ func TestDispatchRate(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	setArgs := []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4", "--dispatch-rate-period", "3", "--relative-to-publish-rate"}
+	setArgs := []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4",
+		"--dispatch-rate-period", "3", "--relative-to-publish-rate"}
 	setOut, execErr, _, _ := TestTopicCommands(SetDispatchRateCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set message dispatch rate successfully for ["+topicName+"]\n")
@@ -69,7 +70,8 @@ func TestDispatchRate(t *testing.T) {
 	assert.Equal(t, dispatchRateData.RatePeriodInSecond, int64(0))
 	assert.Equal(t, dispatchRateData.RelativeToPublishRate, false)
 
-	setArgs = []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4", "--dispatch-rate-period", "3"}
+	setArgs = []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4",
+		"--dispatch-rate-period", "3"}
 	setOut, execErr, _, _ = TestTopicCommands(SetDispatchRateCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set message dispatch rate successfully for ["+topicName+"]\n")
