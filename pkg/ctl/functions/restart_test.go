@@ -18,80 +18,136 @@
 package functions
 
 import (
-	"os"
+	"encoding/json"
+	"path"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRestartFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "restart-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-restart",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	statusArgs := []string{"status",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", fName,
+	}
+
+	var status utils.FunctionStatus
+
+	task := func(args []string, obj interface{}) bool {
+		outStatus, execErr, _ := TestFunctionsCommands(statusFunctionsCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		err = json.Unmarshal(outStatus.Bytes(), obj)
+		if err != nil {
+			return false
+		}
+
+		s := obj.(*utils.FunctionStatus)
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	restartArgs := []string{"restart",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-restart",
+		"--name", fName,
 	}
+	_, execErr, err = TestFunctionsCommands(restartFunctionsCmd, restartArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+}
 
-	_, _, err = TestFunctionsCommands(restartFunctionsCmd, restartArgs)
-	assert.Nil(t, err)
-
+func TestRestartFunctionWithFQFN(t *testing.T) {
+	fName := "restart-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 	argsFqfn := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-restart-fqfn",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
-	restartArgsFqfn := []string{"restart",
-		"--fqfn", "public/default/test-functions-restart-fqfn",
+	statusArgs := []string{"status",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", fName,
 	}
 
-	_, _, err = TestFunctionsCommands(restartFunctionsCmd, restartArgsFqfn)
-	assert.Nil(t, err)
+	var status utils.FunctionStatus
+
+	task := func(args []string, obj interface{}) bool {
+		outStatus, execErr, _ := TestFunctionsCommands(statusFunctionsCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		err = json.Unmarshal(outStatus.Bytes(), obj)
+		if err != nil {
+			return false
+		}
+
+		s := obj.(*utils.FunctionStatus)
+		return len(s.Instances) == 1 && s.Instances[0].Status.Running
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 1*time.Minute, statusArgs, &status)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	restartArgsFqfn := []string{"restart",
+		"--fqfn", "public/default/" + fName,
+	}
+	_, execErr, err = TestFunctionsCommands(restartFunctionsCmd, restartArgsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 }
 
 func TestRestartFunctionsFailure(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "restart-fail-function" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-restart-failure",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	// test the function name not exist
 	failureDeleteArgs := []string{"restart",
@@ -116,7 +172,7 @@ func TestRestartFunctionsFailure(t *testing.T) {
 	notExistInstanceIDArgs := []string{"restart",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-restart-failure",
+		"--name", fName,
 		"--instance-id", "12345678",
 	}
 	_, err, _ = TestFunctionsCommands(restartFunctionsCmd, notExistInstanceIDArgs)

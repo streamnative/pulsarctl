@@ -16,53 +16,49 @@
 // under the License.
 
 // TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
-// +build functions
+// +build function
 
 package functions
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
+	"path"
 	"testing"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTriggerFunctions(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
+	fName := "trigger-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-trigger",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.WordCountFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
 
 	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	if execErr != nil {
-		t.Errorf("create fucntions error value: %s", execErr.Error())
-	}
-	assert.Equal(t, out.String(), "Created test-functions-trigger successfully\n")
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 
 	statsArgs := []string{"stats",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-trigger",
+		"--name", fName,
 	}
-	outStats := new(bytes.Buffer)
-
-	outStats, _, _ = TestFunctionsCommands(statsFunctionsCmd, statsArgs)
-	var stats pulsar.FunctionStats
+	outStats, execErr, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	var stats utils.FunctionStats
 	err = json.Unmarshal(outStats.Bytes(), &stats)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(0), stats.ReceivedTotal)
@@ -72,40 +68,37 @@ func TestTriggerFunctions(t *testing.T) {
 	triggerArgs := []string{"trigger",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-trigger",
+		"--name", fName,
 		"--topic", "test-input-topic",
 		"--trigger-value", "hello pulsar",
 	}
 
-	triggerOut := new(bytes.Buffer)
 	for i := 0; i < 2; i++ {
-		triggerOut, execErr, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
+		_, execErr, err = TestFunctionsCommands(triggerFunctionsCmd, triggerArgs)
 		assert.Nil(t, err)
 		if execErr != nil {
 			t.Error(execErr.Error())
 		}
-		fmt.Print(triggerOut.String())
 	}
 }
 
 func TestTriggerFunctionsFailure(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
+	fName := "trigger-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-trigger-failure",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
 
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-trigger-failure successfully\n")
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 	// wait the function create successfully
 	time.Sleep(time.Second * 3)
 
@@ -120,7 +113,7 @@ func TestTriggerFunctionsFailure(t *testing.T) {
 	assert.Equal(t, errorMessage, errMsg.Error())
 
 	triggerArgsNoTopic := []string{"trigger",
-		"--name", "test-functions-trigger-failure",
+		"--name", fName,
 		"--topic", "test-input-topic-failure",
 		"--trigger-value", "hello pulsar",
 	}

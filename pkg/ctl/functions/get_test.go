@@ -20,48 +20,46 @@ package functions
 import (
 	"encoding/json"
 	"os"
+	"path"
 	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFunction(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "gf" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-get",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
-
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	getArgs := []string{"get",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-get",
+		"--name", fName,
 	}
-
-	out, _, err := TestFunctionsCommands(getFunctionsCmd, getArgs)
-	assert.Nil(t, err)
+	out, execErr, err := TestFunctionsCommands(getFunctionsCmd, getArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	var functionConfig utils.FunctionConfig
 	err = json.Unmarshal(out.Bytes(), &functionConfig)
-	assert.Nil(t, err)
+	FailImmediatelyIfErrorNotNil(t, err)
 
 	assert.Equal(t, functionConfig.Tenant, "public")
 	assert.Equal(t, functionConfig.Namespace, "default")
-	assert.Equal(t, functionConfig.Name, "test-functions-get")
+	assert.Equal(t, functionConfig.Name, fName)
 	assert.Equal(t, functionConfig.Output, "persistent://public/default/test-output-topic")
 	assert.Equal(t, functionConfig.ClassName, "org.apache.pulsar.functions.api.examples.ExclamationFunction")
 }

@@ -19,59 +19,58 @@ package functions
 
 import (
 	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStopFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "stop-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	stopArgs := []string{"stop",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop",
+		"--name", fName,
 	}
+	_, execErr, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
-	assert.Nil(t, err)
-
+	fName = "stop-fafn-f" + test.RandomSuffix()
 	argsFqfn := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stop-fqfn",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	stopArgsFqfn := []string{"stop",
-		"--fqfn", "public/default/test-functions-stop-fqfn",
+		"--fqfn", "public/default/" + fName,
 	}
-
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 }
 
 func TestStopFunctionsWithFailure(t *testing.T) {

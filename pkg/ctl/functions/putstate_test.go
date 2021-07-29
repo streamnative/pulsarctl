@@ -19,43 +19,41 @@ package functions
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStateFunctions(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Fatal(err)
-	}
+	fName := "f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
-
 	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	if execErr != nil {
-		t.Fatal(execErr)
-	}
-	assert.Equal(t, out.String(), "Created test-functions-putstate successfully\n")
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate",
+		"--name", fName,
 		"pulsar", "-", "hello",
 	}
 
@@ -80,7 +78,7 @@ func TestStateFunctions(t *testing.T) {
 	}
 
 	stateArgsErrInFormat := []string{"putstate",
-		"--name", "test-functions-putstate",
+		"--name", fName,
 		"pulsar", "hello",
 	}
 
@@ -98,7 +96,7 @@ func TestStateFunctions(t *testing.T) {
 	queryStateArgs := []string{"querystate",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate",
+		"--name", fName,
 		"--key", "pulsar",
 	}
 
@@ -139,26 +137,22 @@ func TestStateFunctions(t *testing.T) {
 }
 
 func TestByteValue(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
+	fName := "f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate-byte-value",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
 
 	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(), "Created test-functions-putstate-byte-value successfully\n")
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 
 	buf := "hello pulsar!"
 	file, err := ioutil.TempFile("", "byte-value-functions")
@@ -173,7 +167,7 @@ func TestByteValue(t *testing.T) {
 	putstateArgs := []string{"putstate",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate-byte-value",
+		"--name", fName,
 		"pulsar", "=", file.Name(),
 	}
 
@@ -194,14 +188,12 @@ func TestByteValue(t *testing.T) {
 	queryStateArgs := []string{"querystate",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-putstate-byte-value",
+		"--name", fName,
 		"--key", "pulsar",
 	}
 
-	outQueryState, _, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
-	if err != nil {
-		t.Fatal(err)
-	}
+	outQueryState, execErr, err := TestFunctionsCommands(querystateFunctionsCmd, queryStateArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	var state utils.FunctionState
 	err = json.Unmarshal(outQueryState.Bytes(), &state)
