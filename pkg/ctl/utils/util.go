@@ -90,12 +90,8 @@ func InferMissingSinkeArguments(sinkConf *utils.SinkConfig) {
 }
 
 func IsFileExist(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	fmt.Println("exists", info.Name(), info.Size(), info.ModTime())
-	return true
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
 }
 
 func ValidateSizeString(s string) (int64, error) {

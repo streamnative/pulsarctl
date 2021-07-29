@@ -19,43 +19,45 @@ package functions
 
 import (
 	"encoding/json"
+	"fmt"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func TestStatsFunctions(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
+	fName := "status-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-stats",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
 
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, out.String(), "Created test-functions-stats successfully\n")
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 
 	statsArgs := []string{"stats",
-		"--name", "test-functions-stats",
+		"--name", fName,
 	}
 
-	outStats, _, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
-	assert.Nil(t, err)
+	outStats, execErr, err := TestFunctionsCommands(statsFunctionsCmd, statsArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	var stats utils.FunctionStats
 	err = json.Unmarshal(outStats.Bytes(), &stats)
-	assert.Nil(t, err)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	assert.Equal(t, int64(0), stats.ReceivedTotal)
 	assert.Equal(t, int64(0), stats.ProcessedSuccessfullyTotal)

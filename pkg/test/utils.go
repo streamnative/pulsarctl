@@ -19,8 +19,8 @@ package test
 
 import (
 	"context"
+	"math/rand"
 	"os/exec"
-	"strconv"
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -41,8 +41,18 @@ func NewNetwork(name string) (testcontainers.Network, error) {
 	return net, err
 }
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
 func RandomSuffix() string {
-	return "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	b := make([]rune, 6)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
 
 func ExecCmd(containerID string, cmd []string) (string, error) {
