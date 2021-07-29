@@ -12,11 +12,14 @@ docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
 case ${1} in
     token)
         env_file=${PROJECT_ROOT}/test/auth/token.env
-        docker run --env-file ${env_file} -e TEST_ARGS=token ${IMAGE_NAME}
+        docker run --rm --env-file ${env_file} -e TEST_ARGS=token ${IMAGE_NAME}
         ;;
     tls)
         env_file=${PROJECT_ROOT}/test/auth/tls.env
-        docker run --env-file ${env_file} -e TEST_ARGS=tls ${IMAGE_NAME}
+        docker run --rm --env-file ${env_file} -e TEST_ARGS=tls ${IMAGE_NAME}
+        ;;
+    function)
+        docker run --name function --rm -e TEST_ARGS=function -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
     *)
         env_file=${PROJECT_ROOT}/test/policies/policies.env

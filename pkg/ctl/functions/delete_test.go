@@ -19,59 +19,64 @@ package functions
 
 import (
 	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "df" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-delete",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	deleteArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-delete",
+		"--name", fName,
 	}
 
-	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+}
+
+func TestDeleteFunctionsWithFQFN(t *testing.T) {
+	fName := "df" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	argsFqfn := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-delete-fqfn",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	deleteArgsFqfn := []string{"delete",
-		"--fqfn", "public/default/test-functions-delete-fqfn",
+		"--fqfn", "public/default/" + fName,
 	}
 
-	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 }
 
 func TestDeleteFunctionsWithFailure(t *testing.T) {

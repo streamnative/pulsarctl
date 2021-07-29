@@ -6,7 +6,7 @@
 *.dylib
 pulsarctl
 bin/
-api-examples.jar
+test/functions/api-examples.jar
 dummyExample.jar
 pulsar-io-kafka-2.4.0.nar
 kafka-clients-0.10.2.1.jar

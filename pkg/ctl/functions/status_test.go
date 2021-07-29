@@ -19,55 +19,55 @@ package functions
 
 import (
 	"encoding/json"
+	"fmt"
+	"path"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStatusFunctions(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
+	fName := "status-function" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
-		"--jar", basePath + "/test/functions/api-examples.jar",
+		"--jar", jarName,
 	}
-
-	out, _, err := TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, "Created test-functions-status successfully\n", out.String())
+	out, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Equal(t, fmt.Sprintf("Created %s successfully\n", fName), out.String())
 
 	getArgs := []string{"get",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
+		"--name", fName,
 	}
-
-	outGet, _, _ := TestFunctionsCommands(getFunctionsCmd, getArgs)
-	assert.Nil(t, err)
+	outGet, execErr, err := TestFunctionsCommands(getFunctionsCmd, getArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	var functionConfig utils.FunctionConfig
 	err = json.Unmarshal(outGet.Bytes(), &functionConfig)
-	assert.Nil(t, err)
+	FailImmediatelyIfErrorNotNil(t, err)
 
 	assert.Equal(t, functionConfig.Tenant, "public")
 	assert.Equal(t, functionConfig.Namespace, "default")
-	assert.Equal(t, functionConfig.Name, "test-functions-status")
+	assert.Equal(t, functionConfig.Name, fName)
 
 	statusArgs := []string{"status",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-status",
+		"--name", fName,
 	}
 
 	var status utils.FunctionStatus
@@ -86,8 +86,7 @@ func TestStatusFunctions(t *testing.T) {
 		s := obj.(*utils.FunctionStatus)
 		return len(s.Instances) == 1 && s.Instances[0].Status.Running
 	}
-
-	err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute, statusArgs, &status)
+	err = cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, statusArgs, &status)
 	if err != nil {
 		t.Fatal(err)
 	}

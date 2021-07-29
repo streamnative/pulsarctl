@@ -19,42 +19,41 @@ package functions
 
 import (
 	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDownloadFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
-
-	defer os.Remove(jarName)
+	fName := "df" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-download",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
-
+	destinationFile := "./dummyExample.jar"
 	downloadArgs := []string{"download",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-download",
-		"--destination-file", "./dummyExample.jar",
+		"--name", fName,
+		"--destination-file", destinationFile,
 	}
 	outPut, execErr, err := TestFunctionsCommands(downloadFunctionsCmd, downloadArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, outPut.String(), "Downloaded ./dummyExample.jar successfully\n")
-	assert.Nil(t, execErr)
-	assert.Nil(t, err)
+	os.Remove(destinationFile)
 }
 
 func TestDownloadFunctionsWithFailure(t *testing.T) {
