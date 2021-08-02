@@ -10,7 +10,7 @@ LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.GoVersion=$(shell 
 GO := GO111MODULE=on go
 GOBUILD := $(GO) build
 
-# Build pulsarctl docs
+# Build pulsarctl binary & docs
 
 cleancli:
 	rm -f main
