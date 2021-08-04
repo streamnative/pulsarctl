@@ -42,13 +42,15 @@ case ${TEST_ARGS} in
     sink)
         echo "running sink tests"
         checkFunctionWorker
-        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sinks/
+        mkdir -p test/sinks
+        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sinks/data-generator.nar
         go test -v -test.timeout 5m ./pkg/ctl/sinks
         ;;
-    souce)
+    source)
         echo "running source tests"
         checkFunctionWorker
-        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/
+        mkdir -p test/sources
+        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/data-generator.nar
         go test -v -test.timeout 5m ./pkg/ctl/sources
         ;;
     *)

@@ -64,7 +64,7 @@ func TestSourcesCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 
 func resourceDir() string {
 	_, b, _, _ := runtime.Caller(0)
-	d := path.Join(path.Dir(b), "../../../test/sinks")
+	d := path.Join(path.Dir(b), "../../../test/sources")
 	return d
 }
 
