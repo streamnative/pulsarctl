@@ -26,7 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateSourceFailedByClassname(t *testing.T)  {
+func TestCreateSourceFailedByClassname(t *testing.T) {
 	narName := path.Join(resourceDir(), "data-generator.nar")
 	sourceName := "create-source-fail" + test.RandomSuffix()
 

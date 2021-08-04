@@ -25,7 +25,7 @@ func TestSinksOperations(t *testing.T) {
 	}
 
 	listArgs := []string{"list"}
-	out, execErr, err := TestSinksCommands(listSinksCmd, append(listArgs))
+	out, execErr, err := TestSinksCommands(listSinksCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.NotContains(t, out.String(), sinkName)
 
@@ -38,7 +38,7 @@ func TestSinksOperations(t *testing.T) {
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, fmt.Sprintf("Created %s successfully\n", sinkName), out.String())
 
-	out, execErr, err = TestSinksCommands(listSinksCmd, append(listArgs))
+	out, execErr, err = TestSinksCommands(listSinksCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Contains(t, out.String(), sinkName)
 
@@ -139,7 +139,7 @@ func TestSinksOperations(t *testing.T) {
 	_, execErr, err = TestSinksCommands(deleteSinksCmd, append(deleteArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 
-	out, execErr, err = TestSinksCommands(listSinksCmd, append(listArgs))
+	out, execErr, err = TestSinksCommands(listSinksCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.NotContains(t, out.String(), sinkName)
 }

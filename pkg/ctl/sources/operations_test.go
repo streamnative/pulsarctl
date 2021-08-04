@@ -25,7 +25,7 @@ func TestSourcesOperations(t *testing.T) {
 	}
 
 	listArgs := []string{"list"}
-	out, execErr, err := TestSourcesCommands(listSourcesCmd, append(listArgs))
+	out, execErr, err := TestSourcesCommands(listSourcesCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.NotContains(t, out.String(), sourceName)
 
@@ -38,7 +38,7 @@ func TestSourcesOperations(t *testing.T) {
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, fmt.Sprintf("Created %s successfully\n", sourceName), out.String())
 
-	out, execErr, err = TestSourcesCommands(listSourcesCmd, append(listArgs))
+	out, execErr, err = TestSourcesCommands(listSourcesCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Contains(t, out.String(), sourceName)
 
@@ -139,7 +139,7 @@ func TestSourcesOperations(t *testing.T) {
 	_, execErr, err = TestSourcesCommands(deleteSourcesCmd, append(deleteArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 
-	out, execErr, err = TestSourcesCommands(listSourcesCmd, append(listArgs))
+	out, execErr, err = TestSourcesCommands(listSourcesCmd, listArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.NotContains(t, out.String(), sourceName)
 }

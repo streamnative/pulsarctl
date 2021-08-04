@@ -24,7 +24,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestFailureStatus(t *testing.T) {
 	statusArgs := []string{"status",
 		"--name", "not-exist",

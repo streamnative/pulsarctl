@@ -33,15 +33,16 @@ type SinkConfig struct {
 	Name           string `json:"name,omitempty" yaml:"name"`
 	ClassName      string `json:"className,omitempty" yaml:"className"`
 
-	Archive                string                    `json:"archive,omitempty" yaml:"archive"`
-	ProcessingGuarantees   string                    `json:"processingGuarantees,omitempty" yaml:"processingGuarantees"`
-	SourceSubscriptionName string                    `json:"sourceSubscriptionName,omitempty" yaml:"sourceSubscriptionName"`
-	RuntimeFlags           string                    `json:"runtimeFlags,omitempty" yaml:"runtimeFlags"`
-	Inputs                 []string                  `json:"inputs,omitempty" yaml:"inputs"`
-	TopicToSerdeClassName  map[string]string         `json:"topicToSerdeClassName,omitempty" yaml:"topicToSerdeClassName"`
-	TopicToSchemaType      map[string]string         `json:"topicToSchemaType,omitempty" yaml:"topicToSchemaType"`
-	InputSpecs             map[string]ConsumerConfig `json:"inputSpecs,omitempty" yaml:"inputSpecs"`
-	Configs                map[string]interface{}    `json:"configs,omitempty" yaml:"configs"`
+	Archive                string `json:"archive,omitempty" yaml:"archive"`
+	ProcessingGuarantees   string `json:"processingGuarantees,omitempty" yaml:"processingGuarantees"`
+	SourceSubscriptionName string `json:"sourceSubscriptionName,omitempty" yaml:"sourceSubscriptionName"`
+	RuntimeFlags           string `json:"runtimeFlags,omitempty" yaml:"runtimeFlags"`
+
+	Inputs                []string                  `json:"inputs,omitempty" yaml:"inputs"`
+	TopicToSerdeClassName map[string]string         `json:"topicToSerdeClassName,omitempty" yaml:"topicToSerdeClassName"`
+	TopicToSchemaType     map[string]string         `json:"topicToSchemaType,omitempty" yaml:"topicToSchemaType"`
+	InputSpecs            map[string]ConsumerConfig `json:"inputSpecs,omitempty" yaml:"inputSpecs"`
+	Configs               map[string]interface{}    `json:"configs,omitempty" yaml:"configs"`
 
 	// This is a map of secretName(aka how the secret is going to be
 	// accessed in the function via context) to an object that

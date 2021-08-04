@@ -7,10 +7,6 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'CONTRIBUTING.md'
-
-env:
-  PULSAR_VERSION: "2.8.0-rc-202106151929"
-
 jobs:
   function-tests:
     runs-on: ubuntu-latest

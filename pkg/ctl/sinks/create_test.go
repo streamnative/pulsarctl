@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateSinkFailedByEmptyFile(t *testing.T)  {
+func TestCreateSinkFailedByEmptyFile(t *testing.T) {
 	file, err := ioutil.TempFile("", "test")
 	if err != nil {
 		t.Fatal(err)
