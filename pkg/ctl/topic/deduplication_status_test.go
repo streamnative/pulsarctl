@@ -21,11 +21,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeduplicationStatus(t *testing.T) {
-	topicName := "persistent://public/default/test-deduplication-status-topic"
+	topicName := "persistent://public/default/test-deduplication-status-topic-" + test.RandomSuffix()
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
@@ -33,7 +34,7 @@ func TestDeduplicationStatus(t *testing.T) {
 	args = []string{"set-deduplication", topicName, "-e"}
 	out, execErr, _, _ := TestTopicCommands(SetDeduplicationStatusCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(), "Set the deduplication policy successfully for ["+topicName+"]\n")
+	assert.Equal(t, out.String(), "Enable the deduplication policy successfully for ["+topicName+"]\n")
 
 	time.Sleep(time.Duration(1) * time.Second)
 	args = []string{"get-deduplication", topicName}
@@ -55,7 +56,7 @@ func TestDeduplicationStatus(t *testing.T) {
 	args = []string{"set-deduplication", topicName, "-d"}
 	out, execErr, _, _ = TestTopicCommands(SetDeduplicationStatusCmd, args)
 	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(), "Set the deduplication policy successfully for ["+topicName+"]\n")
+	assert.Equal(t, out.String(), "Disable the deduplication policy successfully for ["+topicName+"]\n")
 
 	time.Sleep(time.Duration(1) * time.Second)
 	args = []string{"get-deduplication", topicName}

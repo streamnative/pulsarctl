@@ -32,7 +32,7 @@ func SetDeduplicationStatusCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	msg := cmdutils.Example{
 		Desc:    "Set the deduplication policy for a topic",
-		Command: "pulsarctl topics set-deduplication topic ",
+		Command: "pulsarctl topics set-deduplication topic -e",
 	}
 	examples = append(examples, msg)
 	desc.CommandExamples = examples
@@ -91,10 +91,16 @@ func doSetDeduplicationStatus(vc *cmdutils.VerbCmd, enable bool, disable bool) e
 		vc.Command.Printf(msg)
 		return errors.Errorf(msg)
 	}
+	var typeStr string
+	if enable {
+		typeStr = "Enable"
+	} else {
+		typeStr = "Disable"
+	}
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Topics().SetDeduplicationStatus(*topic, enable)
 	if err == nil {
-		vc.Command.Printf("Set the deduplication policy successfully for [%s]\n", topic.String())
+		vc.Command.Printf("%s the deduplication policy successfully for [%s]\n", typeStr, topic.String())
 	}
 	return err
 }
