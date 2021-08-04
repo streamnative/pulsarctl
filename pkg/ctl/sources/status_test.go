@@ -18,67 +18,11 @@
 package sources
 
 import (
-	"encoding/json"
 	"testing"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestStatusSource(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-status",
-		"--destination-topic-name", "my-topic",
-		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-	}
-
-	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-status successfully\n")
-
-	statusArgs := []string{"status",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-status",
-	}
-
-	var status utils.SourceStatus
-
-	task := func(args []string, obj interface{}) bool {
-		outStatus, execErr, _ := TestSourcesCommands(statusSourcesCmd, args)
-		if execErr != nil {
-			t.Log("Unexpected error: ", execErr.Error())
-			return false
-		}
-		err = json.Unmarshal(outStatus.Bytes(), &obj)
-		if err != nil {
-			t.Log("Unexpected error: ", err.Error())
-			return false
-		}
-		t.Log("output status: ", outStatus.String())
-		s := obj.(*utils.SourceStatus)
-		return len(s.Instances) == 1 && s.Instances[0].Status.Running
-	}
-
-	err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute, statusArgs, &status)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	assert.Equal(t, 1, status.NumRunning)
-	assert.Equal(t, 1, status.NumInstances)
-}
 
 func TestFailureStatus(t *testing.T) {
 	statusArgs := []string{"status",

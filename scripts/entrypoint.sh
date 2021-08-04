@@ -37,7 +37,17 @@ case ${TEST_ARGS} in
         checkFunctionWorker
         cp /pulsar/examples/api-examples.jar test/functions/
         cp /pulsar/examples/python-examples/logging_function.py test/functions/
-        go test -v -test.timeout 5m ./pkg/ctl/functions
+        go test -v -test.timeout 5m $(go list ./... | grep function)
+        ;;
+    sink)
+        echo "running sink tests"
+        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sinks/
+        go test -v -test.timeout 5m ./pkg/ctl/sinks
+        ;;
+    souce)
+        echo "running source tests"
+        cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/
+        go test -v -test.timeout 5m ./pkg/ctl/sources
         ;;
     *)
         echo "running normal unit tests"

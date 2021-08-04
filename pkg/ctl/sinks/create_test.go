@@ -18,72 +18,27 @@
 package sinks
 
 import (
-	"fmt"
+	"io/ioutil"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateSinks(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
+func TestCreateSinkFailedByEmptyFile(t *testing.T)  {
+	file, err := ioutil.TempFile("", "test")
+	if err != nil {
+		t.Fatal(err)
 	}
+	defer os.Remove(file.Name())
 
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-create",
-		"--inputs", "persistent://public/default/my-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-		"--parallelism", "1",
+	failedArgs := []string{
+		"create",
+		"--name", "failed-create",
+		"--inputs", "failed-inputs",
+		"--archive", file.Name(),
 	}
-	out, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-	fmt.Println(out.String())
-	assert.Equal(t, out.String(), "Created test-sink-create successfully\n")
-}
-
-func TestFailureCreateSinks(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	narName := "dummy-pulsar-io-mysql.nar"
-	_, err = os.Create(narName)
-	assert.Nil(t, err)
-
-	defer os.Remove(narName)
-
-	failArgs := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-create",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	exceptedErr := "Sink test-sink-create already exists"
-	out, execErr, _ := TestSinksCommands(createSinksCmd, failArgs)
-	assert.True(t, strings.Contains(out.String(), exceptedErr))
-	assert.NotNil(t, execErr)
-
-	narFailArgs := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-create-nar-fail",
-		"--inputs", "my-topic",
-		"--archive", narName,
-	}
-
-	narErrInfo := "error: zip file is empty"
-	narOut, execErr, _ := TestSinksCommands(createSinksCmd, narFailArgs)
-	fmt.Println(narOut.String())
-	assert.True(t, strings.Contains(narOut.String(), narErrInfo))
+	_, execErr, err := TestSinksCommands(createSinksCmd, failedArgs)
+	failImmediatelyIfErrorNotNil(t, err)
 	assert.NotNil(t, execErr)
 }
