@@ -18,62 +18,18 @@
 package sinks
 
 import (
-	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUpdateSink(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sinks-update",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sinks-update successfully\n")
-
-	updateArgs := []string{"update",
-		"--name", "test-sinks-update",
-		"--parallelism", "3",
-	}
-
-	updateOut, _, err := TestSinksCommands(updateSinksCmd, updateArgs)
-	fmt.Println(updateOut.String())
-	assert.Nil(t, err)
-	getArgs := []string{"get",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sinks-update",
-	}
-
-	out, _, err := TestSinksCommands(getSinksCmd, getArgs)
-	assert.Nil(t, err)
-
-	var sinkConf utils.SinkConfig
-	err = json.Unmarshal(out.Bytes(), &sinkConf)
-	assert.Nil(t, err)
-	fmt.Print(sinkConf)
-	assert.Equal(t, sinkConf.Parallelism, 3)
-
 	// test the sink name not exist
 	failureUpdateArgs := []string{"update",
 		"--name", "not-exist",
 	}
-	_, err, _ = TestSinksCommands(updateSinksCmd, failureUpdateArgs)
+	_, err, _ := TestSinksCommands(updateSinksCmd, failureUpdateArgs)
 	assert.NotNil(t, err)
 	failMsg := "Sink not-exist doesn't exist"
 	assert.True(t, strings.Contains(err.Error(), failMsg))

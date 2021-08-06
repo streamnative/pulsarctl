@@ -19,7 +19,9 @@ package sources
 
 import (
 	"bytes"
-	"os"
+	"path"
+	"runtime"
+	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
@@ -60,30 +62,21 @@ func TestSourcesCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	return buf, execError, err
 }
 
-var (
-	flag     bool
-	basePath string
-)
+func resourceDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b), "../../../test/sources")
+	return d
+}
 
-func getDirHelp() (string, error) {
-	var err error
-	if !flag {
-		basePath, err = os.Getwd()
-		if err != nil {
-			return "", err
+func failImmediatelyIfErrorNotNil(t *testing.T, err ...error) {
+	for _, e := range err {
+		if e != nil {
+			_, file, line, ok := runtime.Caller(1)
+			if ok {
+				t.Logf("%s %d %s", file, line, e.Error())
+			}
+			t.Logf(e.Error())
+			t.FailNow()
 		}
-
-		err = os.Chdir("../../../")
-		if err != nil {
-			return "", err
-		}
-
-		basePath, err = os.Getwd()
-		if err != nil {
-			return "", err
-		}
-		flag = true
 	}
-
-	return basePath, nil
 }

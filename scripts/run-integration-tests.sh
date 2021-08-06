@@ -21,6 +21,12 @@ case ${1} in
     function)
         docker run --name function --rm -e TEST_ARGS=function -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
+    sink)
+        docker run --name sink --rm -e TEST_ARGS=sink -e FUNCTION_ENABLE=true ${IMAGE_NAME}
+        ;;
+    source)
+        docker run --name sink --rm -e TEST_ARGS=source -e FUNCTION_ENABLE=true ${IMAGE_NAME}
+        ;;
     *)
         env_file=${PROJECT_ROOT}/test/policies/policies.env
         docker run --env-file ${env_file} ${IMAGE_NAME}
