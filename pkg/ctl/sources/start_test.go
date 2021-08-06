@@ -25,47 +25,11 @@ import (
 )
 
 func TestStartAndStopSource(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-start",
-		"--destination-topic-name", "my-topic",
-		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-	}
-
-	createOut, _, err := TestSourcesCommands(createSourcesCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-source-start successfully\n")
-
-	stopArgs := []string{"stop",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-start",
-	}
-
-	_, _, err = TestSourcesCommands(stopSourcesCmd, stopArgs)
-	assert.Nil(t, err)
-
-	startArgs := []string{"start",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-start",
-	}
-	_, _, err = TestSourcesCommands(startSourcesCmd, startArgs)
-	assert.Nil(t, err)
-
 	// test failure case
 	failureStartArgs := []string{"start",
 		"--name", "not-exist",
 	}
-	_, err, _ = TestSourcesCommands(startSourcesCmd, failureStartArgs)
+	_, err, _ := TestSourcesCommands(startSourcesCmd, failureStartArgs)
 	assert.NotNil(t, err)
 	failMsg := "Source not-exist doesn't exist"
 	assert.True(t, strings.ContainsAny(err.Error(), failMsg))

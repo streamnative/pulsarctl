@@ -18,48 +18,8 @@
 package sinks
 
 import (
-	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestListSinks(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-list",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-list successfully\n")
-
-	listArgs := []string{"list",
-		"--tenant", "public",
-		"--namespace", "default",
-	}
-	listOut, _, _ := TestSinksCommands(listSinksCmd, listArgs)
-	assert.True(t, strings.Contains(listOut.String(), "test-sink-list"))
-
-	deleteArgs := []string{"delete",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-list",
-	}
-
-	deleteOut, _, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	assert.Equal(t, deleteOut.String(), "Deleted test-sink-list successfully\n")
-
-	listArgsAgain := []string{"list"}
-	sinks, _, _ := TestSinksCommands(listSinksCmd, listArgsAgain)
-	assert.False(t, strings.Contains(sinks.String(), "test-sink-list"))
 }

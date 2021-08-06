@@ -23,51 +23,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRestartSink(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-restart",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Equal(t, createOut.String(), "Created test-sink-restart successfully\n")
-
-	restartArgs := []string{"restart",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-restart",
-	}
-
-	out, execErr, err := TestSinksCommands(restartSinksCmd, restartArgs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Nil(t, execErr)
-	assert.NotEmpty(t, out.String())
-
-	notExistInstanceIDArgs := []string{"restart",
-		"--name", "test-sink-restart",
-		"--instance-id", "12345678",
-	}
-	_, execErr, err = TestSinksCommands(restartSinksCmd, notExistInstanceIDArgs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.NotNil(t, execErr)
-}
-
 func TestRestartFailed(t *testing.T) {
 	// test failure case
 	failureArgs := []string{"restart",

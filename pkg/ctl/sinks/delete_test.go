@@ -18,42 +18,11 @@
 package sinks
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestDeleteSinks(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-delete",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	_, _, err = TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-
-	deleteArgs := []string{"delete",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-delete",
-	}
-
-	deleteOut, execErr, _ := TestSinksCommands(deleteSinksCmd, deleteArgs)
-	delErr := "Deleted test-sink-delete successfully\n"
-	assert.True(t, strings.Contains(deleteOut.String(), delErr))
-	assert.Nil(t, execErr)
-}
 
 func TestFailureDeleteSink(t *testing.T) {
 	failureDeleteArgs := []string{"delete",
@@ -62,7 +31,6 @@ func TestFailureDeleteSink(t *testing.T) {
 
 	exceptedErr := "Sink test-sink-delete doesn't exist"
 	_, execErrMsg, _ := TestSinksCommands(deleteSinksCmd, failureDeleteArgs)
-	fmt.Println(execErrMsg.Error())
 	assert.True(t, strings.Contains(execErrMsg.Error(), exceptedErr))
 	assert.NotNil(t, execErrMsg)
 

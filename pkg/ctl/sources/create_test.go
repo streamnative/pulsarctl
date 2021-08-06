@@ -18,72 +18,22 @@
 package sources
 
 import (
-	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateSources(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	// $ ./pulsarctl source create
-	// --archive ./pulsar-io-kafka-2.4.0.nar
-	// --classname org.apache.pulsar.io.kafka.KafkaBytesSource
-	// --tenant public
-	// --namespace default
-	// --name kafka
-	// --destination-topic-name my-topic
-	// --source-config-file ./conf/kafkaSourceConfig.yaml
-	// --parallelism 1
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-create",
-		"--destination-topic-name", "my-topic",
-		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-		"--source-config-file", basePath + "/test/sources/kafkaSourceConfig.yaml",
-	}
-
-	_, _, err = TestSourcesCommands(createSourcesCmd, args)
-	assert.Nil(t, err)
-}
-
-func TestFailureCreateSources(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	narName := "dummy-pulsar-io-kafka.nar"
-	_, err = os.Create(narName)
-	assert.Nil(t, err)
-
-	defer os.Remove(narName)
-
-	failArgs := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-source-create",
-		"--destination-topic-name", "my-topic",
-		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
-		"--archive", basePath + "/test/sources/pulsar-io-kafka-2.4.0.nar",
-	}
-
-	exceptedErr := "Source test-source-create already exists"
-	out, execErr, _ := TestSourcesCommands(createSourcesCmd, failArgs)
-	assert.True(t, strings.Contains(out.String(), exceptedErr))
-	assert.NotNil(t, execErr)
+func TestCreateSourceFailedByClassname(t *testing.T) {
+	narName := path.Join(resourceDir(), "data-generator.nar")
+	sourceName := "create-source-fail" + test.RandomSuffix()
 
 	narFailArgs := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-source-create-nar-fail",
+		"--name", sourceName,
 		"--destination-topic-name", "my-topic",
 		"--classname", "org.apache.pulsar.io.kafka.KafkaBytesSource",
 		"--archive", narName,
