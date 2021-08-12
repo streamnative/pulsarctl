@@ -25,46 +25,11 @@ import (
 )
 
 func TestStartAndStopSink(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-start",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	createOut, _, err := TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-	assert.Equal(t, createOut.String(), "Created test-sink-start successfully\n")
-
-	stopArgs := []string{"stop",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-start",
-	}
-
-	_, _, err = TestSinksCommands(stopSinksCmd, stopArgs)
-	assert.Nil(t, err)
-
-	startArgs := []string{"start",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-start",
-	}
-	_, _, err = TestSinksCommands(startSinksCmd, startArgs)
-	assert.Nil(t, err)
-
 	// test failure case
 	failureStartArgs := []string{"start",
 		"--name", "not-exist",
 	}
-	_, err, _ = TestSinksCommands(startSinksCmd, failureStartArgs)
+	_, err, _ := TestSinksCommands(startSinksCmd, failureStartArgs)
 	assert.NotNil(t, err)
 	failMsg := "Sink not-exist doesn't exist"
 	assert.True(t, strings.ContainsAny(err.Error(), failMsg))

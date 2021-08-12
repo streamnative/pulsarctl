@@ -18,58 +18,11 @@
 package sinks
 
 import (
-	"encoding/json"
 	"testing"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestGetSink(t *testing.T) {
-	basePath, err := getDirHelp()
-	if basePath == "" || err != nil {
-		t.Error(err)
-	}
-
-	args := []string{"create",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-get",
-		"--inputs", "test-topic",
-		"--archive", basePath + "/test/sinks/pulsar-io-jdbc-2.4.0.nar",
-		"--sink-config-file", basePath + "/test/sinks/mysql-jdbc-sink.yaml",
-	}
-
-	_, _, err = TestSinksCommands(createSinksCmd, args)
-	assert.Nil(t, err)
-
-	getArgs := []string{"get",
-		"--tenant", "public",
-		"--namespace", "default",
-		"--name", "test-sink-get",
-	}
-
-	out, execErr, _ := TestSinksCommands(getSinksCmd, getArgs)
-	assert.Nil(t, execErr)
-
-	var sinkConf utils.SinkConfig
-	err = json.Unmarshal(out.Bytes(), &sinkConf)
-	assert.Nil(t, err)
-
-	assert.Equal(t, sinkConf.Tenant, "public")
-	assert.Equal(t, sinkConf.Namespace, "default")
-	assert.Equal(t, sinkConf.Name, "test-sink-get")
-
-	// check configs
-	sinkConfMap := map[string]interface{}{
-		"userName":  "root",
-		"password":  "jdbc",
-		"jdbcUrl":   "jdbc:mysql://127.0.0.1:3306/test_jdbc",
-		"tableName": "test_jdbc",
-	}
-	assert.Equal(t, sinkConf.Configs, sinkConfMap)
-}
 
 func TestGetFailureSink(t *testing.T) {
 	deleteArgs := []string{"delete",

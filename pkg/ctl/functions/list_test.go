@@ -18,51 +18,48 @@
 package functions
 
 import (
-	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestListFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "lf" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-list",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
-
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	listArgs := []string{"list"}
-	functions, _, err := TestFunctionsCommands(listFunctionsCmd, listArgs)
-	assert.Nil(t, err)
-	assert.True(t, strings.Contains(functions.String(), "test-functions-list"))
+	functions, execErr, err := TestFunctionsCommands(listFunctionsCmd, listArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.True(t, strings.Contains(functions.String(), fName))
 
 	deleteArgs := []string{"delete",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-list",
+		"--name", fName,
 	}
-
-	_, _, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(deleteFunctionsCmd, deleteArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	listArgsAgain := []string{"list",
 		"--tenant", "public",
 		"--namespace", "default",
 	}
-	out, _, err := TestFunctionsCommands(listFunctionsCmd, listArgsAgain)
-	assert.Nil(t, err)
+	out, execErr, err := TestFunctionsCommands(listFunctionsCmd, listArgsAgain)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.False(t, strings.Contains(out.String(), "test-functions-list"))
 }

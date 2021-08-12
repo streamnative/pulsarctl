@@ -109,8 +109,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		"--source-file", testFile,
 	}
 	out, execErr, err := TestFunctionsCommands(uploadFunctionsCmd, args)
-	assert.Nil(t, err)
-	assert.Nil(t, execErr)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.True(t, strings.Contains(out.String(), "successfully"))
 
 	downloadFilePath := "download-upload-file"
@@ -121,8 +120,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 	}
 	out, execErr, err = TestFunctionsCommands(downloadFunctionsCmd, args)
 	defer os.RemoveAll(downloadFilePath)
-	assert.Nil(t, err)
-	assert.Nil(t, execErr)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.True(t, strings.Contains(out.String(), "successfully"))
 
 	downloadFileSha, err := getFileSha256(downloadFilePath)

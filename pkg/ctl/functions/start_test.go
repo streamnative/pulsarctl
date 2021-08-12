@@ -18,90 +18,83 @@
 package functions
 
 import (
-	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStartFunctions(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
+	fName := "start-f" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
-	defer os.Remove(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-start",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
 
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, args)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	stopArgs := []string{"stop",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-start",
+		"--name", fName,
 	}
 
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(stopFunctionsCmd, stopArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	startArgs := []string{"start",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-start",
+		"--name", fName,
 	}
+	_, execErr, err = TestFunctionsCommands(startFunctionsCmd, startArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+}
 
-	_, _, err = TestFunctionsCommands(startFunctionsCmd, startArgs)
-	assert.Nil(t, err)
-
+func TestStartFunctionWithFQFN(t *testing.T) {
+	fName := "start-fqfn" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
 	argsFqfn := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
-		"--name", "test-functions-start-fqfn",
+		"--name", fName,
 		"--inputs", "test-input-topic",
 		"--output", "persistent://public/default/test-output-topic",
 		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
 		"--jar", jarName,
 	}
-
-	_, _, err = TestFunctionsCommands(createFunctionsCmd, argsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, argsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	stopArgsFqfn := []string{"stop",
-		"--fqfn", "public/default/test-functions-start-fqfn",
+		"--fqfn", "public/default/" + fName,
 	}
 
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
-	assert.Nil(t, err)
+	_, execErr, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	startArgsFqfn := []string{"start",
-		"--fqfn", "public/default/test-functions-start-fqfn",
+		"--fqfn", "public/default/" + fName,
 	}
+	_, execErr, err = TestFunctionsCommands(startFunctionsCmd, startArgsFqfn)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+}
 
-	_, _, err = TestFunctionsCommands(startFunctionsCmd, startArgsFqfn)
-	assert.Nil(t, err)
-
-	// test failure cases
-
-	stopArgsFqfnAgain := []string{"stop",
-		"--fqfn", "public/default/test-functions-start-fqfn",
-	}
-	_, _, err = TestFunctionsCommands(stopFunctionsCmd, stopArgsFqfnAgain)
-	assert.Nil(t, err)
-
-	// test the function name not exist
+func TestFailedToStartFunction(t *testing.T) {
 	failureStartArgs := []string{"start",
 		"--name", "not-exist",
 	}
-	_, err, _ = TestFunctionsCommands(startFunctionsCmd, failureStartArgs)
+	_, err, _ := TestFunctionsCommands(startFunctionsCmd, failureStartArgs)
 	assert.NotNil(t, err)
 	failMsg := "Function not-exist doesn't exist"
 	assert.True(t, strings.ContainsAny(err.Error(), failMsg))
