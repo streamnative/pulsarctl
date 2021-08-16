@@ -225,5 +225,6 @@ func parseSigningKeyData(args *createCmdArgs) (interface{}, error) {
 			return nil, errors.New("invalid type of the signature algorithm")
 		}
 	}
-	return nil, errors.New("unknown error")
+
+	return nil, errors.New("no way to decode the signature key was found")
 }
