@@ -257,5 +257,6 @@ func readValidateKeyData(args *validateCmdArgs) (interface{}, error) {
 			return keypair.DecodeECDSAPublicKey(data)
 		}
 	}
-	return nil, errors.New("unknown error")
+
+	return nil, errors.New("no matching decoder found")
 }
