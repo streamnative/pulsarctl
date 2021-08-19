@@ -54,6 +54,11 @@ var InvalidPartitionsNumberError = cmdutils.Output{
 	Out:  "[✖]  invalid partition number '<number>'",
 }
 
+var TopicLevelPolicyNotEnabledError = cmdutils.Output{
+	Desc: "topic-level policy is not enabled",
+	Out:  "[✖]  code: 405 reason: Topic level policy is disabled, please enable the topic level policy and retry",
+}
+
 var TopicNameErrors = []cmdutils.Output{
 	{
 		Desc: "the topic name is not in the format of <tenant>/<namespace>/<topic> or <topic>",
