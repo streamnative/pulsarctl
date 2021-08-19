@@ -27,12 +27,14 @@ import (
 
 func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for setting the default maximum message publish rate of a namespace per second."
+	desc.CommandUsedFor = "This command is used for setting the default maximum message publish rate of a namespace " +
+		"per second."
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example
 	setByMsg := cmdutils.Example{
-		Desc:    "Set the default message publish rate per second by message of the namespace (namespace-name) to (rate)",
+		Desc: "Set the default message publish rate per second by message of the namespace (namespace-name) " +
+			"to (rate)",
 		Command: "pulsarctl namespaces set-publish-rate --msg-rate (rate) (namespace)",
 	}
 
