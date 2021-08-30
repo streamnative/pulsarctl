@@ -81,6 +81,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetRetentionCmd,
 		RemoveRetentionCmd,
 		SetRetentionCmd,
+		GetBacklogQuotaCmd,
+		SetBacklogQuotaCmd,
+		RemoveBacklogQuotaCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
