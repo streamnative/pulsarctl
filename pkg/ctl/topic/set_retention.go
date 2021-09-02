@@ -27,12 +27,12 @@ import (
 func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set the retention policy for a topic"
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandPermission = "This command requires tenant admin permissions and topic-level policy should be enabled in Brokers"
 
 	var examples []cmdutils.Example
 	removeRetention := cmdutils.Example{
 		Desc:    "Set the retention policy for a topic",
-		Command: "pulsarctl topics set-retention tenant/namespace/topic",
+		Command: "pulsarctl topics set-retention tenant/namespace/topic --time 100m --size 1G",
 	}
 	examples = append(examples, removeRetention)
 	desc.CommandExamples = examples
@@ -58,7 +58,12 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	out = append(out, successOut, noTopicName, tenantNotExistError, nsNotExistError)
+	topicLevelPolicyNotEnabledError := cmdutils.Output{
+		Desc: "topic-level policy is not enabled",
+		Out:  "[✖]  code: 405 reason: Topic level policy is disabled, please enable the topic level policy in Brokers by config of systemTopicEnabled and topicLevelPoliciesEnabled",
+	}
+
+	out = append(out, successOut, noTopicName, tenantNotExistError, nsNotExistError, topicLevelPolicyNotEnabledError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
