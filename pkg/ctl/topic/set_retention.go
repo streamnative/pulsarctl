@@ -60,7 +60,7 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 
 	topicLevelPolicyNotEnabledError := cmdutils.Output{
 		Desc: "topic-level policy is not enabled",
-		Out:  "[✖]  code: 405 reason: Topic level policy is disabled, please enable the topic level policy in brokers by configs of systemTopicEnabled and topicLevelPoliciesEnabled",
+		Out:  "[✖]  code: 405 reason: Topic level policy is disabled, please enable configs of systemTopicEnabled and topicLevelPoliciesEnabled in brokers",
 	}
 
 	out = append(out, successOut, noTopicName, tenantNotExistError, nsNotExistError, topicLevelPolicyNotEnabledError)
