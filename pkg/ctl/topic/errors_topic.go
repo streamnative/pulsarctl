@@ -56,7 +56,7 @@ var InvalidPartitionsNumberError = cmdutils.Output{
 
 var TopicLevelPolicyNotEnabledError = cmdutils.Output{
 	Desc: "topic-level policy is not enabled",
-	Out:  "[✖]  code: 405 reason: Topic level policy is disabled, please enable configs of systemTopicEnabled and topicLevelPoliciesEnabled in brokers",
+	Out:  "[✖]  code: 405 reason: Topic level policy is disabled, set configs of systemTopicEnabled and topicLevelPoliciesEnabled in brokers",
 }
 
 var TopicNameErrors = []cmdutils.Output{
