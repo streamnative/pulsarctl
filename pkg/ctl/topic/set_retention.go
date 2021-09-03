@@ -27,7 +27,7 @@ import (
 func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
 	desc.CommandUsedFor = "Set the retention policy for a topic"
-	desc.CommandPermission = "This command requires tenant admin permissions"
+	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
 	removeRetention := cmdutils.Example{
