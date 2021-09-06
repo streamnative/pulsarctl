@@ -33,3 +33,5 @@ site/gen-pulsarctldocs/generators/build/*
 # Binary distribution
 pulsarctl*.tar.gz
 pulsarctl-site-*.tar.gz
+release
+dist
