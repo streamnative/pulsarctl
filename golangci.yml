@@ -1,10 +1,6 @@
 run:
   deadline: 6m
 
-linters-settings:
-  lll:
-    line-length: 150
-
 linters:
   disable-all: true
   enable:
