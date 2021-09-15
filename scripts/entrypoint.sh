@@ -53,6 +53,13 @@ case ${TEST_ARGS} in
         cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/data-generator.nar
         go test -v -test.timeout 5m ./pkg/ctl/sources
         ;;
+    packages)
+        echo "running packages tests"
+        checkFunctionWorker
+        cp /pulsar/examples/api-examples.jar test/functions/
+        cp /pulsar/examples/python-examples/logging_function.py test/functions/
+        go test -v -test.timeout 5m $(go list ./... | grep packages)
+        ;;
     *)
         echo "running normal unit tests"
         go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v test)

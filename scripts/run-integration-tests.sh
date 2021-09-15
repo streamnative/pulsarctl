@@ -27,6 +27,9 @@ case ${1} in
     source)
         docker run --name sink --rm -e TEST_ARGS=source -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
+    packages)
+        docker run --name packages --rm -e TEST_ARGS=packages -e FUNCTION_ENABLE=true -e PULSAR_PREFIX_enablePackagesManagement=true ${IMAGE_NAME}
+        ;;
     *)
         env_file=${PROJECT_ROOT}/test/policies/policies.env
         docker run --env-file ${env_file} ${IMAGE_NAME}
