@@ -97,7 +97,8 @@ func doPutPackageMetadata(vc *cmdutils.VerbCmd, packageMetadata *utils.PackageMe
 	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
-	err = admin.Packages().UpdateMetadata(vc.NameArg, packageMetadata.Description, packageMetadata.Contact, packageMetadata.Properties)
+	err = admin.Packages().UpdateMetadata(vc.NameArg, packageMetadata.Description, packageMetadata.Contact,
+		packageMetadata.Properties)
 	if err != nil {
 		return err
 	}
