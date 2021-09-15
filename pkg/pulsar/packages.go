@@ -136,7 +136,7 @@ func (p packages) Upload(packageURL, filePath, description, contact string, prop
 
 	multiPartWriter := multipart.NewWriter(bodyBuf)
 
-	metadataJson, err := json.Marshal(metadata)
+	metadataJSON, err := json.Marshal(metadata)
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func (p packages) Upload(packageURL, filePath, description, contact string, prop
 		return err
 	}
 
-	_, err = stringWriter.Write(metadataJson)
+	_, err = stringWriter.Write(metadataJSON)
 	if err != nil {
 		return err
 	}

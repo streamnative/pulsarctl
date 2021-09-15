@@ -39,7 +39,8 @@ func invalidPackageNameError(completeName string) error {
 		"in the format of type://tenant/namespace/name@version", completeName)
 }
 
-func GetPackageNameWithComponents(packageType PackageType, tenant, namespace, name, version string) (*PackageName, error) {
+func GetPackageNameWithComponents(packageType PackageType,
+	tenant, namespace, name, version string) (*PackageName, error) {
 	return GetPackageName(fmt.Sprintf("%s://%s/%s/%s@%s", packageType, tenant, namespace, name, version))
 }
 
