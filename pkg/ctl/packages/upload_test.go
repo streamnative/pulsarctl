@@ -22,14 +22,19 @@ import (
 	"path"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUploadPackages(t *testing.T) {
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
+	randomVersion := test.RandomSuffix()
+	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+
 	args := []string{"upload",
-		"function://public/default/api-examples@v1",
+		packageURL,
 		"--description", "examples",
 		"--path", jarName,
 	}
@@ -37,14 +42,17 @@ func TestUploadPackages(t *testing.T) {
 	output, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package 'function://public/default/api-examples@v1' uploaded from path '%s' successfully\n", jarName))
+		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
 }
 
 func TestUploadPackagesWithFailure(t *testing.T) {
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
+	randomVersion := test.RandomSuffix()
+	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+
 	args := []string{"upload",
-		"function://public/default/api-examples@v1",
+		packageURL,
 		"--description", "examples",
 		"--path", jarName,
 	}
@@ -52,5 +60,5 @@ func TestUploadPackagesWithFailure(t *testing.T) {
 	output, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package 'function://public/default/api-examples@v1' uploaded from path '%s' successfully\n", jarName))
+		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
 }

@@ -27,29 +27,41 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListPackages(t *testing.T) {
-	randomVersion := test.RandomSuffix()
-	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+func TestListPackageVersions(t *testing.T) {
+	randomVersion1 := "a" + test.RandomSuffix()
+	randomVersion2 := "b" + test.RandomSuffix()
+	packageURL1 := fmt.Sprintf("function://public/default/version-test@%s", randomVersion1)
+	packageURL2 := fmt.Sprintf("function://public/default/version-test@%s", randomVersion2)
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"upload",
-		packageURL,
-		"--description", "examples",
+		packageURL1,
+		"--description", "version-test",
 		"--path", jarName,
 	}
 
 	output, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
+		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL1, jarName))
 
-	args = []string{"list",
-		"--type", "function",
-		"public/default",
+	args = []string{"upload",
+		packageURL2,
+		"--description", "version-test",
+		"--path", jarName,
 	}
 
-	output, execErr, err = TestPackagesCommands(listPackagesCmd, args)
+	output, execErr, err = TestPackagesCommands(uploadPackagesCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	assert.Contains(t, output.String(), "PULSAR PACKAGE NAME")
-	assert.Contains(t, output.String(), "api-examples")
+	assert.Equal(t, output.String(),
+		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL2, jarName))
+
+	args = []string{"list-versions",
+		"function://public/default/version-test",
+	}
+
+	output, execErr, err = TestPackagesCommands(listPackageVersionsCmd, args)
+	failImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Contains(t, output.String(), randomVersion2)
+	assert.Contains(t, output.String(), randomVersion1)
 }

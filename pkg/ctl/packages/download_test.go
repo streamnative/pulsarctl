@@ -24,14 +24,18 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUploadAndDownloadPackages(t *testing.T) {
+	randomVersion := test.RandomSuffix()
+	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"upload",
-		"function://public/default/api-examples@v1",
+		packageURL,
 		"--description", "examples",
 		"--path", jarName,
 	}
@@ -39,18 +43,18 @@ func TestUploadAndDownloadPackages(t *testing.T) {
 	output, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package 'function://public/default/api-examples@v1' uploaded from path '%s' successfully\n", jarName))
+		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
 
 	destinationFile := "./dummyExample.jar"
 	downloadArgs := []string{"download",
-		"function://public/default/api-examples@v1",
+		packageURL,
 		"--path", destinationFile,
 	}
 
 	output, execErr, err = TestPackagesCommands(downloadPackagesCmd, downloadArgs)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package 'function://public/default/api-examples@v1' downloaded to path '%s' successfully\n", destinationFile))
+		fmt.Sprintf("The package '%s' downloaded to path '%s' successfully\n", packageURL, destinationFile))
 	os.Remove(destinationFile)
 }
 

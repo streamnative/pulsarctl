@@ -18,19 +18,23 @@
 package packages
 
 import (
-	"os"
+	"fmt"
 	"path"
 	"strings"
 	"testing"
+
+	"github.com/streamnative/pulsarctl/pkg/test"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeletePackages(t *testing.T) {
+	randomVersion := test.RandomSuffix()
+	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"upload",
-		"function://public/default/api-examples@v1",
+		packageURL,
 		"--description", "examples",
 		"--path", jarName,
 	}
@@ -39,7 +43,7 @@ func TestDeletePackages(t *testing.T) {
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 
 	deleteArgs := []string{"delete",
-		"function://public/default/api-examples@v1",
+		packageURL,
 	}
 
 	_, execErr, err = TestPackagesCommands(deletePackagesCmd, deleteArgs)
@@ -47,21 +51,6 @@ func TestDeletePackages(t *testing.T) {
 }
 
 func TestDeletePackagesWithFailure(t *testing.T) {
-	jarName := "dummyExample.jar"
-	_, err := os.Create(jarName)
-	assert.Nil(t, err)
-
-	defer os.Remove(jarName)
-	args := []string{"upload",
-		"function://public/default/api-examples@v1",
-		"--description", "examples",
-		"--path", jarName,
-	}
-
-	_, _, err = TestPackagesCommands(uploadPackagesCmd, args)
-
-	assert.Nil(t, err)
-
 	failureDeleteArgs := []string{"delete",
 		"function://public/default/api-examples@non-exist",
 	}

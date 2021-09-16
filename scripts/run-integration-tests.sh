@@ -3,7 +3,7 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="2.8.0-rc-202106151929"
+readonly PULSAR_DEFAULT_VERSION="2.8.0.14"
 readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 
 docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
@@ -28,7 +28,7 @@ case ${1} in
         docker run --name sink --rm -e TEST_ARGS=source -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
     packages)
-        docker run --name packages --rm -e TEST_ARGS=packages -e FUNCTION_ENABLE=true -e PULSAR_PREFIX_enablePackagesManagement=true ${IMAGE_NAME}
+        docker run --name packages --rm -e TEST_ARGS=packages -e PULSAR_PREFIX_enablePackagesManagement=true -e PULSAR_PREFIX_zookeeperServers=127.0.0.1:2181 ${IMAGE_NAME}
         ;;
     *)
         env_file=${PROJECT_ROOT}/test/policies/policies.env

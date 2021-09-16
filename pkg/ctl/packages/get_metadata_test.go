@@ -27,14 +27,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListPackages(t *testing.T) {
+func TestPackagesGetMetadata(t *testing.T) {
 	randomVersion := test.RandomSuffix()
-	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+	packageURL := fmt.Sprintf("function://public/default/get-metadata@%s", randomVersion)
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"upload",
 		packageURL,
-		"--description", "examples",
+		"--description", randomVersion,
 		"--path", jarName,
 	}
 
@@ -43,13 +43,11 @@ func TestListPackages(t *testing.T) {
 	assert.Equal(t, output.String(),
 		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
 
-	args = []string{"list",
-		"--type", "function",
-		"public/default",
+	args = []string{"get-metadata",
+		packageURL,
 	}
 
-	output, execErr, err = TestPackagesCommands(listPackagesCmd, args)
+	output, execErr, err = TestPackagesCommands(getPackageMetadataCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	assert.Contains(t, output.String(), "PULSAR PACKAGE NAME")
-	assert.Contains(t, output.String(), "api-examples")
+	assert.Contains(t, output.String(), "description")
 }

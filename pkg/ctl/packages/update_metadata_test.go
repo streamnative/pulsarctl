@@ -20,6 +20,7 @@ package packages
 import (
 	"fmt"
 	"path"
+	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/test"
@@ -27,14 +28,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListPackages(t *testing.T) {
+func TestPackagesUpdateMetadata(t *testing.T) {
 	randomVersion := test.RandomSuffix()
-	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+	packageURL := fmt.Sprintf("function://public/default/update-metadata@%s", randomVersion)
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	args := []string{"upload",
 		packageURL,
-		"--description", "examples",
+		"--description", randomVersion,
 		"--path", jarName,
 	}
 
@@ -43,13 +44,28 @@ func TestListPackages(t *testing.T) {
 	assert.Equal(t, output.String(),
 		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
 
-	args = []string{"list",
-		"--type", "function",
-		"public/default",
+	args = []string{"update-metadata",
+		packageURL,
+		"--description", "update-description",
+		"--contact", "pulsar@apache",
+		"--properties", "foo=bar,abc=def",
 	}
 
-	output, execErr, err = TestPackagesCommands(listPackagesCmd, args)
+	output, execErr, err = TestPackagesCommands(putPackageMetadataCmd, args)
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	assert.Contains(t, output.String(), "PULSAR PACKAGE NAME")
-	assert.Contains(t, output.String(), "api-examples")
+	exceptMsg := fmt.Sprintf("The metadata of the package '%s' updated successfully\n", packageURL)
+	assert.True(t, strings.ContainsAny(output.String(), exceptMsg))
+
+	args = []string{"get-metadata",
+		packageURL,
+	}
+
+	output, execErr, err = TestPackagesCommands(getPackageMetadataCmd, args)
+	failImmediatelyIfErrorNotNil(t, execErr, err)
+	assert.Contains(t, output.String(), "update-description")
+	assert.Contains(t, output.String(), "pulsar@apache")
+	assert.Contains(t, output.String(), "foo")
+	assert.Contains(t, output.String(), "bar")
+	assert.Contains(t, output.String(), "abc")
+	assert.Contains(t, output.String(), "def")
 }
