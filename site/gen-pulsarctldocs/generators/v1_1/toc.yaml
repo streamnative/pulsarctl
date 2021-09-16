@@ -35,6 +35,7 @@ categories:
   - subscriptions
   - resource-quotas
   - functions-worker
+  - packages
   - ns-isolation-policy
   - token
   - context
