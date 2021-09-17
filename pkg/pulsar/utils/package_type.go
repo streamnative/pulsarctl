@@ -29,11 +29,11 @@ const (
 
 func parsePackageType(packageTypeName string) (PackageType, error) {
 	switch packageTypeName {
-	case "function":
+	case PackageTypeFunction.String():
 		return PackageTypeFunction, nil
-	case "sink":
+	case PackageTypeSink.String():
 		return PackageTypeSink, nil
-	case "source":
+	case PackageTypeSource.String():
 		return PackageTypeSource, nil
 	default:
 		return "", errors.Errorf("Invalid package type '%s', it should be "+
