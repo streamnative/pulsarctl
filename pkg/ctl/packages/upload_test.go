@@ -49,7 +49,7 @@ func TestUploadPackagesWithFailure(t *testing.T) {
 	jarName := path.Join(ResourceDir(), "api-examples.jar")
 
 	randomVersion := test.RandomSuffix()
-	packageURL := fmt.Sprintf("function://public/default/api-examples@%s", randomVersion)
+	packageURL := fmt.Sprintf("function://public/default/not-valid-package/api-examples@%s", randomVersion)
 
 	args := []string{"upload",
 		packageURL,
@@ -57,8 +57,7 @@ func TestUploadPackagesWithFailure(t *testing.T) {
 		"--path", jarName,
 	}
 
-	output, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
-	failImmediatelyIfErrorNotNil(t, execErr, err)
-	assert.Equal(t, output.String(),
-		fmt.Sprintf("The package '%s' uploaded from path '%s' successfully\n", packageURL, jarName))
+	_, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
+	assert.NotNil(t, err)
+	assert.NotNil(t, execErr)
 }

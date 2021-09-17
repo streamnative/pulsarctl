@@ -29,7 +29,7 @@ import (
 
 func listPackageVersionsCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "List all versions of a package."
+	desc.CommandUsedFor = "List all versions of a package"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example

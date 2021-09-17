@@ -25,7 +25,7 @@ import (
 
 func downloadPackagesCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Download a package."
+	desc.CommandUsedFor = "Download a package"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example

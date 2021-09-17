@@ -25,7 +25,7 @@ import (
 
 func getPackageMetadataCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Get the metadata of a package\n"
+	desc.CommandUsedFor = "Get the metadata of a package"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example

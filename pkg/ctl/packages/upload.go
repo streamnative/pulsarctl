@@ -27,7 +27,7 @@ import (
 
 func uploadPackagesCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Upload a package."
+	desc.CommandUsedFor = "Upload a package"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example

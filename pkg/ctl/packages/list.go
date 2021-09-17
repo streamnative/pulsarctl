@@ -28,7 +28,7 @@ import (
 
 func listPackagesCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "List all specified type packages under a specific tenant and namespace."
+	desc.CommandUsedFor = "List all specified type packages under a specific tenant and namespace"
 	desc.CommandPermission = "This command requires super-user permissions."
 
 	var examples []cmdutils.Example
