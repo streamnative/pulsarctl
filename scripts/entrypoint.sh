@@ -62,7 +62,7 @@ case ${TEST_ARGS} in
         ;;
     *)
         echo "running normal unit tests"
-        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v test)
+        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v packages | grep -v test)
         ;;
 esac
 # stop pulsar service
