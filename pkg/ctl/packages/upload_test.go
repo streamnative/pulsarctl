@@ -57,7 +57,6 @@ func TestUploadPackagesWithFailure(t *testing.T) {
 		"--path", jarName,
 	}
 
-	_, execErr, err := TestPackagesCommands(uploadPackagesCmd, args)
-	assert.NotNil(t, err)
+	_, execErr, _ := TestPackagesCommands(uploadPackagesCmd, args)
 	assert.NotNil(t, execErr)
 }
