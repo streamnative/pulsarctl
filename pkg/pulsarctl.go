@@ -28,6 +28,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/functionsworker"
 	"github.com/streamnative/pulsarctl/pkg/ctl/namespace"
 	"github.com/streamnative/pulsarctl/pkg/ctl/nsisolationpolicy"
+	"github.com/streamnative/pulsarctl/pkg/ctl/packages"
 	"github.com/streamnative/pulsarctl/pkg/ctl/plugin"
 	"github.com/streamnative/pulsarctl/pkg/ctl/resourcequotas"
 	"github.com/streamnative/pulsarctl/pkg/ctl/subscription"
@@ -129,6 +130,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(functionsworker.Command(flagGrouping))
 	rootCmd.AddCommand(token.Command(flagGrouping))
 	rootCmd.AddCommand(context.Command(flagGrouping))
+	rootCmd.AddCommand(packages.Command(flagGrouping))
 
 	// bookkeeper related commands
 	rootCmd.AddCommand(bkctl.Command(flagGrouping))
