@@ -90,6 +90,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionDispatchRateCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, UnsubscribeCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSubscriptionAuthModeCmd)
-
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetPublishRateCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetPublishRateCmd)
 	return resourceCmd
 }
