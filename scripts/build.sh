@@ -10,78 +10,36 @@ if [[ "x$version" == "x" ]]; then
   exit 1
 fi
 
+ROOT_DIR=`cd $(dirname $0)/../; pwd`
+
+pushd $ROOT_DIR
+
+LDFLAGS+="-X \"github.com/streamnative/pulsarctl/pkg/cmdutils.ReleaseVersion=${version}\" "
+LDFLAGS+="-X \"github.com/streamnative/pulsarctl/pkg/cmdutils.BuildTS=$(date -u '+%Y-%m-%d %H:%M:%S')\" "
+LDFLAGS+="-X \"github.com/streamnative/pulsarctl/pkg/cmdutils.GitHash=$(git rev-parse HEAD)\" "
+LDFLAGS+="-X \"github.com/streamnative/pulsarctl/pkg/cmdutils.GitBranch=$(git rev-parse --abbrev-ref HEAD)\" "
+LDFLAGS+="-X \"github.com/streamnative/pulsarctl/pkg/cmdutils.GoVersion=$(go version)\" "
+
+echo $LDFLAGS
 # Create a direcotry to save assets
-ASSETSDIR=release
-mkdir $ASSETSDIR
+ASSETS_DIR=${ROOT_DIR}/release
+mkdir $ASSETS_DIR
 
-function build_amd64_linux() {
-  DIR=pulsarctl-amd64-linux
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pulsarctl -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_386_linux() {
-  DIR=pulsarctl-386-linux
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o pulsarctl -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_amd64_darwin() {
-  DIR=pulsarctl-amd64-darwin
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o pulsarctl -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_arm64_darwin() {
-  DIR=pulsarctl-arm64-darwin
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o pulsarctl -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_386_darwin() {
-  DIR=pulsarctl-386-darwin
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o pulsarctl -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_amd64_windows() {
-  DIR=pulsarctl-amd64-windows
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o  pulsarctl.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl.exe ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
-}
-
-function build_386_windows() {
-  DIR=pulsarctl-386-windows
-  mkdir ${DIR}
-  CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o  pulsarctl.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-  mv pulsarctl.exe ${DIR}
-  cp -r plugins ${DIR}
-  tar -czf ${DIR}.tar.gz ${DIR}
-  mv ${DIR}.tar.gz $ASSETSDIR
+build() {
+    local arch=${1}
+    local os=${2}
+    local base_dir=dist
+    local dirname=pulsarctl-${arch}-${os}
+    local dir=${base_dir}/${dirname}
+    mkdir -p ${dir}
+    CGO_ENABLED=0 GOOS=${os} GOARCH=${arch} go build \
+        -ldflags "${LDFLAGS}" -o pulsarctl
+    mv pulsarctl ${dir}
+    cp -r plugins ${dir}
+    pushd $base_dir
+    tar -czf ${dirname}.tar.gz ${dirname}
+    mv ${dirname}.tar.gz ${ASSETS_DIR}
+    popd
 }
 
 function build_doc() {
@@ -90,10 +48,12 @@ function build_doc() {
   mv pulsarctl-site-${version}.tar.gz ${ASSETSDIR}
 }
 
-build_amd64_linux
-build_386_linux
-build_amd64_darwin
-build_arm64_darwin
-build_amd64_windows
-build_386_windows
+build amd64 linux
+build 386 linux
+build amd64 darwin
+build arm64 darwin
+build amd64 windows
+build 386 windows
 build_doc
+
+popd
