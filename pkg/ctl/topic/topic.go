@@ -87,6 +87,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetCompactionThresholdCmd,
 		SetCompactionThresholdCmd,
 		RemoveCompactionThresholdCmd,
+		GetPublishRateCmd,
+		SetPublishRateCmd,
+		RemovePublishRateCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
