@@ -34,6 +34,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, getPackageMetadataCmd)
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, putPackageMetadataCmd)
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, downloadPackagesCmd)
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, uploadPackagesCmd)
 
 	return resourceCmd
 }
