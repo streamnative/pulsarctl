@@ -86,8 +86,6 @@ func (g *FlagGrouping) Usage(cmd *cobra.Command) error {
 		return fmt.Errorf("nil command")
 	}
 
-	group := g.groups[cmd]
-
 	usage := []string{fmt.Sprintf("Usage: %s", cmd.UseLine())}
 
 	if cmd.HasAvailableSubCommands() {
@@ -110,11 +108,9 @@ func (g *FlagGrouping) Usage(cmd *cobra.Command) error {
 		usage = append(usage, "\nAliases: "+cmd.NameAndAliases())
 	}
 
-	if group != nil {
-		for _, nfs := range group.list {
-			usage = append(usage, fmt.Sprintf("\n%s flags:", nfs.name))
-			usage = append(usage, strings.TrimRightFunc(nfs.fs.FlagUsages(), unicode.IsSpace))
-		}
+	if len(cmd.LocalFlags().FlagUsages()) != 0 && !cmd.HasAvailableSubCommands() {
+		usage = append(usage, "\nFlags:")
+		usage = append(usage, strings.TrimRightFunc(cmd.LocalFlags().FlagUsages(), unicode.IsSpace))
 	}
 
 	usage = append(usage, "\nCommon flags:")
