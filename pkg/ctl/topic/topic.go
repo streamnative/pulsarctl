@@ -90,6 +90,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetPublishRateCmd,
 		SetPublishRateCmd,
 		RemovePublishRateCmd,
+		GetInactiveTopicCmd,
+		SetInactiveTopicCmd,
+		RemoveInactiveTopicCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
