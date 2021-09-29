@@ -18,10 +18,10 @@
 package cmdutils
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/magiconair/properties"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -35,7 +35,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-var PulsarCtlConfig = loadFromEnv()
+var PulsarCtlConfig = mustLoadConfig()
 
 // the configuration of the cluster that pulsarctl connects to
 type ClusterConfig common.Config
@@ -150,60 +150,8 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 		"", "Path to the private key file.")
 }
 
-func Exists(path string) bool {
-	_, err := os.Stat(path)
-	if err != nil {
-		return os.IsExist(err)
-	}
-	return true
-}
-
-func (c *ClusterConfig) DecodeContext() *Config {
-	cfg := NewConfig()
-
-	defaultPath := fmt.Sprintf("%s/.config/pulsar/config", utils.HomeDir())
-	if !Exists(defaultPath) {
-		return nil
-	}
-
-	content, err := ioutil.ReadFile(defaultPath)
-	if err != nil {
-		return nil
-	}
-
-	err = yaml.Unmarshal(content, &cfg)
-	if err != nil {
-		return nil
-	}
-
-	return cfg
-}
-
 func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	c.PulsarAPIVersion = version
-
-	ctxConf := c.DecodeContext()
-	if ctxConf != nil {
-		if ctxConf.CurrentContext != "" {
-			ctx, exist := ctxConf.Contexts[ctxConf.CurrentContext]
-			auth, existAuth := ctxConf.AuthInfos[ctxConf.CurrentContext]
-
-			if !exist || !existAuth {
-				logger.Critical("wrong context:%s\n"+
-					"auth-info and contexts must be specified at the same time\n", ctxConf.CurrentContext)
-				os.Exit(1)
-			}
-			c.WebServiceURL = ctx.BrokerServiceURL
-			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
-			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
-			c.Token = auth.Token
-			c.TokenFile = auth.TokenFile
-			c.IssuerEndpoint = auth.IssuerEndpoint
-			c.ClientID = auth.ClientID
-			c.Audience = auth.Audience
-			c.KeyFile = auth.KeyFile
-		}
-	}
 
 	if len(c.WebServiceURL) == 0 {
 		c.WebServiceURL = pulsar.DefaultWebServiceURL
@@ -226,21 +174,13 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	config := common.Config(*c)
 	client, err := pulsar.New(&config)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, "Get pulsar client failed: "+err.Error())
+		log.Fatalf("new pulsar client failed: " + err.Error())
 	}
 	return client
 }
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
-	ctxConf := c.DecodeContext()
-
-	if ctxConf != nil {
-		if ctxConf.CurrentContext != "" {
-			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-			c.BKWebServiceURL = ctx.BookieServiceURL
-		}
-	}
 
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
@@ -254,8 +194,66 @@ func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	return bk
 }
 
-func loadFromEnv() *ClusterConfig {
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	}
+	return true
+}
+
+func DecodeContext() *Config {
+	cfg := NewConfig()
+	defaultPath := filepath.Join(utils.HomeDir(), ".config", "pulsar", "config")
+	if !Exists(defaultPath) {
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(defaultPath)
+	if err != nil {
+		return nil
+	}
+
+	err = yaml.Unmarshal(content, &cfg)
+	if err != nil {
+		return nil
+	}
+
+	return cfg
+}
+
+// mustLoadConfig loads config from system.
+// Priority:
+// 1. HOME/.config/pulsar/config
+// 2. PULSAR_CLIENT_CONF
+func mustLoadConfig() *ClusterConfig {
 	config := ClusterConfig{}
+
+	ctxConf := DecodeContext()
+	if ctxConf != nil {
+		if ctxConf.CurrentContext != "" {
+			ctx, exist := ctxConf.Contexts[ctxConf.CurrentContext]
+			auth, existAuth := ctxConf.AuthInfos[ctxConf.CurrentContext]
+
+			if !exist || !existAuth {
+				log.Fatalf("wrong context:%s\n"+
+					"auth-info and contexts must be specified at the same time\n", ctxConf.CurrentContext)
+			}
+
+			config.WebServiceURL = ctx.BrokerServiceURL
+			config.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
+			config.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
+			config.Token = auth.Token
+			config.TokenFile = auth.TokenFile
+			config.IssuerEndpoint = auth.IssuerEndpoint
+			config.ClientID = auth.ClientID
+			config.Audience = auth.Audience
+			config.KeyFile = auth.KeyFile
+
+			config.BKWebServiceURL = ctx.BookieServiceURL
+		}
+	}
+
 	if envConf, ok := os.LookupEnv("PULSAR_CLIENT_CONF"); ok {
 		if props, err := properties.LoadFile(envConf, properties.UTF8); err == nil && props != nil {
 			config.WebServiceURL = props.GetString("webServiceUrl", pulsar.DefaultWebServiceURL)
@@ -267,5 +265,6 @@ func loadFromEnv() *ClusterConfig {
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
 		}
 	}
+
 	return &config
 }

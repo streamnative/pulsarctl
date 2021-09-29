@@ -19,11 +19,14 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"reflect"
-	"sort"
 
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
+
+	"github.com/gofrs/flock"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -84,7 +87,7 @@ func NewDefaultPathOptions() *PathOptions {
 	ret := &PathOptions{
 		GlobalFile: RecommendedHomeFile,
 
-		GlobalFileSubpath: path.Join(RecommendedHomeDir, RecommendedFileName),
+		GlobalFileSubpath: filepath.Join(RecommendedHomeDir, RecommendedFileName),
 
 		LoadingRules: NewDefaultClientConfigLoadingRules(),
 	}
@@ -96,14 +99,28 @@ func NewDefaultPathOptions() *PathOptions {
 // ModifyConfig takes a Config object and write filed of Config struct to file
 func ModifyConfig(configAccess ConfigAccess, newConfig cmdutils.Config, relativizePaths bool) error {
 	possibleSources := configAccess.GetLoadingPrecedence()
-	// sort the possible pulsar config files so we always "lock" in the same order
-	// to avoid deadlock (note: this can fail w/ symlinks, but... come on).
-	sort.Strings(possibleSources)
+	var fileLocks []*flock.Flock //nolint:prealloc
+	defer func() {
+		for _, locker := range fileLocks {
+			_ = locker.Unlock()
+		}
+	}()
 	for _, filename := range possibleSources {
-		if err := lockFile(filename); err != nil {
+		if !utils.IsFileExist(filename) {
+			err := WriteToFile(cmdutils.Config{}, filename)
+			if err != nil {
+				return err
+			}
+		}
+		fileLock := flock.New(filename)
+		locked, err := fileLock.TryLock()
+		if err != nil {
 			return err
 		}
-		defer unlockFile(filename)
+		if !locked {
+			return fmt.Errorf("%s has been locked, cannot modify this configuration", filename)
+		}
+		fileLocks = append(fileLocks, fileLock)
 	}
 
 	startingConfig, err := configAccess.GetStartingConfig()

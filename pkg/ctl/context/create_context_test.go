@@ -23,7 +23,6 @@ import (
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -68,8 +67,7 @@ func TestOauthConfiguration(t *testing.T) {
 	}
 	assert.Nil(t, execErr)
 
-	config := &cmdutils.ClusterConfig{}
-	_ = config.Client(common.V2)
+	config := cmdutils.PulsarCtlConfig
 	assert.Equal(t, "https://test-endpoint", config.IssuerEndpoint)
 	assert.Equal(t, "clientid", config.ClientID)
 	assert.Equal(t, "audience", config.Audience)
