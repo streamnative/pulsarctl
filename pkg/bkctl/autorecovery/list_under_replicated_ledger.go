@@ -76,6 +76,7 @@ func listUnderReplicatedLedgerCmd(vc *cmdutils.VerbCmd) {
 		set.StringVar(&exclude, "exclude", "", "Show the under-replicated ledger exclude the bookie.")
 		set.BoolVar(&show, "show", false, "Show the replicate ledger list.")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doListUnderReplicatedLedger(vc *cmdutils.VerbCmd, include, exclude string, show bool) error {

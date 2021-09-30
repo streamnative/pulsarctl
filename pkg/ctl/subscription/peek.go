@@ -69,6 +69,7 @@ Message :`,
 	vc.FlagSetGroup.InFlagSet("Peek", func(set *pflag.FlagSet) {
 		set.IntVarP(&count, "count", "n", 1, "Number of messages (default 1)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doPeek(vc *cmdutils.VerbCmd, n int) error {

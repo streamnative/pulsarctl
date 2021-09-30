@@ -87,6 +87,7 @@ func show(vc *cmdutils.VerbCmd) {
 		set.StringVar(&tokenFile, "token-file", "",
 			"The token file you would like to show the content.")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doShow(vc *cmdutils.VerbCmd, tokenString, tokenFile string) error {

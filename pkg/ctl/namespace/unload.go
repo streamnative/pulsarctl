@@ -88,6 +88,7 @@ func unload(vc *cmdutils.VerbCmd) {
 			"",
 			"{start-boundary}_{end-boundary}(e.g. 0x00000000_0xffffffff)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doUnload(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

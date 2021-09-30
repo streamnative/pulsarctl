@@ -70,6 +70,7 @@ func SetSubscribeRateCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&(rate.RatePeriodInSecond), "period", "p", 30,
 			"dispatch rate period (default 30 second)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetSubscribeRate(vc *cmdutils.VerbCmd, rate utils.SubscribeRate) error {

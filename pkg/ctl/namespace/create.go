@@ -100,6 +100,7 @@ func createNs(vc *cmdutils.VerbCmd) {
 			nil,
 			"List of clusters this namespace will be assigned")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreate(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

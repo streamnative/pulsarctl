@@ -60,6 +60,7 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string) error {

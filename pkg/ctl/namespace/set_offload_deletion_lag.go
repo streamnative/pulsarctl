@@ -67,6 +67,7 @@ func SetOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 				"from cluster local storage. (e.g. 1s, 1m, 1h)")
 		cobra.MarkFlagRequired(set, "lag")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetOffloadDeletionLag(vc *cmdutils.VerbCmd, d string) error {

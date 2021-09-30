@@ -141,6 +141,7 @@ func validate(vc *cmdutils.VerbCmd) {
 		set.BoolVar(&args.base64Encoded, "base64", false,
 			"The secret key is base64 encoded or not.")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doValidate(vc *cmdutils.VerbCmd, args *validateCmdArgs) error {

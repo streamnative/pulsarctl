@@ -119,6 +119,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The name of a Pulsar Function")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

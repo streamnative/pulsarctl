@@ -66,6 +66,7 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 			"Subscription authorization mode of a namespace. (e.g. None, Prefix)")
 		cobra.MarkFlagRequired(set, "mode")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetSubscriptionAuthMode(vc *cmdutils.VerbCmd, mode string) error {

@@ -107,6 +107,7 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 
 		cobra.MarkFlagRequired(flagSet, "bundle")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSplitBundle(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

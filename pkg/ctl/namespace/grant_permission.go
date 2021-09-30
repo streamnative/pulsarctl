@@ -76,6 +76,7 @@ func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(set, "role")
 		cobra.MarkFlagRequired(set, "actions")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGrantPermissions(vc *cmdutils.VerbCmd, role string, actions []string) error {

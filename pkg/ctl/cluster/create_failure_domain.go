@@ -82,6 +82,7 @@ func createFailureDomainCmd(vc *cmdutils.VerbCmd) {
 			nil,
 			"Set the failure domain clusters")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateFailureDomain(vc *cmdutils.VerbCmd, failureDomain *utils.FailureDomainData) error {

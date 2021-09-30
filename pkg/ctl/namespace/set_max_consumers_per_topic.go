@@ -65,6 +65,7 @@ func SetMaxConsumersPerTopicCmd(vc *cmdutils.VerbCmd) {
 		set.IntVar(&num, "size", -1, "max consumers per topic")
 		cobra.MarkFlagRequired(set, "size")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetMaxConsumersPerTopic(vc *cmdutils.VerbCmd, max int) error {

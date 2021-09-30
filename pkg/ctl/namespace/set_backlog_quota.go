@@ -86,7 +86,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		return doSetBacklogQuota(vc, namespaceData)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("Set backlog quota", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
 			&namespaceData.LimitStr,
 			"limit-size",
@@ -111,6 +111,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(flagSet, "limit-size")
 		cobra.MarkFlagRequired(flagSet, "policy")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {

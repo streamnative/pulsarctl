@@ -18,6 +18,8 @@
 package packages
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -64,13 +66,15 @@ func downloadPackagesCmd(vc *cmdutils.VerbCmd) {
 	}, "the package URL is not provided")
 
 	// register the params
-	vc.Command.Flags().StringVarP(
-		&path,
-		"path",
-		"",
-		"",
-		"download destination path of the package")
-
+	vc.FlagSetGroup.InFlagSet("Download Package", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&path,
+			"path",
+			"",
+			"",
+			"download destination path of the package")
+		_ = cobra.MarkFlagRequired(flagSet, "path")
+	})
 	vc.EnableOutputFlagSet()
 }
 

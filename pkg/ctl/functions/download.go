@@ -114,6 +114,7 @@ func downloadFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"Function name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doDownloadFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

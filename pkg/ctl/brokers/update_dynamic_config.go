@@ -81,6 +81,7 @@ func updateDynamicConfig(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(flagSet, "config")
 		cobra.MarkFlagRequired(flagSet, "value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doUpdateDynamic(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {

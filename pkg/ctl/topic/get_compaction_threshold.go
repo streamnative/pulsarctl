@@ -18,6 +18,7 @@
 package topic
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -51,7 +52,10 @@ func GetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString())
 
 	var applied bool
-	vc.Command.Flags().BoolVarP(&applied, "applied", "", false, "Get the applied policy for the topic")
+	vc.FlagSetGroup.InFlagSet("Get Compaction Threshold", func(flagSet *pflag.FlagSet) {
+		flagSet.BoolVarP(&applied, "applied", "", false, "Get the applied policy for the topic")
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetCompactionThreshold(vc, applied)

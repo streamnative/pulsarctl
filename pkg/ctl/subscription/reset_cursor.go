@@ -85,6 +85,7 @@ func ResetCursorCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&mID, "message-id", "m", "",
 			"message id to reset back to (e.g. ledgerId:entryId)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doResetCursor(vc *cmdutils.VerbCmd, t, mID string) error {

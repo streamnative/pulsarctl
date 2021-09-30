@@ -73,6 +73,7 @@ func SkipCmd(vc *cmdutils.VerbCmd) {
 			"number of messages to skip")
 		set.BoolVarP(&all, "all", "a", false, "skip all messages")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSkip(vc *cmdutils.VerbCmd, count int64, all bool) error {

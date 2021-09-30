@@ -121,6 +121,7 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(flagSet, "ack-quorum-size")
 		cobra.MarkFlagRequired(flagSet, "ml-mark-delete-max-rate")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetPersistence(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

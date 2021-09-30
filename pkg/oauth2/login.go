@@ -64,6 +64,7 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, noRefresh bool) error {
