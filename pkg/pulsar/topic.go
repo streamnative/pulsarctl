@@ -225,6 +225,15 @@ type Topics interface {
 
 	// SetInactiveTopicPolicies sets the inactive topic policies on a topic
 	SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error
+
+	// GetOffloadPolicies gets the offload policies for a topic
+	GetOffloadPolicies(topic utils.TopicName, applied bool) (utils.OffloadPolicies, error)
+
+	// SetOffloadPolicies sets the offload policies for a topic
+	SetOffloadPolicies(utils.TopicName, utils.OffloadPolicies) error
+
+	// RemoveOffloadPolicies removes the offload policies for a topic
+	RemoveOffloadPolicies(topic utils.TopicName) error
 }
 
 type topics struct {
@@ -700,4 +709,22 @@ func (t *topics) RemoveInactiveTopicPolicies(topic utils.TopicName) error {
 func (t *topics) SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "inactiveTopicPolicies")
 	return t.pulsar.Client.Post(endpoint, data)
+}
+
+func (t *topics) GetOffloadPolicies(topic utils.TopicName, applied bool) (utils.OffloadPolicies, error) {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "offloadPolicies")
+	queryParams := map[string]string{"applied": strconv.FormatBool(applied)}
+	var out utils.OffloadPolicies
+	_, err := t.pulsar.Client.GetWithQueryParams(endpoint, &out, queryParams, true)
+	return out, err
+}
+
+func (t *topics) RemoveOffloadPolicies(topic utils.TopicName) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "offloadPolicies")
+	return t.pulsar.Client.Delete(endpoint)
+}
+
+func (t *topics) SetOffloadPolicies(topic utils.TopicName, policies utils.OffloadPolicies) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "offloadPolicies")
+	return t.pulsar.Client.Post(endpoint, &policies)
 }

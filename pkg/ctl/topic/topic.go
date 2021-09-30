@@ -93,6 +93,9 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetInactiveTopicCmd,
 		SetInactiveTopicCmd,
 		RemoveInactiveTopicCmd,
+		GetOffloadPoliciesCmd,
+		SetOffloadPoliciesCmd,
+		RemoveOffloadPoliciesCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

@@ -19,6 +19,8 @@ package topic
 
 import (
 	"bytes"
+	"path"
+	"runtime"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
@@ -63,4 +65,9 @@ func TestTopicCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out 
 	err = rootCmd.Execute()
 
 	return buf, execError, nameError, err
+}
+
+func TestResourceDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	return path.Join(path.Dir(b), "../../../")
 }
