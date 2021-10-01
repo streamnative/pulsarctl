@@ -148,6 +148,11 @@ func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
 		&c.KeyFile,
 		"key-file",
 		"", "Path to the private key file.")
+
+	flags.StringSliceVar(
+		&c.Scopes,
+		"scope",
+		nil, "OAuth 2.0 scopes to request.")
 }
 
 func Exists(path string) bool {
@@ -202,6 +207,7 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 			c.ClientID = auth.ClientID
 			c.Audience = auth.Audience
 			c.KeyFile = auth.KeyFile
+			c.Scopes = auth.Scopes
 		}
 	}
 

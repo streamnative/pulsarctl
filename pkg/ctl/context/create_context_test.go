@@ -61,6 +61,7 @@ func TestOauthConfiguration(t *testing.T) {
 		"--issuer-endpoint", "https://test-endpoint",
 		"--client-id", "clientid",
 		"--audience", "audience",
+		"--scope", "profile,api://test-endpoint",
 	}
 	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
 	if err != nil {
@@ -73,4 +74,5 @@ func TestOauthConfiguration(t *testing.T) {
 	assert.Equal(t, "https://test-endpoint", config.IssuerEndpoint)
 	assert.Equal(t, "clientid", config.ClientID)
 	assert.Equal(t, "audience", config.Audience)
+	assert.Equal(t, []string{"profile", "api://test-endpoint"}, config.Scopes)
 }

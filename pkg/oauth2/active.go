@@ -47,29 +47,33 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 		"activate")
 
 	var issuerEndpoint, audience, keyFile string
+	var scopes []string
 
 	vc.SetRunFunc(func() error {
-		return doActivate(vc, issuerEndpoint, audience, keyFile)
+		return doActivate(vc, issuerEndpoint, audience, keyFile, scopes)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
 		set.StringVarP(&issuerEndpoint, "issuer-endpoint", "i", "",
 			"The OAuth 2.0 issuer endpoint")
+		_ = set.MarkHidden("issuer-endpoint")
 		set.StringVarP(&audience, "audience", "a", "",
 			"The audience identifier for the Pulsar instance")
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
+		set.StringSliceVar(&scopes, "scope", []string{},
+			"OAuth 2.0 scopes to request")
 	})
 }
 
-func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string) error {
-	if issuerEndpoint == "" || audience == "" || keyFile == "" {
+func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string, scopes []string) error {
+	if audience == "" || keyFile == "" {
 		return errors.New("the arguments issuer-endpoint, audience, key-file can not be empty")
 	}
 
 	flow, err := o.NewDefaultClientCredentialsFlow(o.ClientCredentialsFlowOptions{
 		KeyFile:          keyFile,
-		AdditionalScopes: nil,
+		AdditionalScopes: scopes,
 	})
 	if err != nil {
 		return err

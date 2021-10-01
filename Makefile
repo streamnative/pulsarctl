@@ -28,3 +28,7 @@ cli: cleancli
 
 pulsarctl: 
 	$(GOBUILD) -ldflags '$(LDFLAGS)' -o bin/pulsarctl
+
+.PHONY: install
+install:
+	go install github.com/streamnative/pulsarctl

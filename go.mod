@@ -27,3 +27,5 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )
+
+replace github.com/apache/pulsar-client-go/oauth2 => /Users/eron/go/src/github.com/apache/pulsar-client-go/oauth2

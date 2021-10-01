@@ -130,6 +130,7 @@ func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Contex
 	o.authInfo.ClientID = cmdutils.PulsarCtlConfig.ClientID
 	o.authInfo.Audience = cmdutils.PulsarCtlConfig.Audience
 	o.authInfo.KeyFile = cmdutils.PulsarCtlConfig.KeyFile
+	o.authInfo.Scopes = cmdutils.PulsarCtlConfig.Scopes
 
 	if o.authInfo != nil {
 		modifiedAuth.TokenFile = o.authInfo.TokenFile
@@ -140,6 +141,7 @@ func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Contex
 		modifiedAuth.ClientID = o.authInfo.ClientID
 		modifiedAuth.Audience = o.authInfo.Audience
 		modifiedAuth.KeyFile = o.authInfo.KeyFile
+		modifiedAuth.Scopes = o.authInfo.Scopes
 	}
 
 	if o.brokerServiceURL != "" {

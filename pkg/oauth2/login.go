@@ -49,9 +49,10 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 		"login")
 
 	var issuerEndpoint, clientID, audience, keyFile string
+	var scopes []string
 
 	vc.SetRunFunc(func() error {
-		return doLogin(vc, issuerEndpoint, clientID, audience, false)
+		return doLogin(vc, issuerEndpoint, clientID, audience, scopes, false)
 	})
 
 	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
@@ -63,19 +64,21 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 			"The client ID to user for authorization grants")
 		set.StringVarP(&keyFile, "key-file", "k", "",
 			"Path to the private key file")
+		set.StringSliceVar(&scopes, "scope", []string{},
+			"OAuth 2.0 scopes to request")
 	})
 }
 
-func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, noRefresh bool) error {
+func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, scopes []string, noRefresh bool) error {
 	if issuerEndpoint == "" || clientID == "" || audience == "" {
-		return errors.New("the arguments issuer-endpoint, client-id, audience can not be empty")
+		return errors.New("the arguments issuer-endpoint, client-id, audience can not cannot be empty")
 	}
 
 	options := o.DeviceCodeFlowOptions{
 		IssuerEndpoint:   issuerEndpoint,
 		ClientID:         clientID,
-		AdditionalScopes: nil,
-		AllowRefresh:     noRefresh,
+		AdditionalScopes: scopes,
+		AllowRefresh:     !noRefresh,
 	}
 
 	prompt := NewPrompt(false)
@@ -122,7 +125,12 @@ func NewPrompt(skipOpen bool) *PromptFunc {
 
 func (p *PromptFunc) Prompt(code *o.DeviceCodeResult) error {
 	if !p.SkipOpen {
-		err := p.osInteractor.OpenURL(code.VerificationURIComplete)
+		var err error
+		if code.VerificationURIComplete != "" {
+			err = p.osInteractor.OpenURL(code.VerificationURIComplete)
+		} else {
+			err = p.osInteractor.OpenURL(code.VerificationURI)
+		}
 		if err == nil {
 			fmt.Printf(`We've launched your web browser to complete the login process.
 Verification code: %s
