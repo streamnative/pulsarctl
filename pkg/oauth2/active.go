@@ -19,9 +19,9 @@ package oauth2
 
 import (
 	"errors"
+	"github.com/spf13/pflag"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
-	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -34,7 +34,7 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	activate := cmdutils.Example{
 		Desc:    "Activate a service account by supplying its credentials.",
-		Command: "pulsarctl oauth2 activate --issuer-endpoint (issuer) --audience (audience) --key-file (key file path)",
+		Command: "pulsarctl oauth2 activate --key-file (key file path)",
 	}
 	examples = append(examples, activate)
 	desc.CommandExamples = examples
@@ -46,40 +46,40 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"activate")
 
-	var issuerEndpoint, audience, keyFile string
-	var scopes []string
-
 	vc.SetRunFunc(func() error {
-		return doActivate(vc, issuerEndpoint, audience, keyFile, scopes)
+		return doActivate(vc, cmdutils.PulsarCtlConfig)
 	})
 
-	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
-		set.StringVarP(&issuerEndpoint, "issuer-endpoint", "i", "",
+	c := cmdutils.PulsarCtlConfig
+	vc.FlagSetGroup.InFlagSet("OAuth 2.0", func(set *pflag.FlagSet) {
+		set.StringVarP(&c.IssuerEndpoint, "issuer-endpoint", "i", c.IssuerEndpoint,
 			"The OAuth 2.0 issuer endpoint")
-		_ = set.MarkHidden("issuer-endpoint")
-		set.StringVarP(&audience, "audience", "a", "",
+		set.StringVarP(&c.Audience, "audience", "a", c.Audience,
 			"The audience identifier for the Pulsar instance")
-		set.StringVarP(&keyFile, "key-file", "k", "",
-			"Path to the private key file")
-		set.StringSliceVar(&scopes, "scope", []string{},
-			"OAuth 2.0 scopes to request")
+		set.StringVarP(&c.KeyFile, "key-file", "k", c.KeyFile,
+			"The path to the private key file")
+		set.StringSliceVar(&c.Scopes, "scopes", c.Scopes,
+			"The OAuth 2.0 scope(s) to request")
 	})
 }
 
-func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string, scopes []string) error {
-	if audience == "" || keyFile == "" {
-		return errors.New("the arguments issuer-endpoint, audience, key-file can not be empty")
+func doActivate(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig) error {
+	if config.KeyFile == "" {
+		return errors.New("required: key-file")
+	}
+	if config.Audience == "" {
+		return errors.New("required: audience")
 	}
 
 	flow, err := o.NewDefaultClientCredentialsFlow(o.ClientCredentialsFlowOptions{
-		KeyFile:          keyFile,
-		AdditionalScopes: scopes,
+		KeyFile:          config.KeyFile,
+		AdditionalScopes: config.Scopes,
 	})
 	if err != nil {
 		return err
 	}
 
-	grant, err := flow.Authorize(audience)
+	grant, err := flow.Authorize(config.Audience)
 	if err != nil {
 		return err
 	}
@@ -89,12 +89,12 @@ func doActivate(vc *cmdutils.VerbCmd, issuerEndpoint, audience, keyFile string, 
 		return err
 	}
 
-	err = store.SaveGrant(audience, *grant)
+	err = store.SaveGrant(config.Audience, *grant)
 	if err != nil {
 		return err
 	}
 
-	userName, err := store.WhoAmI(audience)
+	userName, err := store.WhoAmI(config.Audience)
 	if err != nil {
 		return err
 	}

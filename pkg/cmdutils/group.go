@@ -73,6 +73,21 @@ func (n *NamedFlagSetGroup) InFlagSet(name string, cb func(*pflag.FlagSet)) {
 	n.list = append(n.list, nfs)
 }
 
+func (n *NamedFlagSetGroup) Add(name string, fs *pflag.FlagSet) {
+	for _, nfs := range n.list {
+		if nfs.name == name {
+			nfs.fs = fs
+			return
+		}
+	}
+
+	nfs := namedFlagSet{
+		name: name,
+		fs:   fs,
+	}
+	n.list = append(n.list, nfs)
+}
+
 // AddTo mixes all flagsets in the given group to another flagset
 func (n *NamedFlagSetGroup) AddTo(cmd *cobra.Command) {
 	for _, nfs := range n.list {

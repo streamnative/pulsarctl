@@ -112,7 +112,6 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"File path for TLS key used for authentication")
 
 	c.addBKFlags(flags)
-	c.addOAuth2Flags(flags)
 
 	return flags
 }
@@ -121,38 +120,19 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	flags.StringVar(
 		&c.BKWebServiceURL,
 		"bookie-service-url",
-		bookkeeper.DefaultWebServiceURL,
+		c.BKWebServiceURL,
 		"The bookie web service url that pulsarctl connects to.",
 	)
 }
 
-func (c *ClusterConfig) addOAuth2Flags(flags *pflag.FlagSet) {
-	flags.StringVar(
-		&c.IssuerEndpoint,
-		"issuer-endpoint",
-		"",
-		"OAuth 2.0 issuer endpoint.")
-
-	flags.StringVar(
-		&c.ClientID,
-		"client-id",
-		"",
-		"OAuth 2.0 client identifier.")
-
-	flags.StringVar(
-		&c.Audience,
-		"audience",
-		"", "OAuth 2.0 audience identifier.")
-
-	flags.StringVar(
-		&c.KeyFile,
-		"key-file",
-		"", "Path to the private key file.")
-
-	flags.StringSliceVar(
-		&c.Scopes,
-		"scope",
-		nil, "OAuth 2.0 scopes to request.")
+func (c *ClusterConfig) DeepCopy() *ClusterConfig {
+	if c == nil {
+		return nil
+	}
+	out := new(ClusterConfig)
+	*out = *c
+	out.Scopes = append(c.Scopes[:0:0], c.Scopes...)
+	return out
 }
 
 func Exists(path string) bool {
@@ -163,42 +143,39 @@ func Exists(path string) bool {
 	return true
 }
 
-func (c *ClusterConfig) DecodeContext() *Config {
+func readConfigFile() (*Config, error) {
 	cfg := NewConfig()
 
 	defaultPath := fmt.Sprintf("%s/.config/pulsar/config", utils.HomeDir())
 	if !Exists(defaultPath) {
-		return nil
+		return nil, nil
 	}
 
 	content, err := ioutil.ReadFile(defaultPath)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	err = yaml.Unmarshal(content, &cfg)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return cfg
+	return cfg, nil
 }
 
-func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
-	c.PulsarAPIVersion = version
-
-	ctxConf := c.DecodeContext()
+func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 	if ctxConf != nil {
-		if ctxConf.CurrentContext != "" {
-			ctx, exist := ctxConf.Contexts[ctxConf.CurrentContext]
-			auth, existAuth := ctxConf.AuthInfos[ctxConf.CurrentContext]
-
-			if !exist || !existAuth {
-				logger.Critical("wrong context:%s\n"+
-					"auth-info and contexts must be specified at the same time\n", ctxConf.CurrentContext)
-				os.Exit(1)
-			}
+		if contextName == nil {
+			contextName = &ctxConf.CurrentContext
+		}
+		ctx, exist := ctxConf.Contexts[*contextName]
+		if exist {
 			c.WebServiceURL = ctx.BrokerServiceURL
+			c.BKWebServiceURL = ctx.BookieServiceURL
+		}
+		auth, exist := ctxConf.AuthInfos[*contextName]
+		if exist {
 			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
 			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
 			c.Token = auth.Token
@@ -210,11 +187,9 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 			c.Scopes = auth.Scopes
 		}
 	}
+}
 
-	if len(c.WebServiceURL) == 0 {
-		c.WebServiceURL = pulsar.DefaultWebServiceURL
-	}
-
+func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
 		logger.Critical("the token and token file can not be specified at the same time")
 		os.Exit(1)
@@ -230,6 +205,8 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 	}
 
 	config := common.Config(*c)
+	config.PulsarAPIVersion = version
+
 	client, err := pulsar.New(&config)
 	if err != nil {
 		fmt.Fprintln(os.Stdout, "Get pulsar client failed: "+err.Error())
@@ -239,14 +216,6 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	config := bookkeeper.DefaultConfig()
-	ctxConf := c.DecodeContext()
-
-	if ctxConf != nil {
-		if ctxConf.CurrentContext != "" {
-			ctx := ctxConf.Contexts[ctxConf.CurrentContext]
-			c.BKWebServiceURL = ctx.BookieServiceURL
-		}
-	}
 
 	if len(c.BKWebServiceURL) > 0 {
 		config.WebServiceURL = c.BKWebServiceURL
@@ -262,6 +231,10 @@ func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 
 func loadFromEnv() *ClusterConfig {
 	config := ClusterConfig{}
+	if len(config.WebServiceURL) == 0 {
+		config.WebServiceURL = pulsar.DefaultWebServiceURL
+	}
+
 	if envConf, ok := os.LookupEnv("PULSAR_CLIENT_CONF"); ok {
 		if props, err := properties.LoadFile(envConf, properties.UTF8); err == nil && props != nil {
 			config.WebServiceURL = props.GetString("webServiceUrl", pulsar.DefaultWebServiceURL)
@@ -272,6 +245,14 @@ func loadFromEnv() *ClusterConfig {
 			config.AuthPlugin = props.GetString("authPlugin", "")
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
 		}
+	} else {
+		ctxConf, err := readConfigFile()
+		if err != nil {
+			logger.Critical("configuration error: %s", err.Error())
+			os.Exit(1)
+		}
+		config.ApplyContext(ctxConf, nil)
 	}
+
 	return &config
 }
