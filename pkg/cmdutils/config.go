@@ -209,7 +209,8 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 
 	client, err := pulsar.New(&config)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, "Get pulsar client failed: "+err.Error())
+		logger.Critical("client error: %s", err.Error())
+		os.Exit(1)
 	}
 	return client
 }

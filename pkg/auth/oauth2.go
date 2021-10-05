@@ -18,6 +18,7 @@
 package auth
 
 import (
+	"github.com/pkg/errors"
 	"net/http"
 	"path/filepath"
 
@@ -28,11 +29,6 @@ import (
 	"github.com/apache/pulsar-client-go/oauth2/store"
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	xoauth2 "golang.org/x/oauth2"
-)
-
-const (
-	TypeClientCredential = "client_credentials"
-	TypeDeviceCode       = "device_code"
 )
 
 type OAuth2Provider struct {
@@ -89,13 +85,14 @@ func NewAuthenticationOAuth2WithDefaultFlow(issuer oauth2.Issuer, keyFile string
 }
 
 func NewAuthenticationOAuth2WithParams(
-	issueEndpoint,
+	issuerEndpoint,
 	clientID,
 	audience string,
+	additionalScopes []string,
 	transport http.RoundTripper) (*OAuth2Provider, error) {
 
 	issuer := oauth2.Issuer{
-		IssuerEndpoint: issueEndpoint,
+		IssuerEndpoint: issuerEndpoint,
 		ClientID:       clientID,
 		Audience:       audience,
 	}
@@ -123,6 +120,9 @@ func NewAuthenticationOAuth2WithParams(
 func (o *OAuth2Provider) loadGrant() error {
 	grant, err := o.store.LoadGrant(o.issuer.Audience)
 	if err != nil {
+		if err == store.ErrNoAuthenticationData {
+			return errors.New("oauth2 login required")
+		}
 		return err
 	}
 	return o.initCache(grant)
