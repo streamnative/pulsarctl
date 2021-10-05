@@ -20,6 +20,7 @@ package oauth2
 import (
 	"errors"
 	"fmt"
+
 	o "github.com/apache/pulsar-client-go/oauth2"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/auth"

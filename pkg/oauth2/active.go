@@ -19,6 +19,7 @@ package oauth2
 
 import (
 	"errors"
+
 	"github.com/spf13/pflag"
 
 	o "github.com/apache/pulsar-client-go/oauth2"

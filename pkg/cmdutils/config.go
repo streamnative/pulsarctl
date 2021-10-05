@@ -125,16 +125,6 @@ func (c *ClusterConfig) addBKFlags(flags *pflag.FlagSet) {
 	)
 }
 
-func (c *ClusterConfig) DeepCopy() *ClusterConfig {
-	if c == nil {
-		return nil
-	}
-	out := new(ClusterConfig)
-	*out = *c
-	out.Scopes = append(c.Scopes[:0:0], c.Scopes...)
-	return out
-}
-
 func Exists(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {

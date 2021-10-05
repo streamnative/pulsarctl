@@ -18,9 +18,10 @@
 package auth
 
 import (
-	"github.com/pkg/errors"
 	"net/http"
 	"path/filepath"
+
+	"github.com/pkg/errors"
 
 	"github.com/99designs/keyring"
 	"github.com/apache/pulsar-client-go/oauth2"
