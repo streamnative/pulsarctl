@@ -41,8 +41,8 @@ github.com/Microsoft/go-winio v0.4.11 h1:zoIOcVf0xPN1tnMVbTtEdI+P8OofVk3NObnwOQ6
 github.com/Microsoft/go-winio v0.4.11/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcyvVC4A4RozmA=
 github.com/Microsoft/hcsshim v0.8.6 h1:ZfF0+zZeYdzMIVMZHKtDKJvLHj76XCuVae/jNkjj0IA=
 github.com/Microsoft/hcsshim v0.8.6/go.mod h1:Op3hHsoHPAvb6lceZHDtd9OkTew38wNoXnJs8iY7rUg=
-github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211005180455-161f4ffc41c4 h1:X3G0/OS1Cn2WPjIF200nc5tE68PUNguqpbsFDUXnflA=
-github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211005180455-161f4ffc41c4/go.mod h1:xQySKl7kNQ2xBas4gGTtvwWPY8O+8SYzD6K3Tpbw7Ww=
+github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403 h1:mBjZq3UbtlZXuDJ06SfW9LLO5ZoSQi+v5hlzR6rwDAA=
+github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403/go.mod h1:xQySKl7kNQ2xBas4gGTtvwWPY8O+8SYzD6K3Tpbw7Ww=
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/cenkalti/backoff v2.2.1+incompatible h1:tNowT99t7UNflLxfYYSlKYsBpXdEet03Pg2g16Swow4=
 github.com/cenkalti/backoff v2.2.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=

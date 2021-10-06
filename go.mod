@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/99designs/keyring v1.1.6
-	github.com/apache/pulsar-client-go/oauth2 v0.6.1-0.20211005180455-161f4ffc41c4
+	github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
@@ -34,4 +34,4 @@ require (
 	gopkg.in/yaml.v2 v2.3.0
 )
 
-replace github.com/apache/pulsar-client-go/oauth2 => github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211005180455-161f4ffc41c4
+replace github.com/apache/pulsar-client-go/oauth2 => github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403
