@@ -19,6 +19,7 @@ package oauth2
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/spf13/pflag"
 
@@ -59,7 +60,7 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 			"The audience identifier for the Pulsar instance")
 		set.StringVarP(&c.KeyFile, "key-file", "k", c.KeyFile,
 			"The path to the private key file")
-		set.StringSliceVar(&c.Scopes, "scopes", c.Scopes,
+		set.StringVar(&c.Scope, "scope", c.Scope,
 			"The OAuth 2.0 scope(s) to request")
 	})
 }
@@ -74,7 +75,7 @@ func doActivate(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig) error {
 
 	flow, err := o.NewDefaultClientCredentialsFlow(o.ClientCredentialsFlowOptions{
 		KeyFile:          config.KeyFile,
-		AdditionalScopes: config.Scopes,
+		AdditionalScopes: strings.Split(config.Scope, " "),
 	})
 	if err != nil {
 		return err

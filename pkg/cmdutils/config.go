@@ -35,7 +35,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-var PulsarCtlConfig = loadFromEnv()
+var PulsarCtlConfig = LoadFromEnv()
 
 // the configuration of the cluster that pulsarctl connects to
 type ClusterConfig common.Config
@@ -174,7 +174,7 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 			c.ClientID = auth.ClientID
 			c.Audience = auth.Audience
 			c.KeyFile = auth.KeyFile
-			c.Scopes = auth.Scopes
+			c.Scope = auth.Scope
 		}
 	}
 }
@@ -220,7 +220,7 @@ func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 	return bk
 }
 
-func loadFromEnv() *ClusterConfig {
+func LoadFromEnv() *ClusterConfig {
 	config := ClusterConfig{}
 	if len(config.WebServiceURL) == 0 {
 		config.WebServiceURL = pulsar.DefaultWebServiceURL

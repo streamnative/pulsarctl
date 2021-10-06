@@ -20,6 +20,7 @@ package oauth2
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
 	"github.com/spf13/pflag"
@@ -60,7 +61,7 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 			"The audience identifier for the Pulsar instance")
 		set.StringVarP(&c.ClientID, "client-id", "c", c.ClientID,
 			"The OAuth 2.0 client identifier for pulsarctl")
-		set.StringSliceVar(&c.Scopes, "scopes", c.Scopes,
+		set.StringVar(&c.Scope, "scope", c.Scope,
 			"The OAuth 2.0 scope(s) to request")
 	})
 }
@@ -79,7 +80,7 @@ func doLogin(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig, noRefresh boo
 	options := o.DeviceCodeFlowOptions{
 		IssuerEndpoint:   config.IssuerEndpoint,
 		ClientID:         config.ClientID,
-		AdditionalScopes: config.Scopes,
+		AdditionalScopes: strings.Split(config.Scope, " "),
 		AllowRefresh:     !noRefresh,
 	}
 

@@ -31,11 +31,11 @@ type AuthInfo struct {
 	TokenFile                  string `yaml:"tokenFile"`
 
 	// OAuth2 configuration
-	IssuerEndpoint string   `yaml:"issuer_endpoint"`
-	ClientID       string   `yaml:"client_id"`
-	Audience       string   `yaml:"audience"`
-	Scopes         []string `yaml:"scopes"`
-	KeyFile        string   `yaml:"key_file"`
+	IssuerEndpoint string `yaml:"issuer_endpoint"`
+	ClientID       string `yaml:"client_id"`
+	Audience       string `yaml:"audience"`
+	Scope          string `yaml:"scope"`
+	KeyFile        string `yaml:"key_file"`
 }
 
 type Context struct {

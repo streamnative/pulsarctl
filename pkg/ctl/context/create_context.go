@@ -19,8 +19,10 @@ package context
 
 import (
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func setContextCmd(vc *cmdutils.VerbCmd) {
@@ -79,7 +81,7 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 			"The OAuth 2.0 client identifier for pulsarctl")
 		set.StringVarP(&ops.flags.KeyFile, "key-file", "k", "",
 			"The path to the private key file")
-		set.StringSliceVar(&ops.flags.Scopes, "scopes", nil,
+		set.StringVar(&ops.flags.Scope, "scope", "",
 			"The OAuth 2.0 scope(s) to request")
 	})
 	vc.ClusterConfigOverride = ops.flags
@@ -97,6 +99,8 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	startingStanza, exists := config.Contexts[name]
 	if !exists {
 		startingStanza = new(cmdutils.Context)
+		startingStanza.BrokerServiceURL = pulsar.DefaultWebServiceURL
+		startingStanza.BookieServiceURL = bookkeeper.DefaultWebServiceURL
 	}
 
 	startingAuth, exists := config.AuthInfos[name]
@@ -165,8 +169,8 @@ func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Contex
 	if f.Changed("key-file") {
 		modifiedAuth.KeyFile = o.flags.KeyFile
 	}
-	if f.Changed("scopes") {
-		modifiedAuth.Scopes = o.flags.Scopes
+	if f.Changed("scope") {
+		modifiedAuth.Scope = o.flags.Scope
 	}
 
 	return modifiedContext, modifiedAuth

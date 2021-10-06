@@ -89,7 +89,7 @@ func NewAuthenticationOAuth2WithParams(
 	issuerEndpoint,
 	clientID,
 	audience string,
-	additionalScopes []string,
+	scope string,
 	transport http.RoundTripper) (*OAuth2Provider, error) {
 
 	issuer := oauth2.Issuer{

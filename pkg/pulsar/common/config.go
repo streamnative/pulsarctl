@@ -48,5 +48,5 @@ type Config struct {
 	ClientID       string
 	Audience       string
 	KeyFile        string
-	Scopes         []string
+	Scope          string
 }
