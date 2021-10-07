@@ -73,15 +73,15 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 	}, "the context name is not specified or the context name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("OAuth 2.0", func(set *pflag.FlagSet) {
-		set.StringVarP(&ops.flags.IssuerEndpoint, "issuer-endpoint", "i", "",
+		set.StringVarP(&ops.flags.IssuerEndpoint, "issuer-endpoint", "i", ops.flags.IssuerEndpoint,
 			"The OAuth 2.0 issuer endpoint")
-		set.StringVarP(&ops.flags.Audience, "audience", "a", "",
+		set.StringVarP(&ops.flags.Audience, "audience", "a", ops.flags.Audience,
 			"The audience identifier for the Pulsar instance")
-		set.StringVarP(&ops.flags.ClientID, "client-id", "c", "",
+		set.StringVarP(&ops.flags.ClientID, "client-id", "c", ops.flags.ClientID,
 			"The OAuth 2.0 client identifier for pulsarctl")
-		set.StringVarP(&ops.flags.KeyFile, "key-file", "k", "",
+		set.StringVarP(&ops.flags.KeyFile, "key-file", "k", ops.flags.KeyFile,
 			"The path to the private key file")
-		set.StringVar(&ops.flags.Scope, "scope", "",
+		set.StringVar(&ops.flags.Scope, "scope", ops.flags.Scope,
 			"The OAuth 2.0 scope(s) to request")
 	})
 	vc.ClusterConfigOverride = ops.flags
