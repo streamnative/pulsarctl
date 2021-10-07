@@ -20,6 +20,7 @@ package oauth2
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
 	"github.com/spf13/pflag"
@@ -36,7 +37,7 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	login := cmdutils.Example{
 		Desc:    "Login as a oauth2 user",
-		Command: "pulsarctl oauth2 login --issuer-endpoint (issuer) --audience (audience) --client-id (client-id)",
+		Command: "pulsarctl oauth2 login",
 	}
 	examples = append(examples, login)
 	desc.CommandExamples = examples
@@ -48,34 +49,39 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"login")
 
-	var issuerEndpoint, clientID, audience, keyFile string
-
 	vc.SetRunFunc(func() error {
-		return doLogin(vc, issuerEndpoint, clientID, audience, false)
+		return doLogin(vc, cmdutils.PulsarCtlConfig, false)
 	})
 
-	vc.FlagSetGroup.InFlagSet("Oauth2 login", func(set *pflag.FlagSet) {
-		set.StringVarP(&issuerEndpoint, "issuer-endpoint", "i", "",
+	c := cmdutils.PulsarCtlConfig
+	vc.FlagSetGroup.InFlagSet("OAuth 2.0", func(set *pflag.FlagSet) {
+		set.StringVarP(&c.IssuerEndpoint, "issuer-endpoint", "i", c.IssuerEndpoint,
 			"The OAuth 2.0 issuer endpoint")
-		set.StringVarP(&audience, "audience", "a", "",
+		set.StringVarP(&c.Audience, "audience", "a", c.Audience,
 			"The audience identifier for the Pulsar instance")
-		set.StringVarP(&clientID, "client-id", "c", "",
-			"The client ID to user for authorization grants")
-		set.StringVarP(&keyFile, "key-file", "k", "",
-			"Path to the private key file")
+		set.StringVarP(&c.ClientID, "client-id", "c", c.ClientID,
+			"The OAuth 2.0 client identifier for pulsarctl")
+		set.StringVar(&c.Scope, "scope", c.Scope,
+			"The OAuth 2.0 scope(s) to request")
 	})
 }
 
-func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, noRefresh bool) error {
-	if issuerEndpoint == "" || clientID == "" || audience == "" {
-		return errors.New("the arguments issuer-endpoint, client-id, audience can not be empty")
+func doLogin(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig, noRefresh bool) error {
+	if config.IssuerEndpoint == "" {
+		return errors.New("required: issuer-endpoint")
+	}
+	if config.ClientID == "" {
+		return errors.New("required: client-id")
+	}
+	if config.Audience == "" {
+		return errors.New("required: audience")
 	}
 
 	options := o.DeviceCodeFlowOptions{
-		IssuerEndpoint:   issuerEndpoint,
-		ClientID:         clientID,
-		AdditionalScopes: nil,
-		AllowRefresh:     noRefresh,
+		IssuerEndpoint:   config.IssuerEndpoint,
+		ClientID:         config.ClientID,
+		AdditionalScopes: strings.Split(config.Scope, " "),
+		AllowRefresh:     !noRefresh,
 	}
 
 	prompt := NewPrompt(false)
@@ -83,7 +89,7 @@ func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, no
 	if err != nil {
 		return errors.New("configuration error: unable to use device code flow: " + err.Error())
 	}
-	grant, err := flow.Authorize(audience)
+	grant, err := flow.Authorize(config.Audience)
 	if err != nil {
 		return errors.New("login failed: " + err.Error())
 	}
@@ -93,12 +99,12 @@ func doLogin(vc *cmdutils.VerbCmd, issuerEndpoint, clientID, audience string, no
 		return err
 	}
 
-	err = store.SaveGrant(audience, *grant)
+	err = store.SaveGrant(config.Audience, *grant)
 	if err != nil {
 		return err
 	}
 
-	userName, err := store.WhoAmI(audience)
+	userName, err := store.WhoAmI(config.Audience)
 	if err != nil {
 		return err
 	}
@@ -122,7 +128,12 @@ func NewPrompt(skipOpen bool) *PromptFunc {
 
 func (p *PromptFunc) Prompt(code *o.DeviceCodeResult) error {
 	if !p.SkipOpen {
-		err := p.osInteractor.OpenURL(code.VerificationURIComplete)
+		var err error
+		if code.VerificationURIComplete != "" {
+			err = p.osInteractor.OpenURL(code.VerificationURIComplete)
+		} else {
+			err = p.osInteractor.OpenURL(code.VerificationURI)
+		}
 		if err == nil {
 			fmt.Printf(`We've launched your web browser to complete the login process.
 Verification code: %s

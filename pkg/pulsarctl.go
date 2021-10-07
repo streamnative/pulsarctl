@@ -80,8 +80,6 @@ func NewPulsarctlCmd() *cobra.Command {
 		"v",
 		3,
 		"set log level, use 0 to silence, 4 for debugging")
-	// add the common pulsarctl flags
-	rootCmd.PersistentFlags().AddFlagSet(cmdutils.PulsarCtlConfig.FlagSet())
 
 	cobra.OnInitialize(func() {
 		// Control colored output
