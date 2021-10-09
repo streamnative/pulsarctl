@@ -105,6 +105,10 @@ func processArguments(sinkData *util.SinkData) error {
 		sinkData.SinkConf.SourceSubscriptionName = sinkData.SubsName
 	}
 
+	if sinkData.SubsPosition != "" {
+		sinkData.SinkConf.SourceSubscriptionPosition = sinkData.SubsPosition
+	}
+
 	if sinkData.TopicsPattern != "" {
 		sinkData.SinkConf.TopicsPattern = &sinkData.TopicsPattern
 	}
