@@ -83,6 +83,7 @@ func setTopicAutoCreation(vc *cmdutils.VerbCmd) {
 		set.StringVar(&topicType, "type", "", "topic type to auto-create")
 		set.IntVar(&partitions, "partitions", 0, "number of partitions on auto-created partitioned topics")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetTopicAutoCreation(vc *cmdutils.VerbCmd, disable bool, topicType string, partitions int) error {

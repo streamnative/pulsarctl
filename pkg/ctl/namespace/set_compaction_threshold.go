@@ -61,12 +61,13 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 		return doSetCompactionThreshold(vc, threshold)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("Compaction Threshold", func(set *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("Set compaction threshold", func(set *pflag.FlagSet) {
 		set.StringVar(&threshold, "size", "0",
 			"Maximum number of bytes in a topic backlog before compaction is triggered "+
 				"(e.g. 10M, 16G, 3T). 0 disable automatic compaction")
 		cobra.MarkFlagRequired(set, "size")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetCompactionThreshold(vc *cmdutils.VerbCmd, threshold string) error {

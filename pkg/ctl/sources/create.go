@@ -235,6 +235,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"Source config key/values")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {

@@ -64,6 +64,7 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 		set.StringVar(&c.Scope, "scope", c.Scope,
 			"The OAuth 2.0 scope(s) to request")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doLogin(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig, noRefresh bool) error {

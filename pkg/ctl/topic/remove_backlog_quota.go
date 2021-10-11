@@ -18,6 +18,7 @@
 package topic
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
@@ -52,13 +53,17 @@ func RemoveBacklogQuotaCmd(vc *cmdutils.VerbCmd) {
 	)
 
 	var backlogQuotaType string
-	vc.Command.Flags().StringVarP(
-		&backlogQuotaType,
-		"type",
-		"t",
-		string(utils.DestinationStorage),
-		"Backlog quota type to remove",
-	)
+
+	vc.FlagSetGroup.InFlagSet("Remove backlog quota", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&backlogQuotaType,
+			"type",
+			"t",
+			string(utils.DestinationStorage),
+			"Backlog quota type to remove",
+		)
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doRemoveBacklogQuota(vc, utils.BacklogQuotaType(backlogQuotaType))

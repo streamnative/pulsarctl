@@ -131,6 +131,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The function instanceId (start all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStartFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

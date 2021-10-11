@@ -116,7 +116,7 @@ func UpdateClusterCmd(vc *cmdutils.VerbCmd) {
 			[]string{""},
 			"Cluster to be registered as a peer-cluster of this cluster.")
 	})
-
+	vc.EnableOutputFlagSet()
 }
 
 func doUpdateCluster(vc *cmdutils.VerbCmd, clusterData *utils.ClusterData) error {

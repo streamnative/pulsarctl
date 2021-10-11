@@ -74,6 +74,7 @@ func CreateCmd(vc *cmdutils.VerbCmd) {
 			"message id where the subscription starts from. It can be either 'latest', "+
 				"'earliest' or (ledgerId:entryId)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreate(vc *cmdutils.VerbCmd, id string) error {

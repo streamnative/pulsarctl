@@ -18,6 +18,8 @@
 package topic
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	ctlutils "github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -46,35 +48,38 @@ func SetInactiveTopicCmd(vc *cmdutils.VerbCmd) {
 	examples = append(examples, set)
 	desc.CommandExamples = examples
 
-	args := setInactiveTopicPoliciesArgs{}
-
-	vc.Command.Flags().BoolVarP(&args.deleteWhileInactive,
-		"enable-delete-while-inactive",
-		"e",
-		false,
-		"Control whether deletion is enabled while inactive")
-
-	vc.Command.Flags().StringVarP(&args.deleteInactiveTopicsMaxInactiveDuration,
-		"max-inactive-duration",
-		"t",
-		"",
-		"Max duration of topic inactivity in seconds, "+
-			"topics that are inactive for longer than this value will be deleted (eg: 1s, 10s, 1m, 5h, 3d)")
-	vc.Command.Flags().StringVarP(&args.inactiveTopicDeleteMode,
-		"delete-mode",
-		"m",
-		"",
-		"Mode of delete inactive topic, "+
-			"Valid options are: [delete_when_no_subscriptions, delete_when_subscriptions_caught_up]")
-
-	_ = vc.Command.MarkFlagRequired("delete-mode")
-	_ = vc.Command.MarkFlagRequired("max-inactive-duration")
-
 	vc.SetDescription(
 		"set-inactive-topic-policies",
 		desc.CommandUsedFor,
 		desc.ToString(),
 		desc.ExampleToString())
+
+	args := setInactiveTopicPoliciesArgs{}
+
+	vc.FlagSetGroup.InFlagSet("Set Inactive Topic", func(flagSet *pflag.FlagSet) {
+		flagSet.BoolVarP(&args.deleteWhileInactive,
+			"enable-delete-while-inactive",
+			"e",
+			false,
+			"Control whether deletion is enabled while inactive")
+
+		flagSet.StringVarP(&args.deleteInactiveTopicsMaxInactiveDuration,
+			"max-inactive-duration",
+			"t",
+			"",
+			"Max duration of topic inactivity in seconds, "+
+				"topics that are inactive for longer than this value will be deleted (eg: 1s, 10s, 1m, 5h, 3d)")
+		flagSet.StringVarP(&args.inactiveTopicDeleteMode,
+			"delete-mode",
+			"m",
+			"",
+			"Mode of delete inactive topic, "+
+				"Valid options are: [delete_when_no_subscriptions, delete_when_subscriptions_caught_up]")
+
+		_ = cobra.MarkFlagRequired(flagSet, "delete-mode")
+		_ = cobra.MarkFlagRequired(flagSet, "max-inactive-duration")
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetInactiveTopic(vc, args)

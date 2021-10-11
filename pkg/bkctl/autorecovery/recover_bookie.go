@@ -72,6 +72,7 @@ func recoverBookieCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVar(&deleteCookie, "delete-cookie", false,
 			"Delete cookie when recovering the failed bookies.")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doRecoverBookie(vc *cmdutils.VerbCmd, deleteCookie bool) error {

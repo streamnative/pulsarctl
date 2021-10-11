@@ -84,6 +84,7 @@ func DeleteTopicCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&deleteSchema, "delete-schema", "d", false,
 			"Delete schema while deleting topic")
 	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doDeleteTopic(vc, force, deleteSchema, nonPartitioned)

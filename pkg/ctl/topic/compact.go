@@ -71,6 +71,7 @@ func CompactCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCompact(vc *cmdutils.VerbCmd, partition int) error {

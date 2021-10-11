@@ -68,6 +68,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Messages Encryption", func(set *pflag.FlagSet) {
 		set.BoolVar(&d, "disable", false, "Disable messages encryption")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetEncryptionRequired(vc *cmdutils.VerbCmd, disable bool) error {

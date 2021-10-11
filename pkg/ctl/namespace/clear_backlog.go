@@ -80,6 +80,7 @@ func ClearBacklogCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&force, "force", "f", false,
 			"Whether to force clear backlog without prompt")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doClearBacklog(vc *cmdutils.VerbCmd, sName, bundle string, force bool) (err error) {

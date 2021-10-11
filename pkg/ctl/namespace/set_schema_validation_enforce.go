@@ -68,6 +68,7 @@ func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&d, "disable", "d", false,
 			"Disable schema validation enforced")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetSchemaValidationEnforced(vc *cmdutils.VerbCmd, disable bool) error {

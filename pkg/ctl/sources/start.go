@@ -107,6 +107,7 @@ func startSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source instanceId (stop all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doStartSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {

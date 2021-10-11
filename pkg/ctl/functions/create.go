@@ -407,6 +407,7 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The topic where messages that are not processed successfully are sent to")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error {

@@ -80,6 +80,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&show, "show-hostname", "p", false,
 			"Show the hostname of the bookies.")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doList(vc *cmdutils.VerbCmd, show bool) error {

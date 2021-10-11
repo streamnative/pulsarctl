@@ -83,6 +83,7 @@ func SetReplicatorDispatchRateCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&(rate.RatePeriodInSecond), "period", "p", 1,
 			"dispatch rate period (default 1 second)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetReplicatorDispatchRate(vc *cmdutils.VerbCmd, rate utils.DispatchRate) error {

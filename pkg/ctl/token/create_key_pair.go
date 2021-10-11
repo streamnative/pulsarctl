@@ -97,6 +97,7 @@ func createKeyPair(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(set, "output-private-key")
 		cobra.MarkFlagRequired(set, "output-private-key")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateKeyPair(vc *cmdutils.VerbCmd, signatureAlgorithm, outputPrivateKeyFilePath,

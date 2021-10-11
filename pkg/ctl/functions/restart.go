@@ -132,6 +132,7 @@ func restartFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The function instanceId (restart all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doRestartFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {

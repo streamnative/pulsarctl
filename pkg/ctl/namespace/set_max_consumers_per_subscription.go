@@ -65,6 +65,7 @@ func SetMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 		set.IntVar(&num, "size", -1, "max consumers per subscription")
 		cobra.MarkFlagRequired(set, "size")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetMaxConsumersPerSubscription(vc *cmdutils.VerbCmd, max int) error {

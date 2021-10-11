@@ -91,6 +91,7 @@ func deleteSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink's name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doDeleteSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {

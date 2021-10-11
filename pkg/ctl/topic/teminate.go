@@ -77,6 +77,7 @@ func TerminateCmd(vc *cmdutils.VerbCmd) {
 		set.IntVarP(&partition, "partition", "p", -1,
 			"The partitioned topic index value")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doTerminate(vc *cmdutils.VerbCmd, partition int) error {

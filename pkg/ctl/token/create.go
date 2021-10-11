@@ -128,6 +128,7 @@ func create(vc *cmdutils.VerbCmd) {
 			"The secret key is base64 encoded or not.")
 		cobra.MarkFlagRequired(set, "subject")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreate(vc *cmdutils.VerbCmd, args *createCmdArgs) error {

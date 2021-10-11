@@ -21,6 +21,7 @@ import (
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -71,12 +72,14 @@ func listPackagesCmd(vc *cmdutils.VerbCmd) {
 	}, "the package URL is not provided")
 
 	// register the params
-	vc.Command.Flags().StringVarP(
-		&packageTypeName,
-		"type",
-		"",
-		"",
-		"function, source, sink")
+	vc.FlagSetGroup.InFlagSet("List packages", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&packageTypeName,
+			"type",
+			"",
+			"",
+			"function, source, sink")
+	})
 	vc.EnableOutputFlagSet()
 }
 
