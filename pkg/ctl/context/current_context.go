@@ -20,7 +20,6 @@ package context
 import (
 	"github.com/pkg/errors"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
 func currentContextCmd(vc *cmdutils.VerbCmd) {
@@ -53,7 +52,7 @@ func currentContextCmd(vc *cmdutils.VerbCmd) {
 		"current")
 
 	ops := new(currentContextOptions)
-	ops.access = internal.NewDefaultPathOptions()
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function without name argument
 	vc.SetRunFunc(func() error {
@@ -62,7 +61,7 @@ func currentContextCmd(vc *cmdutils.VerbCmd) {
 }
 
 type currentContextOptions struct {
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func doRunCurrentContext(vc *cmdutils.VerbCmd, ops *currentContextOptions) error {

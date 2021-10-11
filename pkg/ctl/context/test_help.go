@@ -19,6 +19,7 @@ package context
 
 import (
 	"bytes"
+	"os"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
@@ -58,4 +59,9 @@ func TestConfigCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out
 	err = rootCmd.Execute()
 
 	return buf, execError, err
+}
+
+func IsCI() bool {
+	_, exists := os.LookupEnv("CI")
+	return exists
 }

@@ -1,0 +1,16 @@
+auth-info:
+  standalone:
+    tls_trust_certs_file_path: ""
+    tls_allow_insecure_connection: false
+    token: ""
+    tokenFile: ""
+    issuer_endpoint: "https://login.cluster-1.pulsar.demo.local/11969f5b-8b91-4ea8-bd79-f33ede77397a/v2.0"
+    client_id: "d69780eb-0cc7-44fc-b183-08d124d1f712"
+    audience: "api://cluster-1.pulsar.demo.local"
+    scope: "api://cluster-1.pulsar.demo.local/.default"
+    key_file: ""
+contexts:
+  standalone:
+    admin-service-url: http://localhost:8080
+    bookie-service-url: http://localhost:8080
+current-context: standalone

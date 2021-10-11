@@ -21,7 +21,6 @@ import (
 	"github.com/kris-nova/logger"
 	"github.com/olekukonko/tablewriter"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
 func getContextsCmd(vc *cmdutils.VerbCmd) {
@@ -64,7 +63,7 @@ func getContextsCmd(vc *cmdutils.VerbCmd) {
 		"get")
 
 	ops := new(getContextOptions)
-	ops.access = internal.NewDefaultPathOptions()
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function with name argument
 	vc.SetRunFunc(func() error {
@@ -74,7 +73,7 @@ func getContextsCmd(vc *cmdutils.VerbCmd) {
 }
 
 type getContextOptions struct {
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func doRunGetContext(vc *cmdutils.VerbCmd, ops *getContextOptions) error {

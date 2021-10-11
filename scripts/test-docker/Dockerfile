@@ -12,5 +12,6 @@ COPY . /pulsarctl
 
 ENV PULSAR_HOME /pulsar
 ENV PULSARCTL_HOME /pulsarctl
+ENV CI any
 
 ENTRYPOINT /pulsarctl/scripts/entrypoint.sh

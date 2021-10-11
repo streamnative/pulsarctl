@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
 func useContextCmd(vc *cmdutils.VerbCmd) {
@@ -55,7 +54,7 @@ func useContextCmd(vc *cmdutils.VerbCmd) {
 		"use")
 
 	ops := new(useContextOptions)
-	ops.access = internal.NewDefaultPathOptions()
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
@@ -64,7 +63,7 @@ func useContextCmd(vc *cmdutils.VerbCmd) {
 }
 
 type useContextOptions struct {
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func doRunUseContext(vc *cmdutils.VerbCmd, ops *useContextOptions) error {
@@ -80,7 +79,7 @@ func doRunUseContext(vc *cmdutils.VerbCmd, ops *useContextOptions) error {
 
 	config.CurrentContext = vc.NameArg
 
-	err = internal.ModifyConfig(ops.access, *config, true)
+	err = cmdutils.ModifyConfig(ops.access, *config)
 	if err == nil {
 		vc.Command.Printf("Switched to context %q.\n", vc.NameArg)
 	}

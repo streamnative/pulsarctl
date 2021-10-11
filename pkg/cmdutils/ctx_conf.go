@@ -24,7 +24,6 @@ type Config struct {
 }
 
 type AuthInfo struct {
-	LocationOfOrigin           string
 	TLSTrustCertsFilePath      string `yaml:"tls_trust_certs_file_path"`
 	TLSAllowInsecureConnection bool   `yaml:"tls_allow_insecure_connection"`
 	Token                      string `yaml:"token"`

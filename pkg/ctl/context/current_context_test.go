@@ -24,6 +24,11 @@ import (
 )
 
 func TestCurrentContextCmd(t *testing.T) {
+	if !IsCI() {
+		t.Skip("skip this test, it will modify the your local file")
+		return
+	}
+
 	currentArgs := []string{"current"}
 	out, execErr, err := TestConfigCommands(currentContextCmd, currentArgs)
 	assert.Nil(t, err)

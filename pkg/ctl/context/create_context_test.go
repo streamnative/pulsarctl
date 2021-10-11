@@ -28,6 +28,11 @@ import (
 )
 
 func TestSetContextCmd(t *testing.T) {
+	if !IsCI() {
+		t.Skip("skip this test, it will modify the your local file")
+		return
+	}
+
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
 	defer os.Remove(path)
@@ -52,6 +57,11 @@ func TestSetContextCmd(t *testing.T) {
 }
 
 func TestOauthConfiguration(t *testing.T) {
+	if !IsCI() {
+		t.Skip("skip this test, it will modify the your local file")
+		return
+	}
+
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
 	defer os.Remove(path)

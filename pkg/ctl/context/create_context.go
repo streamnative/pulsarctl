@@ -21,7 +21,6 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
@@ -66,6 +65,7 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 	ops := new(createContextOptions)
 	ops.vc = vc
 	ops.flags = &cmdutils.ClusterConfig{}
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
@@ -89,7 +89,6 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 
 func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	name := vc.NameArg
-	o.access = internal.NewDefaultPathOptions()
 
 	config, err := o.access.GetStartingConfig()
 	if err != nil {
@@ -113,7 +112,7 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	config.AuthInfos[name] = &authInfo
 	config.CurrentContext = name
 
-	if err := internal.ModifyConfig(o.access, *config, true); err != nil {
+	if err := cmdutils.ModifyConfig(o.access, *config); err != nil {
 		return err
 	}
 
@@ -129,7 +128,7 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 type createContextOptions struct {
 	vc     *cmdutils.VerbCmd
 	flags  *cmdutils.ClusterConfig
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Context,

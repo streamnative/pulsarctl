@@ -18,15 +18,10 @@
 package cmdutils
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
 	"github.com/magiconair/properties"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"gopkg.in/yaml.v2"
-
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
@@ -133,27 +128,6 @@ func Exists(path string) bool {
 	return true
 }
 
-func readConfigFile() (*Config, error) {
-	cfg := NewConfig()
-
-	defaultPath := fmt.Sprintf("%s/.config/pulsar/config", utils.HomeDir())
-	if !Exists(defaultPath) {
-		return nil, nil
-	}
-
-	content, err := ioutil.ReadFile(defaultPath)
-	if err != nil {
-		return nil, err
-	}
-
-	err = yaml.Unmarshal(content, &cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	return cfg, nil
-}
-
 func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 	if ctxConf != nil {
 		if contextName == nil {
@@ -237,7 +211,8 @@ func LoadFromEnv() *ClusterConfig {
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
 		}
 	} else {
-		ctxConf, err := readConfigFile()
+		loader := NewDefaultClientConfigLoadingRules()
+		ctxConf, err := loader.Load()
 		if err != nil {
 			logger.Critical("configuration error: %s", err.Error())
 			os.Exit(1)

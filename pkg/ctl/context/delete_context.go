@@ -21,7 +21,6 @@ import (
 	"fmt"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
 func deleteContextCmd(vc *cmdutils.VerbCmd) {
@@ -54,7 +53,7 @@ func deleteContextCmd(vc *cmdutils.VerbCmd) {
 		"del")
 
 	ops := new(deleteContextOptions)
-	ops.access = internal.NewDefaultPathOptions()
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
@@ -63,7 +62,7 @@ func deleteContextCmd(vc *cmdutils.VerbCmd) {
 }
 
 type deleteContextOptions struct {
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func doRunDeleteContext(vc *cmdutils.VerbCmd, ops *deleteContextOptions) error {
@@ -78,7 +77,7 @@ func doRunDeleteContext(vc *cmdutils.VerbCmd, ops *deleteContextOptions) error {
 		return nil
 	}
 
-	configFile := ops.access.GetDefaultFilename()
+	configFile := ops.access.GetCurrentConfigFilename()
 
 	_, ok := config.Contexts[name]
 	if !ok {
@@ -98,7 +97,7 @@ func doRunDeleteContext(vc *cmdutils.VerbCmd, ops *deleteContextOptions) error {
 	delete(config.Contexts, name)
 	delete(config.AuthInfos, name)
 
-	if err := internal.ModifyConfig(ops.access, *config, true); err != nil {
+	if err := cmdutils.ModifyConfig(ops.access, *config); err != nil {
 		return err
 	}
 

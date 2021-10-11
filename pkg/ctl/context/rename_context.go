@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
 )
 
 func renameContextCmd(vc *cmdutils.VerbCmd) {
@@ -55,7 +54,7 @@ func renameContextCmd(vc *cmdutils.VerbCmd) {
 		"update")
 
 	ops := new(renameContextOptions)
-	ops.access = internal.NewDefaultPathOptions()
+	ops.access = cmdutils.NewDefaultClientConfigLoadingRules()
 
 	// set the run function with name argument
 	vc.SetRunFuncWithMultiNameArgs(func() error {
@@ -69,7 +68,7 @@ func renameContextCmd(vc *cmdutils.VerbCmd) {
 }
 
 type renameContextOptions struct {
-	access internal.ConfigAccess
+	access cmdutils.ConfigAccess
 }
 
 func doRunRenameContext(vc *cmdutils.VerbCmd, ops *renameContextOptions) error {
@@ -81,7 +80,7 @@ func doRunRenameContext(vc *cmdutils.VerbCmd, ops *renameContextOptions) error {
 		return err
 	}
 
-	configFile := ops.access.GetDefaultFilename()
+	configFile := ops.access.GetCurrentConfigFilename()
 
 	context, exists := config.Contexts[oldName]
 	if !exists {
@@ -114,7 +113,7 @@ func doRunRenameContext(vc *cmdutils.VerbCmd, ops *renameContextOptions) error {
 		config.CurrentContext = newName
 	}
 
-	if err := internal.ModifyConfig(ops.access, *config, true); err != nil {
+	if err := cmdutils.ModifyConfig(ops.access, *config); err != nil {
 		return err
 	}
 
