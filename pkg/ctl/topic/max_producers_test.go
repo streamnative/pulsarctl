@@ -30,12 +30,13 @@ func TestMaxProducers(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
+	time.Sleep(defaultWaitTime)
 	setArgs := []string{"set-max-producers", topicName, "-p", "20"}
 	setOut, execErr, _, _ := TestTopicCommands(SetMaxProducersCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set max number of producers successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs := []string{"get-max-producers", topicName}
 	getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, getArgs)
 	assert.Nil(t, execErr)
@@ -46,7 +47,7 @@ func TestMaxProducers(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove max number of producers successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs = []string{"get-max-producers", topicName}
 	getOut, execErr, _, _ = TestTopicCommands(GetMaxProducersCmd, getArgs)
 	assert.Nil(t, execErr)

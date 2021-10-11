@@ -35,7 +35,7 @@ func TestMessageTTL(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set message TTL successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getTTLArgs := []string{"get-message-ttl", topicName}
 	getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
 	assert.Nil(t, execErr)
@@ -46,7 +46,7 @@ func TestMessageTTL(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove message TTL successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getTTLArgs = []string{"get-message-ttl", topicName}
 	getOut, execErr, _, _ = TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
 	assert.Nil(t, execErr)

@@ -35,7 +35,7 @@ func TestMaxUnackMessagesPerSubscription(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set max unacked messages per subscription successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs := []string{"get-max-unacked-messages-per-subscription", topicName}
 	getOut, execErr, _, _ := TestTopicCommands(GetMaxUnackMessagesPerSubscriptionCmd, getArgs)
 	assert.Nil(t, execErr)
@@ -46,7 +46,7 @@ func TestMaxUnackMessagesPerSubscription(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove max unacked messages per subscription successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs = []string{"get-max-unacked-messages-per-subscription", topicName}
 	getOut, execErr, _, _ = TestTopicCommands(GetMaxUnackMessagesPerSubscriptionCmd, getArgs)
 	assert.Nil(t, execErr)

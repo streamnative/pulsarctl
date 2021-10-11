@@ -37,7 +37,7 @@ func TestPersistence(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set persistence successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs := []string{"get-persistence", topicName}
 	getOut, execErr, _, _ := TestTopicCommands(GetPersistenceCmd, getArgs)
 	var persistenceData utils.PersistenceData
@@ -56,7 +56,7 @@ func TestPersistence(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove persistence successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs = []string{"get-persistence", topicName}
 	getOut, execErr, _, _ = TestTopicCommands(GetPersistenceCmd, getArgs)
 	err = json.Unmarshal(getOut.Bytes(), &persistenceData)

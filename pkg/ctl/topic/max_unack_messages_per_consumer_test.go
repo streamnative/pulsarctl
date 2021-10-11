@@ -30,12 +30,13 @@ func TestMaxUnackMessagesPerConsumer(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
+	time.Sleep(defaultWaitTime)
 	setArgs := []string{"set-max-unacked-messages-per-consumer", topicName, "-m", "20"}
 	setOut, execErr, _, _ := TestTopicCommands(SetMaxUnackMessagesPerConsumerCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set max unacked messages per consumer successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs := []string{"get-max-unacked-messages-per-consumer", topicName}
 	getOut, execErr, _, _ := TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
 	assert.Nil(t, execErr)
@@ -46,7 +47,7 @@ func TestMaxUnackMessagesPerConsumer(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove max unacked messages per consumer successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(defaultWaitTime)
 	getArgs = []string{"get-max-unacked-messages-per-consumer", topicName}
 	getOut, execErr, _, _ = TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
 	assert.Nil(t, execErr)

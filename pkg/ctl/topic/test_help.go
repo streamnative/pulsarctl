@@ -19,12 +19,15 @@ package topic
 
 import (
 	"bytes"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 )
+
+const defaultWaitTime = 5 * time.Second
 
 func TestTopicCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
 	execErr, nameErr, err error) {
