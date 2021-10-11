@@ -84,11 +84,7 @@ func setRetention(vc *cmdutils.VerbCmd) {
 
 	var data util.NamespacesData
 
-	vc.SetRunFuncWithNameArg(func() error {
-		return doSetRetention(vc, data)
-	}, "the namespace name is not specified or the namespace name is specified more than one")
-
-	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("Set Retention", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVar(
 			&data.RetentionTimeStr,
 			"time",
@@ -103,9 +99,14 @@ func setRetention(vc *cmdutils.VerbCmd) {
 			"Retention size limit (eg: 10M, 16G, 3T).\n"+
 				"0 or less than 1MB means no retention and -1 means infinite size retention")
 
-		cobra.MarkFlagRequired(flagSet, "time")
-		cobra.MarkFlagRequired(flagSet, "size")
+		_ = cobra.MarkFlagRequired(flagSet, "time")
+		_ = cobra.MarkFlagRequired(flagSet, "size")
 	})
+	vc.EnableOutputFlagSet()
+
+	vc.SetRunFuncWithNameArg(func() error {
+		return doSetRetention(vc, data)
+	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
 func doSetRetention(vc *cmdutils.VerbCmd, data util.NamespacesData) error {

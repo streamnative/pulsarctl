@@ -19,6 +19,8 @@ package topic
 
 import (
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	ctlutils "github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -72,15 +74,18 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 	var timeStr string
 	var sizeStr string
 
-	vc.Command.Flags().StringVarP(&timeStr, "time", "", "",
-		"Retention time in minutes (or minutes, hours, days, weeks eg: 100m, 3h, 2d, 5w). "+
-			"0 means no retention and -1 means infinite time retention")
-	vc.Command.Flags().StringVarP(&sizeStr, "size", "", "",
-		"Retention size limit (eg: 10M, 16G, 3T). "+
-			"0 or less than 1MB means no retention and -1 means infinite size retention")
+	vc.FlagSetGroup.InFlagSet("Set retention", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(&timeStr, "time", "", "",
+			"Retention time in minutes (or minutes, hours, days, weeks eg: 100m, 3h, 2d, 5w). "+
+				"0 means no retention and -1 means infinite time retention")
+		flagSet.StringVarP(&sizeStr, "size", "", "",
+			"Retention size limit (eg: 10M, 16G, 3T). "+
+				"0 or less than 1MB means no retention and -1 means infinite size retention")
 
-	_ = vc.Command.MarkFlagRequired("time")
-	_ = vc.Command.MarkFlagRequired("size")
+		_ = cobra.MarkFlagRequired(flagSet, "time")
+		_ = cobra.MarkFlagRequired(flagSet, "size")
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetRetention(vc, timeStr, sizeStr)

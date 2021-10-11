@@ -91,6 +91,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The source's name")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {

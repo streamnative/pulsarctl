@@ -102,6 +102,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 
 		cobra.MarkFlagRequired(flagSet, "group")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGetAntiAffinityNamespaces(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

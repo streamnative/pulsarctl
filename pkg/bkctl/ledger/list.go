@@ -67,6 +67,7 @@ func listCmd(vc *cmdutils.VerbCmd) {
 		set.BoolVarP(&show, "show-metadata", "p", false,
 			"Show the metadata of the ledgers")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doListCmd(vc *cmdutils.VerbCmd, showMeta bool) error {

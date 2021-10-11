@@ -79,6 +79,7 @@ func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 			"Client role to which grant permissions")
 		cobra.MarkFlagRequired(set, "role")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGrantSubscriptionPermissions(vc *cmdutils.VerbCmd, role []string) error {

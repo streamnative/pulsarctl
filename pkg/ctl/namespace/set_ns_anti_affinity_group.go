@@ -89,6 +89,7 @@ func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 
 		cobra.MarkFlagRequired(flagSet, "group")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetAntiAffinityGroup(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

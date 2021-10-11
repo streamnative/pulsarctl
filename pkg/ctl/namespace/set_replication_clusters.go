@@ -96,6 +96,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 
 		cobra.MarkFlagRequired(flagSet, "clusters")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetReplicationClusters(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

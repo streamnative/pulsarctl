@@ -108,6 +108,7 @@ func restartSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink instanceId (stop all instances if instance-id is not provided)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doRestartSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {

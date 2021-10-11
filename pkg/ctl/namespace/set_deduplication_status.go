@@ -85,6 +85,7 @@ func setDeduplication(vc *cmdutils.VerbCmd) {
 			false,
 			"Enable deduplication")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetDeduplication(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

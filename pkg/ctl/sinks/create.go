@@ -264,6 +264,7 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			0,
 			"The message timeout in milliseconds")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {

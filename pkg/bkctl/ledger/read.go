@@ -78,7 +78,7 @@ func readCmd(vc *cmdutils.VerbCmd) {
 			"")
 		set.Int64VarP(&end, "end", "e", -1, "")
 	})
-
+	vc.EnableOutputFlagSet()
 }
 
 func doRead(vc *cmdutils.VerbCmd, start, end int64) error {

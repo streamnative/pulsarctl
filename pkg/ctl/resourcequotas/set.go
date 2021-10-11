@@ -122,6 +122,7 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(flagSet, "bandwidthOut")
 		cobra.MarkFlagRequired(flagSet, "memory")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetResourceQuota(vc *cmdutils.VerbCmd, quotaData *utils.ResourceQuotaData) error {

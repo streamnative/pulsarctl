@@ -18,6 +18,8 @@
 package topic
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	utils "github.com/streamnative/pulsarctl/pkg/ctl/utils"
@@ -52,10 +54,17 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString())
 
 	var threshold string
-	vc.Command.Flags().StringVarP(&threshold, "threshold", "t", "0",
-		"Maximum number of bytes in a topic backlog before compaction is triggered (eg: 10M, 16G, 3T). "+
-			"0 disables automatic compaction")
-	_ = vc.Command.MarkFlagRequired("threshold")
+	vc.FlagSetGroup.InFlagSet("Set Compaction Threshold", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&threshold,
+			"threshold",
+			"t",
+			"0",
+			"Maximum number of bytes in a topic backlog before compaction is triggered (eg: 10M, 16G, 3T). "+
+				"0 disables automatic compaction")
+		_ = cobra.MarkFlagRequired(flagSet, "threshold")
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetCompactionThreshold(vc, threshold)
