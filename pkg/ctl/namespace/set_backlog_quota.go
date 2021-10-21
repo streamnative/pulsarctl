@@ -37,8 +37,10 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	setBacklog := cmdutils.Example{
 		Desc: "Set a backlog quota policy for a namespace",
 		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
-			"\t--limit 2G \n" +
-			"\t--policy producer_request_hold",
+			"\t--limit-size 16G \n" +
+			"\t--limit-time -1 \n" +
+			"\t--policy producer_request_hold" +
+		    "\t--type <destination_storage|message_age>",
 	}
 	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
@@ -108,6 +110,14 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 			"",
 			"Retention policy to enforce when the limit is reached.\n"+
 				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
+
+		flagSet.StringVarP(
+			&namespaceData.BacklogQuotaType,
+			"type",
+			"t",
+			string(util.DestinationStorage),
+			"Backlog quota type to set.\n"+
+				"Valid options are: [destination_storage, message_age]")
 		cobra.MarkFlagRequired(flagSet, "limit-size")
 		cobra.MarkFlagRequired(flagSet, "policy")
 	})
@@ -135,7 +145,12 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
 	}
 
-	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, data.LimitTime, policy))
+	backlogQuotaType, err := util.ParseBacklogQuotaType(data.BacklogQuotaType)
+	if err != nil {
+		return err
+	}
+
+	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, data.LimitTime, policy), backlogQuotaType)
 	if err == nil {
 		vc.Command.Printf("Set backlog quota successfully for [%s]\n", ns)
 	}
