@@ -69,6 +69,8 @@ func TestBacklogQuotaCmd(t *testing.T) {
 	var backlogQuotaMap map[utils.BacklogQuotaType]utils.BacklogQuota
 	err := json.Unmarshal(out.Bytes(), &backlogQuotaMap)
 
+	fmt.Println(backlogQuotaMap)
+
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(backlogQuotaMap))
 	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitTime, int64(120))
