@@ -36,13 +36,8 @@ func TestBacklogQuotaCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Nil(t, cmdErr)
 
-	//retentionArgs := []string{"set-retention", topicName, "--size", "-1", "--time", "-1"}
-	//_, execErr, _, cmdErr = TestTopicCommands(SetRetentionCmd, retentionArgs)
-	//assert.Nil(t, execErr)
-	//assert.Nil(t, cmdErr)
-
 	setArgs := []string{"set-backlog-quota", topicName,
-		"--limit-size", "2k",
+		"--limit-size", "1k",
 		"--limit-time", "120",
 		"-p", "producer_exception"}
 	out, execErr, _, cmdErr := TestTopicCommands(SetBacklogQuotaCmd, setArgs)
@@ -74,7 +69,7 @@ func TestBacklogQuotaCmd(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(backlogQuotaMap))
 	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitTime, int64(120))
-	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitSize, int64(2048))
+	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitSize, int64(1024))
 	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].Policy, utils.ProducerException)
 	assert.Equal(t, backlogQuotaMap[utils.MessageAge].LimitTime, int64(240))
 	assert.Equal(t, backlogQuotaMap[utils.MessageAge].LimitSize, int64(-1))
