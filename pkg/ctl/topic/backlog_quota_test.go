@@ -32,20 +32,22 @@ import (
 func TestBacklogQuotaCmd(t *testing.T) {
 	topicName := fmt.Sprintf("persistent://public/default/test-backlog-quotas-topic-%s", test.RandomSuffix())
 	createArgs := []string{"create", topicName, "1"}
-	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, createArgs)
-	assert.Nil(t, execErr)
-
-	retentionArgs := []string{"set-retention", topicName, "--size", "-1", "--time", "-1"}
-	_, execErr, _, cmdErr := TestTopicCommands(SetRetentionCmd, retentionArgs)
+	_, execErr, _, cmdErr := TestTopicCommands(CreateTopicCmd, createArgs)
 	assert.Nil(t, execErr)
 	assert.Nil(t, cmdErr)
+
+	//retentionArgs := []string{"set-retention", topicName, "--size", "-1", "--time", "-1"}
+	//_, execErr, _, cmdErr = TestTopicCommands(SetRetentionCmd, retentionArgs)
+	//assert.Nil(t, execErr)
+	//assert.Nil(t, cmdErr)
 
 	setArgs := []string{"set-backlog-quota", topicName,
 		"--limit-size", "2k",
 		"--limit-time", "120",
 		"-p", "producer_exception"}
-	out, execErr, _, _ := TestTopicCommands(SetBacklogQuotaCmd, setArgs)
+	out, execErr, _, cmdErr := TestTopicCommands(SetBacklogQuotaCmd, setArgs)
 	assert.Nil(t, execErr)
+	assert.Nil(t, cmdErr)
 	assert.Equal(t, out.String(), fmt.Sprintf("Set backlog quota successfully for [%s]\n", topicName))
 
 	setArgs = []string{"set-backlog-quota", topicName,
@@ -53,8 +55,9 @@ func TestBacklogQuotaCmd(t *testing.T) {
 		"--limit-time", "240",
 		"-t", "message_age",
 		"-p", "consumer_backlog_eviction"}
-	out, execErr, _, _ = TestTopicCommands(SetBacklogQuotaCmd, setArgs)
+	out, execErr, _, cmdErr = TestTopicCommands(SetBacklogQuotaCmd, setArgs)
 	assert.Nil(t, execErr)
+	assert.Nil(t, cmdErr)
 	assert.Equal(t, out.String(), fmt.Sprintf("Set backlog quota successfully for [%s]\n", topicName))
 
 	<-time.After(5 * time.Second)
