@@ -225,6 +225,10 @@ type Topics interface {
 
 	// SetInactiveTopicPolicies sets the inactive topic policies on a topic
 	SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error
+
+	// Skip all messages on a topic subscription.
+	// Completely clears the backlog on the subscription.
+	SkipAllMessages(topic utils.TopicName, subscriptionName string) error
 }
 
 type topics struct {
@@ -700,4 +704,9 @@ func (t *topics) RemoveInactiveTopicPolicies(topic utils.TopicName) error {
 func (t *topics) SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "inactiveTopicPolicies")
 	return t.pulsar.Client.Post(endpoint, data)
+}
+
+func (t *topics) SkipAllMessages(topic utils.TopicName, subscriptionName string) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "subscription", subscriptionName, "skip_all")
+	return t.pulsar.Client.Post(endpoint, nil)
 }
