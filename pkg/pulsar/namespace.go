@@ -407,20 +407,16 @@ func (n *namespaces) GetBacklogQuotaMap(namespace string) (map[utils.BacklogQuot
 	return backlogQuotaMap, err
 }
 
-func (n *namespaces) SetBacklogQuota(namespace string, backlogQuota utils.BacklogQuota, backlogQuotaType utils.BacklogQuotaType) error {
+func (n *namespaces) SetBacklogQuota(namespace string, backlogQuota utils.BacklogQuota,
+	backlogQuotaType utils.BacklogQuotaType) error {
 	nsName, err := utils.GetNamespaceName(namespace)
 	if err != nil {
 		return err
 	}
 	endpoint := n.pulsar.endpoint(n.basePath, nsName.String(), "backlogQuota")
-	u, err := url.Parse(endpoint)
-	if err != nil {
-		return err
-	}
-	q := u.Query()
-	q.Add("backlogQuotaType", string(backlogQuotaType))
-	u.RawQuery = q.Encode()
-	return n.pulsar.Client.Post(u.String(), &backlogQuota)
+	params := make(map[string]string)
+	params["backlogQuotaType"] = string(backlogQuotaType)
+	return n.pulsar.Client.PostWithQueryParams(endpoint, &backlogQuota, params)
 }
 
 func (n *namespaces) RemoveBacklogQuota(namespace string) error {

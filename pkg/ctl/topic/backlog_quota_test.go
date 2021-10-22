@@ -35,11 +35,25 @@ func TestBacklogQuotaCmd(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, createArgs)
 	assert.Nil(t, execErr)
 
+	retentionArgs := []string{"set-retention", topicName, "--size", "-1", "--time", "-1"}
+	_, execErr, _, cmdErr := TestTopicCommands(SetRetentionCmd, retentionArgs)
+	assert.Nil(t, execErr)
+	assert.Nil(t, cmdErr)
+
 	setArgs := []string{"set-backlog-quota", topicName,
-		"--limit-size", "1k",
-		"--limit-time", "20",
+		"--limit-size", "2k",
+		"--limit-time", "120",
 		"-p", "producer_exception"}
 	out, execErr, _, _ := TestTopicCommands(SetBacklogQuotaCmd, setArgs)
+	assert.Nil(t, execErr)
+	assert.Equal(t, out.String(), fmt.Sprintf("Set backlog quota successfully for [%s]\n", topicName))
+
+	setArgs = []string{"set-backlog-quota", topicName,
+		"--limit-size", "-1",
+		"--limit-time", "240",
+		"-t", "message_age",
+		"-p", "consumer_backlog_eviction"}
+	out, execErr, _, _ = TestTopicCommands(SetBacklogQuotaCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, out.String(), fmt.Sprintf("Set backlog quota successfully for [%s]\n", topicName))
 
@@ -49,15 +63,24 @@ func TestBacklogQuotaCmd(t *testing.T) {
 	out, execErr, _, _ = TestTopicCommands(GetBacklogQuotaCmd, getArgs)
 	assert.Nil(t, execErr)
 
-	var backlogQuotaMap map[string]utils.BacklogQuota
+	var backlogQuotaMap map[utils.BacklogQuotaType]utils.BacklogQuota
 	err := json.Unmarshal(out.Bytes(), &backlogQuotaMap)
+
 	assert.Nil(t, err)
-	assert.NotNil(t, backlogQuotaMap)
-	assert.NotNil(t, backlogQuotaMap["destination_storage"].LimitTime, int64(20))
-	assert.NotNil(t, backlogQuotaMap["destination_storage"].LimitSize, int64(1024))
-	assert.Equal(t, backlogQuotaMap["destination_storage"].Policy, utils.ProducerException)
+	assert.Equal(t, 2, len(backlogQuotaMap))
+	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitTime, int64(120))
+	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].LimitSize, int64(2048))
+	assert.Equal(t, backlogQuotaMap[utils.DestinationStorage].Policy, utils.ProducerException)
+	assert.Equal(t, backlogQuotaMap[utils.MessageAge].LimitTime, int64(240))
+	assert.Equal(t, backlogQuotaMap[utils.MessageAge].LimitSize, int64(-1))
+	assert.Equal(t, backlogQuotaMap[utils.MessageAge].Policy, utils.ConsumerBacklogEviction)
 
 	removeArgs := []string{"remove-backlog-quota", topicName}
+	out, execErr, _, _ = TestTopicCommands(RemoveBacklogQuotaCmd, removeArgs)
+	assert.Nil(t, execErr)
+	assert.Equal(t, out.String(), "Remove backlog quota successfully for ["+topicName+"]\n")
+
+	removeArgs = []string{"remove-backlog-quota", topicName, "-t", "message_age"}
 	out, execErr, _, _ = TestTopicCommands(RemoveBacklogQuotaCmd, removeArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, out.String(), "Remove backlog quota successfully for ["+topicName+"]\n")

@@ -40,7 +40,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 			"\t--limit-size 16G \n" +
 			"\t--limit-time -1 \n" +
 			"\t--policy producer_request_hold" +
-		    "\t--type <destination_storage|message_age>",
+			"\t--type <destination_storage|message_age>",
 	}
 	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
@@ -114,11 +114,10 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		flagSet.StringVarP(
 			&namespaceData.BacklogQuotaType,
 			"type",
-			"t",
+			"",
 			string(util.DestinationStorage),
 			"Backlog quota type to set.\n"+
 				"Valid options are: [destination_storage, message_age]")
-		cobra.MarkFlagRequired(flagSet, "limit-size")
 		cobra.MarkFlagRequired(flagSet, "policy")
 	})
 	vc.EnableOutputFlagSet()
