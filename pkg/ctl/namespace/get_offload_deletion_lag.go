@@ -67,14 +67,13 @@ func doGetOffloadDeletionLag(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	ms, err := admin.Namespaces().GetOffloadDeleteLag(*ns)
-	if err == nil {
-		t, _ := time.ParseDuration(fmt.Sprintf("%dms", ms))
-		vc.Command.Printf("The offload deletion lag of the namespace %s is %f minute(s)\n",
-			ns.String(), t.Minutes())
-	} else if ms == 0 {
-		vc.Command.Printf("The offload deletion lag of the namespace %s is not set\n", ns.String())
-		err = nil
+	if err != nil {
+		return err
 	}
 
-	return err
+	t, _ := time.ParseDuration(fmt.Sprintf("%dms", ms))
+	vc.Command.Printf("The offload deletion lag of the namespace %s is %f minute(s)\n",
+		ns.String(), t.Minutes())
+
+	return nil
 }
