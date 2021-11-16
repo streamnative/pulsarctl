@@ -65,7 +65,7 @@ func createTenantCmd(vc *cmdutils.VerbCmd) {
 			&tenantData.AdminRoles,
 			"admin-roles",
 			"r",
-			[]string{""},
+			[]string{},
 			"Allowed admins to access the tenant")
 		set.StringSliceVarP(
 			&tenantData.AllowedClusters,
