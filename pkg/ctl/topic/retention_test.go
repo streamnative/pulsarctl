@@ -32,14 +32,17 @@ import (
 func TestRetentionCmd(t *testing.T) {
 	topic := fmt.Sprintf("test-retention-topic-%s", test.RandomSuffix())
 
-	args := []string{"set-retention", topic, "--time", "12h", "--size", "100g"}
+	args := []string{"create", topic, "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"set-retention", topic, "--time", "12h", "--size", "100g"}
 	out, execErr, nameErr, cmdErr := TestTopicCommands(SetRetentionCmd, args)
 	assert.Nil(t, execErr)
 	assert.Nil(t, nameErr)
 	assert.Nil(t, cmdErr)
 	assert.NotNil(t, out)
 	assert.NotEmpty(t, out.String())
-	t.Log(fmt.Sprintf("set-retention response: %s", out.String()))
 
 	// waiting for the pulsar to be configured
 	<-time.After(5 * time.Second)
@@ -51,7 +54,6 @@ func TestRetentionCmd(t *testing.T) {
 	assert.Nil(t, cmdErr)
 	assert.NotNil(t, out)
 	assert.NotEmpty(t, out.String())
-	t.Log(fmt.Sprintf("get-retention response: %s", out.String()))
 
 	var data utils.RetentionPolicies
 	err := json.Unmarshal(out.Bytes(), &data)
@@ -66,7 +68,6 @@ func TestRetentionCmd(t *testing.T) {
 	assert.Nil(t, cmdErr)
 	assert.NotNil(t, out)
 	assert.NotEmpty(t, out.String())
-	t.Log(fmt.Sprintf("remove-retention response: %s", out.String()))
 
 	args = []string{"get-retention", topic}
 	out, execErr, nameErr, cmdErr = TestTopicCommands(GetRetentionCmd, args)
@@ -75,7 +76,6 @@ func TestRetentionCmd(t *testing.T) {
 	assert.Nil(t, cmdErr)
 	assert.NotNil(t, out)
 	assert.NotEmpty(t, out.String())
-	t.Log(fmt.Sprintf("get-retention response: %s", out.String()))
 
 	data = utils.RetentionPolicies{}
 	err = json.Unmarshal(out.Bytes(), &data)
