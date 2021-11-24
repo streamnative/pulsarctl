@@ -72,7 +72,7 @@ func GrantPermissionsCmd(vc *cmdutils.VerbCmd) {
 		set.StringVar(&role, "role", "",
 			"Client role to which grant permissions")
 		set.StringSliceVar(&actions, "actions", []string{},
-			"Actions to be granted (produce,consume,functions)")
+			"Actions to be granted (produce,consume,sources,sinks,functions,packages)")
 		cobra.MarkFlagRequired(set, "role")
 		cobra.MarkFlagRequired(set, "actions")
 	})
