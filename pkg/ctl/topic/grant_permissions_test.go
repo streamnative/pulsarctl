@@ -30,7 +30,7 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", "test-grant-permission-non-partitioned-topic"}
+	args = []string{"permissions", "test-grant-permission-non-partitioned-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -42,7 +42,7 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 
 	assert.Equal(t, map[string][]common.AuthAction{}, permissions)
 
-	args = []string{"grant-permissions",
+	args = []string{"grant-permission",
 		"--role", "grant-non-partitioned-role",
 		"--actions", "produce",
 		"test-grant-permission-non-partitioned-topic",
@@ -50,7 +50,7 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 	_, execErr, _, _ = TestTopicCommands(GrantPermissionCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", "test-grant-permission-non-partitioned-topic"}
+	args = []string{"permissions", "test-grant-permission-non-partitioned-topic"}
 	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -67,7 +67,7 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", "test-grant-permission-partitioned-topic"}
+	args = []string{"permissions", "test-grant-permission-partitioned-topic"}
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -79,7 +79,7 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 
 	assert.Equal(t, map[string][]common.AuthAction{}, permissions)
 
-	args = []string{"grant-permissions",
+	args = []string{"grant-permission",
 		"--role", "grant-partitioned-role",
 		"--actions", "consume",
 		"test-grant-permission-partitioned-topic",
@@ -87,7 +87,7 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 	_, execErr, _, _ = TestTopicCommands(GrantPermissionCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", "test-grant-permission-partitioned-topic"}
+	args = []string{"permissions", "test-grant-permission-partitioned-topic"}
 	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -100,22 +100,22 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 }
 
 func TestGrantPermissionArgError(t *testing.T) {
-	args := []string{"grant-permissions", "--role", "test-arg-error-role", "--actions", "produce"}
+	args := []string{"grant-permission", "--role", "test-arg-error-role", "--actions", "produce"}
 	_, _, nameErr, _ := TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 
-	args = []string{"grant-permissions", "args-error-topic"}
+	args = []string{"grant-permission", "args-error-topic"}
 	_, _, _, err := TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"actions\", \"role\" not set", err.Error())
 
-	args = []string{"grant-permissions", "--role", "", "--actions", "produce", "role-empty-topic"}
+	args = []string{"grant-permission", "--role", "", "--actions", "produce", "role-empty-topic"}
 	_, execErr, _, _ := TestTopicCommands(GrantPermissionCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "Invalid role name", execErr.Error())
 
-	args = []string{"grant-permissions",
+	args = []string{"grant-permission",
 		"--role", "args-error-role",
 		"--actions", "args-error-action",
 		"invalid-actions-topic",

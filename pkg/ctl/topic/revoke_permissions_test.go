@@ -40,7 +40,7 @@ func TestRevokePermissionsOnNonPartitionedTopic(t *testing.T) {
 }
 
 func testRevokePermission(t *testing.T, topic string) {
-	args := []string{"grant-permissions",
+	args := []string{"grant-permission",
 		"--role", "revoke-test-role",
 		"--actions", "produce",
 		topic,
@@ -48,7 +48,7 @@ func testRevokePermission(t *testing.T, topic string) {
 	_, execErr, _, _ := TestTopicCommands(GrantPermissionCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", topic}
+	args = []string{"permissions", topic}
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -65,7 +65,7 @@ func testRevokePermission(t *testing.T, topic string) {
 	_, execErr, _, _ = TestTopicCommands(RevokePermissions, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-permissions", topic}
+	args = []string{"permissions", topic}
 	out, execErr, _, _ = TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 

@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetPermissionsArgError(t *testing.T) {
-	args := []string{"get-permissions"}
+	args := []string{"permissions"}
 	_, _, nameErr, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())

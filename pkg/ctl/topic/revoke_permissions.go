@@ -57,7 +57,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"revoke-permissions",
+		"revoke-permission",
 		"Revoke a client role permissions on a topic",
 		desc.ToString(),
 		desc.ExampleToString(),

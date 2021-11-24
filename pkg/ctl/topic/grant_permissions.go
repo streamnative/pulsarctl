@@ -36,7 +36,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	grant := cmdutils.Example{
 		Desc:    "Grant permissions to a client on a single topic (topic-name)",
-		Command: "pulsarctl topic grant-permissions --role (role) --actions (action-1) --actions (action-2) (topic-name)",
+		Command: "pulsarctl topic grant-permission --role (role) --actions (action-1) --actions (action-2) (topic-name)",
 	}
 	examples = append(examples, grant)
 	desc.CommandExamples = examples
@@ -63,7 +63,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"grant-permissions",
+		"grant-permission",
 		"Grant permissions to a client on a topic",
 		desc.ToString(),
 		desc.ExampleToString(),
