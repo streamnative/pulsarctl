@@ -53,5 +53,5 @@ func TestGrantPermissionsArgsError(t *testing.T) {
 	_, execErr, _, _ := TestNamespaceCommands(GrantPermissionsCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "The auth action only can be specified as 'produce', "+
-		"'consume', or 'functions'. Invalid auth action 'fail'", execErr.Error())
+		"'consume', 'sources', 'sinks', 'packages', or 'functions'. Invalid auth action 'fail'", execErr.Error())
 }
