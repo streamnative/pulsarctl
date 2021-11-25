@@ -36,7 +36,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	revoke := cmdutils.Example{
 		Desc:    "Revoke permissions of a topic (topic-name)",
-		Command: "pulsarctl topic revoke-permissions --role (role) (topic-name)",
+		Command: "pulsarctl topic revoke-permission --role (role) (topic-name)",
 	}
 	examples = append(examples, revoke)
 	desc.CommandExamples = examples

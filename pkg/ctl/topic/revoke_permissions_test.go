@@ -61,7 +61,7 @@ func testRevokePermission(t *testing.T, topic string) {
 	assert.Equal(t, 1, len(permissions["revoke-test-role"]))
 	assert.Equal(t, "produce", permissions["revoke-test-role"][0].String())
 
-	args = []string{"revoke-permissions", "--role", "revoke-test-role", topic}
+	args = []string{"revoke-permission", "--role", "revoke-test-role", topic}
 	_, execErr, _, _ = TestTopicCommands(RevokePermissions, args)
 	assert.Nil(t, execErr)
 
@@ -79,17 +79,17 @@ func testRevokePermission(t *testing.T, topic string) {
 }
 
 func TestRevokePermissionsArgError(t *testing.T) {
-	args := []string{"revoke-permissions", "--role", "args-error-role"}
+	args := []string{"revoke-permission", "--role", "args-error-role"}
 	_, _, nameErr, _ := TestTopicCommands(RevokePermissions, args)
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 
-	args = []string{"revoke-permissions", "--role", "", "empty-role-topic"}
+	args = []string{"revoke-permission", "--role", "", "empty-role-topic"}
 	_, execErr, _, _ := TestTopicCommands(RevokePermissions, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "Invalid role name", execErr.Error())
 
-	args = []string{"revoke-permissions", "not-specified-role-topic"}
+	args = []string{"revoke-permission", "not-specified-role-topic"}
 	_, _, _, err := TestTopicCommands(RevokePermissions, args)
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
