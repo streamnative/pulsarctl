@@ -23,6 +23,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
@@ -49,15 +50,25 @@ func TestInactiveTopicCmd(t *testing.T) {
 	<-time.After(5 * time.Second)
 
 	getArgs := []string{"get-inactive-topic-policies", topicName}
-	out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, getArgs)
-	assert.Nil(t, execErr)
-
 	var inactiveTopic utils.InactiveTopicPolicies
-	err := json.Unmarshal(out.Bytes(), &inactiveTopic)
-	assert.NoError(t, err)
-	assert.Equal(t, true, inactiveTopic.DeleteWhileInactive)
-	assert.Equal(t, 3600, inactiveTopic.MaxInactiveDurationSeconds)
-	assert.Equal(t, "delete_when_no_subscriptions", inactiveTopic.InactiveTopicDeleteMode.String())
+	task := func(args []string, obj interface{}) bool {
+		out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, args)
+		if execErr != nil {
+			return false
+		}
+		err := json.Unmarshal(out.Bytes(), &inactiveTopic)
+		if err != nil {
+			return false
+		}
+
+		return inactiveTopic.DeleteWhileInactive &&
+			inactiveTopic.MaxInactiveDurationSeconds == 3600 &&
+			inactiveTopic.InactiveTopicDeleteMode.String() == "delete_when_no_subscriptions"
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	removeArgs := []string{"remove-inactive-topic-policies", topicName}
 	out, execErr, _, _ = TestTopicCommands(RemoveInactiveTopicCmd, removeArgs)

@@ -18,10 +18,12 @@
 package topic
 
 import (
+	"bytes"
 	"encoding/json"
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -40,18 +42,30 @@ func TestDispatchRate(t *testing.T) {
 
 	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-dispatch-rate", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, getArgs)
-	var dispatchRateData utils.DispatchRateData
-	err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
+
+	task := func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, args)
+		if execErr != nil {
+			return false
+		}
+		var dispatchRateData utils.DispatchRateData
+		err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
+		if err != nil {
+			return false
+		}
+
+		return dispatchRateData.DispatchThrottlingRateInMsg == 5 &&
+			dispatchRateData.DispatchThrottlingRateInByte == 4 &&
+			dispatchRateData.RatePeriodInSecond == 3 &&
+			dispatchRateData.RelativeToPublishRate
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInMsg, int64(5))
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInByte, int64(4))
-	assert.Equal(t, dispatchRateData.RatePeriodInSecond, int64(3))
-	assert.Equal(t, dispatchRateData.RelativeToPublishRate, true)
 
+	var dispatchRateData utils.DispatchRateData
+	var getOut *bytes.Buffer
 	setArgs = []string{"remove-dispatch-rate", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemoveDispatchRateCmd, setArgs)
 	assert.Nil(t, execErr)
