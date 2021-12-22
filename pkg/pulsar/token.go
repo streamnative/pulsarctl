@@ -23,7 +23,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/pkg/errors"
 )
 
