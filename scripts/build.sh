@@ -45,7 +45,7 @@ build() {
 function build_doc() {
   echo ${version} > VERSION
   make cli
-  mv pulsarctl-site-${version}.tar.gz ${ASSETSDIR}
+  mv pulsarctl-site-${version}.tar.gz ${ASSETS_DIR}
 }
 
 build amd64 linux
