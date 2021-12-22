@@ -4,13 +4,13 @@ go 1.13
 
 require (
 	github.com/99designs/keyring v1.1.6
-	github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211108044248-fe3b7c4e445b
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.4.3
 	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/imdario/mergo v0.3.8
