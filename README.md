@@ -65,6 +65,16 @@ To install `pulsarctl` on the Windows operation system, follow these steps:
 2. Add the `pulsarctl` directory to your system PATH.
 3. Type `pulsarctl -h` at CMD to verify that `pulsarctl` is work.
 
+### As project dependency
+
+Use `go get` to install `pulsarctl` as dependency on your project:
+
+```shell
+go get github.com/streamnative/pulsarctl@master
+```
+
+**Note:** We will not release `v0.y.z` tags, so you need to use `master` branch code.
+
 ## Build pulsarctl from codes
 
 ### Prerequisite
