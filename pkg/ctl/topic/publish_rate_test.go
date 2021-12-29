@@ -51,11 +51,11 @@ func TestPublishRate(t *testing.T) {
 			return false
 		}
 
-		prd :=  obj.(*utils.PublishRateData)
+		prd := obj.(*utils.PublishRateData)
 		return prd.PublishThrottlingRateInMsg == 5 &&
 			prd.PublishThrottlingRateInByte == 4
 	}
-	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, &publishRateData)
+	err := cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -78,11 +78,11 @@ func TestPublishRate(t *testing.T) {
 			return false
 		}
 
-		prd :=  obj.(*utils.PublishRateData)
+		prd := obj.(*utils.PublishRateData)
 		return prd.PublishThrottlingRateInMsg == 0 &&
 			prd.PublishThrottlingRateInByte == 0
 	}
-	err = cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, &publishRateData)
+	err = cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
 	if err != nil {
 		t.Fatal(err)
 	}
