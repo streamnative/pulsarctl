@@ -21,6 +21,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,22 +36,37 @@ func TestMaxProducers(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set max number of producers successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-max-producers", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
+	task := func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		return getOut.String() == "20"
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	setArgs = []string{"remove-max-producers", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemoveMaxProducersCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove max number of producers successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-max-producers", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetMaxProducersCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "0")
+	task = func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		return getOut.String() == "20"
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// test negative value
 	setArgs = []string{"set-max-producers", topicName, "-p", "-2"}

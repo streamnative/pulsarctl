@@ -23,6 +23,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/test"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -44,22 +45,24 @@ func TestRetentionCmd(t *testing.T) {
 	assert.NotNil(t, out)
 	assert.NotEmpty(t, out.String())
 
-	// waiting for the pulsar to be configured
-	<-time.After(5 * time.Second)
-
 	args = []string{"get-retention", topic}
-	out, execErr, nameErr, cmdErr = TestTopicCommands(GetRetentionCmd, args)
-	assert.Nil(t, execErr)
-	assert.Nil(t, nameErr)
-	assert.Nil(t, cmdErr)
-	assert.NotNil(t, out)
-	assert.NotEmpty(t, out.String())
-
 	var data utils.RetentionPolicies
-	err := json.Unmarshal(out.Bytes(), &data)
-	assert.Nil(t, err)
-	assert.Equal(t, 720, data.RetentionTimeInMinutes)
-	assert.Equal(t, int64(102400), data.RetentionSizeInMB)
+	task := func(args []string, obj interface{}) bool {
+		out, execErr, _, _= TestTopicCommands(GetRetentionCmd, args)
+		if execErr != nil {
+			return false
+		}
+		err := json.Unmarshal(out.Bytes(), obj)
+		if err != nil {
+			return false
+		}
+		d := obj.(*utils.RetentionPolicies)
+		return d.RetentionTimeInMinutes == 720 && d.RetentionSizeInMB == int64(102400)
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, args, &data)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	args = []string{"remove-retention", topic}
 	out, execErr, nameErr, cmdErr = TestTopicCommands(RemoveRetentionCmd, args)

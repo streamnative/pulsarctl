@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -39,35 +40,52 @@ func TestPersistence(t *testing.T) {
 
 	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-persistence", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetPersistenceCmd, getArgs)
 	var persistenceData utils.PersistenceData
-	err := json.Unmarshal(getOut.Bytes(), &persistenceData)
+
+	task := func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetPersistenceCmd, args)
+		if execErr != nil {
+			return false
+		}
+		err := json.Unmarshal(getOut.Bytes(), &persistenceData)
+		if err != nil {
+			return false
+		}
+		p := obj.(*utils.PersistenceData)
+		return p.BookkeeperEnsemble == int64(5) &&
+			p.BookkeeperWriteQuorum == int64(4) &&
+			p.BookkeeperAckQuorum == int64(3) &&
+			p.ManagedLedgerMaxMarkDeleteRate == float64(2.2)
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &persistenceData)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, persistenceData.BookkeeperEnsemble, int64(5))
-	assert.Equal(t, persistenceData.BookkeeperWriteQuorum, int64(4))
-	assert.Equal(t, persistenceData.BookkeeperAckQuorum, int64(3))
-	assert.Equal(t, persistenceData.ManagedLedgerMaxMarkDeleteRate, float64(2.2))
 
 	setArgs = []string{"remove-persistence", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemovePersistenceCmd, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove persistence successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-persistence", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetPersistenceCmd, getArgs)
-	err = json.Unmarshal(getOut.Bytes(), &persistenceData)
+	task = func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetPersistenceCmd, args)
+		if execErr != nil {
+			return false
+		}
+		err := json.Unmarshal(getOut.Bytes(), &persistenceData)
+		if err != nil {
+			return false
+		}
+		p := obj.(*utils.PersistenceData)
+		return p.BookkeeperEnsemble == int64(0) &&
+			p.BookkeeperWriteQuorum == int64(0) &&
+			p.BookkeeperAckQuorum == int64(0) &&
+			p.ManagedLedgerMaxMarkDeleteRate == float64(0)
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &persistenceData)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, persistenceData.BookkeeperEnsemble, int64(0))
-	assert.Equal(t, persistenceData.BookkeeperWriteQuorum, int64(0))
-	assert.Equal(t, persistenceData.BookkeeperAckQuorum, int64(0))
-	assert.Equal(t, persistenceData.ManagedLedgerMaxMarkDeleteRate, float64(0))
 
 	// test value
 	setArgs = []string{"set-persistence", topicName, "-e", "1", "-w", "4", "-a", "3", "-r", "2.2"}

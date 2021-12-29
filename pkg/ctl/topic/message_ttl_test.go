@@ -21,6 +21,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,22 +36,37 @@ func TestMessageTTL(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set message TTL successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getTTLArgs := []string{"get-message-ttl", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
+	task := func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		return getOut.String() == "20"
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getTTLArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	setTTLArgs = []string{"remove-message-ttl", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemoveMessageTTLCmd, setTTLArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Remove message TTL successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getTTLArgs = []string{"get-message-ttl", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "0")
+	task = func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, args)
+		if execErr != nil {
+			return false
+		}
+
+		return getOut.String() == "0"
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 30 * time.Second, getTTLArgs, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// test negative value
 	setTTLArgs = []string{"set-message-ttl", topicName, "-t", "-2"}
