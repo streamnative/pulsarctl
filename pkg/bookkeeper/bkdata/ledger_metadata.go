@@ -18,8 +18,9 @@
 package bkdata
 
 type BookieSocketAddress struct {
-	Port     int    `json:"port"`
-	HostName string `json:"hostname"`
+	Port     int    `json:"port,omitempty"`
+	HostName string `json:"hostname,omitempty"`
+	ID       string `json:"id,omitempty"`
 }
 
 type LedgerMetadata struct {
