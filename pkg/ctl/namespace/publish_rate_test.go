@@ -35,13 +35,19 @@ func TestPublishRateCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	args = []string{"get-publish-rate", ns}
-	_, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
-	// unset will return 404
-	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "404")
+	out, execErr, _, _ := TestNamespaceCommands(GetPublishRateCmd, args)
+	assert.Nil(t, execErr)
+	var rate utils.PublishRate
+
+	err := json.Unmarshal(out.Bytes(), &rate)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, 0, rate.PublishThrottlingRateInMsg)
+	assert.Equal(t, int64(0), rate.PublishThrottlingRateInByte)
 
 	args = []string{"set-publish-rate", ns}
-	out, execErr, _, _ := TestNamespaceCommands(SetPublishRateCmd, args)
+	out, execErr, _, _ = TestNamespaceCommands(SetPublishRateCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
 		fmt.Sprintf("Success set the default message publish rate "+
@@ -56,9 +62,8 @@ func TestPublishRateCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
 	assert.Nil(t, execErr)
 
-	var rate utils.PublishRate
 
-	err := json.Unmarshal(out.Bytes(), &rate)
+	err = json.Unmarshal(out.Bytes(), &rate)
 	if err != nil {
 		t.Fatal(err)
 	}
