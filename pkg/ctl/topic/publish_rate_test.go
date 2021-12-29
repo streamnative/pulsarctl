@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -37,17 +38,27 @@ func TestPublishRate(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set message publish rate successfully for ["+topicName+"]\n")
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-publish-rate", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetPublishRateCmd, getArgs)
 	var publishRateData utils.PublishRateData
-	err := json.Unmarshal(getOut.Bytes(), &publishRateData)
+	task := func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetPublishRateCmd, getArgs)
+		if execErr != nil {
+			return false
+		}
+
+		err := json.Unmarshal(getOut.Bytes(), obj)
+		if err != nil {
+			return false
+		}
+
+		prd := obj.(*utils.PublishRateData)
+		return prd.PublishThrottlingRateInMsg == 5 &&
+			prd.PublishThrottlingRateInByte == 4
+	}
+	err := cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, publishRateData.PublishThrottlingRateInMsg, int64(5))
-	assert.Equal(t, publishRateData.PublishThrottlingRateInByte, int64(4))
 
 	setArgs = []string{"remove-publish-rate", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemovePublishRateCmd, setArgs)
@@ -56,12 +67,23 @@ func TestPublishRate(t *testing.T) {
 
 	time.Sleep(time.Duration(1) * time.Second)
 	getArgs = []string{"get-publish-rate", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetPublishRateCmd, getArgs)
-	err = json.Unmarshal(getOut.Bytes(), &publishRateData)
+	task = func(args []string, obj interface{}) bool {
+		getOut, execErr, _, _ := TestTopicCommands(GetPublishRateCmd, getArgs)
+		if execErr != nil {
+			return false
+		}
+
+		err := json.Unmarshal(getOut.Bytes(), obj)
+		if err != nil {
+			return false
+		}
+
+		prd := obj.(*utils.PublishRateData)
+		return prd.PublishThrottlingRateInMsg == 0 &&
+			prd.PublishThrottlingRateInByte == 0
+	}
+	err = cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, publishRateData.PublishThrottlingRateInMsg, int64(0))
-	assert.Equal(t, publishRateData.PublishThrottlingRateInByte, int64(0))
 }
