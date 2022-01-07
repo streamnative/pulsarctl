@@ -30,6 +30,8 @@ import (
 )
 
 func TestRetentionCmd(t *testing.T) {
+	t.Skipf("Refactoring with gomega")
+
 	topic := fmt.Sprintf("test-retention-topic-%s", test.RandomSuffix())
 
 	args := []string{"create", topic, "0"}

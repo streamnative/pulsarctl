@@ -28,6 +28,8 @@ import (
 )
 
 func TestPublishRate(t *testing.T) {
+	t.Skipf("Refactoring with gomega")
+
 	topicName := "persistent://public/default/test-publish-rate-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)

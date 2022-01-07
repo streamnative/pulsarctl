@@ -86,6 +86,8 @@ func TestDeleteNonExistingSub(t *testing.T) {
 }
 
 func TestDeleteNonExistingTopicSub(t *testing.T) {
+	t.Skipf("Need fix https://github.com/apache/pulsar/issues/13211")
+
 	args := []string{"delete", "non-existing-topic", "non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(DeleteCmd, args)
 	assert.NotNil(t, execErr)
