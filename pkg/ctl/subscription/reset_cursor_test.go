@@ -56,6 +56,8 @@ func TestResetCursorFlagError(t *testing.T) {
 }
 
 func TestResetCursorNonExistingTopic(t *testing.T) {
+	t.Skipf("Need fix https://github.com/apache/pulsar/issues/13211")
+
 	args := []string{"seek", "--time", "1m", "test-reset-cursor-non-existing-topic",
 		"test-reset-cursor-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)

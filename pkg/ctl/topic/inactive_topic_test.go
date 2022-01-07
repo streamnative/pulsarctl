@@ -29,6 +29,8 @@ import (
 )
 
 func TestInactiveTopicCmd(t *testing.T) {
+	t.Skipf("Refactoring with gomega")
+
 	topicName := fmt.Sprintf("persistent://public/default/test-inactive-topic-%s",
 		test.RandomSuffix())
 	createArgs := []string{"create", topicName, "1"}

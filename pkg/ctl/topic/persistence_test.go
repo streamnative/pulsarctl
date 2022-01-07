@@ -27,6 +27,8 @@ import (
 )
 
 func TestPersistence(t *testing.T) {
+	t.Skipf("Refactoring with gomega")
+
 	topicName := "persistent://public/default/test-persistence-topic-10"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)

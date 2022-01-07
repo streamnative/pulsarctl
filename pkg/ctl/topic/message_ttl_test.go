@@ -25,6 +25,8 @@ import (
 )
 
 func TestMessageTTL(t *testing.T) {
+	t.Skipf("Refactoring with gomega")
+
 	topicName := "persistent://public/default/test-message-ttl-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
