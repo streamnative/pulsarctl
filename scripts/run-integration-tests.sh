@@ -3,9 +3,18 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="2.9.1.2"
-readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
+PULSAR_DEFAULT_VERSION="2.9.1.2"
 
+if [ "$PULSAR_MATRIX_VERSION" ] && [ "$PULSAR_MATRIX_VERSION" != "default" ];then
+  if [ "$PULSAR_MATRIX_VERSION" == "$PULSAR_DEFAULT_VERSION" ]; then
+    echo "The current integration test is the same as ut-test(default), exit 0"
+    exit 0
+  fi
+  PULSAR_DEFAULT_VERSION="$PULSAR_MATRIX_VERSION"
+fi
+
+readonly PULSAR_DEFAULT_VERSION
+readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
              -t ${IMAGE_NAME} \
              -f ${PROJECT_ROOT}/scripts/test-docker/Dockerfile ${PROJECT_ROOT}

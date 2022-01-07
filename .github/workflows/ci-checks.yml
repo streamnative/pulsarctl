@@ -9,8 +9,14 @@ on:
       - 'CONTRIBUTING.md'
 jobs:
   ut-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        pulsar: [ default, 2.8.2.2, 2.9.1.2 ]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run tests
-      run: scripts/run-integration-tests.sh
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+          export PULSAR_MATRIX_VERSION=${{ matrix.pulsar }}
+          scripts/run-integration-tests.sh
