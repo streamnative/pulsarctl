@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/streamnative/pulsarctl/pkg/test/bookkeeper/containers"
@@ -31,7 +32,7 @@ import (
 
 var (
 	LatestImage      = "apache/bookkeeper:latest"
-	BookKeeper4_10_0 = "apache/bookkeeper:4.10.0"
+	BookKeeper4_10_0 = "apache/bookkeeper:4.14.3"
 )
 
 type ClusterDef struct {
@@ -99,7 +100,15 @@ func (c *ClusterDef) Start(ctx context.Context) error {
 	fmt.Println("BookKeeper metadata initialized successfully.")
 
 	for k, v := range c.bookieContainers {
-		err = v.Start(ctx)
+		retry := 0 // starting bk container sometimes fails.
+		for retry <= 5 {
+			err = v.Start(ctx)
+			if err == nil {
+				break
+			}
+			retry++
+			fmt.Printf("Retry start the %s at %s: %s\n", k, time.Now(), err)
+		}
 		if err != nil {
 			return errors.WithMessagef(err, "encountering errors when starting the bookie %s\n", k)
 		}
@@ -152,4 +161,12 @@ func (c *ClusterDef) GetAllBookieContainerID() []string {
 		containerIDs = append(containerIDs, v.GetContainerID())
 	}
 	return containerIDs
+}
+
+func (c *ClusterDef) ContainerIP(ctx context.Context) (string, error) {
+	return c.getABookie().ContainerIP(ctx)
+}
+
+func (c *ClusterDef) GetBookieServicePortPort() int {
+	return c.clusterSpec.BookieServicePort
 }

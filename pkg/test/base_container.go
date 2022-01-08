@@ -20,7 +20,9 @@ package test
 import (
 	"context"
 
+	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
+	"github.com/pkg/errors"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -140,4 +142,27 @@ func (bc *BaseContainer) GetContainerID() string {
 // MappedPort gets the outside port.
 func (bc *BaseContainer) MappedPort(ctx context.Context, port string) (nat.Port, error) {
 	return bc.container.MappedPort(ctx, nat.Port(port))
+}
+
+func (bc *BaseContainer) ContainerIP(ctx context.Context) (string, error) {
+	c, err := client.NewClientWithOpts()
+	if err != nil {
+		return "", err
+	}
+
+	inspect, err := c.ContainerInspect(ctx, bc.container.GetContainerID())
+	if err != nil {
+		return "", err
+	}
+
+	ip := inspect.NetworkSettings.IPAddress
+	if ip != "" {
+		return ip, nil
+	}
+
+	for _, settings := range inspect.NetworkSettings.Networks {
+		return settings.IPAddress, nil
+	}
+
+	return "", errors.New("cannot get container ip address")
 }

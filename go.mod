@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/99designs/keyring v1.2.1
 	github.com/apache/pulsar-client-go v0.9.0
+	github.com/docker/docker v0.7.3-0.20190506211059-b20a14b54661
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
 	github.com/ghodss/yaml v1.0.0
@@ -34,7 +35,6 @@ require (
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.7.1-0.20190205005809-0d3efadf0154+incompatible // indirect
-	github.com/docker/docker v0.7.3-0.20190506211059-b20a14b54661 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect

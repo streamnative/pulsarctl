@@ -19,6 +19,7 @@ package autorecovery
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/test/bookkeeper"
@@ -49,13 +50,21 @@ func TestWhoIsAuditor(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	allBK := bk.GetAllBookieContainerID()
+	bkIP, err := bk.ContainerIP(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bkPort := bk.GetBookieServicePortPort()
+	if err != nil {
+		t.Fatal(err)
+	}
+	auditor := fmt.Sprintf("%s:%d", bkIP, bkPort)
 
 	httpAddr, err := bk.GetHTTPServiceURL(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	args := []string{"--bookie-service-url", httpAddr, "who-is-auditor"}
 	out, execErr, nameErr, err := testAutoRecoveryCommands(whoIsAuditorCmd, args)
 	if err != nil {
@@ -68,5 +77,5 @@ func TestWhoIsAuditor(t *testing.T) {
 		t.Fatal(execErr)
 	}
 
-	assert.Contains(t, out.String(), allBK[0][:12])
+	assert.Contains(t, out.String(), auditor)
 }
