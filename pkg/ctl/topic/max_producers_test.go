@@ -19,44 +19,57 @@ package topic
 
 import (
 	"testing"
-	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 )
 
 func TestMaxProducers(t *testing.T) {
-	t.Skipf("Refactoring with gomega")
+	g := gomega.NewWithT(t)
 
 	topicName := "persistent://public/default/test-max-producers-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
-	assert.Nil(t, execErr)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setArgs := []string{"set-max-producers", topicName, "-p", "20"}
-	setOut, execErr, _, _ := TestTopicCommands(SetMaxProducersCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set max number of producers successfully for ["+topicName+"]\n")
+	g.Eventually(func(g gomega.Gomega) {
+		setOut, execErr, _, _ := TestTopicCommands(SetMaxProducersCmd, setArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(setOut).ShouldNot(gomega.BeNil())
+		g.Expect(setOut).Should(gomega.Equal("Set max number of producers successfully for [" + topicName + "]\n"))
+	}).Should(gomega.Succeed())
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-max-producers", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut).ShouldNot(gomega.BeNil())
+		g.Expect(getOut.String()).Should(gomega.Equal("20"))
+	}).Should(gomega.Succeed())
 
-	setArgs = []string{"remove-max-producers", topicName}
-	setOut, execErr, _, _ = TestTopicCommands(RemoveMaxProducersCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Remove max number of producers successfully for ["+topicName+"]\n")
+	removeArgs := []string{"remove-max-producers", topicName}
+	g.Eventually(func(g gomega.Gomega) {
+		setOut, execErr, _, _ := TestTopicCommands(RemoveMaxProducersCmd, removeArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(setOut).ShouldNot(gomega.BeNil())
+		g.Expect(setOut.String()).Should(
+			gomega.Equal("Remove max number of producers successfully for [" + topicName + "]\n"))
+	}).Should(gomega.Succeed())
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs = []string{"get-max-producers", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetMaxProducersCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "0")
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(RemoveMaxProducersCmd, removeArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut).ShouldNot(gomega.BeNil())
+		g.Expect(getOut.String()).Should(
+			gomega.Equal("0"))
+	}).Should(gomega.Succeed())
 
 	// test negative value
 	setArgs = []string{"set-max-producers", topicName, "-p", "-2"}
-	_, execErr, _, _ = TestTopicCommands(SetMaxProducersCmd, setArgs)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: maxProducers must be 0 or more")
+	g.Eventually(func(g gomega.Gomega) {
+		_, execErr, _, _ = TestTopicCommands(SetMaxProducersCmd, setArgs)
+		g.Expect(execErr).ShouldNot(gomega.BeNil())
+		g.Expect(execErr.Error()).ShouldNot(gomega.Equal("code: 412 reason: maxProducers must be 0 or more"))
+	}).Should(gomega.Succeed())
 }

@@ -7,6 +7,9 @@ RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd6
 		| tar -C /usr/local -xz
 ENV PATH /usr/local/go/bin:$PATH
 
+# gomega config
+ENV GOMEGA_DEFAULT_EVENTUALLY_TIMEOUT 10s
+
 # copy the code into image
 COPY . /pulsarctl
 

@@ -19,44 +19,53 @@ package topic
 
 import (
 	"testing"
-	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
+	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
 func TestMaxUnackMessagesPerConsumer(t *testing.T) {
-	t.Skipf("Refactoring with gomega")
+	g := gomega.NewWithT(t)
 
-	topicName := "persistent://public/default/test-max-unacked-messages-per-consumer-topic"
+	topicName := "persistent://public/default/test-max-unacked-messages-per-consumer-topic" + test.RandomSuffix()
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
-	assert.Nil(t, execErr)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setArgs := []string{"set-max-unacked-messages-per-consumer", topicName, "-m", "20"}
-	setOut, execErr, _, _ := TestTopicCommands(SetMaxUnackMessagesPerConsumerCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set max unacked messages per consumer successfully for ["+topicName+"]\n")
+	g.Eventually(func(g gomega.Gomega) {
+		setOut, execErr, _, _ := TestTopicCommands(SetMaxUnackMessagesPerConsumerCmd, setArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(setOut.String()).Should(
+			gomega.Equal("Set max unacked messages per consumer successfully for [" + topicName + "]\n"))
+	}).Should(gomega.Succeed())
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-max-unacked-messages-per-consumer", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
+	g.Expect(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut.String()).Should(gomega.Equal("20"))
+	}).Should(gomega.Succeed())
 
-	setArgs = []string{"remove-max-unacked-messages-per-consumer", topicName}
-	setOut, execErr, _, _ = TestTopicCommands(RemoveMaxUnackMessagesPerConsumerCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Remove max unacked messages per consumer successfully for ["+topicName+"]\n")
+	removeArgs := []string{"remove-max-unacked-messages-per-consumer", topicName}
+	g.Expect(func(g gomega.Gomega) {
+		setOut, execErr, _, _ := TestTopicCommands(RemoveMaxUnackMessagesPerConsumerCmd, removeArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(setOut.String()).Should(
+			gomega.Equal("Remove max unacked messages per consumer successfully for [" + topicName + "]\n"))
+	}).Should(gomega.Succeed())
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-max-unacked-messages-per-consumer", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "0")
+	g.Expect(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetMaxUnackMessagesPerConsumerCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut.String()).Should(gomega.Equal("0"))
+	}).Should(gomega.Succeed())
 
 	// test negative value
 	setArgs = []string{"set-max-unacked-messages-per-consumer", topicName, "-m", "-2"}
-	_, execErr, _, _ = TestTopicCommands(SetMaxUnackMessagesPerConsumerCmd, setArgs)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: maxUnackedNum must be 0 or more")
+	g.Expect(func(g gomega.Gomega) {
+		_, execErr, _, _ = TestTopicCommands(SetMaxUnackMessagesPerConsumerCmd, setArgs)
+		g.Expect(execErr).ShouldNot(gomega.BeNil())
+		g.Expect(execErr.Error()).Should(gomega.Equal("code: 412 reason: maxUnackedNum must be 0 or more"))
+	}).Should(gomega.Succeed())
 }

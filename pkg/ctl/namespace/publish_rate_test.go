@@ -22,13 +22,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/onsi/gomega"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPublishRateCmd(t *testing.T) {
-	t.Skipf("The need to keep the same behavior in 2.8.0.13 and 2.8.2.2")
+	g := gomega.NewWithT(t)
 
 	ns := "public/test-publish-rate-ns" + test.RandomSuffix()
 
@@ -36,74 +37,52 @@ func TestPublishRateCmd(t *testing.T) {
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"get-publish-rate", ns}
-	_, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
-	// unset will return 404
-	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "404")
-
-	args = []string{"set-publish-rate", ns}
-	out, execErr, _, _ := TestNamespaceCommands(SetPublishRateCmd, args)
-	assert.Nil(t, execErr)
-	assert.Equal(t,
-		fmt.Sprintf("Success set the default message publish rate "+
-			"of the namespace %s to %+v\n", ns,
-			utils.PublishRate{
-				PublishThrottlingRateInMsg:  -1,
-				PublishThrottlingRateInByte: -1,
-			}),
-		out.String())
-
-	args = []string{"get-publish-rate", ns}
-	out, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
-	assert.Nil(t, execErr)
-
-	var rate utils.PublishRate
-
-	err := json.Unmarshal(out.Bytes(), &rate)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Equal(t, -1, rate.PublishThrottlingRateInMsg)
-	assert.Equal(t, int64(-1), rate.PublishThrottlingRateInByte)
-
 	args = []string{"set-publish-rate", "--msg-rate", "10", "--byte-rate", "10", ns}
-	out, execErr, _, _ = TestNamespaceCommands(SetPublishRateCmd, args)
-	assert.Nil(t, execErr)
-	assert.Equal(t,
-		fmt.Sprintf("Success set the default message publish rate "+
+	g.Eventually(func(g gomega.Gomega) {
+		out, execErr, _, _ := TestNamespaceCommands(SetPublishRateCmd, args)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(out).ShouldNot(gomega.BeNil())
+		g.Expect(out.String()).Should(gomega.Equal(fmt.Sprintf("Success set the default message publish rate "+
 			"of the namespace %s to %+v\n", ns,
 			utils.PublishRate{
 				PublishThrottlingRateInMsg:  10,
 				PublishThrottlingRateInByte: 10,
-			}),
-		out.String())
+			})))
+	}).Should(gomega.Succeed())
 
 	args = []string{"get-publish-rate", ns}
-	out, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
-	assert.Nil(t, execErr)
-	err = json.Unmarshal(out.Bytes(), &rate)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Equal(t, 10, rate.PublishThrottlingRateInMsg)
-	assert.Equal(t, int64(10), rate.PublishThrottlingRateInByte)
+	g.Eventually(func(g gomega.Gomega) {
+		out, execErr, _, _ := TestNamespaceCommands(GetPublishRateCmd, args)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(out).ShouldNot(gomega.BeNil())
+
+		var rate utils.PublishRate
+		err := json.Unmarshal(out.Bytes(), &rate)
+		g.Expect(err).Should(gomega.BeNil())
+
+		g.Expect(rate.PublishThrottlingRateInMsg).Should(gomega.Equal(10))
+		g.Expect(rate.PublishThrottlingRateInByte).Should(gomega.Equal(int64(10)))
+	}).Should(gomega.Succeed())
 }
 
 func TestSetPublishRateOnNonExistingNs(t *testing.T) {
+	g := gomega.NewWithT(t)
+
 	ns := "public/non-existing-ns"
 
 	args := []string{"set-publish-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetPublishRateCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "404")
+	g.Expect(execErr).ShouldNot(gomega.BeNil())
+	g.Expect(execErr.Error()).Should(gomega.ContainSubstring("404"))
 }
 
 func TestGetPublishRateOnNonExistingNs(t *testing.T) {
+	g := gomega.NewWithT(t)
+
 	ns := "public/non-existing-ns"
 
 	args := []string{"get-publish-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetPublishRateCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	g.Expect(execErr).ShouldNot(gomega.BeNil())
+	g.Expect(execErr.Error()).Should(gomega.Equal("code: 404 reason: Namespace does not exist"))
 }
