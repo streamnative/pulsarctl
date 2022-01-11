@@ -39,7 +39,7 @@ func TestPolicesCommand(t *testing.T) {
 	err = json.Unmarshal(out.Bytes(), &police)
 	assert.Nil(t, err)
 
-	assert.Equal(t, police.DeduplicationEnabled, false)
+	assert.Nil(t, police.DeduplicationEnabled)
 	assert.Equal(t, police.Deleted, false)
 	for key, value := range police.ClusterSubscribeRate {
 		exceptedValue := utils.SubscribeRate{
