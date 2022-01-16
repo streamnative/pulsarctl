@@ -3,7 +3,7 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="2.9.1.2"
+readonly PULSAR_DEFAULT_VERSION="2.9.1.3"
 readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 readonly GOMEGA_DEFAULT_EVENTUALLY_TIMEOUT="10s"
 
