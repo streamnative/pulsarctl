@@ -54,6 +54,8 @@ func TestCompactArgError(t *testing.T) {
 }
 
 func TestCompactNonExistingTopic(t *testing.T) {
+	t.Skipf("Need fix https://github.com/apache/pulsar/issues/13211")
+
 	args := []string{"compact", "test-compact-non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(CompactCmd, args)
 	assert.NotNil(t, execErr)
