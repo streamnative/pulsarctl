@@ -12,22 +12,22 @@ on:
 jobs:
   release-check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.13', '1.14', '1.15', '1.16', '1.17' ]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v2
         with:
-          go-version: 1.13
-        id: go
-
+          go-version: ${{ matrix.go }}
+      - uses: goreleaser/goreleaser-action@v2
+        with:
+          distribution: goreleaser
+          version: 1.4.1
+          install-only: true
       - name: build
         run: |
-          version=`cat VERSION`
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pulsarctl-amd64-linux -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o pulsarctl-386-linux -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o pulsarctl-amd64-darwin -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o pulsarctl-386-darwin -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o  pulsarctl-amd64-windows.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
-          CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o  pulsarctl-386-windows.exe -ldflags "-X github.com/streamnative/pulsarctl/pkg/pulsar.ReleaseVersion=Pulsarctl-Go-$version" .
+          make goreleaser-release-snapshot
       - name: build-site
-        run: |
-          make cli
+        run: make build-site

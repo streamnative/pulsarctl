@@ -11,36 +11,18 @@ jobs:
   function-tests:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-    - name: Function tests
-      run: scripts/run-integration-tests.sh function
+      - uses: actions/checkout@v2
+      - name: Function tests
+        run: scripts/run-integration-tests.sh function
   sink-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.13
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.13
-        id: go
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: Sink tests
         run: scripts/run-integration-tests.sh sink
   source-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.13
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.13
-        id: go
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: Source tests
         run: scripts/run-integration-tests.sh source

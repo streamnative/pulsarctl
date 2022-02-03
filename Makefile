@@ -1,33 +1,32 @@
 MINOR_VERSION=1
 VERSION=$(shell cat VERSION)
+export GO_VERSION=$(shell go version | awk '{print $$3}')
 
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.ReleaseVersion=$(shell git describe --tags --always)"
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.BuildTS=$(shell date -u '+%Y-%m-%d %H:%M:%S')"
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.GitHash=$(shell git rev-parse HEAD)"
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.GitBranch=$(shell git rev-parse --abbrev-ref HEAD)"
-LDFLAGS += -X "github.com/streamnative/pulsarctl/pkg/cmdutils.GoVersion=$(shell go version)"
+clean-site:
+	rm -rf site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz
+	rm -rf site/gen-pulsarctldocs/generators/includes
+	rm -rf site/gen-pulsarctldocs/generators/build
+	rm -rf site/gen-pulsarctldocs/generators/manifest.json
 
-GO := GO111MODULE=on go
-GOBUILD := $(GO) build
-
-# Build pulsarctl binary & docs
-
-cleancli:
-	rm -f main
-	rm -rf $(shell pwd)/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz
-	rm -rf $(shell pwd)/site/gen-pulsarctldocs/generators/includes
-	rm -rf $(shell pwd)/site/gen-pulsarctldocs/generators/build
-	rm -rf $(shell pwd)/site/gen-pulsarctldocs/generators/manifest.json
-
-cli: cleancli
-	export GO111MODULE=on 
+build-site: clean-site
 	go run site/gen-pulsarctldocs/main.go --pulsar-version v1_$(MINOR_VERSION)
 	docker run -v ${PWD}/site/gen-pulsarctldocs/generators/includes:/source -v ${PWD}/site/gen-pulsarctldocs/generators/build:/build -v ${PWD}/site/gen-pulsarctldocs/generators/:/manifest pwittrock/brodocs
-	tar -czvf ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz -C ${PWD}/site/gen-pulsarctldocs/generators/build/ .
-	mv ${PWD}/site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz ${PWD}/pulsarctl-site-${VERSION}.tar.gz
+	mkdir -p dist
+	tar -czvf site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz -C site/gen-pulsarctldocs/generators/build/ .
+	mv site/gen-pulsarctldocs/generators/pulsarctl-site-${VERSION}.tar.gz dist/pulsarctl-site-${VERSION}.tar.gz
 
-pulsarctl: 
-	$(GOBUILD) -ldflags '$(LDFLAGS)' -o bin/pulsarctl
+build:
+	CGO_ENABLED=0 go build -o bin/pulsarctl
+
+goreleaser-release-snapshot:
+	goreleaser release --rm-dist --snapshot
+
+goreleaser-release:
+	goreleaser release --rm-dist
+
+install-goreleaser:
+	go install github.com/goreleaser/goreleaser@v1.4.1
+	goreleaser --version
 
 .PHONY: install
 install:
