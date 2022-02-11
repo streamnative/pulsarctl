@@ -22,6 +22,10 @@ function checkFunctionWorker() {
 pushd ${PULSARCTL_HOME}
 # startup pulsar service
 scripts/pulsar-service-startup.sh
+
+echo "find gcc: $(which gcc)"
+# disable cgo
+export CGO_ENABLED=0
 # run tests
 case ${TEST_ARGS} in
     token)
