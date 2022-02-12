@@ -33,5 +33,5 @@ func TestDeleteDynamicConfig(t *testing.T) {
 	failArgs := []string{"delete-dynamic-config", "--config", "errorName"}
 	_, nameErr, _, _ := TestBrokersCommands(deleteDynamicConfigCmd, failArgs)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "code: 412 reason:  Can't update non-dynamic configuration", nameErr.Error())
+	assert.Equal(t, "code: 412 reason:  Cannot update non-dynamic configuration", nameErr.Error())
 }
