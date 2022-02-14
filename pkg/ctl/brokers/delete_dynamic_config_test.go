@@ -18,6 +18,7 @@
 package brokers
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,5 +34,5 @@ func TestDeleteDynamicConfig(t *testing.T) {
 	failArgs := []string{"delete-dynamic-config", "--config", "errorName"}
 	_, nameErr, _, _ := TestBrokersCommands(deleteDynamicConfigCmd, failArgs)
 	assert.NotNil(t, nameErr)
-	assert.Equal(t, "code: 412 reason:  Can't update non-dynamic configuration", nameErr.Error())
+	assert.True(t, strings.Contains(nameErr.Error(), "code: 412"))
 }
