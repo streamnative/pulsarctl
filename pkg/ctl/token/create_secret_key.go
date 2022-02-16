@@ -47,7 +47,7 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 
 	outputToFile := cmdutils.Example{
 		Desc:    "Create a secret key and save it to a file.",
-		Command: "pulsarctl token create-secret-key --output (file path)",
+		Command: "pulsarctl token create-secret-key --output-file (file path)",
 	}
 	examples = append(examples, outputToTerminal, outputWithBase64, outputToFile)
 	desc.CommandExamples = examples
