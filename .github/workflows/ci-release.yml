@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v0.0.0-*
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pulsarctl
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          path: pulsarctl
+
+      - name: Checkout streamnative/homebrew-streamnative
+        uses: actions/checkout@v2
+        with:
+          repository: streamnative/homebrew-streamnative
+          path: homebrew-streamnative
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+          id: go
+
+      - uses: goreleaser/goreleaser-action@v2
+        with:
+          distribution: goreleaser
+          version: 1.4.1
+          install-only: true
+
+      - name: Run GoReleaser
+        run: |
+          GIT_PREVIOUS_TAG=$(git tag --sort=-v:refname -l "v0.0.0-*" | head -2 | tail -1)
+          if [[ -z "$GIT_PREVIOUS_TAG" ]]; then
+            GIT_PREVIOUS_TAG=v2.9.2.2
+          fi
+          export GORELEASER_PREVIOUS_TAG=$GIT_PREVIOUS_TAG
+          export GO_VERSION=$(go version | awk '{print $3}')
+
+          goreleaser release -f .goreleaser-master.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: pulsarctl
+
+      - name: Prepare Homebrew formula
+        run: cp pulsarctl/dist/pulsarctl@master.rb homebrew-streamnative/Formula/pulsarctl@master.rb
+
+      - name: Create Homebrew PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.HOMEBREW_STREAMNATIVE_GITHUB_TOKEN }}
+          path: homebrew-streamnative
+          branch: pulsarctl/${{ github.ref_name }}
+          title: Update pulsarctl to ${{ github.ref_name }}
+          body: Automated changes by Release workflow in streamnative/pulsarctl repository.
+          delete-branch: true

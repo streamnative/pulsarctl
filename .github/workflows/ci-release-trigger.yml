@@ -1,0 +1,20 @@
+name: Release trigger
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 5' # At 00:00 on Friday
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PULSARCTL_GITHUB_TOKEN }}
+
+      - name: Push tag
+        run: |
+          TAG=v0.0.0-$(date +%Y%m%d%H%M)
+          git tag $TAG
+          git push origin $TAG
