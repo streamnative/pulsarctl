@@ -76,7 +76,7 @@ func doGetAntiAffinityGroup(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	res, err := admin.Namespaces().GetNamespaceAntiAffinityGroup(ns)
 	if err == nil {
-		vc.Command.Print(res)
+		vc.Command.Println(res)
 	}
 	return err
 }
