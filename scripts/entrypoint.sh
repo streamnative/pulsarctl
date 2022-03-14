@@ -26,43 +26,43 @@ scripts/pulsar-service-startup.sh
 case ${TEST_ARGS} in
     token)
         echo "running token tests"
-        go test -v ./pkg/auth/token.go ./pkg/auth/token_test.go
+        go test -race -v ./pkg/auth/token.go ./pkg/auth/token_test.go
         ;;
     tls)
         echo "running tls tests"
-        go test -v ./pkg/ctl/cluster -run TestTLS
+        go test -race -v ./pkg/ctl/cluster -run TestTLS
         ;;
     function)
         echo "running function tests"
         checkFunctionWorker
         cp /pulsar/examples/api-examples.jar test/functions/
         cp /pulsar/examples/python-examples/logging_function.py test/functions/
-        go test -v -test.timeout 5m $(go list ./... | grep function)
+        go test -race -v -test.timeout 5m $(go list ./... | grep function)
         ;;
     sink)
         echo "running sink tests"
         checkFunctionWorker
         mkdir -p test/sinks
         cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sinks/data-generator.nar
-        go test -v -test.timeout 5m ./pkg/ctl/sinks
+        go test -race -v -test.timeout 5m ./pkg/ctl/sinks
         ;;
     source)
         echo "running source tests"
         checkFunctionWorker
         mkdir -p test/sources
         cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/data-generator.nar
-        go test -v -test.timeout 5m ./pkg/ctl/sources
+        go test -race -v -test.timeout 10m ./pkg/ctl/sources
         ;;
     packages)
         echo "running packages tests"
         checkFunctionWorker
         cp /pulsar/examples/api-examples.jar test/functions/
         cp /pulsar/examples/python-examples/logging_function.py test/functions/
-        go test -v -test.timeout 5m $(go list ./... | grep packages)
+        go test -race -v -test.timeout 10m $(go list ./... | grep packages)
         ;;
     *)
         echo "running normal unit tests"
-        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v packages | grep -v test)
+        go test -race -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v packages | grep -v test)
         ;;
 esac
 # stop pulsar service
