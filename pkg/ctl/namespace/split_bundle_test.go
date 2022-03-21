@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSplitBundle(t *testing.T) {
@@ -30,28 +30,26 @@ func TestSplitBundle(t *testing.T) {
 
 	args := []string{"create", ns}
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
-	assert.Nil(t, execErr)
+	require.Nil(t, execErr)
 
 	args = []string{"split-bundle", ns, "--bundle", "0x80000000_0xc0000000"}
 	_, execErr, _, _ = TestNamespaceCommands(splitBundle, args)
-	assert.NotNil(t, execErr)
-	errMsg := "code: 412 reason: Failed to find ownership for ServiceUnit:" + ns + "/0x80000000_0xc0000000"
-	assert.Equal(t, execErr.Error(), errMsg)
+	require.Nil(t, execErr)
 
 	args = []string{"create", ns + "/test-topic", "0"}
 	_, _, argsErr, err := topic.TestTopicCommands(topic.CreateTopicCmd, args)
-	assert.Nil(t, argsErr)
-	assert.Nil(t, err)
+	require.Nil(t, argsErr)
+	require.Nil(t, err)
 
 	args = []string{"bundle-range", ns + "/test-topic"}
 	out, execErr, _, _ := topic.TestTopicCommands(topic.GetBundleRangeCmd, args)
-	assert.Nil(t, execErr)
+	require.Nil(t, execErr)
 
 	bundle := strings.Split(out.String(), ":")[2]
 	bundle = strings.TrimSpace(bundle)
 
 	args = []string{"split-bundle", ns, "--bundle", bundle}
 	splitOut, execErr, _, _ := TestNamespaceCommands(splitBundle, args)
-	assert.Nil(t, execErr)
-	assert.Equal(t, splitOut.String(), "Split a namespace bundle: "+bundle+" successfully\n")
+	require.Nil(t, execErr)
+	require.Equal(t, splitOut.String(), "Split a namespace bundle: "+bundle+" successfully\n")
 }
