@@ -1,6 +1,6 @@
 module github.com/streamnative/pulsarctl
 
-go 1.13
+go 1.18
 
 require (
 	github.com/99designs/keyring v1.1.6
@@ -36,4 +36,4 @@ require (
 
 replace github.com/apache/pulsar-client-go/oauth2 => github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211006154457-742f1b107403
 
-replace golang.org/x/sys => golang.org/x/sys v0.0.0-20201119102817-f84b799fce68
+replace golang.org/x/sys => golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
