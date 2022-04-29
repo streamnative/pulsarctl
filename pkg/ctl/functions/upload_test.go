@@ -81,13 +81,11 @@ exec $JAVA $OPTS org.apache.pulsar.admin.cli.PulsarAdminTool $PULSAR_CLIENT_CONF
 
 func TestUploadAndDownloadCommands(t *testing.T) {
 	f, err := ioutil.TempFile(".", "test")
-	defer os.RemoveAll(f.Name())
 	if err != nil {
 		log.Fatal(err)
 		t.Fail()
 		return
 	}
-
 	err = ioutil.WriteFile(f.Name(), []byte(fileContent), os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
@@ -119,7 +117,6 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		"--path", downloadFilePath,
 	}
 	out, execErr, err = TestFunctionsCommands(downloadFunctionsCmd, args)
-	defer os.RemoveAll(downloadFilePath)
 	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.True(t, strings.Contains(out.String(), "successfully"))
 
@@ -128,6 +125,8 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		log.Fatal(err)
 		t.Fail()
 	}
+	defer os.RemoveAll(f.Name())
+	defer os.RemoveAll(downloadFilePath)
 	assert.Equal(t, fileHash, downloadFileSha)
 }
 

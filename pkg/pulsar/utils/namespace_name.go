@@ -84,10 +84,7 @@ func validateNamespaceName(tenant, namespace string) error {
 const PATTEN = "^[-=:.\\w]*$"
 
 func CheckName(name string) bool {
-	patten, err := regexp.Compile(PATTEN)
-	if err != nil {
-		return false
-	}
+	patten := regexp.MustCompile(PATTEN)
 
 	return patten.MatchString(name)
 }

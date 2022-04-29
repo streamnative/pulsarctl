@@ -280,7 +280,7 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
 			"be specified for the function. Please specify one")
 	case 1:
-		//proceed
+		// proceed
 	default:
 		return errors.New("either a Java jar or a Python file or a Go executable binary needs to " +
 			"be specified for the function, cannot specify more than one")
