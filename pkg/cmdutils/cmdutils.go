@@ -77,7 +77,7 @@ func GetNameArgs(args []string, check func(args []string) error) ([]string, erro
 	if err != nil {
 		logger.Critical(err.Error())
 		CheckNameArgError(err)
-		//for testing
+		// for testing
 		return nil, err
 	}
 	return args, nil

@@ -99,7 +99,7 @@ func TestUpdateFunctionsFailure(t *testing.T) {
 	failMsg := "Function not-exist doesn't exist"
 	assert.True(t, strings.Contains(err.Error(), failMsg))
 
-	//test no change for update
+	// test no change for update
 	noChangeArgs := []string{"update",
 		"--name", fname,
 		"--output", "persistent://public/default/test-output-topic",
