@@ -110,7 +110,7 @@ func HandlePluginCommand(pluginHandler Handler, cmdArgs []string) error {
 		if strings.HasPrefix(cmdArgs[idx], "-") {
 			break
 		}
-		remainingArgs = append(remainingArgs, strings.Replace(cmdArgs[idx], "-", "_", -1))
+		remainingArgs = append(remainingArgs, strings.ReplaceAll(cmdArgs[idx], "-", "_"))
 	}
 
 	foundBinaryPath := ""
