@@ -283,11 +283,10 @@ func WriteCommandFile(manifest *Manifest, t *template.Template, params TopLevelC
 		}
 	}
 	f, err := os.Create(*GenPulsarctlDir + "/includes/_generated_" + strings.ToLower(params.MainCommand.Name) + ".md")
-	defer f.Close()
 	if err != nil {
 		log.Panicf("Failed to open index: %v", err)
 	}
-
+	defer f.Close()
 	err = t.Execute(f, params)
 	if err != nil {
 		log.Panicf("Failed to execute template: %v", err)
