@@ -22,7 +22,7 @@ type GCStatus struct {
 	ForceCompacting bool `json:"forceCompacting"`
 	// whether the GC thread is in major compacting
 	MajorCompacting bool `json:"majorCompacting"`
-	//whether the GC thread is in minor compacting
+	// whether the GC thread is in minor compacting
 	MinorCompacting bool `json:"minorCompacting"`
 
 	LastMajorCompactionTime int64 `json:"lastMajorCompactionTime"`
