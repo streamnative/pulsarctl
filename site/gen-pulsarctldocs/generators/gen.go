@@ -22,6 +22,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -261,16 +262,14 @@ func WriteCategoryFile(c Category) {
 
 	fn := strings.ReplaceAll(c.Name, " ", "_")
 	f, err := os.Create(*GenPulsarctlDir + "/includes/_generated_category_" + strings.ToLower(fmt.Sprintf("%s.md", fn)))
+	defer f.Close()
 	if err != nil {
-		fmt.Printf("Failed to open index: %v", err)
-		os.Exit(1)
+		log.Panicf("Failed to open index: %v", err)
 	}
 	err = ct.Execute(f, c)
 	if err != nil {
-		fmt.Printf("Failed to execute template: %v", err)
-		os.Exit(1)
+		log.Panicf("Failed to execute template: %v", err)
 	}
-	defer f.Close()
 }
 
 func WriteCommandFile(manifest *Manifest, t *template.Template, params TopLevelCommand) {
@@ -284,16 +283,14 @@ func WriteCommandFile(manifest *Manifest, t *template.Template, params TopLevelC
 		}
 	}
 	f, err := os.Create(*GenPulsarctlDir + "/includes/_generated_" + strings.ToLower(params.MainCommand.Name) + ".md")
+	defer f.Close()
 	if err != nil {
-		fmt.Printf("Failed to open index: %v", err)
-		os.Exit(1)
+		log.Panicf("Failed to open index: %v", err)
 	}
 
 	err = t.Execute(f, params)
 	if err != nil {
-		fmt.Printf("Failed to execute template: %v", err)
-		os.Exit(1)
+		log.Panicf("Failed to execute template: %v", err)
 	}
-	defer f.Close()
 	manifest.Docs = append(manifest.Docs, Doc{"_generated_" + strings.ToLower(params.MainCommand.Name) + ".md"})
 }
