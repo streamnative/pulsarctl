@@ -2,11 +2,11 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-    - '*'
+      - '*'
     path-ignores:
-    - 'docs/**'
-    - 'README.md'
-    - 'CONTRIBUTING.md'
+      - 'docs/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
 jobs:
   bookie-ut-tests:
     runs-on: ubuntu-latest
@@ -18,10 +18,10 @@ jobs:
     - name: Login to cloudsmith
       run: docker login -u="${{ secrets.CLOUDSMITH_USERNAME }}" -p="${{ secrets.CLOUDSMITH_API_KEY
         }}" docker.cloudsmith.io
-    - name: Set up Go 1.13
+    - name: Set up Go 1.18
       uses: actions/setup-go@v1
       with:
-        go-version: 1.13
+        go-version: 1.18
       id: go
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
