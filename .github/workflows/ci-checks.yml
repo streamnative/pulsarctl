@@ -2,15 +2,25 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-      - '*'
+    - '*'
     path-ignores:
-      - 'docs/**'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
+    - docs/**
+    - README.md
+    - CONTRIBUTING.md
 jobs:
   ut-tests:
     runs-on: ubuntu-latest
     steps:
+    - name: Login to cloudsmith
+      if: matrix.registries == 'docker.cloudsmith.io/streamnative/staging/'
+      run: docker login -u="${{ secrets.CLOUDSMITH_USERNAME }}" -p="${{ secrets.CLOUDSMITH_API_KEY
+        }}" docker.cloudsmith.io
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     - uses: actions/checkout@v2
     - name: Run tests
       run: scripts/run-integration-tests.sh
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
