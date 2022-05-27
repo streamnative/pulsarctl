@@ -2,11 +2,11 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-      - '*'
+    - '*'
     path-ignores:
-      - 'docs/**'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
+    - docs/**
+    - README.md
+    - CONTRIBUTING.md
 jobs:
   bookie-ut-tests:
     runs-on: ubuntu-latest
@@ -24,15 +24,34 @@ jobs:
         docker-compose pull
         docker-compose up -d
         popd
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     - name: Check bookKeeper service
       run: |
         ./test/script/check.sh bookieHTTP
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     - name: Write dummy data
       run: |
         docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
         docker exec bk bin/bookkeeper shell simpletest -ensemble 1 -writeQuorum 1 -ackQuorum 1 -numEntries 10
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     - name: Test
       run: |
         docker ps
         go test -v ./pkg/bkctl/...
         go test -v ./pkg/bookkeeper/...
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+    - name: Login to cloudsmith
+      if: matrix.registries == 'docker.cloudsmith.io/streamnative/staging/'
+      run: docker login -u="${{ secrets.CLOUDSMITH_USERNAME }}" -p="${{ secrets.CLOUDSMITH_API_KEY
+        }}" docker.cloudsmith.io
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}

@@ -2,10 +2,10 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-      - '*'
+    - '*'
     paths:
-      - 'install.sh'
-      - 'stable.txt'
+    - install.sh
+    - stable.txt
 jobs:
   install-script-check:
     runs-on: ubuntu-latest
@@ -18,3 +18,13 @@ jobs:
         ~/.pulsarctl/pulsarctl help
         ./install.sh -u
         ~/.pulsarctl/pulsarctl help
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+    - name: Login to cloudsmith
+      if: matrix.registries == 'docker.cloudsmith.io/streamnative/staging/'
+      run: docker login -u="${{ secrets.CLOUDSMITH_USERNAME }}" -p="${{ secrets.CLOUDSMITH_API_KEY
+        }}" docker.cloudsmith.io
+      env:
+        CLOUDSMITH_USERNAME: ${{ secrets.CLOUDSMITH_USERNAME }}
+        CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
