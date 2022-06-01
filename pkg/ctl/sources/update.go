@@ -211,7 +211,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 			"Source config key/values")
 
 		flagSet.BoolVar(
-			&functionData.UpdateAuthData,
+			&sourceData.UpdateAuthData,
 			"update-auth-data",
 			false,
 			"Whether or not to update the auth data")

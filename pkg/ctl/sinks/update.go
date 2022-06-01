@@ -251,7 +251,7 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"The message timeout in milliseconds")
 
 		flagSet.BoolVar(
-			&functionData.UpdateAuthData,
+			&sinkData.UpdateAuthData,
 			"update-auth-data",
 			false,
 			"Whether or not to update the auth data")
