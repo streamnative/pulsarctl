@@ -10,6 +10,10 @@ RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd6
 		| tar -C /usr/local -xz
 ENV PATH /usr/local/go/bin:$PATH
 
+# install git
+RUN apt update
+RUN apt install git -y
+
 # copy the code into image
 COPY . /pulsarctl
 
