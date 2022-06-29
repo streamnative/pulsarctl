@@ -75,5 +75,5 @@ func TestPersistence(t *testing.T) {
 	setArgs = []string{"set-persistence", topicName, "-e", "1", "-w", "4", "-a", "3", "-r", "2.2"}
 	_, execErr, _, _ = TestTopicCommands(SetPersistenceCmd, setArgs)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 400 reason: Bookkeeper Ensemble (1) >= WriteQuorum (4) >= AckQuoru (3)")
+	assert.Equal(t, execErr.Error(), "code: 400 reason: Bookkeeper Ensemble (1) >= WriteQuorum (4) >= AckQuorum (3)")
 }
