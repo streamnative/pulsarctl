@@ -27,17 +27,6 @@
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
-## Available Releases
-
-| Version | Reference |
-| --------| --------- |
-| [0.5.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.5.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.5.0/) |
-| [0.4.1](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.1) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.4.1/) |
-| [0.4.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.4.0/)|
-| [0.3.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.3.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.3.0/) |
-| [0.2.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.2.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.2.0/) |
-| [0.1.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.1.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.1.0/) |
-
 ## Install pulsarctl
 
 ### Mac operation system
