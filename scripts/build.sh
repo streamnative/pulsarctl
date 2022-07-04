@@ -28,6 +28,7 @@ mkdir $ASSETS_DIR
 build() {
     local arch=${1}
     local os=${2}
+    local docker_tag=${3}
     local base_dir=dist
     local dirname=pulsarctl-${arch}-${os}
     local dir=${base_dir}/${dirname}
@@ -40,6 +41,12 @@ build() {
     tar -czf ${dirname}.tar.gz ${dirname}
     mv ${dirname}.tar.gz ${ASSETS_DIR}
     popd
+
+    if [[ "x${docker_tag}" != "x" ]]; then
+      docker build -f docker/${arch}-${os}.Dockerfile -t streamnative/pulsarctl:${docker_tag} ${dir}
+      docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
+      docker push streamnative/pulsarctl:${docker_tag}
+    fi
 }
 
 function build_doc() {
@@ -48,7 +55,7 @@ function build_doc() {
   mv pulsarctl-site-${version}.tar.gz ${ASSETS_DIR}
 }
 
-build amd64 linux
+build amd64 linux ${version}
 build 386 linux
 build amd64 darwin
 build arm64 darwin
