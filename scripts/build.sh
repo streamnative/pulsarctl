@@ -33,8 +33,8 @@ build() {
     local dir=${base_dir}/${dirname}
     mkdir -p ${dir}
     CGO_ENABLED=0 GOOS=${os} GOARCH=${arch} go build \
-        -ldflags "${LDFLAGS}" -o pulsarctl
-    mv pulsarctl ${dir}
+        -ldflags "${LDFLAGS}"
+    mv pulsarctl* ${dir}
     cp -r plugins ${dir}
     pushd $base_dir
     tar -czf ${dirname}.tar.gz ${dirname}
