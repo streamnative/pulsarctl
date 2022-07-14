@@ -161,7 +161,7 @@ The following is an incomplete list of features that are not yet implemented:
 
 ## Different With Java Pulsar Admin
 
-We move the subscription commands from the topics to the subscriptions in pulsarctl.
+Subscription commands have moved from the `topics` category to the `subscriptions` category in `pulsarctl`.
  
 | pulsar-admin | pulsarctl |
 | ------------ | --------- |
@@ -172,6 +172,13 @@ We move the subscription commands from the topics to the subscriptions in pulsar
 | bin/pulsar-admin topics peek-messages | pulsarctl subscription peek |
 | bin/pulsar-admin topics reset-cursor | pulsarctl subscription seek |
 | bin/pulsar-admin topics subscriptions | pulsarctl subscription list |
+
+Topic schema compatibility commands have moved from the `topicPolicies` category to the `topic` category in `pulsarctl`.
+ 
+| pulsar-admin | pulsarctl |
+| ------------ | --------- |
+| bin/pulsar-admin topicPolicies set-schema-compatibility-strategy | pulsarctl topic set-schema-compatibility-strategy |
+| bin/pulsar-admin topicPolicies get-schema-compatibility-strategy | pulsarctl topic get-schema-compatibility-strategy |
 
 ## Contribute
 
