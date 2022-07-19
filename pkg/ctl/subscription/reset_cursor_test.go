@@ -61,6 +61,7 @@ func TestResetCursorNonExistingTopic(t *testing.T) {
 		"test-reset-cursor-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
+	t.Log(execErr.Error())
 	assert.True(t, strings.Contains(execErr.Error(), "code: 404"))
 }
 
