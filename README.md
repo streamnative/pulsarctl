@@ -56,13 +56,20 @@ To install `pulsarctl` on the Windows operation system, follow these steps:
 
 ### As project dependency
 
-Use `go get` to install `pulsarctl` as dependency on your project:
+Use `go get` to install the `pulsarctl` as dependency on your project:
 
 ```shell
+# Using master branch
 go get github.com/streamnative/pulsarctl@master
+
+# Or using v2.10.1.3 tag
+go get github.com/streamnative/pulsarctl@v2.10.1.3
+
+# Or using v2.9.3.3 tag
+go get github.com/streamnative/pulsarctl@v2.9.3.3
 ```
 
-**Note:** We will not release `v0.y.z` tags, so you need to use `master` branch code.
+**Note:** We will not release `v0.y.z` tags, so you need to specify the branch or tag.
 
 ## Build pulsarctl from codes
 
