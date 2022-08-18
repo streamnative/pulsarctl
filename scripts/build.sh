@@ -43,9 +43,9 @@ build() {
     popd
 
     if [[ "x${docker_tag}" != "x" ]]; then
-      docker build -f docker/${arch}-${os}.Dockerfile -t streamnative/pulsarctl:${docker_tag} ${dir}
       docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
-      docker push streamnative/pulsarctl:${docker_tag}
+      docker buildx create --name pulsarctl --node pulsarctl0 --use
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${docker_tag} -f docker/Dockerfile -t streamnative/pulsarctl:${docker_tag} --push ${dir}
     fi
 }
 
