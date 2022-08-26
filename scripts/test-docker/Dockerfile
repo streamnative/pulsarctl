@@ -1,5 +1,5 @@
 ARG PULSAR_VERSION
-FROM streamnative/pulsar-all:$PULSAR_VERSION
+FROM docker.cloudsmith.io/streamnative/staging/pulsar-all:$PULSAR_VERSION
 
 # use root user
 USER root
