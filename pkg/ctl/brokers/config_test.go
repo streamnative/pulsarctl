@@ -33,10 +33,6 @@ func TestGetInternalConfig(t *testing.T) {
 	var internalData utils.InternalConfigurationData
 	err := json.Unmarshal(internalOut.Bytes(), &internalData)
 	assert.Nil(t, err)
-
-	assert.Equal(t, "127.0.0.1:2181", internalData.ZookeeperServers)
-	assert.Equal(t, "127.0.0.1:2181", internalData.ConfigurationStoreServers)
-	assert.Equal(t, "/ledgers", internalData.LedgersRootPath)
 }
 
 func TestGetRuntimeConfig(t *testing.T) {
