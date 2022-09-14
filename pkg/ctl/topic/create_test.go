@@ -20,6 +20,7 @@ package topic
 import (
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -78,6 +79,31 @@ func TestCreateNonPartitionedTopic(t *testing.T) {
 func TestCreateNonPersistentNonPartitionedTopic(t *testing.T) {
 	args := []string{"create", "non-persistent://public/default/test-create-non-partitioned-topic", "0"}
 	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+	assert.Nil(t, argsErr)
+	assert.Nil(t, err)
+}
+
+func TestCreateTopicNameWithColons(t *testing.T) {
+	topic := "persistent://public/default/test:topic-" + test.RandomSuffix()
+	args := []string{"create", topic, "0"}
+	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+	assert.Nil(t, argsErr)
+	assert.Nil(t, err)
+
+}
+
+func TestCreateTopicNameWithEncodedColons(t *testing.T) {
+	topic := "persistent://public/default/test%3Atopic-" + test.RandomSuffix()
+	args := []string{"create", topic, "0"}
+	_, execErr, argsErr, err := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+	assert.Nil(t, argsErr)
+	assert.Nil(t, err)
+
+	args = []string{"get", topic}
+	_, execErr, argsErr, err = TestTopicCommands(GetTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Nil(t, argsErr)
 	assert.Nil(t, err)
