@@ -77,7 +77,7 @@ func TestDeleteNonExistingSub(t *testing.T) {
 	args = []string{"delete", "test-delete-non-existing-sub-topic", "test-delete-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(DeleteCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 
 	args = []string{"list", "test-delete-non-existing-sub-topic"}
 	out, execErr, _, _ = TestSubCommands(ListCmd, args)

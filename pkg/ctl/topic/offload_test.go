@@ -46,5 +46,5 @@ func TestOffloadNonExistingTopicError(t *testing.T) {
 	args := []string{"offload", "test-offload-non-existing-topic", "10m"}
 	_, execErr, _, _ := TestTopicCommands(OffloadCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }

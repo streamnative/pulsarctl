@@ -59,7 +59,7 @@ func TestCompactNonExistingTopic(t *testing.T) {
 	args := []string{"compact", "test-compact-non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(CompactCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestCompactNonPersistentTopic(t *testing.T) {

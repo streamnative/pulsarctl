@@ -58,5 +58,5 @@ func TestMessageTTL(t *testing.T) {
 	setTTLArgs = []string{"set-message-ttl", topicName, "-t", "-2"}
 	_, execErr, _, _ = TestTopicCommands(SetMessageTTLCmd, setTTLArgs)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
+	assert.Contains(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
 }

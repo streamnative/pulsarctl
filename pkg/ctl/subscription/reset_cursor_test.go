@@ -62,7 +62,7 @@ func TestResetCursorNonExistingTopic(t *testing.T) {
 		"test-reset-cursor-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestResetCursorNonExistingSub(t *testing.T) {
@@ -74,5 +74,5 @@ func TestResetCursorNonExistingSub(t *testing.T) {
 		"test-reset-cursor-non-existing-sub"}
 	_, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 }
