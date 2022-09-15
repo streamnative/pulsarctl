@@ -75,7 +75,7 @@ func TestDeleteNonExistPartitionedTopic(t *testing.T) {
 	args := []string{"delete", "non-existent-partitioned-topic"}
 	_, execErr, _, _ := TestTopicCommands(DeleteTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "code: 404 reason: Partitioned topic")
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Partitioned Topic")
 }
 
 func TestDeleteNonExistNonPartitionedTopic(t *testing.T) {
