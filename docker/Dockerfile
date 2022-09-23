@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o pulsarctl -l
 FROM alpine:3.16.0
 
 RUN apk add --no-cache \
-  tzdata=2022a-r0 \
+  tzdata=2022c-r0 \
   ca-certificates=20220614-r0 \
   bash=5.1.16-r2 \
   openssl=1.1.1q-r0
