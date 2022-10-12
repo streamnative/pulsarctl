@@ -61,6 +61,9 @@ type Namespaces interface {
 	// GetNamespaceMessageTTL returns the message TTL for a namespace
 	GetNamespaceMessageTTL(namespace string) (int, error)
 
+	// RemoveNamespaceMessageTTL removes the message TTL config for a namespace, defaulting to broker settings
+	RemoveNamespaceMessageTTL(namespace string) error
+
 	// GetRetention returns the retention configuration for a namespace
 	GetRetention(namespace string) (*utils.RetentionPolicies, error)
 
@@ -124,17 +127,26 @@ type Namespaces interface {
 	// GetMaxConsumersPerSubscription returns the maxConsumersPerSubscription for a namespace.
 	GetMaxConsumersPerSubscription(namespace utils.NameSpaceName) (int, error)
 
+	// RemoveMaxConsumersPerSubscription removes the maxConsumersPerSubscription config for a namespace, defaulting to broker settings.
+	RemoveMaxConsumersPerSubscription(namespace utils.NameSpaceName) error
+
 	// SetMaxConsumersPerTopic sets maxConsumersPerTopic for a namespace.
 	SetMaxConsumersPerTopic(namespace utils.NameSpaceName, max int) error
 
 	// GetMaxConsumersPerTopic returns the maxProducersPerTopic for a namespace.
 	GetMaxConsumersPerTopic(namespace utils.NameSpaceName) (int, error)
 
+	// RemoveMaxConsumersPerTopic removes the maxProducersPerTopic config for a namespace, defaulting to broker settings.
+	RemoveMaxConsumersPerTopic(namespace utils.NameSpaceName) error
+
 	// SetMaxProducersPerTopic sets maxProducersPerTopic for a namespace.
 	SetMaxProducersPerTopic(namespace utils.NameSpaceName, max int) error
 
 	// GetMaxProducersPerTopic returns the maxProducersPerTopic for a namespace.
 	GetMaxProducersPerTopic(namespace utils.NameSpaceName) (int, error)
+
+	// RemoveMaxProducersPerTopic removes the maxProducersPerTopic config for a namespace, defaulting to broker settings.
+	RemoveMaxProducersPerTopic(namespace utils.NameSpaceName) error
 
 	// GetNamespaceReplicationClusters returns the replication clusters for a namespace
 	GetNamespaceReplicationClusters(namespace string) ([]string, error)
@@ -362,7 +374,7 @@ func (n *namespaces) DeleteNamespaceBundle(namespace string, bundleRange string)
 }
 
 func (n *namespaces) GetNamespaceMessageTTL(namespace string) (int, error) {
-	var ttl int
+	ttl := -1
 	nsName, err := utils.GetNamespaceName(namespace)
 	if err != nil {
 		return 0, err
@@ -377,9 +389,17 @@ func (n *namespaces) SetNamespaceMessageTTL(namespace string, ttlInSeconds int) 
 	if err != nil {
 		return err
 	}
-
 	endpoint := n.pulsar.endpoint(n.basePath, nsName.String(), "messageTTL")
 	return n.pulsar.Client.Post(endpoint, &ttlInSeconds)
+}
+
+func (n *namespaces) RemoveNamespaceMessageTTL(namespace string) error {
+	nsName, err := utils.GetNamespaceName(namespace)
+	if err != nil {
+		return err
+	}
+	endpoint := n.pulsar.endpoint(n.basePath, nsName.String(), "messageTTL")
+	return n.pulsar.Client.Delete(endpoint)
 }
 
 func (n *namespaces) SetRetention(namespace string, policy utils.RetentionPolicies) error {
@@ -502,10 +522,15 @@ func (n *namespaces) SetMaxConsumersPerSubscription(namespace utils.NameSpaceNam
 }
 
 func (n *namespaces) GetMaxConsumersPerSubscription(namespace utils.NameSpaceName) (int, error) {
-	var result int
+	result := -1
 	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
 	err := n.pulsar.Client.Get(endpoint, &result)
 	return result, err
+}
+
+func (n *namespaces) RemoveMaxConsumersPerSubscription(namespace utils.NameSpaceName) error {
+	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxConsumersPerSubscription")
+	return n.pulsar.Client.Delete(endpoint)
 }
 
 func (n *namespaces) SetOffloadThreshold(namespace utils.NameSpaceName, threshold int64) error {
@@ -526,10 +551,15 @@ func (n *namespaces) SetMaxConsumersPerTopic(namespace utils.NameSpaceName, max 
 }
 
 func (n *namespaces) GetMaxConsumersPerTopic(namespace utils.NameSpaceName) (int, error) {
-	var result int
+	result := -1
 	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
 	err := n.pulsar.Client.Get(endpoint, &result)
 	return result, err
+}
+
+func (n *namespaces) RemoveMaxConsumersPerTopic(namespace utils.NameSpaceName) error {
+	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxConsumersPerTopic")
+	return n.pulsar.Client.Delete(endpoint)
 }
 
 func (n *namespaces) SetCompactionThreshold(namespace utils.NameSpaceName, threshold int64) error {
@@ -550,10 +580,15 @@ func (n *namespaces) SetMaxProducersPerTopic(namespace utils.NameSpaceName, max 
 }
 
 func (n *namespaces) GetMaxProducersPerTopic(namespace utils.NameSpaceName) (int, error) {
-	var result int
+	result := -1
 	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
 	err := n.pulsar.Client.Get(endpoint, &result)
 	return result, err
+}
+
+func (n *namespaces) RemoveMaxProducersPerTopic(namespace utils.NameSpaceName) error {
+	endpoint := n.pulsar.endpoint(n.basePath, namespace.String(), "maxProducersPerTopic")
+	return n.pulsar.Client.Delete(endpoint)
 }
 
 func (n *namespaces) GetNamespaceReplicationClusters(namespace string) ([]string, error) {

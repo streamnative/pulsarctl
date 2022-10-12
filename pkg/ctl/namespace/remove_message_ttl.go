@@ -19,30 +19,25 @@ package namespace
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
-func setMessageTTL(vc *cmdutils.VerbCmd) {
+func RemoveMessageTTL(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Set Message TTL for a namespace"
+	desc.CommandUsedFor = "Remove Message TTL setting for a namespace"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
-	setMsgTTL := cmdutils.Example{
-		Desc:    "Set Message TTL for a namespace",
-		Command: "pulsarctl namespaces set-message-ttl tenant/namespace -ttl 10",
+	deleteMsgTTL := cmdutils.Example{
+		Desc:    "Remove Message TTL setting for a namespace",
+		Command: "pulsarctl namespaces remove-message-ttl tenant/namespace",
 	}
-	examples = append(examples, setMsgTTL)
+	examples = append(examples, deleteMsgTTL)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out:  "Set message TTL successfully for [tenant/namespace]",
+		Out:  "Successfully removed message TTL for [tenant/namespace]",
 	}
 
 	noNamespaceName := cmdutils.Output{
@@ -60,45 +55,27 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  code: 404 reason: Namespace (tenant/namespace) does not exist",
 	}
 
-	failOut := cmdutils.Output{
-		Desc: "Invalid value for message TTL, please check -ttl arg",
-		Out:  "code: 412 reason: Invalid value for message TTL",
-	}
-	out = append(out, successOut, failOut, noNamespaceName, tenantNotExistError, nsNotExistError)
+	out = append(out, successOut, noNamespaceName, tenantNotExistError, nsNotExistError)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"set-message-ttl",
-		"Set Message TTL for a namespace",
+		"remove-message-ttl",
+		"Removes Message TTL for a namespace",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"set-message-ttl",
 	)
 
-	var namespaceData utils.NamespacesData
-
 	vc.SetRunFuncWithNameArg(func() error {
-		return doSetMessageTTL(vc, namespaceData)
+		return doDeleteMessageTTL(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
-
-	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
-		flagSet.IntVarP(
-			&namespaceData.MessageTTL,
-			"messageTTL",
-			"t",
-			0,
-			"Message TTL in seconds")
-		cobra.MarkFlagRequired(flagSet, "messageTTL")
-	})
-	vc.EnableOutputFlagSet()
 }
 
-func doSetMessageTTL(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
+func doDeleteMessageTTL(vc *cmdutils.VerbCmd) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	err := admin.Namespaces().SetNamespaceMessageTTL(ns, data.MessageTTL)
+	err := admin.Namespaces().RemoveNamespaceMessageTTL(ns)
 	if err == nil {
-		vc.Command.Printf("Message TTL for namespace %s successfully set to %d\n", ns, data.MessageTTL)
+		vc.Command.Printf("Successfully removed Message TTL setting for namespace %s\n", ns)
 	}
 	return err
 }

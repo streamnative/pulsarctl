@@ -23,15 +23,15 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
-func GetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
+func RemoveMaxConsumersPerSubscriptionCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
-	desc.CommandUsedFor = "This command is used for getting the max producers per topic of a namespace."
-	desc.CommandPermission = "This command requires tenant admin permissions."
+	desc.CommandUsedFor = "This command is used to remove the max consumers per subscription setting of a namespace."
+	desc.CommandPermission = "This command requires super-user permissions and broker has write policies permission."
 
 	var examples []cmdutils.Example
 	set := cmdutils.Example{
-		Desc:    "Get the max producers per topic of the namespace (namespace-name)",
-		Command: "pulsarctl namespaces get-max-producers-per-topic (namespace-name)",
+		Desc:    "Remove the max consumers per subscription setting for the namespace (namespace-name)",
+		Command: "pulsarctl namespaces remove-max-consumers-per-subscription (namespace-name)",
 	}
 	examples = append(examples, set)
 	desc.CommandExamples = examples
@@ -39,37 +39,35 @@ func GetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out:  "The max producers per topic of the namespace (namespace-name) is (size)",
+		Out:  "Successfully removed the max consumers per subscription setting for namespace (namespace-name)",
 	}
 	out = append(out, successOut, ArgError, NsNotExistError)
 	out = append(out, NsErrors...)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"get-max-producers-per-topic",
-		"Get the max producers per topic of namespace",
+		"remove-max-consumers-per-subscription",
+		"Remove the max consumers per subscription setting for a namespace",
 		desc.ToString(),
-		desc.ExampleToString())
+		desc.ExampleToString(),
+	)
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetMaxProducersPerTopic(vc)
+		return doRemoveMaxConsumersPerSubscription(vc)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 }
 
-func doGetMaxProducersPerTopic(vc *cmdutils.VerbCmd) error {
+func doRemoveMaxConsumersPerSubscription(vc *cmdutils.VerbCmd) error {
 	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	max, err := admin.Namespaces().GetMaxProducersPerTopic(*ns)
+	err = admin.Namespaces().RemoveMaxConsumersPerSubscription(*ns)
 	if err == nil {
-		if max < 0 {
-			vc.Command.Printf("The max producers per topic of the namespace %s is not set (%d)\n", ns.String(), max)
-		} else {
-			vc.Command.Printf("The max producers per topic of the namespace %s is %d\n", ns.String(), max)
-		}
+		vc.Command.Printf("Successfully removed the max consumers per subscription setting for namespace %s\n",
+			ns.String())
 	}
 
 	return err
