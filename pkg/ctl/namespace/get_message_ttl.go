@@ -77,7 +77,7 @@ func doGetMessageTTL(vc *cmdutils.VerbCmd) error {
 	ttl, err := admin.Namespaces().GetNamespaceMessageTTL(ns)
 	if err == nil {
 		if ttl < 0 {
-			vc.Command.Printf("Message TTL for  namespace %s is not set (%d)\n", ns, ttl)
+			vc.Command.Printf("Message TTL for namespace %s is not set (%d)\n", ns, ttl)
 		} else {
 			vc.Command.Printf("Message TTL for namespace %s is %d\n", ns, ttl)
 		}
