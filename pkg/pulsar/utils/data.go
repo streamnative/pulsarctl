@@ -183,7 +183,7 @@ type NamespacesData struct {
 }
 
 type TopicStats struct {
-	BacklogSize         int64                        `json:"backlogSize"`
+	BacklogSize         uint64                       `json:"backlogSize"`
 	MsgCounterIn        int64                        `json:"msgInCounter"`
 	MsgCounterOut       int64                        `json:"msgOutCounter"`
 	MsgRateIn           float64                      `json:"msgRateIn"`
