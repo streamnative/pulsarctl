@@ -18,10 +18,10 @@
 package auth
 
 import (
+	"encoding/json"
+	"github.com/pkg/errors"
 	"net/http"
 	"path/filepath"
-
-	"github.com/pkg/errors"
 
 	"github.com/99designs/keyring"
 	"github.com/apache/pulsar-client-go/oauth2"
@@ -31,6 +31,19 @@ import (
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	xoauth2 "golang.org/x/oauth2"
 )
+
+const (
+	OAuth2PluginName      = "org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2"
+	OAuth2PluginShortName = "oauth2"
+)
+
+type OAuth2ClientCredentials struct {
+	IssuerUrl  string `json:"issuerUrl,omitempty"`
+	Audience   string `json:"audience,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	PrivateKey string `json:"privateKey,omitempty"`
+	ClientId   string `json:"clientId,omitempty"`
+}
 
 type OAuth2Provider struct {
 	clock            clock2.RealClock
@@ -83,6 +96,22 @@ func NewAuthenticationOAuth2WithDefaultFlow(issuer oauth2.Issuer, keyFile string
 	}
 
 	return p, p.loadGrant()
+}
+
+func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
+	transport http.RoundTripper) (*OAuth2Provider, error) {
+	var p *OAuth2Provider
+	var err error
+
+	var paramsJSON OAuth2ClientCredentials
+	err = json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
+	if err != nil {
+		return p, err
+	} else {
+		p, err = NewAuthenticationOAuth2WithParams(paramsJSON.IssuerUrl, paramsJSON.ClientId, paramsJSON.Audience,
+			paramsJSON.Scope, transport)
+	}
+	return p, err
 }
 
 func NewAuthenticationOAuth2WithParams(

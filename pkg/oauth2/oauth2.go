@@ -18,9 +18,18 @@
 package oauth2
 
 import (
+	"encoding/json"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
+
+type ClientCredentials struct {
+	IssuerUrl  string `json:"issuerUrl,omitempty"`
+	Audience   string `json:"audience,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	PrivateKey string `json:"privateKey,omitempty"`
+	ClientId   string `json:"clientId,omitempty"`
+}
 
 func Command(grouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
@@ -33,4 +42,20 @@ func Command(grouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(grouping, resourceCmd, loginCmd)
 
 	return resourceCmd
+}
+
+func applyClientCredentialsToConfig(config *cmdutils.ClusterConfig) (*cmdutils.ClusterConfig, error) {
+	if config.AuthParams != "" && config.KeyFile == "" &&
+		config.IssuerEndpoint == "" && config.Audience == "" && config.Scope == "" {
+		var paramsJSON ClientCredentials
+		err := json.Unmarshal([]byte(config.AuthParams), &paramsJSON)
+		if err != nil {
+			return config, err
+		}
+		config.IssuerEndpoint = paramsJSON.IssuerUrl
+		config.Audience = paramsJSON.Audience
+		config.Scope = paramsJSON.Scope
+		config.KeyFile = paramsJSON.PrivateKey
+	}
+	return config, nil
 }
