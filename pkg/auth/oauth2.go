@@ -39,11 +39,11 @@ const (
 )
 
 type OAuth2ClientCredentials struct {
-	IssuerUrl  string `json:"issuerUrl,omitempty"`
+	IssuerURL  string `json:"issuerUrl,omitempty"`
 	Audience   string `json:"audience,omitempty"`
 	Scope      string `json:"scope,omitempty"`
 	PrivateKey string `json:"privateKey,omitempty"`
-	ClientId   string `json:"clientId,omitempty"`
+	ClientID   string `json:"clientId,omitempty"`
 }
 
 type OAuth2Provider struct {
@@ -109,10 +109,9 @@ func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
 	if err != nil {
 		return p, err
 	} else {
-		p, err = NewAuthenticationOAuth2WithParams(paramsJSON.IssuerUrl, paramsJSON.ClientId, paramsJSON.Audience,
+		return NewAuthenticationOAuth2WithParams(paramsJSON.IssuerURL, paramsJSON.ClientID, paramsJSON.Audience,
 			paramsJSON.Scope, transport)
 	}
-	return p, err
 }
 
 func NewAuthenticationOAuth2WithParams(

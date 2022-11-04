@@ -25,11 +25,11 @@ import (
 )
 
 type ClientCredentials struct {
-	IssuerUrl  string `json:"issuerUrl,omitempty"`
+	IssuerURL  string `json:"issuerUrl,omitempty"`
 	Audience   string `json:"audience,omitempty"`
 	Scope      string `json:"scope,omitempty"`
 	PrivateKey string `json:"privateKey,omitempty"`
-	ClientId   string `json:"clientId,omitempty"`
+	ClientID   string `json:"clientId,omitempty"`
 }
 
 func Command(grouping *cmdutils.FlagGrouping) *cobra.Command {
@@ -53,7 +53,7 @@ func applyClientCredentialsToConfig(config *cmdutils.ClusterConfig) (*cmdutils.C
 		if err != nil {
 			return config, err
 		}
-		config.IssuerEndpoint = paramsJSON.IssuerUrl
+		config.IssuerEndpoint = paramsJSON.IssuerURL
 		config.Audience = paramsJSON.Audience
 		config.Scope = paramsJSON.Scope
 		config.KeyFile = paramsJSON.PrivateKey
