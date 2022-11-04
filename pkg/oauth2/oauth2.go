@@ -19,6 +19,7 @@ package oauth2
 
 import (
 	"encoding/json"
+
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
