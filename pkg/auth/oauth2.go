@@ -101,7 +101,6 @@ func NewAuthenticationOAuth2WithDefaultFlow(issuer oauth2.Issuer, keyFile string
 
 func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
 	transport http.RoundTripper) (*OAuth2Provider, error) {
-	var err error
 
 	var paramsJSON OAuth2ClientCredentials
 	err := json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
