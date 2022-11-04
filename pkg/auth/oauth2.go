@@ -105,7 +105,7 @@ func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
 	var err error
 
 	var paramsJSON OAuth2ClientCredentials
-	err = json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
+	err := json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
 	if err != nil {
 		return nil, err
 	}
