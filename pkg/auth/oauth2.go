@@ -108,10 +108,9 @@ func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
 	err = json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
 	if err != nil {
 		return p, err
-	} else {
-		return NewAuthenticationOAuth2WithParams(paramsJSON.IssuerURL, paramsJSON.ClientID, paramsJSON.Audience,
-			paramsJSON.Scope, transport)
 	}
+	return NewAuthenticationOAuth2WithParams(paramsJSON.IssuerURL, paramsJSON.ClientID, paramsJSON.Audience,
+		paramsJSON.Scope, transport)
 }
 
 func NewAuthenticationOAuth2WithParams(
