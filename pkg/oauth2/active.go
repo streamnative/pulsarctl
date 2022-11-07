@@ -62,11 +62,22 @@ func activateCmd(vc *cmdutils.VerbCmd) {
 			"The path to the private key file")
 		set.StringVar(&c.Scope, "scope", c.Scope,
 			"The OAuth 2.0 scope(s) to request")
+		set.StringVar(
+			&c.AuthParams,
+			"auth-params",
+			c.AuthParams,
+			"Authentication parameters are used to configure the OAuth 2.0 provider.\n"+
+				" OAuth2 example: \"{\"audience\":\"test\",\"issuerUrl\":\"https://sample\","+
+				"\"privateKey\":\"/mnt/secrets/auth.json\",\"scope\":\"api://default/\"}\"\n")
 	})
 	vc.EnableOutputFlagSet()
 }
 
 func doActivate(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig) error {
+	config, err := applyClientCredentialsToConfig(config)
+	if err != nil {
+		return err
+	}
 	if config.KeyFile == "" {
 		return errors.New("required: key-file")
 	}
