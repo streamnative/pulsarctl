@@ -29,43 +29,43 @@ export CGO_ENABLED=0
 case ${TEST_ARGS} in
     token)
         echo "running token tests"
-        go test -v ./pkg/auth/token.go ./pkg/auth/token_test.go
+        CGO_ENABLED=1 go test -v -race ./pkg/auth/token.go ./pkg/auth/token_test.go
         ;;
     tls)
         echo "running tls tests"
-        go test -v ./pkg/ctl/cluster -run TestTLS
+        CGO_ENABLED=1 go test -v -race ./pkg/ctl/cluster -run TestTLS
         ;;
     function)
         echo "running function tests"
         checkFunctionWorker
         cp /pulsar/examples/api-examples.jar test/functions/
         cp /pulsar/examples/python-examples/logging_function.py test/functions/
-        go test -v -test.timeout 5m $(go list ./... | grep function)
+        CGO_ENABLED=1 go test -v -race -test.timeout 10m $(go list ./... | grep function)
         ;;
     sink)
         echo "running sink tests"
         checkFunctionWorker
         mkdir -p test/sinks
         cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sinks/data-generator.nar
-        go test -v -test.timeout 5m ./pkg/ctl/sinks
+        CGO_ENABLED=1 go test -v -race -test.timeout 10m ./pkg/ctl/sinks
         ;;
     source)
         echo "running source tests"
         checkFunctionWorker
         mkdir -p test/sources
         cp /pulsar/connectors/pulsar-io-data-generator-*.nar test/sources/data-generator.nar
-        go test -v -test.timeout 5m ./pkg/ctl/sources
+        CGO_ENABLED=1 go test -v -race -test.timeout 10m ./pkg/ctl/sources
         ;;
     packages)
         echo "running packages tests"
         checkFunctionWorker
         cp /pulsar/examples/api-examples.jar test/functions/
         cp /pulsar/examples/python-examples/logging_function.py test/functions/
-        go test -v -test.timeout 5m $(go list ./... | grep packages)
+        CGO_ENABLED=1 go test -v -race -test.timeout 10m $(go list ./... | grep packages)
         ;;
     *)
         echo "running normal unit tests"
-        go test -v $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v packages | grep -v test)
+        CGO_ENABLED=1 go test -v -race $(go list ./... | grep -v bookkeeper | grep -v bkctl | grep -v functions | grep -v sources | grep -v sinks | grep -v packages | grep -v test)
         ;;
 esac
 # stop pulsar service
