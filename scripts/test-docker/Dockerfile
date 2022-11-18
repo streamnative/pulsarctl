@@ -14,6 +14,9 @@ ENV PATH /usr/local/go/bin:$PATH
 RUN apt update
 RUN apt install git -y
 
+# install build-essential, includes gcc, g++ and make.
+RUN apt install build-essential -y
+
 # copy the code into image
 COPY . /pulsarctl
 
