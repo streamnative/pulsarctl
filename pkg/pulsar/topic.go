@@ -20,6 +20,7 @@ package pulsar
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -224,6 +225,15 @@ type Topics interface {
 
 	// SetInactiveTopicPolicies sets the inactive topic policies on a topic
 	SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error
+
+	// SetSchemaCompatibilityStrategy sets the strategy used to check the a new schema provided
+	// by a producer is compatible with the current schema before it is installed
+	SetSchemaCompatibilityStrategy(topic utils.TopicName,
+		strategy utils.SchemaCompatibilityStrategy) error
+
+	// GetSchemaCompatibilityStrategy returns the strategy used to check the a new schema provided
+	// by a producer is compatible with the current schema before it is installed
+	GetSchemaCompatibilityStrategy(topic utils.TopicName) (utils.SchemaCompatibilityStrategy, error)
 }
 
 type topics struct {
@@ -695,4 +705,24 @@ func (t *topics) RemoveInactiveTopicPolicies(topic utils.TopicName) error {
 func (t *topics) SetInactiveTopicPolicies(topic utils.TopicName, data utils.InactiveTopicPolicies) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "inactiveTopicPolicies")
 	return t.pulsar.Client.Post(endpoint, data)
+}
+
+func (t *topics) SetSchemaCompatibilityStrategy(topic utils.TopicName,
+	strategy utils.SchemaCompatibilityStrategy) error {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.String(), "schemaCompatibilityStrategy")
+	return t.pulsar.Client.Put(endpoint, strategy.String())
+}
+
+func (t *topics) GetSchemaCompatibilityStrategy(topic utils.TopicName) (
+	utils.SchemaCompatibilityStrategy, error) {
+	endpoint := t.pulsar.endpoint(t.basePath, topic.String(), "schemaCompatibilityStrategy")
+	b, err := t.pulsar.Client.GetWithQueryParams(endpoint, nil, nil, false)
+	if err != nil {
+		return "", err
+	}
+	s, err := utils.ParseSchemaAutoUpdateCompatibilityStrategy(strings.ReplaceAll(string(b), "\"", ""))
+	if err != nil {
+		return "", err
+	}
+	return s, nil
 }
