@@ -127,7 +127,7 @@ func doDownloadFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) err
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
 
 	if funcData.Path != "" {
-		err := admin.Functions().DownloadFunction(funcData.DestinationFile, funcData.Path)
+		err := admin.Functions().DownloadFunction(funcData.Path, funcData.DestinationFile)
 		if err != nil {
 			return err
 		}

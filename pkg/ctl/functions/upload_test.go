@@ -114,8 +114,8 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 	downloadFilePath := "download-upload-file"
 	args = []string{
 		"download",
-		"--destination-file", pulsarPath,
-		"--path", downloadFilePath,
+		"--destination-file", downloadFilePath,
+		"--path", pulsarPath,
 	}
 	out, execErr, err = TestFunctionsCommands(downloadFunctionsCmd, args)
 	defer os.RemoveAll(downloadFilePath)
