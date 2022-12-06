@@ -64,7 +64,7 @@ func TestGetPartitionedStats(t *testing.T) {
 	args = []string{"stats", "test-partitioned-topic-stats"}
 	_, execErr, _, _ = TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestGetStatsArgsError(t *testing.T) {
@@ -78,7 +78,7 @@ func TestGetNonExistingTopicStats(t *testing.T) {
 	args := []string{"stats", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestGetPartitionedStatsCmd(t *testing.T) {
@@ -167,7 +167,7 @@ func TestGetNonExistingTopicStatsError(t *testing.T) {
 	args := []string{"stats", "--partitioned-topic", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Partitioned Topic")
 }
 
 func TestGetNonPartitionedTopicStatsError(t *testing.T) {
@@ -178,5 +178,5 @@ func TestGetNonPartitionedTopicStatsError(t *testing.T) {
 	args = []string{"stats", "--partitioned-topic", "test-non-partitioned-topic-partitioned-stats"}
 	_, execErr, _, _ = TestTopicCommands(GetStatsCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Partitioned Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Partitioned Topic")
 }
