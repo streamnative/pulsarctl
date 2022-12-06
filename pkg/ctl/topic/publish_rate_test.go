@@ -20,72 +20,47 @@ package topic
 import (
 	"encoding/json"
 	"testing"
-	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/onsi/gomega"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestPublishRate(t *testing.T) {
-	t.Skipf("Refactoring with gomega")
+	g := gomega.NewWithT(t)
 
 	topicName := "persistent://public/default/test-publish-rate-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
-	assert.Nil(t, execErr)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setArgs := []string{"set-publish-rate", topicName, "--msg-publish-rate", "5", "--byte-publish-rate", "4"}
 	setOut, execErr, _, _ := TestTopicCommands(SetPublishRateCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message publish rate successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Set message publish rate successfully for [" + topicName + "]\n"))
 
 	getArgs := []string{"get-publish-rate", topicName}
-	var publishRateData utils.PublishRateData
-	task := func(args []string, obj interface{}) bool {
+	g.Eventually(func(g gomega.Gomega) {
 		getOut, execErr, _, _ := TestTopicCommands(GetPublishRateCmd, getArgs)
-		if execErr != nil {
-			return false
-		}
-
-		err := json.Unmarshal(getOut.Bytes(), obj)
-		if err != nil {
-			return false
-		}
-
-		prd := obj.(*utils.PublishRateData)
-		return prd.PublishThrottlingRateInMsg == 5 &&
-			prd.PublishThrottlingRateInByte == 4
-	}
-	err := cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
-	if err != nil {
-		t.Fatal(err)
-	}
+		g.Expect(execErr).Should(gomega.BeNil())
+		var publishRateData utils.PublishRateData
+		err := json.Unmarshal(getOut.Bytes(), &publishRateData)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(publishRateData.PublishThrottlingRateInMsg).Should(gomega.Equal(int64(5)))
+		g.Expect(publishRateData.PublishThrottlingRateInByte).Should(gomega.Equal(int64(4)))
+	}).Should(gomega.Succeed())
 
 	setArgs = []string{"remove-publish-rate", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemovePublishRateCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Remove message publish rate successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Remove message publish rate successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-publish-rate", topicName}
-	task = func(args []string, obj interface{}) bool {
+	g.Eventually(func(g gomega.Gomega) {
 		getOut, execErr, _, _ := TestTopicCommands(GetPublishRateCmd, getArgs)
-		if execErr != nil {
-			return false
-		}
-
-		err := json.Unmarshal(getOut.Bytes(), obj)
-		if err != nil {
-			return false
-		}
-
-		prd := obj.(*utils.PublishRateData)
-		return prd.PublishThrottlingRateInMsg == 0 &&
-			prd.PublishThrottlingRateInByte == 0
-	}
-	err = cmdutils.RunFuncWithTimeout(task, true, 30*time.Second, getArgs, &publishRateData)
-	if err != nil {
-		t.Fatal(err)
-	}
+		g.Expect(execErr).Should(gomega.BeNil())
+		var publishRateData utils.PublishRateData
+		err := json.Unmarshal(getOut.Bytes(), &publishRateData)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(publishRateData.PublishThrottlingRateInMsg).Should(gomega.Equal(int64(0)))
+		g.Expect(publishRateData.PublishThrottlingRateInByte).Should(gomega.Equal(int64(0)))
+	}).Should(gomega.Succeed())
 }

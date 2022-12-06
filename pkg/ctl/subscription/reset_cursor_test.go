@@ -18,6 +18,7 @@
 package subscription
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,13 +57,12 @@ func TestResetCursorFlagError(t *testing.T) {
 }
 
 func TestResetCursorNonExistingTopic(t *testing.T) {
-	t.Skipf("Need fix https://github.com/apache/pulsar/issues/13211")
-
 	args := []string{"seek", "--time", "1m", "test-reset-cursor-non-existing-topic",
 		"test-reset-cursor-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	t.Log(execErr.Error())
+	assert.True(t, strings.Contains(execErr.Error(), "code: 404"))
 }
 
 func TestResetCursorNonExistingSub(t *testing.T) {
@@ -74,5 +74,5 @@ func TestResetCursorNonExistingSub(t *testing.T) {
 		"test-reset-cursor-non-existing-sub"}
 	_, execErr, _, _ = TestSubCommands(ResetCursorCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.True(t, strings.Contains(execErr.Error(), "code: 404"))
 }
