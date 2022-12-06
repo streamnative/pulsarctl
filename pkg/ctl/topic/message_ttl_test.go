@@ -19,44 +19,44 @@ package topic
 
 import (
 	"testing"
-	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 )
 
 func TestMessageTTL(t *testing.T) {
-	t.Skipf("Refactoring with gomega")
+	g := gomega.NewWithT(t)
 
 	topicName := "persistent://public/default/test-message-ttl-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
-	assert.Nil(t, execErr)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setTTLArgs := []string{"set-message-ttl", topicName, "-t", "20"}
 	setOut, execErr, _, _ := TestTopicCommands(SetMessageTTLCmd, setTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message TTL successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Set message TTL successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getTTLArgs := []string{"get-message-ttl", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "20")
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut.String()).Should(gomega.Equal("20"))
+	}).Should(gomega.Succeed())
 
 	setTTLArgs = []string{"remove-message-ttl", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemoveMessageTTLCmd, setTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Remove message TTL successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Remove message TTL successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getTTLArgs = []string{"get-message-ttl", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, getOut.String(), "0")
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetMessageTTLCmd, getTTLArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		g.Expect(getOut.String()).Should(gomega.Equal("0"))
+	}).Should(gomega.Succeed())
 
 	// test negative value
 	setTTLArgs = []string{"set-message-ttl", topicName, "-t", "-2"}
 	_, execErr, _, _ = TestTopicCommands(SetMessageTTLCmd, setTTLArgs)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
+	g.Expect(execErr).ShouldNot(gomega.BeNil())
+	g.Expect(execErr.Error()).Should(gomega.Equal("code: 412 reason: Invalid value for message TTL"))
 }
