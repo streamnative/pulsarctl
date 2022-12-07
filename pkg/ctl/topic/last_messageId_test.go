@@ -34,7 +34,7 @@ func TestGetLastMessageIdTopicNotExistError(t *testing.T) {
 	args := []string{"last-message-id", "not-existent-topic"}
 	_, execErr, _, _ := TestTopicCommands(GetLastMessageIDCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestGetLastMessageIdNotAllowedError(t *testing.T) {
