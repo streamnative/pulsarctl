@@ -58,5 +58,5 @@ func TestTerminateNonExistingTopic(t *testing.T) {
 	args := []string{"terminate", "non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(TerminateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }

@@ -30,8 +30,7 @@ func TestBrokerAndBrokers(t *testing.T) {
 	brokersFailArgs := []string{"brokers", "standalone"}
 	_, execErr, _, _ := TestNsIsolationPolicyCommands(getAllBrokersWithPolicies, brokersFailArgs)
 	assert.NotNil(t, execErr)
-	exceptedErr := "code: 404 reason: namespace-isolation policies not found for standalone"
-	assert.Equal(t, exceptedErr, execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason")
 
 	setPolicyArgs := []string{"set", "standalone", "test-policy-1",
 		"--auto-failover-policy-params", "min_limit=3,usage_threshold=100",
