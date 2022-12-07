@@ -43,5 +43,5 @@ func TestMessageTTL(t *testing.T) {
 	setTTLArgs = []string{"set-message-ttl", "public/test-ttl-namespace", "-t", "-2"}
 	_, execErr, _, _ = TestNamespaceCommands(setMessageTTL, setTTLArgs)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
+	assert.Contains(t, execErr.Error(), "code: 412 reason: Invalid value for message TTL")
 }
