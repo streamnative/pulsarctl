@@ -45,5 +45,5 @@ func TestUnloadNonExistingTopic(t *testing.T) {
 	args := []string{"unload", "test-unload-non-existing-topic"}
 	_, execErr, _, _ := TestTopicCommands(UnloadCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
