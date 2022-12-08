@@ -28,7 +28,6 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
       id: go
-
     - name: build
       run: |
         version=`cat VERSION`
