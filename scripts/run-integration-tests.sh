@@ -19,7 +19,7 @@ case ${1} in
         docker run --rm --env-file ${env_file} -e TEST_ARGS=tls ${IMAGE_NAME}
         ;;
     function)
-        docker run --name function --rm -e TEST_ARGS=function -e FUNCTION_ENABLE=true ${IMAGE_NAME}
+        docker run --name function --rm -e TEST_ARGS=function -e PULSAR_STANDALONE_USE_ZOOKEEPER=1 -e PULSAR_PREFIX_enablePackagesManagement=true -e PULSAR_PREFIX_functionsWorkerEnablePackageManagement=true -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
     sink)
         docker run --name sink --rm -e TEST_ARGS=sink -e FUNCTION_ENABLE=true ${IMAGE_NAME}
@@ -28,7 +28,7 @@ case ${1} in
         docker run --name sink --rm -e TEST_ARGS=source -e FUNCTION_ENABLE=true ${IMAGE_NAME}
         ;;
     packages)
-        docker run --name packages --rm -e TEST_ARGS=packages -e PULSAR_PREFIX_enablePackagesManagement=true -e PULSAR_PREFIX_zookeeperServers=127.0.0.1:2181 ${IMAGE_NAME}
+        docker run --name packages --rm -e TEST_ARGS=packages -e PULSAR_STANDALONE_USE_ZOOKEEPER=1 -e PULSAR_PREFIX_enablePackagesManagement=true -e PULSAR_PREFIX_zookeeperServers=127.0.0.1:2181 ${IMAGE_NAME}
         ;;
     *)
         env_file=${PROJECT_ROOT}/test/policies/policies.env
