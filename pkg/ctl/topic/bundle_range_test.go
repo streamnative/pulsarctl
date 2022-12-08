@@ -24,6 +24,8 @@ import (
 )
 
 func TestGetBundleRangeCmd(t *testing.T) {
+	t.Skip("https://github.com/apache/pulsar/pull/18755")
+
 	args := []string{"create", "test-get-topic-bundle-range", "0"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
