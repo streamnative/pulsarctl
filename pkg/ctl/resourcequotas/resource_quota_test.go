@@ -26,6 +26,8 @@ import (
 )
 
 func TestResourceQuota(t *testing.T) {
+	t.Skip("https://github.com/apache/pulsar/pull/18755")
+
 	getDefaultArgs := []string{"get"}
 	getDefaultOut, execErr, _, _ := TestResourceQuotaCommands(getResourceQuota, getDefaultArgs)
 	assert.Nil(t, execErr)

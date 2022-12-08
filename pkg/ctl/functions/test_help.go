@@ -69,6 +69,7 @@ func ResourceDir() string {
 }
 
 func FailImmediatelyIfErrorNotNil(t *testing.T, err ...error) {
+	t.Helper()
 	for _, e := range err {
 		if e != nil {
 			t.Logf(e.Error())

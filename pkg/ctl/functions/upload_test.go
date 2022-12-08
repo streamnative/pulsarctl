@@ -101,7 +101,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		t.Fail()
 	}
 
-	pulsarPath := "public/default/test"
+	pulsarPath := "function://public/default/test"
 	args := []string{
 		"upload",
 		"--path", pulsarPath,

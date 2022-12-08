@@ -56,12 +56,12 @@ func TestExpireNonExistingTopic(t *testing.T) {
 		"test-expire-messages-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(ExpireCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 
 	args = []string{"expire", "--expire-time", "1", "--all", "non-existing-topic"}
 	_, execErr, _, _ = TestSubCommands(ExpireCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestExpireNonExistingSub(t *testing.T) {
@@ -74,5 +74,5 @@ func TestExpireNonExistingSub(t *testing.T) {
 		"test-expire-messages-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(ExpireCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 }
