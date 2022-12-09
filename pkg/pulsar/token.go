@@ -19,9 +19,10 @@ package pulsar
 
 import (
 	"encoding/base64"
-	"github.com/golang-jwt/jwt/v4"
 	"strings"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
