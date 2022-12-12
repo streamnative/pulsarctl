@@ -7,8 +7,8 @@ require (
 	github.com/apache/pulsar-client-go/oauth2 v0.0.0-20211108044248-fe3b7c4e445b
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
-	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/ghodss/yaml v1.0.0
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/golang/protobuf v1.5.2
 	github.com/imdario/mergo v0.3.8
 	github.com/kris-nova/logger v0.0.0-20181127235838-fd0d87064b06
@@ -36,6 +36,7 @@ require (
 	github.com/docker/docker v0.7.3-0.20190506211059-b20a14b54661 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/dvsekhvalnov/jose2go v0.0.0-20200901110807-248326c1351b // indirect
+	github.com/form3tech-oss/jwt-go v3.2.3+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
