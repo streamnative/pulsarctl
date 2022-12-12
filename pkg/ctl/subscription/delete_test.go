@@ -21,7 +21,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsarctl/pkg/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDeleteCmd(t *testing.T) {
@@ -90,4 +92,36 @@ func TestDeleteNonExistingTopicSub(t *testing.T) {
 	_, execErr, _, _ := TestSubCommands(DeleteCmd, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+}
+
+func TestForceDeleteSubscription(t *testing.T) {
+	testcases := []struct {
+		topic string
+		sub   string
+		force bool
+	}{
+		{
+			topic: "test-delete-sub-topic-" + test.RandomSuffix(),
+			sub:   "test-delete-sub-" + test.RandomSuffix(),
+			force: true,
+		},
+		{
+			topic: "test-delete-sub-topic-" + test.RandomSuffix(),
+			sub:   "test-delete-sub-" + test.RandomSuffix(),
+			force: false,
+		},
+	}
+
+	for _, testcase := range testcases {
+		createArgs := []string{"create", testcase.topic, testcase.sub}
+		_, execErr, _, _ := TestSubCommands(CreateCmd, createArgs)
+		require.Nil(t, execErr)
+
+		deleteArg := []string{"delete", testcase.topic, testcase.sub}
+		if testcase.force {
+			deleteArg = append(deleteArg, "--force")
+		}
+		_, execErr, _, _ = TestSubCommands(DeleteCmd, deleteArg)
+		require.Nil(t, execErr)
+	}
 }

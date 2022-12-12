@@ -18,8 +18,8 @@
 package subscription
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
@@ -52,12 +52,19 @@ func DeleteCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
+	var force bool
+	vc.FlagSetGroup.InFlagSet("DeleteSubscription", func(set *pflag.FlagSet) {
+		set.BoolVarP(&force, "force", "f", false,
+			"Disconnect and close all consumers and delete subscription forcefully")
+	})
+	vc.EnableOutputFlagSet()
+
 	vc.SetRunFuncWithMultiNameArgs(func() error {
-		return doDelete(vc)
+		return doDelete(vc, force)
 	}, CheckSubscriptionNameTwoArgs)
 }
 
-func doDelete(vc *cmdutils.VerbCmd) error {
+func doDelete(vc *cmdutils.VerbCmd, force bool) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -71,7 +78,11 @@ func doDelete(vc *cmdutils.VerbCmd) error {
 	sName := vc.NameArgs[1]
 
 	admin := cmdutils.NewPulsarClient()
-	err = admin.Subscriptions().Delete(*topic, sName)
+	if force {
+		err = admin.Subscriptions().ForceDelete(*topic, sName)
+	} else {
+		err = admin.Subscriptions().Delete(*topic, sName)
+	}
 	if err == nil {
 		vc.Command.Printf("Delete the subscription %s of the topic %s successfully\n",
 			sName, topic.String())
