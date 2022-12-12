@@ -20,72 +20,70 @@ package topic
 import (
 	"encoding/json"
 	"testing"
-	"time"
 
+	"github.com/onsi/gomega"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestDispatchRate(t *testing.T) {
+	g := gomega.NewWithT(t)
+
 	topicName := "persistent://public/default/test-dispatch-rate-topic"
 	args := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
-	assert.Nil(t, execErr)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setArgs := []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4",
 		"--dispatch-rate-period", "3", "--relative-to-publish-rate"}
 	setOut, execErr, _, _ := TestTopicCommands(SetDispatchRateCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message dispatch rate successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Set message dispatch rate successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
 	getArgs := []string{"get-dispatch-rate", topicName}
-	getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, getArgs)
-	var dispatchRateData utils.DispatchRateData
-	err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInMsg, int64(5))
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInByte, int64(4))
-	assert.Equal(t, dispatchRateData.RatePeriodInSecond, int64(3))
-	assert.Equal(t, dispatchRateData.RelativeToPublishRate, true)
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		var dispatchRateData utils.DispatchRateData
+		err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(dispatchRateData.DispatchThrottlingRateInMsg).Should(gomega.Equal(int64(5)))
+		g.Expect(dispatchRateData.DispatchThrottlingRateInByte).Should(gomega.Equal(int64(4)))
+		g.Expect(dispatchRateData.RatePeriodInSecond).Should(gomega.Equal(int64(3)))
+		g.Expect(dispatchRateData.RelativeToPublishRate).Should(gomega.Equal(true))
+	}).Should(gomega.Succeed())
 
 	setArgs = []string{"remove-dispatch-rate", topicName}
 	setOut, execErr, _, _ = TestTopicCommands(RemoveDispatchRateCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Remove message dispatch rate successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Remove message dispatch rate successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-dispatch-rate", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetDispatchRateCmd, getArgs)
-	err = json.Unmarshal(getOut.Bytes(), &dispatchRateData)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInMsg, int64(0))
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInByte, int64(0))
-	assert.Equal(t, dispatchRateData.RatePeriodInSecond, int64(0))
-	assert.Equal(t, dispatchRateData.RelativeToPublishRate, false)
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		var dispatchRateData utils.DispatchRateData
+		err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(dispatchRateData.DispatchThrottlingRateInMsg).Should(gomega.Equal(int64(0)))
+		g.Expect(dispatchRateData.DispatchThrottlingRateInByte).Should(gomega.Equal(int64(0)))
+		g.Expect(dispatchRateData.RatePeriodInSecond).Should(gomega.Equal(int64(0)))
+		g.Expect(dispatchRateData.RelativeToPublishRate).Should(gomega.Equal(false))
+	}).Should(gomega.Succeed())
 
 	setArgs = []string{"set-dispatch-rate", topicName, "--msg-dispatch-rate", "5", "--byte-dispatch-rate", "4",
 		"--dispatch-rate-period", "3"}
 	setOut, execErr, _, _ = TestTopicCommands(SetDispatchRateCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, setOut.String(), "Set message dispatch rate successfully for ["+topicName+"]\n")
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(setOut.String()).Should(gomega.Equal("Set message dispatch rate successfully for [" + topicName + "]\n"))
 
-	time.Sleep(time.Duration(1) * time.Second)
-	getArgs = []string{"get-dispatch-rate", topicName}
-	getOut, execErr, _, _ = TestTopicCommands(GetDispatchRateCmd, getArgs)
-	err = json.Unmarshal(getOut.Bytes(), &dispatchRateData)
-	if err != nil {
-		t.Fatal(err)
-	}
-	assert.Nil(t, execErr)
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInMsg, int64(5))
-	assert.Equal(t, dispatchRateData.DispatchThrottlingRateInByte, int64(4))
-	assert.Equal(t, dispatchRateData.RatePeriodInSecond, int64(3))
-	assert.Equal(t, dispatchRateData.RelativeToPublishRate, false)
+	g.Eventually(func(g gomega.Gomega) {
+		getOut, execErr, _, _ := TestTopicCommands(GetDispatchRateCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		var dispatchRateData utils.DispatchRateData
+		err := json.Unmarshal(getOut.Bytes(), &dispatchRateData)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(dispatchRateData.DispatchThrottlingRateInMsg).Should(gomega.Equal(int64(5)))
+		g.Expect(dispatchRateData.DispatchThrottlingRateInByte).Should(gomega.Equal(int64(4)))
+		g.Expect(dispatchRateData.RatePeriodInSecond).Should(gomega.Equal(int64(3)))
+		g.Expect(dispatchRateData.RelativeToPublishRate).Should(gomega.Equal(false))
+	}).Should(gomega.Succeed())
 }

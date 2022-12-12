@@ -403,7 +403,9 @@ function ensure_dependencies() {
     fi
   done
   # fix open ssl if needed
-  fix_mac_openssl
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    fix_mac_openssl
+  fi
 }
 
 # if no args specified, show usage

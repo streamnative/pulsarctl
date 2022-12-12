@@ -134,6 +134,7 @@ type SinkData struct {
 	Inputs                  string      `json:"inputs,omitempty"`
 	TopicsPattern           string      `json:"topicsPattern,omitempty"`
 	SubsName                string      `json:"subsName,omitempty"`
+	SubsPosition            string      `json:"subsPosition,omitempty"`
 	CustomSerdeInputString  string      `json:"customSerdeInputString,omitempty"`
 	CustomSchemaInputString string      `json:"customSchemaInputString,omitempty"`
 	ProcessingGuarantees    string      `json:"processingGuarantees,omitempty"`
@@ -173,6 +174,7 @@ type NamespacesData struct {
 	LimitStr                       string   `json:"limitStr"`
 	LimitTime                      int64    `json:"limitTime"`
 	PolicyStr                      string   `json:"policyStr"`
+	BacklogQuotaType               string   `json:"backlogQuotaType"`
 	AntiAffinityGroup              string   `json:"antiAffinityGroup"`
 	Tenant                         string   `json:"tenant"`
 	Cluster                        string   `json:"cluster"`
@@ -181,6 +183,9 @@ type NamespacesData struct {
 }
 
 type TopicStats struct {
+	BacklogSize         int64                        `json:"backlogSize"`
+	MsgCounterIn        int64                        `json:"msgInCounter"`
+	MsgCounterOut       int64                        `json:"msgOutCounter"`
 	MsgRateIn           float64                      `json:"msgRateIn"`
 	MsgRateOut          float64                      `json:"msgRateOut"`
 	MsgThroughputIn     float64                      `json:"msgThroughputIn"`
@@ -204,11 +209,15 @@ type PublisherStats struct {
 type SubscriptionStats struct {
 	BlockedSubscriptionOnUnackedMsgs bool            `json:"blockedSubscriptionOnUnackedMsgs"`
 	IsReplicated                     bool            `json:"isReplicated"`
+	LastConsumedFlowTimestamp        int64           `json:"lastConsumedFlowTimestamp"`
+	LastConsumedTimestamp            int64           `json:"lastConsumedTimestamp"`
+	LastAckedTimestamp               int64           `json:"lastAckedTimestamp"`
 	MsgRateOut                       float64         `json:"msgRateOut"`
 	MsgThroughputOut                 float64         `json:"msgThroughputOut"`
 	MsgRateRedeliver                 float64         `json:"msgRateRedeliver"`
 	MsgRateExpired                   float64         `json:"msgRateExpired"`
 	MsgBacklog                       int64           `json:"msgBacklog"`
+	MsgBacklogNoDelayed              int64           `json:"msgBacklogNoDelayed"`
 	MsgDelayed                       int64           `json:"msgDelayed"`
 	UnAckedMessages                  int64           `json:"unackedMessages"`
 	SubType                          string          `json:"type"`

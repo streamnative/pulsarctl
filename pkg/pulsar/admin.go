@@ -18,7 +18,6 @@
 package pulsar
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"path"
@@ -61,7 +60,49 @@ type pulsarClient struct {
 
 // New returns a new client
 func New(config *common.Config) (Client, error) {
-	if len(config.WebServiceURL) == 0 {
+	authProvider, err := auth.GetAuthProvider(config)
+	if err != nil {
+		return nil, err
+	}
+	return NewPulsarClientWithAuthProvider(config, authProvider)
+}
+
+// NewWithAuthProvider creates a client with auth provider.
+// Deprecated: Use NewPulsarClientWithAuthProvider instead.
+func NewWithAuthProvider(config *common.Config, authProvider auth.Provider) Client {
+	client, err := NewPulsarClientWithAuthProvider(config, authProvider)
+	if err != nil {
+		panic(err)
+	}
+	return client
+}
+
+// NewPulsarClientWithAuthProvider create a client with auth provider.
+func NewPulsarClientWithAuthProvider(config *common.Config,
+	authProvider auth.Provider) (Client, error) {
+	var transport http.RoundTripper
+
+	if authProvider != nil {
+		transport = authProvider.Transport()
+		if transport != nil {
+			transport = authProvider
+		}
+	}
+
+	if transport == nil {
+		defaultTransport, err := auth.NewDefaultTransport(config)
+		if err != nil {
+			return nil, err
+		}
+		if authProvider != nil {
+			authProvider.WithTransport(authProvider)
+		} else {
+			transport = defaultTransport
+		}
+	}
+
+	webServiceURL := config.WebServiceURL
+	if len(webServiceURL) == 0 {
 		config.WebServiceURL = DefaultWebServiceURL
 	}
 
@@ -71,36 +112,13 @@ func New(config *common.Config) (Client, error) {
 			ServiceURL:  config.WebServiceURL,
 			VersionInfo: ReleaseVersion,
 			HTTPClient: &http.Client{
-				Timeout: DefaultHTTPTimeOutDuration,
-			},
-		},
-	}
-
-	authProvider, err := auth.GetAuthProvider(config)
-	if !utils.IsNilFixed(authProvider) {
-		c.Client.HTTPClient.Transport = *authProvider
-	} else {
-		fmt.Printf("No Auth Provider found\n")
-	}
-	return c, err
-}
-
-func NewWithAuthProvider(config *common.Config, authProvider auth.Provider) Client {
-	defaultTransport := auth.GetDefaultTransport(config)
-	authProvider.WithTransport(defaultTransport)
-
-	c := &pulsarClient{
-		APIVersion: config.PulsarAPIVersion,
-		Client: &cli.Client{
-			ServiceURL:  config.WebServiceURL,
-			VersionInfo: ReleaseVersion,
-			HTTPClient: &http.Client{
 				Timeout:   DefaultHTTPTimeOutDuration,
-				Transport: authProvider,
+				Transport: transport,
 			},
 		},
 	}
-	return c
+
+	return c, nil
 }
 
 func (c *pulsarClient) endpoint(componentPath string, parts ...string) string {

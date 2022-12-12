@@ -69,6 +69,9 @@ type Subscriptions interface {
 
 	// PeekMessages peeks messages from a topic subscription
 	PeekMessages(utils.TopicName, string, int) ([]*utils.Message, error)
+
+	// GetMessageByID gets message by its ledgerID and entryID
+	GetMessageByID(topic utils.TopicName, ledgerID, entryID int64) (*utils.Message, error)
 }
 
 type subscriptions struct {
@@ -111,34 +114,34 @@ func (s *subscriptions) ResetCursorToTimestamp(topic utils.TopicName, sName stri
 	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.PathEscape(sName),
 		"resetcursor", strconv.FormatInt(timestamp, 10))
-	return s.pulsar.Client.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, nil)
 }
 
 func (s *subscriptions) ClearBacklog(topic utils.TopicName, sName string) error {
 	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.PathEscape(sName), "skip_all")
-	return s.pulsar.Client.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, nil)
 }
 
 func (s *subscriptions) SkipMessages(topic utils.TopicName, sName string, n int64) error {
 	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.PathEscape(sName),
 		"skip", strconv.FormatInt(n, 10))
-	return s.pulsar.Client.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, nil)
 }
 
 func (s *subscriptions) ExpireMessages(topic utils.TopicName, sName string, expire int64) error {
 	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), s.SubPath, url.PathEscape(sName),
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.pulsar.Client.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, nil)
 }
 
 func (s *subscriptions) ExpireAllMessages(topic utils.TopicName, expire int64) error {
 	endpoint := s.pulsar.endpoint(
 		s.basePath, topic.GetRestPath(), "all_subscription",
 		"expireMessages", strconv.FormatInt(expire, 10))
-	return s.pulsar.Client.Post(endpoint, "")
+	return s.pulsar.Client.Post(endpoint, nil)
 }
 
 func (s *subscriptions) PeekMessages(topic utils.TopicName, sName string, n int) ([]*utils.Message, error) {
@@ -169,6 +172,28 @@ func (s *subscriptions) peekNthMessage(topic utils.TopicName, sName string, pos 
 	defer safeRespClose(resp)
 
 	return handleResp(topic, resp)
+}
+
+func (s *subscriptions) GetMessageByID(topic utils.TopicName, ledgerID, entryID int64) (*utils.Message, error) {
+	ledgerIDStr := strconv.FormatInt(ledgerID, 10)
+	entryIDStr := strconv.FormatInt(entryID, 10)
+
+	endpoint := s.pulsar.endpoint(s.basePath, topic.GetRestPath(), "ledger", ledgerIDStr, "entry", entryIDStr)
+	resp, err := s.pulsar.Client.MakeRequest(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+	defer safeRespClose(resp)
+
+	messages, err := handleResp(topic, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(messages) == 0 {
+		return nil, nil
+	}
+	return messages[0], nil
 }
 
 // safeRespClose is used to close a response body
@@ -261,7 +286,7 @@ func getIndividualMsgsFromBatch(topic utils.TopicName, msgID *utils.MessageID, d
 			}
 		}
 
-		//payload
+		// payload
 		singlePayload := make([]byte, singleMeta.GetPayloadSize())
 		if _, err := io.ReadFull(rdBuf, singlePayload); err != nil {
 			return nil, err

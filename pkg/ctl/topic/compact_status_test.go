@@ -34,7 +34,7 @@ func TestCompactStatusNonExistingTopicError(t *testing.T) {
 	args := []string{"compact-status", "test-non-existing-compact-status"}
 	_, execErr, _, _ := TestTopicCommands(StatusCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestCompactStatusNonPersistentTopicError(t *testing.T) {

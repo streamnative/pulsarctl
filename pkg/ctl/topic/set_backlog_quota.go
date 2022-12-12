@@ -18,6 +18,8 @@
 package topic
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -64,36 +66,40 @@ func SetBacklogQuotaCmd(vc *cmdutils.VerbCmd) {
 	)
 
 	backlogQuota := backlogQuota{}
-	vc.Command.Flags().StringVarP(
-		&backlogQuota.LimitSize,
-		"limit-size",
-		"",
-		"",
-		"Size limit (eg: 10M, 16G)")
 
-	vc.Command.Flags().Int64VarP(
-		&backlogQuota.LimitTime,
-		"limit-time",
-		"",
-		-1,
-		"Time limit in seconds")
+	vc.FlagSetGroup.InFlagSet("Set Backlog Quota", func(flagSet *pflag.FlagSet) {
+		flagSet.StringVarP(
+			&backlogQuota.LimitSize,
+			"limit-size",
+			"",
+			"",
+			"Size limit (eg: 10M, 16G)")
 
-	vc.Command.Flags().StringVarP(
-		&backlogQuota.Policy,
-		"policy",
-		"p",
-		"",
-		"Retention policy to enforce when the limit is reached.\n"+
-			"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
+		flagSet.Int64VarP(
+			&backlogQuota.LimitTime,
+			"limit-time",
+			"",
+			-1,
+			"Time limit in seconds")
 
-	vc.Command.Flags().StringVarP(&backlogQuota.Type,
-		"type",
-		"t",
-		string(util.DestinationStorage),
-		"Backlog quota type to set.\n"+
-			"Valid options are: [destination_storage, message_age]")
+		flagSet.StringVarP(
+			&backlogQuota.Policy,
+			"policy",
+			"p",
+			"",
+			"Retention policy to enforce when the limit is reached.\n"+
+				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
 
-	_ = vc.Command.MarkFlagRequired("policy")
+		flagSet.StringVarP(&backlogQuota.Type,
+			"type",
+			"t",
+			string(util.DestinationStorage),
+			"Backlog quota type to set.\n"+
+				"Valid options are: [destination_storage, message_age]")
+
+		_ = cobra.MarkFlagRequired(flagSet, "policy")
+	})
+	vc.EnableOutputFlagSet()
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doSetBacklogQuota(vc, backlogQuota)

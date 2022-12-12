@@ -96,6 +96,8 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetOffloadPoliciesCmd,
 		SetOffloadPoliciesCmd,
 		RemoveOffloadPoliciesCmd,
+		SetDispatchRateCmd,
+		RemoveDispatchRateCmd,
 	}
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)

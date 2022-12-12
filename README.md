@@ -27,17 +27,6 @@
 
 A CLI tool for the [Apache Pulsar](https://pulsar.incubator.apache.org/) project.
 
-## Available Releases
-
-| Version | Reference |
-| --------| --------- |
-| [0.5.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.5.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.5.0/) |
-| [0.4.1](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.1) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.4.1/) |
-| [0.4.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.4.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.4.0/)|
-| [0.3.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.3.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.3.0/) |
-| [0.2.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.2.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.2.0/) |
-| [0.1.0](https://github.com/streamnative/pulsarctl/releases/tag/v0.1.0) | [Command Reference](https://docs.streamnative.io/pulsarctl/v0.1.0/) |
-
 ## Install pulsarctl
 
 ### Mac operation system
@@ -64,6 +53,23 @@ To install `pulsarctl` on the Windows operation system, follow these steps:
 1. Download the package from [here](https://github.com/streamnative/pulsarctl/releases). 
 2. Add the `pulsarctl` directory to your system PATH.
 3. Type `pulsarctl -h` at CMD to verify that `pulsarctl` is work.
+
+### As project dependency
+
+Use `go get` to install the `pulsarctl` as dependency on your project:
+
+```shell
+# Using master branch
+go get github.com/streamnative/pulsarctl@master
+
+# Or using v2.10.1.3 tag
+go get github.com/streamnative/pulsarctl@v2.10.1.3
+
+# Or using v2.9.3.3 tag
+go get github.com/streamnative/pulsarctl@v2.9.3.3
+```
+
+**Note:** We will not release `v0.y.z` tags, so you need to specify the branch or tag.
 
 ## Build pulsarctl from codes
 

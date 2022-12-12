@@ -280,10 +280,13 @@ func (c *Client) PostWithMultiPart(endpoint string, in interface{}, body io.Read
 	return nil
 }
 
-func (c *Client) PostWithQueryParams(endpoint string, params map[string]string) error {
+func (c *Client) PostWithQueryParams(endpoint string, in interface{}, params map[string]string) error {
 	req, err := c.newRequest(http.MethodPost, endpoint)
 	if err != nil {
 		return err
+	}
+	if in != nil {
+		req.obj = in
 	}
 	if params != nil {
 		query := req.url.Query()
@@ -361,12 +364,11 @@ func endpoint(parts ...string) string {
 
 // encodeJSONBody is used to JSON encode a body
 func encodeJSONBody(obj interface{}) (io.Reader, error) {
-	buf := bytes.NewBuffer(nil)
-	enc := json.NewEncoder(buf)
-	if err := enc.Encode(obj); err != nil {
+	b, err := json.Marshal(obj)
+	if err != nil {
 		return nil, err
 	}
-	return buf, nil
+	return bytes.NewReader(b), nil
 }
 
 // decodeJSONBody is used to JSON decode a body

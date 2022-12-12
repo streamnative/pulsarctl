@@ -81,16 +81,15 @@ exec $JAVA $OPTS org.apache.pulsar.admin.cli.PulsarAdminTool $PULSAR_CLIENT_CONF
 
 func TestUploadAndDownloadCommands(t *testing.T) {
 	f, err := ioutil.TempFile(".", "test")
-	defer os.RemoveAll(f.Name())
 	if err != nil {
 		log.Fatal(err)
 		t.Fail()
 		return
 	}
-
+	defer os.RemoveAll(f.Name())
 	err = ioutil.WriteFile(f.Name(), []byte(fileContent), os.ModePerm)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 		t.Fail()
 		return
 	}
@@ -98,7 +97,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 	testFile := f.Name()
 	fileHash, err := getFileSha256(testFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 		t.Fail()
 	}
 
@@ -115,8 +114,8 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 	downloadFilePath := "download-upload-file"
 	args = []string{
 		"download",
-		"--destination-file", pulsarPath,
-		"--path", downloadFilePath,
+		"--destination-file", downloadFilePath,
+		"--path", pulsarPath,
 	}
 	out, execErr, err = TestFunctionsCommands(downloadFunctionsCmd, args)
 	defer os.RemoveAll(downloadFilePath)
@@ -125,7 +124,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 
 	downloadFileSha, err := getFileSha256(downloadFilePath)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 		t.Fail()
 	}
 	assert.Equal(t, fileHash, downloadFileSha)

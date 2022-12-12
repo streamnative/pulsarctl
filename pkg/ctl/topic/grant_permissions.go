@@ -55,7 +55,7 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 	actionsError := cmdutils.Output{
 		Desc: "the specified actions is not allowed.",
 		Out: "The auth action  only can be specified as 'produce', " +
-			"'consume', or 'functions'. Invalid auth action '(actions)'",
+			"'consume', 'sources', 'sinks', 'packages', or 'functions'. Invalid auth action '(actions)'",
 	}
 	out = append(out, successOut, ArgError, flagError, actionsError)
 	out = append(out, TopicNameErrors...)
@@ -80,10 +80,11 @@ func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
 		set.StringVar(&role, "role", "",
 			"Client role to which grant permissions")
 		set.StringSliceVar(&actions, "actions", []string{},
-			"Actions to be granted (produce,consume,functions)")
+			"Actions to be granted (produce,consume,sources,sinks,functions,packages)")
 		cobra.MarkFlagRequired(set, "role")
 		cobra.MarkFlagRequired(set, "actions")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) error {

@@ -36,9 +36,7 @@ func TestPublishRateCmd(t *testing.T) {
 
 	args = []string{"get-publish-rate", ns}
 	_, execErr, _, _ = TestNamespaceCommands(GetPublishRateCmd, args)
-	// unset will return 404
-	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "404")
+	assert.Nil(t, execErr)
 
 	args = []string{"set-publish-rate", ns}
 	out, execErr, _, _ := TestNamespaceCommands(SetPublishRateCmd, args)

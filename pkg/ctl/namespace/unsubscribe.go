@@ -82,6 +82,7 @@ func UnsubscribeCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&bundle, "bundle", "b", "",
 			"{start_boundary}_{end_boundary}")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doUnsubscribe(vc *cmdutils.VerbCmd, bundle string) (err error) {

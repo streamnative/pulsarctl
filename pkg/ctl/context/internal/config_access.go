@@ -172,11 +172,11 @@ func ModifyConfig(configAccess ConfigAccess, newConfig cmdutils.Config, relativi
 			t := *authInfo
 			configToWrite.AuthInfos[key] = &t
 			configToWrite.AuthInfos[key].LocationOfOrigin = destinationFile
-			//if relativizePaths {
+			// if relativizePaths {
 			//	if err := RelativizeAuthInfoLocalPaths(configToWrite.AuthInfos[key]); err != nil {
 			//		return err
 			//	}
-			//}
+			// }
 
 			if err := WriteToFile(*configToWrite, destinationFile); err != nil {
 				return err

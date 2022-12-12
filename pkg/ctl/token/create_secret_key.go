@@ -102,12 +102,12 @@ func createSecretKey(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&signatureAlgorithm, "signature-algorithm", "a", "HS256",
 			"The signature algorithm used for generating the secret key. Valid options are:"+
 				"'HS256', 'HS384', 'HS512'.")
-		set.StringVarP(&output, "output-file", "o", "",
+		set.StringVarP(&output, "output-file", "", "",
 			"The file that the secret key is written to.")
 		set.BoolVarP(&base64Encoded, "base64", "b", false,
 			"Generate a base64 encoded secret key.")
 	})
-
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile string, base64Encoded bool) error {

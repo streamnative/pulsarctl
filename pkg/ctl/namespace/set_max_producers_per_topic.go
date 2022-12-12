@@ -65,6 +65,7 @@ func SetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 		set.IntVar(&num, "size", -1, "max producers per topic")
 		cobra.MarkFlagRequired(set, "size")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetMaxProducersPerTopic(vc *cmdutils.VerbCmd, max int) error {

@@ -35,10 +35,10 @@ func TestSkipCmd(t *testing.T) {
 		"persistent://public/default/test-skip-messages-topic successfully\n", out.String())
 
 	// TODO: reopen this when issue https://github.com/apache/pulsar/issues/9032 fixed.
-	//args = []string{"skip", "--all", "test-skip-messages-topic", "test-skip-messages-sub"}
-	//out, execErr, _, _ = TestSubCommands(SkipCmd, args)
-	//assert.Nil(t, execErr)
-	//assert.Equal(t, "The subscription test-skip-messages-sub skips -1 messages of the topic "+
+	// args = []string{"skip", "--all", "test-skip-messages-topic", "test-skip-messages-sub"}
+	// out, execErr, _, _ = TestSubCommands(SkipCmd, args)
+	// assert.Nil(t, execErr)
+	// assert.Equal(t, "The subscription test-skip-messages-sub skips -1 messages of the topic "+
 	//	"persistent://public/default/test-skip-messages-topic successfully\n", out.String())
 }
 
@@ -59,13 +59,13 @@ func TestSkipNonExistingTopic(t *testing.T) {
 		"test-skip-messages-non-existing-topic-sub"}
 	_, execErr, _, _ := TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 
 	args = []string{"skip", "--all", "test-skip-messages-non-existing-topic",
 		"test-skip-messages-non-existing-topic-sub"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Topic not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Topic")
 }
 
 func TestSkipNonExistingSub(t *testing.T) {
@@ -78,12 +78,12 @@ func TestSkipNonExistingSub(t *testing.T) {
 		"test-skip-messages-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 
 	args = []string{"skip", "--all", "test-skip-messages-non-existing-sub-topic",
 		"test-skip-messages-non-existing-sub-non-existing"}
 	_, execErr, _, _ = TestSubCommands(SkipCmd, args)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 }
 
 func TestSkipNoExistingSubCharactersEscaped(t *testing.T) {
@@ -92,5 +92,5 @@ func TestSkipNoExistingSubCharactersEscaped(t *testing.T) {
 	args := []string{"skip", "--all", "test-skip-messages-non-existing-sub-topic",
 		"test-skip-messages-non-existing-sub-non-existing/with/special chars"}
 	_, execErr, _, _ := TestSubCommands(SkipCmd, args)
-	assert.Equal(t, "code: 404 reason: Subscription not found", execErr.Error())
+	assert.Contains(t, execErr.Error(), "code: 404 reason: Subscription")
 }

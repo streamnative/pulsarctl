@@ -19,7 +19,6 @@ package pulsar
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
@@ -260,10 +259,13 @@ func (c *pulsarClient) Topics() Topics {
 
 func (t *topics) Create(topic utils.TopicName, partitions int) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "partitions")
+	data := &partitions
 	if partitions == 0 {
 		endpoint = t.pulsar.endpoint(t.basePath, topic.GetRestPath())
+		data = nil
 	}
-	return t.pulsar.Client.Put(endpoint, partitions)
+
+	return t.pulsar.Client.Put(endpoint, data)
 }
 
 func (t *topics) Delete(topic utils.TopicName, force bool, nonPartitioned bool) error {
@@ -408,7 +410,7 @@ func (t *topics) GetPartitionedStats(topic utils.TopicName, perPartition bool) (
 func (t *topics) Terminate(topic utils.TopicName) (utils.MessageID, error) {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "terminate")
 	var messageID utils.MessageID
-	err := t.pulsar.Client.PostWithObj(endpoint, "", &messageID)
+	err := t.pulsar.Client.PostWithObj(endpoint, nil, &messageID)
 	return messageID, err
 }
 
@@ -426,12 +428,12 @@ func (t *topics) OffloadStatus(topic utils.TopicName) (utils.OffloadProcessStatu
 
 func (t *topics) Unload(topic utils.TopicName) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "unload")
-	return t.pulsar.Client.Put(endpoint, "")
+	return t.pulsar.Client.Put(endpoint, nil)
 }
 
 func (t *topics) Compact(topic utils.TopicName) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "compaction")
-	return t.pulsar.Client.Put(endpoint, "")
+	return t.pulsar.Client.Put(endpoint, nil)
 }
 
 func (t *topics) CompactStatus(topic utils.TopicName) (utils.LongRunningProcessStatus, error) {
@@ -452,7 +454,7 @@ func (t *topics) SetMessageTTL(topic utils.TopicName, messageTTL int) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "messageTTL")
 	var params = make(map[string]string)
 	params["messageTTL"] = strconv.Itoa(messageTTL)
-	err := t.pulsar.Client.PostWithQueryParams(endpoint, params)
+	err := t.pulsar.Client.PostWithQueryParams(endpoint, nil, params)
 	return err
 }
 
@@ -673,16 +675,9 @@ func (t *topics) GetBacklogQuotaMap(topic utils.TopicName, applied bool) (map[ut
 func (t *topics) SetBacklogQuota(topic utils.TopicName, backlogQuota utils.BacklogQuota,
 	backlogQuotaType utils.BacklogQuotaType) error {
 	endpoint := t.pulsar.endpoint(t.basePath, topic.GetRestPath(), "backlogQuota")
-
-	u, err := url.Parse(endpoint)
-	if err != nil {
-		return err
-	}
-	q := u.Query()
-	q.Add("backlogQuotaType", string(backlogQuotaType))
-	u.RawQuery = q.Encode()
-
-	return t.pulsar.Client.Post(u.String(), &backlogQuota)
+	params := make(map[string]string)
+	params["backlogQuotaType"] = string(backlogQuotaType)
+	return t.pulsar.Client.PostWithQueryParams(endpoint, &backlogQuota, params)
 }
 
 func (t *topics) RemoveBacklogQuota(topic utils.TopicName, backlogQuotaType utils.BacklogQuotaType) error {

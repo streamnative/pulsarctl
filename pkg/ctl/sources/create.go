@@ -108,7 +108,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 		Out:  "[✖]  Source archive not specified",
 	}
 
-	//Cannot specify both archive and source-type
+	// Cannot specify both archive and source-type
 	sourceTypeOut := cmdutils.Output{
 		Desc: "Cannot specify both archive and source-type, please check --archive and --source-type args",
 		Out:  "[✖]  Cannot specify both archive and source-type",
@@ -235,6 +235,7 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"Source config key/values")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {

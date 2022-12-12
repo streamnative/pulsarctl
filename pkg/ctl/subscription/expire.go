@@ -84,6 +84,7 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 		cobra.MarkFlagRequired(set, "expire-time")
 		set.BoolVarP(&all, "all", "a", false, "Expire all messages")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doExpire(vc *cmdutils.VerbCmd, time int64, all bool) error {

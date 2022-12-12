@@ -25,12 +25,12 @@ type Resources struct {
 
 func NewDefaultResources() *Resources {
 	resources := &Resources{
-		//Default cpu is 1 core
+		// Default cpu is 1 core
 		CPU: 1,
 		// Default memory is 1GB
-		Disk: 1073741824,
+		RAM: 1073741824,
 		// Default disk is 10GB
-		RAM: 10737418240,
+		Disk: 10737418240,
 	}
 
 	return resources

@@ -155,6 +155,13 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
 
 		flagSet.StringVar(
+			&sinkData.SubsPosition,
+			"subs-position",
+			"",
+			"Pulsar source subscription position if user wants to consume messages from the specified location. "+
+				"Possible Values: [Latest, Earliest]")
+
+		flagSet.StringVar(
 			&sinkData.CustomSerdeInputString,
 			"custom-serde-inputs",
 			"",
@@ -242,7 +249,18 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			"timeout-ms",
 			0,
 			"The message timeout in milliseconds")
+
+		flagSet.BoolVar(
+			&sinkData.UpdateAuthData,
+			"update-auth-data",
+			false,
+			"Whether or not to update the auth data")
+
+		flagSet.MarkDeprecated("auto-ack", "this value is immutable")
+		flagSet.MarkDeprecated("processing-guarantees", "this value is immutable")
+		flagSet.MarkDeprecated("retain-ordering", "this value is immutable")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
@@ -255,6 +273,15 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	checkArgsForUpdate(sinkData.SinkConf)
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+
+	latestConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
+	if err != nil {
+		return err
+	}
+
+	sinkData.SinkConf.AutoAck = latestConfig.AutoAck
+	sinkData.SinkConf.RetainOrdering = latestConfig.RetainOrdering
+	sinkData.SinkConf.ProcessingGuarantees = latestConfig.ProcessingGuarantees
 
 	updateOptions := util.NewUpdateOptions()
 	updateOptions.UpdateAuthData = sinkData.UpdateAuthData

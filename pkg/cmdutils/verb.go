@@ -27,12 +27,13 @@ import (
 
 // VerbCmd holds attributes that most of the commands use
 type VerbCmd struct {
-	Command      *cobra.Command
-	FlagSetGroup *NamedFlagSetGroup
-	NameArg      string
-	NameArgs     []string
-	NameError    error // for testing
-	OutputConfig *OutputConfig
+	Command               *cobra.Command
+	FlagSetGroup          *NamedFlagSetGroup
+	NameArg               string
+	NameArgs              []string
+	NameError             error // for testing
+	OutputConfig          *OutputConfig
+	ClusterConfigOverride *ClusterConfig
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
@@ -42,7 +43,16 @@ func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, ne
 	}
 	verb.FlagSetGroup = flagGrouping.New(verb.Command)
 	newVerbCmd(verb)
+
+	if verb.ClusterConfigOverride != nil {
+		// add flags that extend the given context
+		verb.FlagSetGroup.Add("Cluster", verb.ClusterConfigOverride.FlagSet())
+	} else {
+		// add flags that extend the loaded context
+		verb.FlagSetGroup.Add("Cluster", PulsarCtlConfig.FlagSet())
+	}
 	verb.FlagSetGroup.AddTo(verb.Command)
+
 	parentResourceCmd.AddCommand(verb.Command)
 }
 

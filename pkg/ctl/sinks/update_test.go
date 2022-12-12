@@ -31,6 +31,5 @@ func TestUpdateSink(t *testing.T) {
 	}
 	_, err, _ := TestSinksCommands(updateSinksCmd, failureUpdateArgs)
 	assert.NotNil(t, err)
-	failMsg := "Sink not-exist doesn't exist"
-	assert.True(t, strings.Contains(err.Error(), failMsg))
+	assert.True(t, strings.Contains(err.Error(), "404"))
 }

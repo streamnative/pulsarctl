@@ -37,8 +37,10 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 	setBacklog := cmdutils.Example{
 		Desc: "Set a backlog quota policy for a namespace",
 		Command: "pulsarctl namespaces set-backlog-quota tenant/namespace \n" +
-			"\t--limit 2G \n" +
-			"\t--policy producer_request_hold",
+			"\t--limit-size 16G \n" +
+			"\t--limit-time -1 \n" +
+			"\t--policy producer_request_hold" +
+			"\t--type <destination_storage|message_age>",
 	}
 	examples = append(examples, setBacklog)
 	desc.CommandExamples = examples
@@ -86,7 +88,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 		return doSetBacklogQuota(vc, namespaceData)
 	}, "the namespace name is not specified or the namespace name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("Set backlog quota", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
 			&namespaceData.LimitStr,
 			"limit-size",
@@ -108,9 +110,17 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 			"",
 			"Retention policy to enforce when the limit is reached.\n"+
 				"Valid options are: [producer_request_hold, producer_exception, consumer_backlog_eviction]")
-		cobra.MarkFlagRequired(flagSet, "limit-size")
+
+		flagSet.StringVarP(
+			&namespaceData.BacklogQuotaType,
+			"type",
+			"",
+			string(util.DestinationStorage),
+			"Backlog quota type to set.\n"+
+				"Valid options are: [destination_storage, message_age]")
 		cobra.MarkFlagRequired(flagSet, "policy")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
@@ -134,7 +144,12 @@ func doSetBacklogQuota(vc *cmdutils.VerbCmd, data util.NamespacesData) error {
 		return fmt.Errorf("invalid retention policy type: %v", data.PolicyStr)
 	}
 
-	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, data.LimitTime, policy))
+	backlogQuotaType, err := util.ParseBacklogQuotaType(data.BacklogQuotaType)
+	if err != nil {
+		return err
+	}
+
+	err = admin.Namespaces().SetBacklogQuota(ns, util.NewBacklogQuota(sizeLimit, data.LimitTime, policy), backlogQuotaType)
 	if err == nil {
 		vc.Command.Printf("Set backlog quota successfully for [%s]\n", ns)
 	}

@@ -28,6 +28,6 @@ func TestHealthCheck(t *testing.T) {
 	args := []string{"healthcheck"}
 	checkOut, execErr, _, _ := TestBrokersCommands(healthCheckCmd, args)
 	assert.Nil(t, execErr)
-	str := strings.Replace(checkOut.String(), "\n", "", -1)
+	str := strings.ReplaceAll(checkOut.String(), "\n", "")
 	assert.Equal(t, "ok", str)
 }

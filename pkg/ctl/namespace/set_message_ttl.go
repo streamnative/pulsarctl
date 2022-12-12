@@ -90,6 +90,7 @@ func setMessageTTL(vc *cmdutils.VerbCmd) {
 			"Message TTL in seconds")
 		cobra.MarkFlagRequired(flagSet, "messageTTL")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetMessageTTL(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {

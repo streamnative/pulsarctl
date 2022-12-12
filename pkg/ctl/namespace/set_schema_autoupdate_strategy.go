@@ -65,6 +65,7 @@ func SetSchemaAutoUpdateStrategyCmd(vc *cmdutils.VerbCmd) {
 				"(AutoUpdateDisabled, Backward, Forward, Full, AlwaysCompatible, BackwardTransitive, "+
 				"ForwardTransitive, FullTransitive)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetSchemaAutoUpdateStrategy(vc *cmdutils.VerbCmd, strategy string) error {

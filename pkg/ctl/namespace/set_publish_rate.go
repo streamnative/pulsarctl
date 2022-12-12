@@ -73,6 +73,7 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 		set.Int64VarP(&(rate.PublishThrottlingRateInByte), "byte-rate", "b", -1,
 			"byte publish rate per second (default -1)")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doSetPublishRate(vc *cmdutils.VerbCmd, pubRate utils.PublishRate) error {

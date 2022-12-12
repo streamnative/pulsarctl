@@ -81,6 +81,7 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 			"Client role to which revoke permissions")
 		cobra.MarkFlagRequired(set, "role")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doRevokeSubPermissions(vc *cmdutils.VerbCmd, role string) error {

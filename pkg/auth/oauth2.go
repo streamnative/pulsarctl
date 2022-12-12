@@ -18,8 +18,11 @@
 package auth
 
 import (
+	"encoding/json"
 	"net/http"
 	"path/filepath"
+
+	"github.com/pkg/errors"
 
 	"github.com/99designs/keyring"
 	"github.com/apache/pulsar-client-go/oauth2"
@@ -31,9 +34,17 @@ import (
 )
 
 const (
-	TypeClientCredential = "client_credentials"
-	TypeDeviceCode       = "device_code"
+	OAuth2PluginName      = "org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2"
+	OAuth2PluginShortName = "oauth2"
 )
+
+type OAuth2ClientCredentials struct {
+	IssuerURL  string `json:"issuerUrl,omitempty"`
+	Audience   string `json:"audience,omitempty"`
+	Scope      string `json:"scope,omitempty"`
+	PrivateKey string `json:"privateKey,omitempty"`
+	ClientID   string `json:"clientId,omitempty"`
+}
 
 type OAuth2Provider struct {
 	clock            clock2.RealClock
@@ -88,14 +99,27 @@ func NewAuthenticationOAuth2WithDefaultFlow(issuer oauth2.Issuer, keyFile string
 	return p, p.loadGrant()
 }
 
+func NewAuthenticationOAuth2FromAuthParams(encodedAuthParam string,
+	transport http.RoundTripper) (*OAuth2Provider, error) {
+
+	var paramsJSON OAuth2ClientCredentials
+	err := json.Unmarshal([]byte(encodedAuthParam), &paramsJSON)
+	if err != nil {
+		return nil, err
+	}
+	return NewAuthenticationOAuth2WithParams(paramsJSON.IssuerURL, paramsJSON.ClientID, paramsJSON.Audience,
+		paramsJSON.Scope, transport)
+}
+
 func NewAuthenticationOAuth2WithParams(
-	issueEndpoint,
+	issuerEndpoint,
 	clientID,
 	audience string,
+	scope string,
 	transport http.RoundTripper) (*OAuth2Provider, error) {
 
 	issuer := oauth2.Issuer{
-		IssuerEndpoint: issueEndpoint,
+		IssuerEndpoint: issuerEndpoint,
 		ClientID:       clientID,
 		Audience:       audience,
 	}
@@ -123,6 +147,9 @@ func NewAuthenticationOAuth2WithParams(
 func (o *OAuth2Provider) loadGrant() error {
 	grant, err := o.store.LoadGrant(o.issuer.Audience)
 	if err != nil {
+		if err == store.ErrNoAuthenticationData {
+			return errors.New("oauth2 login required")
+		}
 		return err
 	}
 	return o.initCache(grant)

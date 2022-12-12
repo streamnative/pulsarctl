@@ -73,6 +73,7 @@ func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
 			"service-configuration name")
 		cobra.MarkFlagRequired(flagSet, "config")
 	})
+	vc.EnableOutputFlagSet()
 }
 
 func doDeleteDynamicConf(vc *cmdutils.VerbCmd, brokerData *utils.BrokerData) error {

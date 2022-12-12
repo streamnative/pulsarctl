@@ -21,58 +21,56 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
-	"time"
 
+	"github.com/onsi/gomega"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 	"github.com/streamnative/pulsarctl/pkg/test"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestInactiveTopicCmd(t *testing.T) {
+	g := gomega.NewWithT(t)
+
 	topicName := fmt.Sprintf("persistent://public/default/test-inactive-topic-%s",
 		test.RandomSuffix())
 	createArgs := []string{"create", topicName, "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, createArgs)
-	assert.Nil(t, execErr)
-
-	<-time.After(5 * time.Second)
+	g.Expect(execErr).Should(gomega.BeNil())
 
 	setArgs := []string{"set-inactive-topic-policies", topicName,
 		"-e=true",
 		"-t", "1h",
 		"-m", "delete_when_no_subscriptions"}
 	out, execErr, _, _ := TestTopicCommands(SetInactiveTopicCmd, setArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(),
-		fmt.Sprintf("Set inactive topic policies successfully for [%s]", topicName))
-
-	<-time.After(5 * time.Second)
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(out.String()).Should(gomega.Equal(fmt.Sprintf("Set inactive topic policies successfully for [%s]",
+		topicName)))
 
 	getArgs := []string{"get-inactive-topic-policies", topicName}
-	out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, getArgs)
-	assert.Nil(t, execErr)
-
-	var inactiveTopic utils.InactiveTopicPolicies
-	err := json.Unmarshal(out.Bytes(), &inactiveTopic)
-	assert.NoError(t, err)
-	assert.Equal(t, true, inactiveTopic.DeleteWhileInactive)
-	assert.Equal(t, 3600, inactiveTopic.MaxInactiveDurationSeconds)
-	assert.Equal(t, "delete_when_no_subscriptions", inactiveTopic.InactiveTopicDeleteMode.String())
+	g.Eventually(func(g gomega.Gomega) {
+		out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		var inactiveTopic utils.InactiveTopicPolicies
+		err := json.Unmarshal(out.Bytes(), &inactiveTopic)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(inactiveTopic.DeleteWhileInactive).Should(gomega.Equal(true))
+		g.Expect(inactiveTopic.MaxInactiveDurationSeconds).Should(gomega.Equal(3600))
+		g.Expect(inactiveTopic.InactiveTopicDeleteMode.String()).Should(gomega.Equal("delete_when_no_subscriptions"))
+	}).Should(gomega.Succeed())
 
 	removeArgs := []string{"remove-inactive-topic-policies", topicName}
 	out, execErr, _, _ = TestTopicCommands(RemoveInactiveTopicCmd, removeArgs)
-	assert.Nil(t, execErr)
-	assert.Equal(t, out.String(),
-		fmt.Sprintf("Remove inactive topic policies successfully from [%s]", topicName))
+	g.Expect(execErr).Should(gomega.BeNil())
+	g.Expect(out.String()).Should(gomega.Equal(fmt.Sprintf("Remove inactive topic policies successfully from [%s]",
+		topicName)))
 
-	<-time.After(5 * time.Second)
-
-	out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, getArgs)
-	assert.Nil(t, execErr)
-
-	err = json.Unmarshal(out.Bytes(), &inactiveTopic)
-	assert.NoError(t, err)
-	assert.Equal(t, false, inactiveTopic.DeleteWhileInactive)
-	assert.Equal(t, 0, inactiveTopic.MaxInactiveDurationSeconds)
-	assert.Nil(t, inactiveTopic.InactiveTopicDeleteMode)
+	g.Eventually(func(g gomega.Gomega) {
+		out, execErr, _, _ = TestTopicCommands(GetInactiveTopicCmd, getArgs)
+		g.Expect(execErr).Should(gomega.BeNil())
+		var inactiveTopic utils.InactiveTopicPolicies
+		err := json.Unmarshal(out.Bytes(), &inactiveTopic)
+		g.Expect(err).Should(gomega.BeNil())
+		g.Expect(inactiveTopic.DeleteWhileInactive).Should(gomega.Equal(false))
+		g.Expect(inactiveTopic.MaxInactiveDurationSeconds).Should(gomega.Equal(0))
+		g.Expect(inactiveTopic.InactiveTopicDeleteMode).Should(gomega.BeNil())
+	}).Should(gomega.Succeed())
 }

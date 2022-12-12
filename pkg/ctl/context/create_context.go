@@ -18,8 +18,11 @@
 package context
 
 import (
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func setContextCmd(vc *cmdutils.VerbCmd) {
@@ -61,11 +64,27 @@ func setContextCmd(vc *cmdutils.VerbCmd) {
 		"create")
 
 	ops := new(createContextOptions)
+	ops.vc = vc
+	ops.flags = &cmdutils.ClusterConfig{}
 
 	// set the run function with name argument
 	vc.SetRunFuncWithNameArg(func() error {
 		return doRunSetContext(vc, ops)
 	}, "the context name is not specified or the context name is specified more than one")
+
+	vc.FlagSetGroup.InFlagSet("OAuth 2.0", func(set *pflag.FlagSet) {
+		set.StringVarP(&ops.flags.IssuerEndpoint, "issuer-endpoint", "i", ops.flags.IssuerEndpoint,
+			"The OAuth 2.0 issuer endpoint")
+		set.StringVarP(&ops.flags.Audience, "audience", "a", ops.flags.Audience,
+			"The audience identifier for the Pulsar instance")
+		set.StringVarP(&ops.flags.ClientID, "client-id", "c", ops.flags.ClientID,
+			"The OAuth 2.0 client identifier for pulsarctl")
+		set.StringVarP(&ops.flags.KeyFile, "key-file", "k", ops.flags.KeyFile,
+			"The path to the private key file")
+		set.StringVar(&ops.flags.Scope, "scope", ops.flags.Scope,
+			"The OAuth 2.0 scope(s) to request")
+	})
+	vc.ClusterConfigOverride = ops.flags
 }
 
 func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
@@ -80,6 +99,8 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	startingStanza, exists := config.Contexts[name]
 	if !exists {
 		startingStanza = new(cmdutils.Context)
+		startingStanza.BrokerServiceURL = pulsar.DefaultWebServiceURL
+		startingStanza.BookieServiceURL = bookkeeper.DefaultWebServiceURL
 	}
 
 	startingAuth, exists := config.AuthInfos[name]
@@ -106,48 +127,50 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 }
 
 type createContextOptions struct {
-	access           internal.ConfigAccess
-	authInfo         *cmdutils.AuthInfo
-	brokerServiceURL string
-	bookieServiceURL string
+	vc     *cmdutils.VerbCmd
+	flags  *cmdutils.ClusterConfig
+	access internal.ConfigAccess
 }
 
 func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Context,
 	existingAuth cmdutils.AuthInfo) (cmdutils.Context, cmdutils.AuthInfo) {
 
+	f := o.vc.Command.Flags()
 	modifiedContext := existingContext
 	modifiedAuth := existingAuth
 
-	o.brokerServiceURL = cmdutils.PulsarCtlConfig.WebServiceURL
-	o.bookieServiceURL = cmdutils.PulsarCtlConfig.BKWebServiceURL
-
-	o.authInfo = new(cmdutils.AuthInfo)
-	o.authInfo.TokenFile = cmdutils.PulsarCtlConfig.TokenFile
-	o.authInfo.Token = cmdutils.PulsarCtlConfig.Token
-	o.authInfo.TLSTrustCertsFilePath = cmdutils.PulsarCtlConfig.TLSTrustCertsFilePath
-	o.authInfo.TLSAllowInsecureConnection = cmdutils.PulsarCtlConfig.TLSAllowInsecureConnection
-	o.authInfo.IssuerEndpoint = cmdutils.PulsarCtlConfig.IssuerEndpoint
-	o.authInfo.ClientID = cmdutils.PulsarCtlConfig.ClientID
-	o.authInfo.Audience = cmdutils.PulsarCtlConfig.Audience
-	o.authInfo.KeyFile = cmdutils.PulsarCtlConfig.KeyFile
-
-	if o.authInfo != nil {
-		modifiedAuth.TokenFile = o.authInfo.TokenFile
-		modifiedAuth.Token = o.authInfo.Token
-		modifiedAuth.TLSAllowInsecureConnection = o.authInfo.TLSAllowInsecureConnection
-		modifiedAuth.TLSTrustCertsFilePath = o.authInfo.TLSTrustCertsFilePath
-		modifiedAuth.IssuerEndpoint = o.authInfo.IssuerEndpoint
-		modifiedAuth.ClientID = o.authInfo.ClientID
-		modifiedAuth.Audience = o.authInfo.Audience
-		modifiedAuth.KeyFile = o.authInfo.KeyFile
+	if f.Changed("admin-service-url") {
+		modifiedContext.BrokerServiceURL = o.flags.WebServiceURL
 	}
-
-	if o.brokerServiceURL != "" {
-		modifiedContext.BrokerServiceURL = o.brokerServiceURL
+	if f.Changed("bookie-service-url") {
+		modifiedContext.BookieServiceURL = o.flags.BKWebServiceURL
 	}
-
-	if o.bookieServiceURL != "" {
-		modifiedContext.BookieServiceURL = o.bookieServiceURL
+	if f.Changed("token-file") {
+		modifiedAuth.TokenFile = o.flags.TokenFile
+	}
+	if f.Changed("token") {
+		modifiedAuth.Token = o.flags.Token
+	}
+	if f.Changed("tls-trust-cert-path") {
+		modifiedAuth.TLSTrustCertsFilePath = o.flags.TLSTrustCertsFilePath
+	}
+	if f.Changed("tls-allow-insecure") {
+		modifiedAuth.TLSAllowInsecureConnection = o.flags.TLSAllowInsecureConnection
+	}
+	if f.Changed("issuer-endpoint") {
+		modifiedAuth.IssuerEndpoint = o.flags.IssuerEndpoint
+	}
+	if f.Changed("client-id") {
+		modifiedAuth.ClientID = o.flags.ClientID
+	}
+	if f.Changed("audience") {
+		modifiedAuth.Audience = o.flags.Audience
+	}
+	if f.Changed("key-file") {
+		modifiedAuth.KeyFile = o.flags.KeyFile
+	}
+	if f.Changed("scope") {
+		modifiedAuth.Scope = o.flags.Scope
 	}
 
 	return modifiedContext, modifiedAuth
