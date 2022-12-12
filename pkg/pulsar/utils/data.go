@@ -151,22 +151,22 @@ type PartitionedTopicMetadata struct {
 	Partitions int `json:"partitions"`
 }
 
-type ManagedLedgerInfo_LedgerInfo struct {
+type ManagedLedgerInfoLedgerInfo struct {
 	LedgerID             int64  `json:"ledgerId"`
 	Entries              int64  `json:"entries"`
 	Size                 int64  `json:"size"`
 	Timestamp            int64  `json:"timestamp"`
 	Offloaded            bool   `json:"isOffloaded"`
-	OffloadedContextUuid string `json:"offloadedContextUuid"`
+	OffloadedContextUUID string `json:"offloadedContextUuid"`
 }
 
 type ManagedLedgerInfo struct {
-	Version            int                            `json:"version"`
-	CreationDate       string                         `json:"creationDate"`
-	ModificationData   string                         `json:"modificationData"`
-	Ledgers            []ManagedLedgerInfo_LedgerInfo `json:"ledgers"`
-	TerminatedPosition PositionInfo                   `json:"terminatedPosition"`
-	Cursors            map[string]CursorInfo          `json:"cursors"`
+	Version            int                           `json:"version"`
+	CreationDate       string                        `json:"creationDate"`
+	ModificationData   string                        `json:"modificationData"`
+	Ledgers            []ManagedLedgerInfoLedgerInfo `json:"ledgers"`
+	TerminatedPosition PositionInfo                  `json:"terminatedPosition"`
+	Cursors            map[string]CursorInfo         `json:"cursors"`
 }
 
 type NamespacesData struct {
