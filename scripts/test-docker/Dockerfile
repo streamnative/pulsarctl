@@ -1,5 +1,5 @@
 ARG PULSAR_VERSION
-FROM streamnative/pulsar-all:$PULSAR_VERSION
+FROM docker.cloudsmith.io/streamnative/staging/pulsar-all:$PULSAR_VERSION
 
 # install golang
 ENV GOLANG_VERSION 1.13.3
