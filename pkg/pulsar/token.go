@@ -85,7 +85,7 @@ func (t *token) Create(algorithm algorithm.Algorithm, signKey interface{}, subje
 	expireTime int64) (string, error) {
 
 	var claims *jwt.MapClaims
-	if expireTime == 0 {
+	if expireTime <= 0 {
 		claims = &jwt.MapClaims{
 			"sub": subject,
 		}
