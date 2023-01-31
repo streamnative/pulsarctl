@@ -65,6 +65,22 @@ rm -f ~/.zcompdump; compinit
 		},
 	}
 
+	var fishCompletionCmd = &cobra.Command{
+		Use:   "fish",
+		Short: "Generates Fish completion scripts",
+		Long: `To load completions run:
+
+pulsarctl completion fish | source
+
+		To load completions for each session, run:
+
+pulsarctl completion fish > ~/.config/fish/completions/pulsarctl.fish
+`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return rootCmd.GenFishCompletion(os.Stdout, true)
+		},
+	}
+
 	cmd := &cobra.Command{
 		Use:   "completion",
 		Short: "Generates shell completion scripts",
@@ -77,6 +93,7 @@ rm -f ~/.zcompdump; compinit
 
 	cmd.AddCommand(bashCompletionCmd)
 	cmd.AddCommand(zshCompletionCmd)
+	cmd.AddCommand(fishCompletionCmd)
 
 	return cmd
 }

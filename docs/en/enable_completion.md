@@ -21,7 +21,7 @@
 
 ## Enabling shell autocompletion
 
-pulsarctl provides autocompletion support for Bash and Zsh, which can save you a lot of typing.
+pulsarctl provides autocompletion support for Bash, Zsh, and Fish, which can save you a lot of typing.
 
 ### Zsh
 
@@ -93,4 +93,18 @@ pulsarctl completion bash >/usr/local/etc/bash_completion.d/pulsarctl.bash
 ```bash
 echo 'source /usr/local/etc/bash_completion.d/pulsarctl.bash' >> ~/.bashrc
 source ~/.bashrc
+```
+
+### Fish
+
+To load completions once in your current session run:
+		
+```bash
+pulsarctl completion fish | source
+```
+
+To load completions for each session, run:
+
+```bash
+pulsarctl completion fish > ~/.config/fish/completions/pulsarctl.fish
 ```
