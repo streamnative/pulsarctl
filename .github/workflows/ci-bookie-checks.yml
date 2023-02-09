@@ -2,15 +2,22 @@ name: Pulsarctl
 on:
   pull_request:
     branches:
-      - '*'
+    - '*'
     path-ignores:
-      - 'docs/**'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
+    - 'docs/**'
+    - 'README.md'
+    - 'CONTRIBUTING.md'
 jobs:
   bookie-ut-tests:
     runs-on: ubuntu-latest
     steps:
+    - uses: s4u/maven-settings-action@v2.6.0
+      with:
+        servers: '[{"id": "ossrh", "username": "${{ secrets.SONATYPE_USERNAME }}",
+          "password": "${{ secrets.SONATYPE_PASSWORD }}"}]'
+    - name: Login to cloudsmith
+      run: docker login -u="${{ secrets.CLOUDSMITH_USERNAME }}" -p="${{ secrets.CLOUDSMITH_API_KEY
+        }}" docker.cloudsmith.io
     - name: Set up Go 1.18
       uses: actions/setup-go@v1
       with:
