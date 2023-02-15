@@ -27,6 +27,7 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+	"time"
 
 	"gopkg.in/yaml.v2"
 )
@@ -68,8 +69,7 @@ func GenerateFiles() {
 
 	manifest := &Manifest{}
 	manifest.Title = "Pulsarctl Reference Docs"
-	manifest.Copyright = "<a href=\"https://github.com/streamnative/pulsarctl\">" +
-		"Copyright © ${new Date().getFullYear()} StreamNative, Inc.</a>"
+	manifest.Copyright = fmt.Sprintf(`<a href="https://github.com/streamnative/pulsarctl">Copyright © %d StreamNative, Inc.</a>`, time.Now().Year())
 
 	NormalizeSpec(&spec)
 
