@@ -65,7 +65,11 @@ func doGetMaxConsumerPerTopic(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	max, err := admin.Namespaces().GetMaxConsumersPerTopic(*ns)
 	if err == nil {
-		vc.Command.Printf("The max consumers per topic of the namespace %s is %d\n", ns.String(), max)
+		if max < 0 {
+			vc.Command.Printf("The max consumers per topic of the namespace %s is not set (%d)\n", ns.String(), max)
+		} else {
+			vc.Command.Printf("The max consumers per topic of the namespace %s is %d\n", ns.String(), max)
+		}
 	}
 
 	return err
