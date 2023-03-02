@@ -23,10 +23,11 @@ import (
 )
 
 type Message struct {
-	MessageID  MessageID
-	Payload    []byte
-	Topic      string
-	Properties map[string]string
+	MessageID    MessageID
+	Payload      []byte
+	Topic        string
+	Properties   map[string]string
+	PartitionKey string
 }
 
 func NewMessage(topic string, id MessageID, payload []byte, properties map[string]string) *Message {

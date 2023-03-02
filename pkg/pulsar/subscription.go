@@ -291,6 +291,11 @@ func getIndividualMsgsFromBatch(topic utils.TopicName, msgID *utils.MessageID, d
 			return nil, err
 		}
 
+		var partitionKey string
+		if singleMeta.PartitionKey != nil {
+			partitionKey = *singleMeta.PartitionKey
+		}
+
 		if len(singleMeta.Properties) > 0 {
 			for _, v := range singleMeta.Properties {
 				k := *v.Key
@@ -306,10 +311,11 @@ func getIndividualMsgsFromBatch(topic utils.TopicName, msgID *utils.MessageID, d
 		}
 
 		msgs = append(msgs, &utils.Message{
-			Topic:      topic.String(),
-			MessageID:  *msgID,
-			Payload:    singlePayload,
-			Properties: properties,
+			Topic:        topic.String(),
+			MessageID:    *msgID,
+			Payload:      singlePayload,
+			Properties:   properties,
+			PartitionKey: partitionKey,
 		})
 	}
 
