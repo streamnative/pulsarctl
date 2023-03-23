@@ -364,8 +364,8 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 	updateOptions := util.NewUpdateOptions()
 	updateOptions.UpdateAuthData = funcData.UpdateAuthData
 
-	if utils.IsPackageURLSupported(funcData.Jar) {
-		err = admin.Functions().UpdateFunctionWithURL(funcData.FuncConf, funcData.Jar, updateOptions)
+	if utils.IsPackageURLSupported(funcData.UserCodeFile) {
+		err = admin.Functions().UpdateFunctionWithURL(funcData.FuncConf, funcData.UserCodeFile, updateOptions)
 		if err != nil {
 			cmdutils.PrintError(vc.Command.OutOrStderr(), err)
 		} else {
