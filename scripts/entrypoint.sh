@@ -29,7 +29,7 @@ export CGO_ENABLED=0
 case ${TEST_ARGS} in
     token)
         echo "running token tests"
-        CGO_ENABLED=1 go test -v -race ./pkg/auth/token.go ./pkg/auth/token_test.go
+        CGO_ENABLED=1 go test -v -race ./pkg/test/token_test.go
         ;;
     tls)
         echo "running tls tests"

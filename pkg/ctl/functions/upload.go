@@ -23,8 +23,9 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func uploadFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -63,7 +64,7 @@ func uploadFunctionsCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doUploadFunction(vc *cmdutils.VerbCmd, sourceFile, path string) error {
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	if strings.TrimSpace(sourceFile) == "" || strings.TrimSpace(path) == "" {
 		return fmt.Errorf("the source file or the path can not be specified as empty")
 	}

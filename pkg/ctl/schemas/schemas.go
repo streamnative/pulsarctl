@@ -24,8 +24,9 @@ import (
 	"io"
 
 	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {

@@ -22,9 +22,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
@@ -161,7 +162,7 @@ func doQueryStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) er
 	if err != nil {
 		return err
 	}
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 
 	for {
 		functionState, err := admin.Functions().GetFunctionState(

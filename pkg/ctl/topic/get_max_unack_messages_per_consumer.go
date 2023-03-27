@@ -18,8 +18,9 @@
 package topic
 
 import (
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func GetMaxUnackMessagesPerConsumerCmd(vc *cmdutils.VerbCmd) {

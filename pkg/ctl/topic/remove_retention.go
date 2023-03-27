@@ -18,8 +18,9 @@
 package topic
 
 import (
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func RemoveRetentionCmd(vc *cmdutils.VerbCmd) {
@@ -75,7 +76,7 @@ func RemoveRetentionCmd(vc *cmdutils.VerbCmd) {
 func doRemoveRetention(vc *cmdutils.VerbCmd) error {
 	topic := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	topicName, err := util.GetTopicName(topic)
+	topicName, err := utils.GetTopicName(topic)
 	if err != nil {
 		return err
 	}

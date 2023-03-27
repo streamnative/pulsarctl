@@ -20,8 +20,9 @@ package bookkeeper
 import (
 	"strconv"
 
+	"github.com/streamnative/pulsar-admin-go/pkg/rest"
+
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
-	"github.com/streamnative/pulsarctl/pkg/cli"
 )
 
 type Ledger interface {
@@ -40,7 +41,7 @@ type Ledger interface {
 
 type ledger struct {
 	client   *bookieClient
-	request  *cli.Client
+	request  *rest.Client
 	basePath string
 	params   map[string]string
 }

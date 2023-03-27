@@ -23,22 +23,21 @@ import (
 	"log"
 	"os"
 
+	"github.com/kris-nova/logger"
 	"github.com/magiconair/properties"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"gopkg.in/yaml.v2"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-
-	"github.com/kris-nova/logger"
-	"github.com/spf13/pflag"
 )
 
 var PulsarCtlConfig = LoadFromEnv()
 
 // the configuration of the cluster that pulsarctl connects to
-type ClusterConfig common.Config
+type ClusterConfig config.Config
 
 func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet(
@@ -179,7 +178,7 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 	}
 }
 
-func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
+func (c *ClusterConfig) Client(version config.APIVersion) Client {
 	if len(c.Token) > 0 && len(c.TokenFile) > 0 {
 		logger.Critical("the token and token file can not be specified at the same time")
 		os.Exit(1)
@@ -194,15 +193,15 @@ func (c *ClusterConfig) Client(version common.APIVersion) pulsar.Client {
 		os.Exit(1)
 	}
 
-	config := common.Config(*c)
+	config := config.Config(*c)
 	config.PulsarAPIVersion = version
 
-	client, err := pulsar.New(&config)
+	adminClient, err := admin.New(&config)
 	if err != nil {
 		logger.Critical("client error: %s", err.Error())
 		os.Exit(1)
 	}
-	return client
+	return &client{admin: adminClient}
 }
 
 func (c *ClusterConfig) BookieClient() bookkeeper.Client {
@@ -223,12 +222,12 @@ func (c *ClusterConfig) BookieClient() bookkeeper.Client {
 func LoadFromEnv() *ClusterConfig {
 	config := ClusterConfig{}
 	if len(config.WebServiceURL) == 0 {
-		config.WebServiceURL = pulsar.DefaultWebServiceURL
+		config.WebServiceURL = admin.DefaultWebServiceURL
 	}
 
 	if envConf, ok := os.LookupEnv("PULSAR_CLIENT_CONF"); ok {
 		if props, err := properties.LoadFile(envConf, properties.UTF8); err == nil && props != nil {
-			config.WebServiceURL = props.GetString("webServiceUrl", pulsar.DefaultWebServiceURL)
+			config.WebServiceURL = props.GetString("webServiceUrl", admin.DefaultWebServiceURL)
 			config.TLSAllowInsecureConnection = props.GetBool("tlsAllowInsecureConnection", false)
 			config.TLSTrustCertsFilePath = props.GetString("tlsTrustCertsFilePath", "")
 			config.BKWebServiceURL = props.GetString("brokerServiceUrl", bookkeeper.DefaultWebServiceURL)

@@ -15,24 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//go:build token
 // +build token
 
-package auth
+package test
 
 import (
 	"bytes"
 	"strings"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 )
 
-func TestUseJsonTokenParams(t *testing.T)  {
+func TestUseJsonTokenParams(t *testing.T) {
 	args := []string{"--auth-plugin", "token",
 		"--auth-params", "{\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXVzZXIifQ.Yb52IE0B5wzooAdSlIlskEgb6_HBXST8k3lINZS5wwg\"}",
 		"clusters", "list"}

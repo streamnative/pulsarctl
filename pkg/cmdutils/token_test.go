@@ -15,14 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package pulsar
+package cmdutils
 
 import (
 	"testing"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/stretchr/testify/require"
+
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 )
 
 func TestCreateToken(t *testing.T) {

@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//go:build namespace
 // +build namespace
 
 package brokers
@@ -23,7 +24,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,7 +33,7 @@ func TestGetOwnedNamespaces(t *testing.T) {
 	listOut, execErr, _, _ := TestBrokersCommands(getOwnedNamespacesCmd, args)
 	assert.Nil(t, execErr)
 
-	var tmpMap map[string]pulsar.NamespaceOwnershipStatus
+	var tmpMap map[string]utils.NamespaceOwnershipStatus
 	err := json.Unmarshal(listOut.Bytes(), &tmpMap)
 	assert.Nil(t, err)
 

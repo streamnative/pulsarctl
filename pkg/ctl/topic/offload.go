@@ -18,12 +18,11 @@
 package topic
 
 import (
+	"github.com/pkg/errors"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
-	"github.com/pkg/errors"
 )
 
 func OffloadCmd(vc *cmdutils.VerbCmd) {

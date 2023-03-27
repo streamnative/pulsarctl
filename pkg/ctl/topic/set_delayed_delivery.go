@@ -20,9 +20,10 @@ package topic
 import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	ctlUtil "github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func SetDelayedDeliveryCmd(vc *cmdutils.VerbCmd) {

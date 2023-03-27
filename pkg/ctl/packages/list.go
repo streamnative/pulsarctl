@@ -22,9 +22,10 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func listPackagesCmd(vc *cmdutils.VerbCmd) {
@@ -89,7 +90,7 @@ func doListPackages(vc *cmdutils.VerbCmd, packageType string) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	packages, err := admin.Packages().List(packageType, namespace.String())
 	if err != nil {
 		return err

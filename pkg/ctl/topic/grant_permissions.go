@@ -18,13 +18,12 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func GrantPermissionCmd(vc *cmdutils.VerbCmd) {
@@ -118,10 +117,10 @@ func doGrantPermission(vc *cmdutils.VerbCmd, role string, actions []string) erro
 	return err
 }
 
-func getAuthActions(actions []string) ([]common.AuthAction, error) {
-	authActions := make([]common.AuthAction, 0)
+func getAuthActions(actions []string) ([]utils.AuthAction, error) {
+	authActions := make([]utils.AuthAction, 0)
 	for _, v := range actions {
-		a, err := common.ParseAuthAction(v)
+		a, err := utils.ParseAuthAction(v)
 		if err != nil {
 			return nil, err
 		}

@@ -18,11 +18,10 @@
 package tenant
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func createTenantCmd(vc *cmdutils.VerbCmd) {

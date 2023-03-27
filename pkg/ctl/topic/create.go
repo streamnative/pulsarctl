@@ -20,11 +20,10 @@ package topic
 import (
 	"strconv"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/pkg/errors"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func CreateTopicCmd(vc *cmdutils.VerbCmd) {

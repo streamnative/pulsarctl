@@ -20,11 +20,11 @@ package packages
 import (
 	"io"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 )
 
 func listPackageVersionsCmd(vc *cmdutils.VerbCmd) {
@@ -77,7 +77,7 @@ func doListPackageVersions(vc *cmdutils.VerbCmd) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	packages, err := admin.Packages().ListVersions(vc.NameArg)
 	if err != nil {
 		return err

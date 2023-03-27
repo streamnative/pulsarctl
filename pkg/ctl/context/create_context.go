@@ -19,10 +19,11 @@ package context
 
 import (
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin"
+
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
 )
 
 func setContextCmd(vc *cmdutils.VerbCmd) {
@@ -99,7 +100,7 @@ func doRunSetContext(vc *cmdutils.VerbCmd, o *createContextOptions) error {
 	startingStanza, exists := config.Contexts[name]
 	if !exists {
 		startingStanza = new(cmdutils.Context)
-		startingStanza.BrokerServiceURL = pulsar.DefaultWebServiceURL
+		startingStanza.BrokerServiceURL = admin.DefaultWebServiceURL
 		startingStanza.BookieServiceURL = bookkeeper.DefaultWebServiceURL
 	}
 

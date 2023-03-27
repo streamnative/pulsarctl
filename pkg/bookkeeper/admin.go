@@ -22,8 +22,9 @@ import (
 	"net/http"
 	"path"
 
+	"github.com/streamnative/pulsar-admin-go/pkg/rest"
+
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
-	"github.com/streamnative/pulsarctl/pkg/cli"
 )
 
 type Client interface {
@@ -38,7 +39,7 @@ type Client interface {
 }
 
 type bookieClient struct {
-	Client     *cli.Client
+	Client     *rest.Client
 	APIVersion bkdata.APIVersion
 }
 
@@ -49,7 +50,7 @@ func New(config *Config) (Client, error) {
 
 	bkClient := &bookieClient{
 		APIVersion: config.APIVersion,
-		Client: &cli.Client{
+		Client: &rest.Client{
 			ServiceURL:  config.WebServiceURL,
 			VersionInfo: ReleaseVersion,
 			HTTPClient: &http.Client{

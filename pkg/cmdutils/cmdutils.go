@@ -26,14 +26,89 @@ import (
 	"strings"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
-	"github.com/streamnative/pulsarctl/pkg/cli"
-	"github.com/streamnative/pulsarctl/pkg/pulsar"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/rest"
+
+	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 )
+
+// Client defines all the interfaces of pulsarctl
+type Client interface {
+	admin.Client
+
+	Token() Token
+}
+
+type client struct {
+	admin admin.Client
+}
+
+func (c *client) Clusters() admin.Clusters {
+	return c.admin.Clusters()
+}
+
+func (c *client) Functions() admin.Functions {
+	return c.admin.Functions()
+}
+
+func (c *client) Tenants() admin.Tenants {
+	return c.admin.Tenants()
+}
+
+func (c *client) Topics() admin.Topics {
+	return c.admin.Topics()
+}
+
+func (c *client) Subscriptions() admin.Subscriptions {
+	return c.admin.Subscriptions()
+}
+
+func (c *client) Sources() admin.Sources {
+	return c.admin.Sources()
+}
+
+func (c *client) Sinks() admin.Sinks {
+	return c.admin.Sinks()
+}
+
+func (c *client) Namespaces() admin.Namespaces {
+	return c.admin.Namespaces()
+}
+
+func (c *client) Schemas() admin.Schema {
+	return c.admin.Schemas()
+}
+
+func (c *client) NsIsolationPolicy() admin.NsIsolationPolicy {
+	return c.admin.NsIsolationPolicy()
+}
+
+func (c *client) Brokers() admin.Brokers {
+	return c.admin.Brokers()
+}
+
+func (c *client) BrokerStats() admin.BrokerStats {
+	return c.admin.BrokerStats()
+}
+
+func (c *client) ResourceQuotas() admin.ResourceQuotas {
+	return c.admin.ResourceQuotas()
+}
+
+func (c *client) FunctionsWorker() admin.FunctionsWorker {
+	return c.admin.FunctionsWorker()
+}
+
+func (c *client) Packages() admin.Packages {
+	return c.admin.Packages()
+}
+
+func (c *client) Token() Token {
+	return &token{}
+}
 
 const IncompatibleFlags = "cannot be used at the same time"
 
@@ -83,11 +158,11 @@ func GetNameArgs(args []string, check func(args []string) error) ([]string, erro
 	return args, nil
 }
 
-func NewPulsarClient() pulsar.Client {
-	return PulsarCtlConfig.Client(common.V2)
+func NewPulsarClient() Client {
+	return PulsarCtlConfig.Client(config.V2)
 }
 
-func NewPulsarClientWithAPIVersion(version common.APIVersion) pulsar.Client {
+func NewPulsarClientWithAPIVersion(version config.APIVersion) Client {
 	return PulsarCtlConfig.Client(version)
 }
 
@@ -106,8 +181,8 @@ func PrintJSON(w io.Writer, obj interface{}) {
 
 func PrintError(w io.Writer, err error) {
 	msg := err.Error()
-	if cli.IsAdminError(err) {
-		ae, _ := err.(cli.Error)
+	if rest.IsAdminError(err) {
+		ae, _ := err.(rest.Error)
 		msg = ae.Reason
 	}
 	fmt.Fprintln(w, "error:", msg)

@@ -20,9 +20,10 @@ package topic
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 type backlogQuota struct {

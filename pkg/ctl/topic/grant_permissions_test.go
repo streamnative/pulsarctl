@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,13 +34,13 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
-	var permissions map[string][]common.AuthAction
+	var permissions map[string][]utils.AuthAction
 	err := json.Unmarshal(out.Bytes(), &permissions)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, map[string][]common.AuthAction{}, permissions)
+	assert.Equal(t, map[string][]utils.AuthAction{}, permissions)
 
 	args = []string{"grant-permissions",
 		"--role", "grant-non-partitioned-role",
@@ -59,7 +59,7 @@ func TestGrantPermissionToNonPartitionedTopic(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, []common.AuthAction{"produce"}, permissions["grant-non-partitioned-role"])
+	assert.Equal(t, []utils.AuthAction{"produce"}, permissions["grant-non-partitioned-role"])
 }
 
 func TestGrantPermissionToPartitionedTopic(t *testing.T) {
@@ -71,13 +71,13 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 	out, execErr, _, _ := TestTopicCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
-	var permissions map[string][]common.AuthAction
+	var permissions map[string][]utils.AuthAction
 	err := json.Unmarshal(out.Bytes(), &permissions)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, map[string][]common.AuthAction{}, permissions)
+	assert.Equal(t, map[string][]utils.AuthAction{}, permissions)
 
 	args = []string{"grant-permissions",
 		"--role", "grant-partitioned-role",
@@ -96,7 +96,7 @@ func TestGrantPermissionToPartitionedTopic(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, []common.AuthAction{"consume"}, permissions["grant-partitioned-role"])
+	assert.Equal(t, []utils.AuthAction{"consume"}, permissions["grant-partitioned-role"])
 }
 
 func TestGrantPermissionArgError(t *testing.T) {
