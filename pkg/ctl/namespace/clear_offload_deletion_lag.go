@@ -20,7 +20,7 @@ package namespace
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 )
 
 func ClearOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {

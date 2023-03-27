@@ -25,13 +25,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/pkg/errors"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
+	"gopkg.in/yaml.v2"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
-	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 )
 
 func processArguments(sourceData *util.SourceData) error {
@@ -137,7 +137,7 @@ func processArguments(sourceData *util.SourceData) error {
 
 func validateSourceType(sourceType string) string {
 	availableSources := make([]string, 0, 10)
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	connectorDefinition, err := admin.Sources().GetBuiltInSources()
 	if err != nil {
 		log.Printf("get builtin sources error: %s", err.Error())

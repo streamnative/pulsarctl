@@ -24,11 +24,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/pkg/errors"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"gopkg.in/yaml.v2"
+
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 )
 
 func parseFullyQualifiedFunctionName(fqfn string, functionConfig *util.FunctionConfig) error {

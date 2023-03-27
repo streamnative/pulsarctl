@@ -20,8 +20,9 @@ package brokers
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {

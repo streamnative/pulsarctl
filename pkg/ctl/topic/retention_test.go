@@ -23,7 +23,8 @@ import (
 	"testing"
 
 	"github.com/onsi/gomega"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/test"
 )
 

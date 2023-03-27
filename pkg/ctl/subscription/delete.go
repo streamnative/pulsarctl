@@ -19,8 +19,9 @@ package subscription
 
 import (
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func DeleteCmd(vc *cmdutils.VerbCmd) {

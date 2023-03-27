@@ -20,8 +20,9 @@ package topic
 import (
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func SetDeduplicationStatusCmd(vc *cmdutils.VerbCmd) {

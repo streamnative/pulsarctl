@@ -22,9 +22,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/streamnative/pulsarctl/pkg/test"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
 func TestDispatchRateCmd(t *testing.T) {

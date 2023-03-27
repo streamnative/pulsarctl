@@ -18,11 +18,11 @@
 package sources
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getSourcesCmd(vc *cmdutils.VerbCmd) {
@@ -114,7 +114,7 @@ func doGetSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	sourceConfig, err := admin.Sources().GetSource(sourceData.Tenant, sourceData.Namespace, sourceData.Name)
 	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(sourceConfig)

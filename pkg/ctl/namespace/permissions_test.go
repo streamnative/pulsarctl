@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,13 +36,13 @@ func TestPermissionsCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetPermissionsCmd, args)
 	assert.Nil(t, execErr)
 
-	var permissions map[string][]common.AuthAction
+	var permissions map[string][]utils.AuthAction
 	err := json.Unmarshal(out.Bytes(), &permissions)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	empty := make(map[string][]common.AuthAction)
+	empty := make(map[string][]utils.AuthAction)
 
 	assert.Equal(t, empty, permissions)
 }

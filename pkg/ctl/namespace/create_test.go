@@ -22,10 +22,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/streamnative/pulsarctl/pkg/ctl/cluster"
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateNs(t *testing.T) {

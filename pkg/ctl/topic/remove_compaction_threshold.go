@@ -18,9 +18,9 @@
 package topic
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func RemoveCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
@@ -56,7 +56,7 @@ func RemoveCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doRemoveCompactionThreshold(vc *cmdutils.VerbCmd) error {
-	topic, err := util.GetTopicName(vc.NameArg)
+	topic, err := utils.GetTopicName(vc.NameArg)
 	if err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package pulsar
+package cmdutils
 
 import (
 	"encoding/base64"
@@ -23,11 +23,10 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/pkg/errors"
 
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
-
-	"github.com/pkg/errors"
 )
 
 type Token interface {
@@ -56,13 +55,6 @@ type Token interface {
 }
 
 type token struct {
-	pulsar *pulsarClient
-}
-
-func (c *pulsarClient) Token() Token {
-	return &token{
-		pulsar: c,
-	}
 }
 
 func (t *token) CreateKeyPair(signatureAlgorithm algorithm.Algorithm) (*keypair.KeyPair, error) {

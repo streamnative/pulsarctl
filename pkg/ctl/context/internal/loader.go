@@ -30,8 +30,9 @@ import (
 	"github.com/imdario/mergo"
 	"gopkg.in/yaml.v2"
 
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 const (
@@ -124,8 +125,10 @@ func NewDefaultClientConfigLoadingRules() *ClientConfigLoadingRules {
 
 // Load starts by running the MigrationRules and then
 // takes the loading rules and returns a Config object based on following rules.
-//   if the ExplicitPath, return the unmerged explicit file
-//   Otherwise, return a merged config based on the Precedence slice
+//
+//	if the ExplicitPath, return the unmerged explicit file
+//	Otherwise, return a merged config based on the Precedence slice
+//
 // A missing ExplicitPath file produces an error. Empty filenames or other missing files are ignored.
 // Read errors or files with non-deserializable content produce errors.
 // The first file to set a particular map key wins and map key's value is never changed.

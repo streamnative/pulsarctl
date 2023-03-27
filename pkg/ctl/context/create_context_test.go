@@ -22,9 +22,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func TestSetContextCmd(t *testing.T) {

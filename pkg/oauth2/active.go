@@ -21,10 +21,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/spf13/pflag"
-
 	o "github.com/apache/pulsar-client-go/oauth2"
-	"github.com/streamnative/pulsarctl/pkg/auth"
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/auth"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 

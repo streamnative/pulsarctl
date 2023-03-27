@@ -20,10 +20,10 @@ package topic
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
 
-	utils "github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
 )
 
 func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {

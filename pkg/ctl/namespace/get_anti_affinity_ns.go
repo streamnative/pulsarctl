@@ -18,12 +18,12 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
@@ -106,7 +106,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 }
 
 func doGetAntiAffinityNamespaces(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V1)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V1)
 	strList, err := admin.Namespaces().GetAntiAffinityNamespaces(data.Tenant, data.Cluster, data.AntiAffinityGroup)
 	if err == nil {
 		vc.Command.Println(strList)

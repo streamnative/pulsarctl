@@ -16,6 +16,7 @@
 // under the License.
 
 // TODO re-enable the test: https://github.com/streamnative/pulsarctl/issues/60
+//go:build function
 // +build function
 
 package functions
@@ -27,10 +28,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-	"github.com/streamnative/pulsarctl/pkg/test"
-
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
 func TestTriggerFunctions(t *testing.T) {

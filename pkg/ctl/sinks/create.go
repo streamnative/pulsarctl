@@ -18,12 +18,12 @@
 package sinks
 
 import (
+	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	util "github.com/streamnative/pulsarctl/pkg/pulsar/utils"
-
-	"github.com/spf13/pflag"
 )
 
 func createSinksCmd(vc *cmdutils.VerbCmd) {
@@ -287,7 +287,7 @@ func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	if utils.IsPackageURLSupported(sinkData.Archive) {
 		err = admin.Sinks().CreateSinkWithURL(sinkData.SinkConf, sinkData.Archive)
 		if err != nil {

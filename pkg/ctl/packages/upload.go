@@ -20,9 +20,10 @@ package packages
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
 )
 
 func uploadPackagesCmd(vc *cmdutils.VerbCmd) {
@@ -105,7 +106,7 @@ func doUploadPackage(vc *cmdutils.VerbCmd, path *string, packageMetadata *utils.
 		return err
 	}
 
-	admin := cmdutils.NewPulsarClientWithAPIVersion(common.V3)
+	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	err = admin.Packages().Upload(vc.NameArg, *path, packageMetadata.Description,
 		packageMetadata.Contact, packageMetadata.Properties)
 	if err != nil {
