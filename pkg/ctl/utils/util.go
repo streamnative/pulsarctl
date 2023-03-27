@@ -33,13 +33,20 @@ const (
 	FILE    = "file"
 	BUILTIN = "builtin"
 
+	FUNCTION = "function"
+	SINK     = "sink"
+	SOURCE   = "source"
+
 	PublicTenant     = "public"
 	DefaultNamespace = "default"
 )
 
 func IsPackageURLSupported(functionPkgURL string) bool {
-	return functionPkgURL != "" && strings.HasPrefix(functionPkgURL, HTTP) ||
-		strings.HasPrefix(functionPkgURL, FILE)
+	return functionPkgURL != "" && (strings.HasPrefix(functionPkgURL, HTTP) ||
+		strings.HasPrefix(functionPkgURL, FILE) ||
+		strings.HasPrefix(functionPkgURL, FUNCTION) ||
+		strings.HasPrefix(functionPkgURL, SINK) ||
+		strings.HasPrefix(functionPkgURL, SOURCE))
 }
 
 func InferMissingFunctionName(funcConf *utils.FunctionConfig) {
