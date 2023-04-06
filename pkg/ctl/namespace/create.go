@@ -124,7 +124,7 @@ func doCreate(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
 		policies.ReplicationClusters = data.Clusters
 	}
 
-	err = admin.Namespaces().CreateNsWithPolices(ns.String(), *policies)
+	err = admin.Namespaces().CreateNsWithPolicies(ns.String(), *policies)
 	if err == nil {
 		vc.Command.Printf("Created %s successfully\n", ns.String())
 	}

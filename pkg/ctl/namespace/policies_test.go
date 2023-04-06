@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPolicesCommand(t *testing.T) {
+func TestPoliciesCommand(t *testing.T) {
 	args := []string{"create", "public/test-policy-namespace"}
 	createOut, _, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
@@ -51,21 +51,21 @@ func TestPolicesCommand(t *testing.T) {
 	}
 }
 
-func TestPolicesNsArgsError(t *testing.T) {
+func TestPoliciesNsArgsError(t *testing.T) {
 	args := []string{"policies"}
 	_, _, nameErr, _ := TestNamespaceCommands(getPolicies, args)
 	assert.Equal(t, "the namespace name is not specified or the namespace name is "+
 		"specified more than one", nameErr.Error())
 }
 
-func TestPolicesNonExistTenant(t *testing.T) {
+func TestPoliciesNonExistTenant(t *testing.T) {
 	args := []string{"policies", "non-existent-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
 }
 
-func TestPolicesNonExistNs(t *testing.T) {
+func TestPoliciesNonExistNs(t *testing.T) {
 	args := []string{"policies", "public/test-not-exist-ns"}
 	_, execErr, _, _ := TestNamespaceCommands(getPolicies, args)
 	assert.NotNil(t, execErr)
