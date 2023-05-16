@@ -34,7 +34,7 @@ func TestClusters(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, createOut.String(), "Created public/test-cluster-namespace successfully\n")
 
-	clusterArgs := []string{"create", "test-replication-cluster", "--url", "192.168.12.11"}
+	clusterArgs := []string{"create", "test-replication-cluster", "--url", "http://192.168.12.11:8080"}
 	_, execErr, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
