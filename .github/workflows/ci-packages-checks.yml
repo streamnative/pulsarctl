@@ -20,3 +20,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Packages tests
         run: scripts/run-integration-tests.sh packages
+      - name: Setup tmate session
+        if: failure()
+        uses: mxschmitt/action-tmate@v3

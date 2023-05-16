@@ -19,7 +19,6 @@ package topic
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsar-admin-go/pkg/utils"
@@ -83,7 +82,7 @@ func TestUpdateTopicNotExist(t *testing.T) {
 	args := []string{"update", "non-exist-topic", "2"}
 	_, execErr, _, _ := TestTopicCommands(UpdateTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.True(t, strings.Contains(execErr.Error(), "is not partitioned topic"))
+	assert.Contains(t, execErr.Error(), "code: 409")
 }
 
 func TestUpdateNonPartitionedTopic(t *testing.T) {
@@ -94,5 +93,5 @@ func TestUpdateNonPartitionedTopic(t *testing.T) {
 	args = []string{"update", "test-update-non-partitioned-topic", "3"}
 	_, execErr, _, _ = TestTopicCommands(UpdateTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.True(t, strings.Contains(execErr.Error(), "is not partitioned topic"))
+	assert.Contains(t, execErr.Error(), "code: 409")
 }
