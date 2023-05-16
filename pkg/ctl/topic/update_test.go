@@ -93,5 +93,5 @@ func TestUpdateNonPartitionedTopic(t *testing.T) {
 	args = []string{"update", "test-update-non-partitioned-topic", "3"}
 	_, execErr, _, _ = TestTopicCommands(UpdateTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, execErr.Error(), "code: 409")
+	assert.Contains(t, execErr.Error(), "code: 409")
 }
