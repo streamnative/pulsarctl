@@ -19,7 +19,6 @@ package topic
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/streamnative/pulsar-admin-go/pkg/utils"
