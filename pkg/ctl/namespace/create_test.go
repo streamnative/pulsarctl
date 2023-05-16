@@ -104,13 +104,14 @@ func TestCreateNsAlreadyExistError(t *testing.T) {
 }
 
 func TestCreateNsForCluster(t *testing.T) {
-	clusterArgs := []string{"create", "test-cluster", "--url", "192.168.12.11"}
-	_, _, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
+	clusterArgs := []string{"create", "test-cluster", "--url", "http://192.168.12.11:8080"}
+	_, execErr, _, err := cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 
 	updateTenantArgs := []string{"update", "--allowed-clusters", "test-cluster",
 		"--allowed-clusters", "standalone", "public"}
-	_, execErr, _, err := tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 

@@ -29,17 +29,19 @@ import (
 
 func TestClusters(t *testing.T) {
 	args := []string{"create", "public/test-cluster-namespace"}
-	createOut, _, _, err := TestNamespaceCommands(createNs, args)
+	createOut, execErr, _, err := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 	assert.Equal(t, createOut.String(), "Created public/test-cluster-namespace successfully\n")
 
-	clusterArgs := []string{"create", "test-replication-cluster", "--url", "192.168.12.11"}
-	_, _, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
+	clusterArgs := []string{"create", "test-replication-cluster", "--url", "http://192.168.12.11:8080"}
+	_, execErr, _, err = cluster.TestClusterCommands(cluster.CreateClusterCmd, clusterArgs)
 	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 
 	updateTenantArgs := []string{"update", "--allowed-clusters", "test-replication-cluster",
 		"--allowed-clusters", "standalone", "public"}
-	_, execErr, _, err := tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
 	assert.Nil(t, execErr)
 
