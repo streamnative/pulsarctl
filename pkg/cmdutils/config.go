@@ -29,8 +29,6 @@ import (
 	"github.com/streamnative/pulsar-admin-go/pkg/admin"
 	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
 	"github.com/streamnative/pulsar-admin-go/pkg/utils"
-	"gopkg.in/yaml.v2"
-
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 )
 
@@ -55,7 +53,7 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		&c.AuthPlugin,
 		"auth-plugin",
 		c.AuthPlugin,
-		"AuthPlugin is used to specify the plugin to use for authentication,\n"+
+		"AuthPlugin is used to specify the plugin to use for authentication,"+
 			" the supported values are \"org.apache.pulsar.client.impl.auth.AuthenticationTls\""+
 			" and \"org.apache.pulsar.client.impl.auth.AuthenticationToken\"")
 
