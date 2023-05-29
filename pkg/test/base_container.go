@@ -121,7 +121,8 @@ func (bc *BaseContainer) Start(ctx context.Context) error {
 
 // ExecCmd executes a command in the container.
 func (bc *BaseContainer) ExecCmd(ctx context.Context, cmd []string) (int, error) {
-	return bc.container.Exec(ctx, cmd)
+	c, _, err := bc.container.Exec(ctx, cmd)
+	return c, err
 }
 
 // Stop stops the container.
