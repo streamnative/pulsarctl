@@ -29,6 +29,8 @@ import (
 	"github.com/streamnative/pulsar-admin-go/pkg/admin"
 	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
 	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+	"gopkg.in/yaml.v2"
+
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 )
 
