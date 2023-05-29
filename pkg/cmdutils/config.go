@@ -56,8 +56,8 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		&c.AuthPlugin,
 		"auth-plugin",
 		c.AuthPlugin,
-		"AuthPlugin is used to specify the plugin to use for authentication,\n"+
-			" the supported values are \"org.apache.pulsar.client.impl.auth.AuthenticationTls\"\n"+
+		"AuthPlugin is used to specify the plugin to use for authentication,"+
+			" the supported values are \"org.apache.pulsar.client.impl.auth.AuthenticationTls\""+
 			" and \"org.apache.pulsar.client.impl.auth.AuthenticationToken\"")
 
 	flags.StringVar(
@@ -65,8 +65,8 @@ func (c *ClusterConfig) FlagSet() *pflag.FlagSet {
 		"auth-params",
 		c.AuthParams,
 		"Authentication parameters are used to configure the authentication provider specified by"+
-			" \"AuthPlugin\".\n"+
-			" Tls example: \"tlsCertFile:val1,tlsKeyFile:val2\"\n"+
+			" \"AuthPlugin\"."+
+			" Tls example: \"tlsCertFile:val1,tlsKeyFile:val2\""+
 			" Token example: \"authParams=file:///path/to/token/file\" or \"authParams=token:tokenVal\"")
 
 	flags.BoolVar(
