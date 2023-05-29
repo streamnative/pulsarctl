@@ -27,6 +27,7 @@ import (
 	"github.com/magiconair/properties"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsar-admin-go/pkg/admin"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/auth"
 	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
 	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"gopkg.in/yaml.v2"
@@ -163,17 +164,18 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 			c.WebServiceURL = ctx.BrokerServiceURL
 			c.BKWebServiceURL = ctx.BookieServiceURL
 		}
-		auth, exist := ctxConf.AuthInfos[*contextName]
+		authInfo, exist := ctxConf.AuthInfos[*contextName]
 		if exist {
-			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
-			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
-			c.Token = auth.Token
-			c.TokenFile = auth.TokenFile
-			c.IssuerEndpoint = auth.IssuerEndpoint
-			c.ClientID = auth.ClientID
-			c.Audience = auth.Audience
-			c.KeyFile = auth.KeyFile
-			c.Scope = auth.Scope
+			c.TLSTrustCertsFilePath = authInfo.TLSTrustCertsFilePath
+			c.TLSAllowInsecureConnection = authInfo.TLSAllowInsecureConnection
+			c.Token = authInfo.Token
+			c.TokenFile = authInfo.TokenFile
+			c.IssuerEndpoint = authInfo.IssuerEndpoint
+			c.ClientID = authInfo.ClientID
+			c.Audience = authInfo.Audience
+			c.KeyFile = authInfo.KeyFile
+			c.Scope = authInfo.Scope
+			c.AuthPlugin = auth.OAuth2PluginName
 		}
 	}
 }

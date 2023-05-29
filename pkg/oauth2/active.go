@@ -30,7 +30,7 @@ import (
 
 func activateCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "This command is used for activating a service account by supplying its credentials."
+	desc.CommandUsedFor = "[Deprecated] This command is used for activating a service account by supplying its credentials." //nolint:lll
 	desc.CommandPermission = "This command doesn't need pulsar permissions."
 
 	var examples []cmdutils.Example
