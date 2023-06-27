@@ -119,7 +119,7 @@ func processArguments(sinkData *util.SinkData) error {
 
 	if sinkData.Parallelism != 0 {
 		sinkData.SinkConf.Parallelism = sinkData.Parallelism
-	} else {
+	} else if sinkData.SinkConf.Parallelism <= 0 {
 		sinkData.SinkConf.Parallelism = 1
 	}
 

@@ -88,7 +88,7 @@ func processArguments(sourceData *util.SourceData) error {
 
 	if sourceData.Parallelism != 0 {
 		sourceData.SourceConf.Parallelism = sourceData.Parallelism
-	} else {
+	} else if sourceData.SourceConf.Parallelism <= 0 {
 		sourceData.SourceConf.Parallelism = 1
 	}
 
