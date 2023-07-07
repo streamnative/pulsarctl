@@ -136,6 +136,10 @@ func processArgs(funcData *util.FunctionData) error {
 		funcData.FuncConf.RetainOrdering = funcData.RetainOrdering
 	}
 
+	if funcData.RetainKeyOrdering {
+		funcData.FuncConf.RetainKeyOrdering = funcData.RetainKeyOrdering
+	}
+
 	if funcData.SubsName != "" {
 		funcData.FuncConf.SubName = funcData.SubsName
 	}
@@ -235,6 +239,14 @@ func processArgs(funcData *util.FunctionData) error {
 		funcData.FuncConf.DeadLetterTopic = funcData.DeadLetterTopic
 	}
 
+	if funcData.FunctionType != "" {
+		jar := fmt.Sprintf("builtin://%s", funcData.FunctionType)
+		funcData.FuncConf.Jar = &jar
+	} else if *funcData.FuncConf.FunctionType != "" {
+		jar := fmt.Sprintf("builtin://%s", *funcData.FuncConf.FunctionType)
+		funcData.FuncConf.Jar = &jar
+	}
+
 	if funcData.Jar != "" {
 		funcData.FuncConf.Jar = &funcData.Jar
 	}
@@ -257,6 +269,81 @@ func processArgs(funcData *util.FunctionData) error {
 
 	if funcData.FuncConf.Jar != nil {
 		funcData.UserCodeFile = *funcData.FuncConf.Jar
+	}
+
+	funcData.FuncConf.CleanupSubscription = funcData.CleanupSubscription
+
+	if funcData.ProducerConfig != "" {
+		producerConfig := util.ProducerConfig{}
+		err := json.Unmarshal([]byte(funcData.ProducerConfig), &producerConfig)
+		if err != nil {
+			return err
+		}
+
+		funcData.FuncConf.ProducerConfig = producerConfig
+	}
+
+	if funcData.CustomSchemaOutput != "" {
+		schemaOutputs := make(map[string]string)
+		err := json.Unmarshal([]byte(funcData.CustomSchemaOutput), &schemaOutputs)
+		if err != nil {
+			return err
+		}
+
+		funcData.FuncConf.CustomSchemaOutputs = schemaOutputs
+	}
+	if funcData.FuncConf.CustomSchemaOutputs == nil {
+		funcData.FuncConf.CustomSchemaOutputs = make(map[string]string)
+	}
+
+	if funcData.InputSpecs != "" {
+		inputSpecs := make(map[string]util.ConsumerConfig)
+		err := json.Unmarshal([]byte(funcData.InputSpecs), &inputSpecs)
+		if err != nil {
+			return err
+		}
+
+		funcData.FuncConf.InputSpecs = inputSpecs
+	}
+
+	if funcData.InputTypeClassName != "" {
+		funcData.FuncConf.InputTypeClassName = funcData.InputTypeClassName
+	}
+
+	if funcData.OutputTypeClassName != "" {
+		funcData.FuncConf.OutputTypeClassName = funcData.OutputTypeClassName
+	}
+
+	if funcData.BatchBuilder != "" {
+		funcData.FuncConf.BatchBuilder = funcData.BatchBuilder
+	}
+
+	funcData.FuncConf.ForwardSourceMessageProperty = funcData.ForwardSourceMessageProperty
+
+	if funcData.SubsPosition != "" {
+		funcData.FuncConf.SubscriptionPosition = funcData.SubsPosition
+	}
+
+	if funcData.SkipToLatest {
+		funcData.FuncConf.SkipToLatest = funcData.SkipToLatest
+	}
+
+	if funcData.CustomRuntimeOptions != "" {
+		funcData.FuncConf.CustomRuntimeOptions = funcData.CustomRuntimeOptions
+	}
+
+	if funcData.Secrets != "" {
+		secretsMap := make(map[string]interface{})
+		err := json.Unmarshal([]byte(funcData.Secrets), &secretsMap)
+		if err != nil {
+			return err
+		}
+
+		funcData.FuncConf.Secrets = secretsMap
+	}
+
+	if funcData.FuncConf.Secrets == nil {
+		funcData.FuncConf.Secrets = make(map[string]interface{})
 	}
 
 	return nil
@@ -286,7 +373,8 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 			"be specified for the function, cannot specify more than one")
 	}
 
-	if functionConfig.Jar != nil && !utils.IsPackageURLSupported(*functionConfig.Jar) &&
+	if functionConfig.Jar != nil && !strings.HasPrefix(*functionConfig.Jar, "builtin://") &&
+		!utils.IsPackageURLSupported(*functionConfig.Jar) &&
 		!utils.IsFileExist(*functionConfig.Jar) {
 		return errors.New("the specified jar file does not exist")
 	}

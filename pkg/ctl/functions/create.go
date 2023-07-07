@@ -227,6 +227,18 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"The class name of a Pulsar Function")
 
 		flagSet.StringVar(
+			&functionData.FunctionType,
+			"function-type",
+			"",
+			"The built-in Pulsar Function type")
+
+		flagSet.BoolVar(
+			&functionData.CleanupSubscription,
+			"cleanup-subscription",
+			true,
+			"Whether delete the subscription when function is deleted")
+
+		flagSet.StringVar(
 			&functionData.Jar,
 			"jar",
 			"",
@@ -273,6 +285,12 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"The output topic of a Pulsar Function (If none is specified, no output is written)")
 
 		flagSet.StringVar(
+			&functionData.ProducerConfig,
+			"producer-config",
+			"",
+			"The custom producer configuration (as a JSON string)")
+
+		flagSet.StringVar(
 			&functionData.LogTopic,
 			"log-topic",
 			"",
@@ -298,10 +316,34 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"The map of input topics to Schema class names (as a JSON string)")
 
 		flagSet.StringVar(
+			&functionData.CustomSchemaOutput,
+			"custom-schema-outputs",
+			"",
+			"The map of input topics to Schema properties (as a JSON string)")
+
+		flagSet.StringVar(
+			&functionData.InputSpecs,
+			"input-specs",
+			"",
+			"The map of inputs to custom configuration (as a JSON string)")
+
+		flagSet.StringVar(
+			&functionData.InputTypeClassName,
+			"input-type-class-name",
+			"",
+			"The class name of input type class")
+
+		flagSet.StringVar(
 			&functionData.OutputSerDeClassName,
 			"output-serde-classname",
 			"",
 			"The SerDe class to be used for messages output by the function")
+
+		flagSet.StringVar(
+			&functionData.OutputTypeClassName,
+			"output-type-class-name",
+			"",
+			"The class name of output type class")
 
 		flagSet.StringVar(
 			&functionData.FunctionConfigFile,
@@ -327,11 +369,41 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			false,
 			"Function consumes and processes messages in order")
 
+		flagSet.BoolVar(
+			&functionData.RetainKeyOrdering,
+			"retain-key-ordering",
+			false,
+			"Function consumes and processes messages in key order")
+
+		flagSet.StringVar(
+			&functionData.BatchBuilder,
+			"batch-builder",
+			"",
+			"BatcherBuilder provides two types of batch construction methods, DEFAULT and KEY_BASED. The default value is: DEFAULT")
+
+		flagSet.BoolVar(
+			&functionData.ForwardSourceMessageProperty,
+			"forward-source-message-property",
+			true,
+			"Forwarding input message's properties to output topic when processing (use false to disable it)")
+
 		flagSet.StringVar(
 			&functionData.SubsName,
 			"subs-name",
 			"",
 			"Pulsar source subscription name if user wants a specific subscription-name for input-topic consumer")
+
+		flagSet.StringVar(
+			&functionData.SubsPosition,
+			"subs-position",
+			"",
+			"Pulsar source subscription position if user wants to consume messages from the specified location")
+
+		flagSet.BoolVar(
+			&functionData.SkipToLatest,
+			"skip-to-latest",
+			false,
+			"Whether or not the consumer skip to latest message upon function instance restart")
 
 		flagSet.IntVar(
 			&functionData.Parallelism,
@@ -400,6 +472,18 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"max-message-retries",
 			0,
 			"How many times should we try to process a message before giving up")
+
+		flagSet.StringVar(
+			&functionData.CustomRuntimeOptions,
+			"custom-runtime-options",
+			"",
+			"A string that encodes options to customize the runtime, see docs for configured runtime for details #Java")
+
+		flagSet.StringVar(
+			&functionData.Secrets,
+			"secrets",
+			"",
+			"The map of secretName to an object that encapsulates how the secret is fetched by the underlying secrets provider")
 
 		flagSet.StringVar(
 			&functionData.DeadLetterTopic,
