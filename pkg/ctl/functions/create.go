@@ -379,7 +379,8 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			&functionData.BatchBuilder,
 			"batch-builder",
 			"",
-			"BatcherBuilder provides two types of batch construction methods, DEFAULT and KEY_BASED. The default value is: DEFAULT")
+			"BatcherBuilder provides two types of batch construction methods, DEFAULT and KEY_BASED."+
+				"The default value is: DEFAULT")
 
 		flagSet.BoolVar(
 			&functionData.ForwardSourceMessageProperty,
