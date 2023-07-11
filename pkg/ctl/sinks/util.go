@@ -167,6 +167,56 @@ func processArguments(sinkData *util.SinkData) error {
 		sinkData.SinkConf.TimeoutMs = &sinkData.TimeoutMs
 	}
 
+	sinkData.SinkConf.CleanupSubscription = sinkData.CleanupSubscription
+
+	if sinkData.InputSpecs != "" {
+		inputSpecs := make(map[string]util.ConsumerConfig)
+		err := json.Unmarshal([]byte(sinkData.InputSpecs), &inputSpecs)
+		if err != nil {
+			return err
+		}
+
+		sinkData.SinkConf.InputSpecs = inputSpecs
+	}
+
+	sinkData.SinkConf.MaxMessageRetries = sinkData.MaxMessageRetries
+
+	if sinkData.DeadLetterTopic != "" {
+		sinkData.SinkConf.DeadLetterTopic = sinkData.DeadLetterTopic
+	}
+
+	sinkData.SinkConf.NegativeAckRedeliveryDelayMs = sinkData.NegativeAckRedeliveryDelayMs
+
+	if sinkData.CustomRuntimeOptions != "" {
+		sinkData.SinkConf.CustomRuntimeOptions = sinkData.CustomRuntimeOptions
+	}
+
+	if sinkData.Secrets != "" {
+		secretsMap := make(map[string]interface{})
+		err := json.Unmarshal([]byte(sinkData.Secrets), &secretsMap)
+		if err != nil {
+			return err
+		}
+
+		sinkData.SinkConf.Secrets = secretsMap
+	}
+
+	if sinkData.SinkConf.Secrets == nil {
+		sinkData.SinkConf.Secrets = make(map[string]interface{})
+	}
+
+	if sinkData.TransformFunction != "" {
+		sinkData.SinkConf.TransformFunction = sinkData.TransformFunction
+	}
+
+	if sinkData.TransformFunctionClassName != "" {
+		sinkData.SinkConf.TransformFunctionClassName = sinkData.TransformFunctionClassName
+	}
+
+	if sinkData.TransformFunctionConfig != "" {
+		sinkData.SinkConf.TransformFunctionConfig = sinkData.TransformFunctionConfig
+	}
+
 	return nil
 }
 

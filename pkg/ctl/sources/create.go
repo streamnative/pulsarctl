@@ -172,6 +172,19 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"The Pulsar topic to which data is sent")
 
 		flagSet.StringVar(
+			&sourceData.ProducerConfig,
+			"producer-config",
+			"",
+			"The custom producer configuration (as a JSON string)")
+
+		flagSet.StringVar(
+			&sourceData.BatchBuilder,
+			"batch-builder",
+			"",
+			"BatchBuilder provides two types of batch construction methods, DEFAULT and KEY_BASED. The default value"+
+				"is: DEFAULT")
+
+		flagSet.StringVar(
 			&sourceData.DeserializationClassName,
 			"deserialization-classname",
 			"",
@@ -234,6 +247,26 @@ func createSourcesCmd(vc *cmdutils.VerbCmd) {
 			"source-config",
 			"",
 			"Source config key/values")
+
+		flagSet.StringVar(
+			&sourceData.BatchSourceConfigString,
+			"batch-source-config",
+			"",
+			"Batch source config key/values")
+
+		flagSet.StringVar(
+			&sourceData.CustomRuntimeOptions,
+			"custom-runtime-options",
+			"",
+			"A string that encodes options to customize the runtime, see docs for configured runtime for details")
+
+		flagSet.StringVar(
+			&sourceData.Secrets,
+			"secrets",
+			"",
+			"The map of secretName to an object that encapsulates how the secret is fetched by the underlying secrets"+
+				"provider")
+
 	})
 	vc.EnableOutputFlagSet()
 }
