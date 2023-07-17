@@ -242,7 +242,7 @@ func processArgs(funcData *util.FunctionData) error {
 	if funcData.FunctionType != "" {
 		jar := fmt.Sprintf("builtin://%s", funcData.FunctionType)
 		funcData.FuncConf.Jar = &jar
-	} else if *funcData.FuncConf.FunctionType != "" {
+	} else if funcData.FuncConf.FunctionType != nil && *funcData.FuncConf.FunctionType != "" {
 		jar := fmt.Sprintf("builtin://%s", *funcData.FuncConf.FunctionType)
 		funcData.FuncConf.Jar = &jar
 	}
