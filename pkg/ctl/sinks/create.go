@@ -156,6 +156,12 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The sink's connector provider")
 
+		flagSet.BoolVar(
+			&sinkData.CleanupSubscription,
+			"cleanup-subscription",
+			true,
+			"Whether delete the subscription when sink is deleted")
+
 		flagSet.StringVarP(
 			&sinkData.Inputs,
 			"inputs",
@@ -197,6 +203,24 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"The map of input topics to Schema types or class names (as a JSON string)")
 
 		flagSet.StringVar(
+			&sinkData.InputSpecs,
+			"input-specs",
+			"",
+			"The map of inputs to custom configuration (as a JSON string)")
+
+		flagSet.IntVar(
+			&sinkData.MaxMessageRetries,
+			"max-redeliver-count",
+			0,
+			"Maximum number of times that a message will be redelivered before being sent to the dead letter queue")
+
+		flagSet.StringVar(
+			&sinkData.DeadLetterTopic,
+			"dead-letter-topic",
+			"",
+			"Name of the dead topic where the failing messages will be sent.")
+
+		flagSet.StringVar(
 			&sinkData.ProcessingGuarantees,
 			"processing-guarantees",
 			"",
@@ -213,6 +237,12 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"parallelism",
 			0,
 			"The sink's parallelism factor (i.e. the number of sink instances to run)")
+
+		flagSet.BoolVar(
+			&sinkData.RetainKeyOrdering,
+			"retain-key-ordering",
+			false,
+			"Sink consumes and processes messages in key order")
 
 		flagSet.StringVar(
 			&sinkData.Archive,
@@ -270,6 +300,44 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			"timeout-ms",
 			0,
 			"The message timeout in milliseconds")
+
+		flagSet.Int64Var(
+			&sinkData.NegativeAckRedeliveryDelayMs,
+			"negative-ack-redelivery-delay-ms",
+			0,
+			"The negative ack message redelivery delay in milliseconds")
+
+		flagSet.StringVar(
+			&sinkData.CustomRuntimeOptions,
+			"custom-runtime-options",
+			"",
+			"A string that encodes options to customize the runtime, see docs for configured runtime for details")
+
+		flagSet.StringVar(
+			&sinkData.Secrets,
+			"secrets",
+			"",
+			"The map of secretName to an object that encapsulates how the secret is fetched by the underlying secrets"+
+				"provider")
+
+		flagSet.StringVar(
+			&sinkData.TransformFunction,
+			"transform-function",
+			"",
+			"Transform function applied before the Sink")
+
+		flagSet.StringVar(
+			&sinkData.TransformFunctionClassName,
+			"transform-function-classname",
+			"",
+			"The transform function class name")
+
+		flagSet.StringVar(
+			&sinkData.TransformFunctionConfig,
+			"transform-function-config",
+			"",
+			"Configuration of the transform function applied before the Sink")
+
 	})
 	vc.EnableOutputFlagSet()
 }

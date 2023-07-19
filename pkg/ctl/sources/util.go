@@ -132,6 +132,48 @@ func processArguments(sourceData *util.SourceData) error {
 		sourceData.SourceConf.Configs = parseConfigs(sourceData.SourceConfigString)
 	}
 
+	if sourceData.ProducerConfig != "" {
+		producerConfig := &util.ProducerConfig{}
+		err := json.Unmarshal([]byte(sourceData.ProducerConfig), producerConfig)
+		if err != nil {
+			return err
+		}
+
+		sourceData.SourceConf.ProducerConfig = producerConfig
+	}
+
+	if sourceData.BatchBuilder != "" {
+		sourceData.SourceConf.BatchBuilder = sourceData.BatchBuilder
+	}
+
+	if sourceData.BatchSourceConfigString != "" {
+		batchSourceConfig := &util.BatchSourceConfig{}
+		err := json.Unmarshal([]byte(sourceData.BatchSourceConfigString), batchSourceConfig)
+		if err != nil {
+			return err
+		}
+
+		sourceData.SourceConf.BatchSourceConfig = batchSourceConfig
+	}
+
+	if sourceData.CustomRuntimeOptions != "" {
+		sourceData.SourceConf.CustomRuntimeOptions = sourceData.CustomRuntimeOptions
+	}
+
+	if sourceData.Secrets != "" {
+		secretsMap := make(map[string]interface{})
+		err := json.Unmarshal([]byte(sourceData.Secrets), &secretsMap)
+		if err != nil {
+			return err
+		}
+
+		sourceData.SourceConf.Secrets = secretsMap
+	}
+
+	if sourceData.SourceConf.Secrets == nil {
+		sourceData.SourceConf.Secrets = make(map[string]interface{})
+	}
+
 	return nil
 }
 
