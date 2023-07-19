@@ -238,6 +238,12 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 			0,
 			"The sink's parallelism factor (i.e. the number of sink instances to run)")
 
+		flagSet.BoolVar(
+			&sinkData.RetainKeyOrdering,
+			"retain-key-ordering",
+			false,
+			"Sink consumes and processes messages in key order")
+
 		flagSet.StringVar(
 			&sinkData.Archive,
 			"archive",

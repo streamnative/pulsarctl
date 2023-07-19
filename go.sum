@@ -388,6 +388,8 @@ github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An
 github.com/spf13/viper v1.8.1/go.mod h1:o0Pch8wJ9BVSWGQMbra6iw0oQ5oktSIBaujf1rJH9Ns=
 github.com/streamnative/pulsar-admin-go v0.1.1 h1:giB45yb7IJwhBXXO9JPg08ZD18EaQa7x61sQ5VCc7Kc=
 github.com/streamnative/pulsar-admin-go v0.1.1/go.mod h1:0bfFvDCNjCPXWUbi2KHuGxGAHGMT4leLZZ1CLYw2qN0=
+github.com/streamnative/pulsar-admin-go v0.1.2-0.20230719024852-e69fbabe5628 h1:cbXfZf2DAQqpJ4eyq2qxcQfBxqbyOY05lflqlDMiXhc=
+github.com/streamnative/pulsar-admin-go v0.1.2-0.20230719024852-e69fbabe5628/go.mod h1:0bfFvDCNjCPXWUbi2KHuGxGAHGMT4leLZZ1CLYw2qN0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.2.0/go.mod h1:qt09Ya8vawLte6SNmTgCsAVtYtaKzEcn8ATUoHMkEqE=

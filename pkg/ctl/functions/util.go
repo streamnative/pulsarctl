@@ -274,8 +274,8 @@ func processArgs(funcData *util.FunctionData) error {
 	funcData.FuncConf.CleanupSubscription = funcData.CleanupSubscription
 
 	if funcData.ProducerConfig != "" {
-		producerConfig := util.ProducerConfig{}
-		err := json.Unmarshal([]byte(funcData.ProducerConfig), &producerConfig)
+		producerConfig := &util.ProducerConfig{}
+		err := json.Unmarshal([]byte(funcData.ProducerConfig), producerConfig)
 		if err != nil {
 			return err
 		}

@@ -133,8 +133,8 @@ func processArguments(sourceData *util.SourceData) error {
 	}
 
 	if sourceData.ProducerConfig != "" {
-		producerConfig := util.ProducerConfig{}
-		err := json.Unmarshal([]byte(sourceData.ProducerConfig), &producerConfig)
+		producerConfig := &util.ProducerConfig{}
+		err := json.Unmarshal([]byte(sourceData.ProducerConfig), producerConfig)
 		if err != nil {
 			return err
 		}
@@ -147,8 +147,8 @@ func processArguments(sourceData *util.SourceData) error {
 	}
 
 	if sourceData.BatchSourceConfigString != "" {
-		batchSourceConfig := util.BatchSourceConfig{}
-		err := json.Unmarshal([]byte(sourceData.BatchSourceConfigString), &batchSourceConfig)
+		batchSourceConfig := &util.BatchSourceConfig{}
+		err := json.Unmarshal([]byte(sourceData.BatchSourceConfigString), batchSourceConfig)
 		if err != nil {
 			return err
 		}

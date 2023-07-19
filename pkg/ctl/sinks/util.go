@@ -78,6 +78,10 @@ func processArguments(sinkData *util.SinkData) error {
 		sinkData.SinkConf.RetainOrdering = sinkData.RetainOrdering
 	}
 
+	if sinkData.RetainKeyOrdering {
+		sinkData.SinkConf.RetainKeyOrdering = sinkData.RetainKeyOrdering
+	}
+
 	if sinkData.Inputs != "" {
 		inputTopics := strings.Split(sinkData.Inputs, ",")
 		sinkData.SinkConf.Inputs = inputTopics
