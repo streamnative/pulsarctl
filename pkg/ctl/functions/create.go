@@ -226,9 +226,10 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The class name of a Pulsar Function")
 
-		flagSet.StringVar(
+		flagSet.StringVarP(
 			&functionData.FunctionType,
 			"function-type",
+			"t",
 			"",
 			"The built-in Pulsar Function type")
 
@@ -296,10 +297,9 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"The topic to which the logs of a Pulsar Function are produced")
 
-		flagSet.StringVarP(
+		flagSet.StringVar(
 			&functionData.SchemaType,
 			"schema-type",
-			"t",
 			"",
 			"The builtin schema type or custom schema class name to be used for messages output by the function")
 
