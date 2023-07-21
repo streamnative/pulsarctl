@@ -390,6 +390,8 @@ github.com/streamnative/pulsar-admin-go v0.1.1 h1:giB45yb7IJwhBXXO9JPg08ZD18EaQa
 github.com/streamnative/pulsar-admin-go v0.1.1/go.mod h1:0bfFvDCNjCPXWUbi2KHuGxGAHGMT4leLZZ1CLYw2qN0=
 github.com/streamnative/pulsar-admin-go v0.1.2-0.20230719024852-e69fbabe5628 h1:cbXfZf2DAQqpJ4eyq2qxcQfBxqbyOY05lflqlDMiXhc=
 github.com/streamnative/pulsar-admin-go v0.1.2-0.20230719024852-e69fbabe5628/go.mod h1:0bfFvDCNjCPXWUbi2KHuGxGAHGMT4leLZZ1CLYw2qN0=
+github.com/streamnative/pulsar-admin-go v0.1.2-0.20230720220908-d28b89a11802 h1:PwuADM+Tknr6SadyThtUh9SljFNsj7HQbV/0KDuLqB4=
+github.com/streamnative/pulsar-admin-go v0.1.2-0.20230720220908-d28b89a11802/go.mod h1:0bfFvDCNjCPXWUbi2KHuGxGAHGMT4leLZZ1CLYw2qN0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.2.0/go.mod h1:qt09Ya8vawLte6SNmTgCsAVtYtaKzEcn8ATUoHMkEqE=
