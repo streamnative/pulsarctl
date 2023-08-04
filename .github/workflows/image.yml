@@ -33,5 +33,5 @@ jobs:
           build-args: |
             VERSION=latest
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: false
           tags: raohuaming/pulsarctl:latest
