@@ -42,3 +42,15 @@ func TestCreateSinkFailedByEmptyFile(t *testing.T) {
 	failImmediatelyIfErrorNotNil(t, err)
 	assert.NotNil(t, execErr)
 }
+
+func TestCreateSinkFailedByNotExistSinkConfigFile(t *testing.T) {
+	failedArgs := []string{
+		"create",
+		"--name", "failed-create",
+		"--inputs", "failed-inputs",
+		"--sink-config-file", "/tmp/failed-config.yaml",
+	}
+	_, execErr, err := TestSinksCommands(createSinksCmd, failedArgs)
+	failImmediatelyIfErrorNotNil(t, err)
+	assert.NotNil(t, execErr)
+}

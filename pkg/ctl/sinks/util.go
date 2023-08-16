@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -49,7 +48,7 @@ func processArguments(sinkData *util.SinkData) error {
 			if err != nil {
 				return fmt.Errorf("unmarshal yaml file error:%s", err.Error())
 			}
-		} else if !os.IsNotExist(err) {
+		} else {
 			return fmt.Errorf("load conf file failed, err:%s", err.Error())
 		}
 	}
