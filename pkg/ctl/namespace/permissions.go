@@ -18,8 +18,7 @@
 package namespace
 
 import (
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
-
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -68,7 +67,7 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 		return vc.NameError
 	}
 
-	ns, err := utils.GetNamespaceName(vc.NameArg)
+	var ns, err = utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}

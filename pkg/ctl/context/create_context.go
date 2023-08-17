@@ -18,9 +18,8 @@
 package context
 
 import (
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin"
-
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"

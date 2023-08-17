@@ -19,9 +19,8 @@ package namespace
 
 import (
 	"fmt"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"time"
-
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )

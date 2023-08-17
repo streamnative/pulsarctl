@@ -21,11 +21,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"io"
 
 	"github.com/spf13/cobra"
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
-
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 

@@ -19,10 +19,9 @@ package bookkeeper
 
 import (
 	"fmt"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 	"net/http"
 	"path"
-
-	"github.com/streamnative/pulsar-admin-go/pkg/rest"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
 )

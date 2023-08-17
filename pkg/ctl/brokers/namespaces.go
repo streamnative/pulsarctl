@@ -19,10 +19,10 @@ package brokers
 
 import (
 	"errors"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )

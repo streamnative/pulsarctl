@@ -18,9 +18,8 @@
 package bookkeeper
 
 import (
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 	"strconv"
-
-	"github.com/streamnative/pulsar-admin-go/pkg/rest"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
 )
