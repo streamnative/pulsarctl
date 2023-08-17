@@ -19,13 +19,13 @@ package utils
 
 import (
 	"fmt"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 )
 
 const (

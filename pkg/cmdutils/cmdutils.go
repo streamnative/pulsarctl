@@ -21,9 +21,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 	"io"
 	"os"
 	"strings"
@@ -31,6 +28,9 @@ import (
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/rest"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 )

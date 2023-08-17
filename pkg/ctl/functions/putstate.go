@@ -18,13 +18,14 @@
 package functions
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"io/ioutil"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 

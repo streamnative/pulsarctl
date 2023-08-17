@@ -18,10 +18,11 @@
 package packages
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -79,7 +80,7 @@ func downloadPackagesCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doDownloadPackage(vc *cmdutils.VerbCmd, path *string) error {
-	var _, err = utils.GetPackageName(vc.NameArg)
+	_, err := utils.GetPackageName(vc.NameArg)
 	if err != nil {
 		return err
 	}

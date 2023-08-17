@@ -18,10 +18,10 @@
 package sinks
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"io"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 

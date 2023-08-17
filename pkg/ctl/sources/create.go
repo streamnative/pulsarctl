@@ -18,9 +18,9 @@
 package sources
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	util "github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"

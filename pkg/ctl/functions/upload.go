@@ -19,11 +19,12 @@ package functions
 
 import (
 	"fmt"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
+
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 

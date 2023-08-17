@@ -18,8 +18,8 @@
 package topic
 
 import (
-	util "github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/pkg/errors"
+	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/utils"
@@ -130,9 +130,9 @@ func findFirstLedgerWithinThreshold(ledgers []util.LedgerInfo, sizeThreshold int
 		suffixSize += ledgers[i].Size
 		if suffixSize > sizeThreshold {
 			return &util.MessageID{
-				LedgerID:       previousLedger,
-				EntryID:        0,
-				PartitionIndex: -1,
+				LedgerID:         previousLedger,
+				EntryID:          0,
+				PartitionedIndex: -1,
 			}
 		}
 		previousLedger = ledgers[i].LedgerID
