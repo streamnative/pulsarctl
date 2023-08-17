@@ -131,9 +131,9 @@ func findFirstLedgerWithinThreshold(ledgers []util.LedgerInfo, sizeThreshold int
 		suffixSize += ledgers[i].Size
 		if suffixSize > sizeThreshold {
 			return &util.MessageID{
-				LedgerID:         previousLedger,
-				EntryID:          0,
-				PartitionedIndex: -1,
+				LedgerID:       previousLedger,
+				EntryID:        0,
+				PartitionIndex: -1,
 			}
 		}
 		previousLedger = ledgers[i].LedgerID

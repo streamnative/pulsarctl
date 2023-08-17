@@ -50,7 +50,7 @@ func GetLastMessageIDCmd(vc *cmdutils.VerbCmd) {
 		Out: "{\n" +
 			"  \"LedgerID\": 0,\n" +
 			"  \"EntryID\": 0,\n" +
-			"  \"PartitionedIndex\": 0" +
+			"  \"PartitionIndex\": 0" +
 			"\n}",
 	}
 	out = append(out, successOut, ArgError)
