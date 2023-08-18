@@ -21,25 +21,20 @@ import (
 	"io"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/pflag"
-
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func listSinksCmd(vc *cmdutils.VerbCmd) {
+func listBuiltInSinksCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Get the list of all the running Pulsar IO sink connectors"
-	desc.CommandPermission = "This command requires namespace function permissions."
+	desc.CommandUsedFor = "Get the list of Pulsar IO connector sinks supported by Pulsar cluster"
+	desc.CommandPermission = "This command does not need any permission."
 
 	var examples []cmdutils.Example
 
 	list := cmdutils.Example{
-		Desc: "Get the list of all the running Pulsar IO sink connectors",
-		Command: "pulsarctl sink list \n" +
-			"\t--tenant public\n" +
-			"\t--namespace default",
+		Desc:    "Get the list of Pulsar IO connector sinks supported by Pulsar cluster",
+		Command: "pulsarctl sink available-sinks",
 	}
 	examples = append(examples, list)
 	desc.CommandExamples = examples
@@ -47,65 +42,49 @@ func listSinksCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out: "+--------------------+\n" +
-			"|   Sink Name    |\n" +
-			"+--------------------+\n" +
-			"| test_sink_name |\n" +
-			"+--------------------+",
+		Out: "+---------+----------+-----------+\n" +
+			"|   Name   |   Desc   |   Class   |\n" +
+			"+----------+----------+-----------+\n" +
+			"| sink_name | example sink | aaa.bbb |\n" +
+			"+----------+----------+-----------+",
 	}
 
 	out = append(out, successOut)
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"list",
-		"Get the list of all the running Pulsar IO sink connectors",
+		"available-sinks",
+		"List Pulsar IO connector sinks supported by Pulsar cluster",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"list",
+		"available-sinks",
 	)
-
-	sinkData := &utils.SinkData{}
 
 	// set the run sink
 	vc.SetRunFunc(func() error {
-		return doListSinks(vc, sinkData)
+		return doListBuiltInSinks(vc)
 	})
 
-	// register the params
-	vc.FlagSetGroup.InFlagSet("SinksConfig", func(flagSet *pflag.FlagSet) {
-		flagSet.StringVar(
-			&sinkData.Tenant,
-			"tenant",
-			"",
-			"The sink's tenant")
-
-		flagSet.StringVar(
-			&sinkData.Namespace,
-			"namespace",
-			"",
-			"The sink's namespace")
-	})
 	vc.EnableOutputFlagSet()
 }
 
-func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
-	processNamespaceCmd(sinkData)
-
+func doListBuiltInSinks(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
-	sinks, err := admin.Sinks().ListSinks(sinkData.Tenant, sinkData.Namespace)
+	connectorDefinition, err := admin.Sinks().GetBuiltInSinks()
 	if err != nil {
 		return err
 	}
 
 	oc := cmdutils.NewOutputContent().
-		WithObject(sinks).
+		WithObject(connectorDefinition).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
-			table.SetHeader([]string{"Pulsar Sinks Name"})
+			table.SetHeader([]string{"Name", "Description", "ClassName"})
 
-			for _, f := range sinks {
-				table.Append([]string{f})
+			for _, f := range connectorDefinition {
+				if f.SinkClass != "" {
+					table.Append([]string{f.Name, f.Description, f.SinkClass})
+				}
 			}
 
 			table.Render()
