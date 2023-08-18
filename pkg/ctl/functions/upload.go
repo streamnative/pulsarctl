@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )

@@ -23,13 +23,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/kris-nova/logger"
 	"github.com/magiconair/properties"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin/auth"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"gopkg.in/yaml.v2"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"

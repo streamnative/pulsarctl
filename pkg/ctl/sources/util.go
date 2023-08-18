@@ -25,9 +25,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
+	util "github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/pkg/errors"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin/config"
-	util "github.com/streamnative/pulsar-admin-go/pkg/utils"
 	"gopkg.in/yaml.v2"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
