@@ -22,8 +22,8 @@ import (
 	"strings"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
 	"github.com/spf13/pflag"
-	"github.com/streamnative/pulsar-admin-go/pkg/admin/auth"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
