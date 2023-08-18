@@ -32,7 +32,7 @@ require (
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.7.1-0.20190205005809-0d3efadf0154+incompatible // indirect
-	github.com/docker/docker v0.7.3-0.20190506211059-b20a14b54661 // indirect
+	github.com/docker/docker v1.3.3 // indirect
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
