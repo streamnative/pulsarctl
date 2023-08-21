@@ -1,4 +1,4 @@
-FROM alpine:3.16.2
+FROM alpine:3.16.7
 
 ADD pulsarctl /usr/local/bin/pulsarctl
 
