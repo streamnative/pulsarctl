@@ -1,5 +1,5 @@
 ARG PULSAR_VERSION
-FROM streamnative/sn-platform:$PULSAR_VERSION
+FROM streamnative/pulsar-all:$PULSAR_VERSION
 
 # use root user
 USER root
