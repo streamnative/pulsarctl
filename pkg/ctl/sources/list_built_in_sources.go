@@ -81,7 +81,7 @@ func doListBuiltInSources(vc *cmdutils.VerbCmd) error {
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
 			table.SetHeader([]string{"Name", "Description", "ClassName"})
-			table.SetColWidth(200)
+			table.SetColWidth(500)
 
 			for _, f := range connectorDefinition {
 				if f.SourceClass != "" {
