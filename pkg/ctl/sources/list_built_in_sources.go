@@ -71,7 +71,7 @@ func listBuiltInSourcesCmd(vc *cmdutils.VerbCmd) {
 func doListBuiltInSources(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
-	connectorDefinition, err := admin.Sinks().GetBuiltInSinks()
+	connectorDefinition, err := admin.Sources().GetBuiltInSources()
 	if err != nil {
 		return err
 	}
@@ -81,6 +81,7 @@ func doListBuiltInSources(vc *cmdutils.VerbCmd) error {
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
 			table.SetHeader([]string{"Name", "Description", "ClassName"})
+			table.SetColWidth(200)
 
 			for _, f := range connectorDefinition {
 				if f.SourceClass != "" {
