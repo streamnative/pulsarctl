@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
@@ -236,6 +237,28 @@ func LoadFromEnv() *ClusterConfig {
 			config.AuthParams = props.GetString("authParams", "")
 			config.AuthPlugin = props.GetString("authPlugin", "")
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
+		}
+	} else if clientFromEnv, ok := os.LookupEnv("PULSAR_CLIENT_FROM_ENV"); ok && clientFromEnv == "true" {
+		if webServiceUrl, ok := os.LookupEnv("webServiceUrl"); ok {
+			config.WebServiceURL = webServiceUrl
+		}
+		if tlsAllowInsecureConnection, ok := os.LookupEnv("tlsAllowInsecureConnection"); ok {
+			config.TLSAllowInsecureConnection, _ = strconv.ParseBool(tlsAllowInsecureConnection)
+		}
+		if tlsTrustCertsFilePath, ok := os.LookupEnv("tlsTrustCertsFilePath"); ok {
+			config.TLSTrustCertsFilePath = tlsTrustCertsFilePath
+		}
+		if brokerServiceUrl, ok := os.LookupEnv("brokerServiceUrl"); ok {
+			config.BKWebServiceURL = brokerServiceUrl
+		}
+		if authParams, ok := os.LookupEnv("authParams"); ok {
+			config.AuthParams = authParams
+		}
+		if authPlugin, ok := os.LookupEnv("authPlugin"); ok {
+			config.AuthPlugin = authPlugin
+		}
+		if tlsEnableHostnameVerification, ok := os.LookupEnv("tlsEnableHostnameVerification"); ok {
+			config.TLSEnableHostnameVerification, _ = strconv.ParseBool(tlsEnableHostnameVerification)
 		}
 	} else {
 		ctxConf, err := readConfigFile()
