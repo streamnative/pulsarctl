@@ -239,8 +239,8 @@ func LoadFromEnv() *ClusterConfig {
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
 		}
 	} else if clientFromEnv, ok := os.LookupEnv("PULSAR_CLIENT_FROM_ENV"); ok && clientFromEnv == "true" {
-		if webServiceUrl, ok := os.LookupEnv("webServiceUrl"); ok {
-			config.WebServiceURL = webServiceUrl
+		if webServiceURL, ok := os.LookupEnv("webServiceUrl"); ok {
+			config.WebServiceURL = webServiceURL
 		}
 		if tlsAllowInsecureConnection, ok := os.LookupEnv("tlsAllowInsecureConnection"); ok {
 			config.TLSAllowInsecureConnection, _ = strconv.ParseBool(tlsAllowInsecureConnection)
@@ -248,8 +248,8 @@ func LoadFromEnv() *ClusterConfig {
 		if tlsTrustCertsFilePath, ok := os.LookupEnv("tlsTrustCertsFilePath"); ok {
 			config.TLSTrustCertsFilePath = tlsTrustCertsFilePath
 		}
-		if brokerServiceUrl, ok := os.LookupEnv("brokerServiceUrl"); ok {
-			config.BKWebServiceURL = brokerServiceUrl
+		if brokerServiceURL, ok := os.LookupEnv("brokerServiceUrl"); ok {
+			config.BKWebServiceURL = brokerServiceURL
 		}
 		if authParams, ok := os.LookupEnv("authParams"); ok {
 			config.AuthParams = authParams
