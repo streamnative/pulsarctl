@@ -42,7 +42,7 @@ func TestCompactCmd(t *testing.T) {
 	out, execErr, _, _ = TestTopicCommands(StatusCmd, args)
 	assert.Nil(t, execErr)
 
-	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is running\n",
+	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is done successfully\n",
 		out.String())
 }
 
