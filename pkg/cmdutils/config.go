@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/magiconair/properties"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/utils"
@@ -235,6 +236,28 @@ func LoadFromEnv() *ClusterConfig {
 			config.AuthParams = props.GetString("authParams", "")
 			config.AuthPlugin = props.GetString("authPlugin", "")
 			config.TLSEnableHostnameVerification = props.GetBool("tlsEnableHostnameVerification", false)
+		}
+	} else if clientFromEnv, ok := os.LookupEnv("PULSAR_CLIENT_FROM_ENV"); ok && clientFromEnv == "true" {
+		if webServiceURL, ok := os.LookupEnv("webServiceUrl"); ok {
+			config.WebServiceURL = webServiceURL
+		}
+		if tlsAllowInsecureConnection, ok := os.LookupEnv("tlsAllowInsecureConnection"); ok {
+			config.TLSAllowInsecureConnection, _ = strconv.ParseBool(tlsAllowInsecureConnection)
+		}
+		if tlsTrustCertsFilePath, ok := os.LookupEnv("tlsTrustCertsFilePath"); ok {
+			config.TLSTrustCertsFilePath = tlsTrustCertsFilePath
+		}
+		if brokerServiceURL, ok := os.LookupEnv("brokerServiceUrl"); ok {
+			config.BKWebServiceURL = brokerServiceURL
+		}
+		if authParams, ok := os.LookupEnv("authParams"); ok {
+			config.AuthParams = authParams
+		}
+		if authPlugin, ok := os.LookupEnv("authPlugin"); ok {
+			config.AuthPlugin = authPlugin
+		}
+		if tlsEnableHostnameVerification, ok := os.LookupEnv("tlsEnableHostnameVerification"); ok {
+			config.TLSEnableHostnameVerification, _ = strconv.ParseBool(tlsEnableHostnameVerification)
 		}
 	} else {
 		ctxConf, err := readConfigFile()
