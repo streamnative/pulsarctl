@@ -18,12 +18,12 @@
 package status
 
 import (
+	"github.com/streamnative/pulsarctl/pkg/auth"
+	"github.com/streamnative/pulsarctl/pkg/cli"
+	"github.com/streamnative/pulsarctl/pkg/pulsar"
+	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
 	"net/http"
 
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -63,17 +63,17 @@ func checkStatusCmd(vc *cmdutils.VerbCmd) {
 func doCheckStatus(vc *cmdutils.VerbCmd) error {
 	cfg := cmdutils.PulsarCtlConfig
 	if len(cfg.WebServiceURL) == 0 {
-		cfg.WebServiceURL = admin.DefaultWebServiceURL
+		cfg.WebServiceURL = pulsar.DefaultWebServiceURL
 	}
-	authProvider, err := auth.GetAuthProvider((*config.Config)(cfg))
+	authProvider, err := auth.GetAuthProvider((*common.Config)(cfg))
 	if err != nil {
 		return err
 	}
-	client := &rest.Client{
+	client := &cli.Client{
 		ServiceURL:  cmdutils.PulsarCtlConfig.WebServiceURL,
-		VersionInfo: admin.ReleaseVersion,
+		VersionInfo: pulsar.ReleaseVersion,
 		HTTPClient: &http.Client{
-			Timeout:   admin.DefaultHTTPTimeOutDuration,
+			Timeout:   pulsar.DefaultHTTPTimeOutDuration,
 			Transport: authProvider,
 		},
 	}
