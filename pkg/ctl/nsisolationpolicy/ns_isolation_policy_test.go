@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 

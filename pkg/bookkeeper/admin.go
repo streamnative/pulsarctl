@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/streamnative/pulsar-admin-go/pkg/rest"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper/bkdata"
 )
