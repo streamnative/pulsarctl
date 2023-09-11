@@ -1,5 +1,5 @@
 ARG PULSAR_VERSION
-FROM docker.cloudsmith.io/streamnative/staging/pulsar-all:$PULSAR_VERSION
+FROM streamnative/pulsar-all:$PULSAR_VERSION
 
 # use root user
 USER root
@@ -19,6 +19,9 @@ RUN apt install build-essential -y
 
 # copy the code into image
 COPY . /pulsarctl
+
+# Create file for active status.html endpoint
+RUN mkdir -p /usr/local/apache && touch /usr/local/apache/htdocs
 
 ENV PULSAR_HOME /pulsar
 ENV PULSARCTL_HOME /pulsarctl

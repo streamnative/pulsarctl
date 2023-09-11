@@ -3,7 +3,7 @@ module github.com/streamnative/pulsarctl
 go 1.18
 
 require (
-	github.com/apache/pulsar-client-go v0.9.0
+	github.com/apache/pulsar-client-go v0.9.1-0.20230816081803-fbee610ddcbf
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
 	github.com/ghodss/yaml v1.0.0
@@ -17,7 +17,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
-	github.com/streamnative/pulsar-admin-go v0.1.0
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.0.10
 	gopkg.in/yaml.v2 v2.4.0
@@ -62,7 +61,7 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.38.0 // indirect
-	google.golang.org/protobuf v1.26.0 // indirect
+	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

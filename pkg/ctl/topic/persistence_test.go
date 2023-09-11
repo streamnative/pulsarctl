@@ -21,8 +21,8 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/onsi/gomega"
-	"github.com/streamnative/pulsar-admin-go/pkg/utils"
 )
 
 func TestPersistence(t *testing.T) {
