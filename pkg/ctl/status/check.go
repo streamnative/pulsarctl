@@ -18,11 +18,12 @@
 package status
 
 import (
+	"net/http"
+
 	"github.com/streamnative/pulsarctl/pkg/auth"
 	"github.com/streamnative/pulsarctl/pkg/cli"
 	"github.com/streamnative/pulsarctl/pkg/pulsar"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common"
-	"net/http"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
