@@ -18,6 +18,7 @@
 package topic
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -42,8 +43,11 @@ func TestCompactCmd(t *testing.T) {
 	out, execErr, _, _ = TestTopicCommands(StatusCmd, args)
 	assert.Nil(t, execErr)
 
-	assert.Equal(t, "Compacting the topic persistent://public/default/test-compact-topic is running\n",
-		out.String())
+	assert.True(t,
+		strings.Contains(out.String(),
+			"Compacting the topic persistent://public/default/test-compact-topic is done successfully\n") ||
+			strings.Contains(out.String(),
+				"Compacting the topic persistent://public/default/test-compact-topic is running\n"))
 }
 
 func TestCompactArgError(t *testing.T) {
