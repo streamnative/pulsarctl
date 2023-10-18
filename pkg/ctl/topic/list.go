@@ -90,6 +90,8 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 		WithObject(listOutput{partitionedTopics, nonPartitionedTopics}).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"topic name", "partitioned ?"})
 
 			for _, v := range partitionedTopics {
