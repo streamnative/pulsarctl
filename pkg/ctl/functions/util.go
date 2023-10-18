@@ -227,8 +227,6 @@ func processArgs(funcData *util.FunctionData) error {
 
 	if funcData.AutoAck {
 		funcData.FuncConf.AutoAck = funcData.AutoAck
-	} else {
-		funcData.FuncConf.AutoAck = true
 	}
 
 	if funcData.MaxMessageRetries != 0 {
