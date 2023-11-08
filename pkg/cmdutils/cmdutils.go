@@ -170,6 +170,10 @@ func NewBookieClient() bookkeeper.Client {
 	return PulsarCtlConfig.BookieClient()
 }
 
+func NewBookieClientFromConfig(config *ClusterConfig) bookkeeper.Client {
+	return config.BookieClient()
+}
+
 func PrintJSON(w io.Writer, obj interface{}) {
 	b, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {
