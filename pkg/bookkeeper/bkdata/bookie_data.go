@@ -31,6 +31,10 @@ type GCStatus struct {
 	MinorCompactionCounter  int64 `json:"minorCompactionCounter"`
 }
 
+type ReadonlyState struct {
+	ReadOnly bool `json:"readOnly"`
+}
+
 type State struct {
 	Running                        bool `json:"running"`
 	ReadOnly                       bool `json:"readOnly"`

@@ -42,6 +42,9 @@ type Bookie interface {
 
 	// State gets the state of a bookie
 	State() (*bkdata.State, error)
+
+	// SetReadonlyState sets the readonly state of a bookie
+	SetReadonlyState(bool) error
 }
 
 type bookie struct {
@@ -56,6 +59,14 @@ func (c *bookieClient) Bookie() Bookie {
 		basePath: "/bookie",
 		params:   make(map[string]string),
 	}
+}
+
+func (b *bookie) SetReadonlyState(readonly bool) error {
+	endpoint := b.bk.endpoint(b.basePath, "/state/readonly")
+	request := bkdata.ReadonlyState{
+		ReadOnly: readonly,
+	}
+	return b.bk.Client.Put(endpoint, &request)
 }
 
 func (b *bookie) LastLogMark() (map[string]string, error) {
