@@ -18,28 +18,16 @@
 package bookie
 
 import (
-	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
-	resourceCmd := cmdutils.NewResourceCmd(
-		"bookie",
-		"Operations about one bookie",
-		"")
-
-	commands := []func(*cmdutils.VerbCmd){
-		lastLogMarkCmd,
-		listDiskFileCmd,
-		expandStorageCmd,
-		gcCmd,
-		gcStatusCmd,
-		gcDetailsCmd,
-		stateCmd,
-		setReadonlyStateCmd,
-	}
-
-	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
-	return resourceCmd
+func TestSetReadonlyStateCmd(t *testing.T) {
+	args := []string{"set-readonly", "true"}
+	out, execErr, nameErr, err := testBookieCommands(setReadonlyStateCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "Successfully set the readonly state of a bookie\n", out.String())
 }
