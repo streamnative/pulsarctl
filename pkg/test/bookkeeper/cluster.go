@@ -31,7 +31,7 @@ import (
 
 var (
 	LatestImage = "apache/bookkeeper:latest"
-	BookKeeper  = "apache/bookkeeper:4.16.3"
+	BookKeeper  = "apache/bookkeeper:4.16.0"
 )
 
 type ClusterDef struct {
@@ -57,7 +57,7 @@ func NewBookieCluster(spec *ClusterSpec) (*ClusterDef, error) {
 	}
 	c.network = network
 
-	c.zkContainer = containers.NewZookeeperContainer("apache/bookkeeper:4.16.0", c.networkName)
+	c.zkContainer = containers.NewZookeeperContainer(spec.Image, c.networkName)
 	c.bookieContainers = getBookieContainers(spec, c.networkName, containers.DefaultZookeeperServiceString())
 
 	return c, nil
