@@ -30,4 +30,12 @@ func TestSetReadonlyStateCmd(t *testing.T) {
 	assert.Nil(t, nameErr)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "\"Successfully set the readonly state of a bookie\"\n", out.String())
+
+	// set back to false, otherwise the next test will fail
+	args = []string{"set-readonly", "false"}
+	out, execErr, nameErr, err = testBookieCommands(setReadonlyStateCmd, args)
+	assert.Nil(t, err)
+	assert.Nil(t, nameErr)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "\"Successfully set the readonly state of a bookie\"\n", out.String())
 }
