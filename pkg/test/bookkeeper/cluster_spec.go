@@ -35,7 +35,7 @@ type ClusterSpec struct {
 
 func DefaultClusterSpec() *ClusterSpec {
 	return &ClusterSpec{
-		Image:                 BookKeeper4_10_0,
+		Image:                 BookKeeper,
 		ClusterName:           "default-bookie",
 		NumBookies:            1,
 		BookieServicePort:     containers.DefaultBookieServicePort,

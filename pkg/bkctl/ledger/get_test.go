@@ -57,7 +57,6 @@ func TestGetNonExistentLedger(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Nil(t, nameErr)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 500 reason: Internal Server Error", execErr.Error())
 }
 
 func TestGetArgError(t *testing.T) {

@@ -30,8 +30,8 @@ import (
 )
 
 var (
-	LatestImage      = "apache/bookkeeper:latest"
-	BookKeeper4_10_0 = "apache/bookkeeper:4.10.0"
+	LatestImage = "apache/bookkeeper:latest"
+	BookKeeper  = "apache/bookkeeper:4.16.3"
 )
 
 type ClusterDef struct {
