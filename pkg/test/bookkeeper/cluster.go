@@ -110,6 +110,9 @@ func (c *ClusterDef) Start(ctx context.Context) error {
 }
 
 func (c *ClusterDef) Stop(ctx context.Context) error {
+	if c.zkContainer != nil {
+		_ = c.zkContainer.Stop(ctx)
+	}
 	if c.bookieContainers != nil {
 		for _, v := range c.bookieContainers {
 			err := v.Stop(ctx)

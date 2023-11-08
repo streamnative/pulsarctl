@@ -33,7 +33,7 @@ func NewZookeeperContainer(image, network string) *test.BaseContainer {
 	zookeeper.WithNetwork([]string{network})
 	zookeeper.WithNetworkAliases(map[string][]string{network: {ZookeeperName}})
 	zookeeper.WithCmd([]string{"zookeeper"})
-	zookeeper.WaitForLog("binding to port 0.0.0.0/0.0.0.0:2181")
+	zookeeper.WaitForLog("Started AdminServer on address 0.0.0.0, port 8080 and command URL /commands")
 	return zookeeper
 }
 
