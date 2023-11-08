@@ -30,8 +30,8 @@ import (
 )
 
 var (
-	LatestImage      = "apache/bookkeeper:latest"
-	BookKeeper4_10_0 = "apache/bookkeeper:4.10.0"
+	LatestImage = "apache/bookkeeper:latest"
+	BookKeeper  = "apache/bookkeeper:4.16.0"
 )
 
 type ClusterDef struct {
@@ -110,6 +110,9 @@ func (c *ClusterDef) Start(ctx context.Context) error {
 }
 
 func (c *ClusterDef) Stop(ctx context.Context) error {
+	if c.zkContainer != nil {
+		_ = c.zkContainer.Stop(ctx)
+	}
 	if c.bookieContainers != nil {
 		for _, v := range c.bookieContainers {
 			err := v.Stop(ctx)

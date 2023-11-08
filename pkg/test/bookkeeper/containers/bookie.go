@@ -31,6 +31,6 @@ func NewBookieContainer(image, network string) *test.BaseContainer {
 	bk.WithNetworkAliases(map[string][]string{network: {BookieName}})
 	bk.ExposedPorts([]string{"8080"})
 	bk.WithCmd([]string{"bookie"})
-	bk.WaitForPort("8080")
+	bk.WaitForLog("Starting Vertx HTTP server on port 8080")
 	return bk
 }
