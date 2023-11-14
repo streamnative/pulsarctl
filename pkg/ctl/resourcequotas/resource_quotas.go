@@ -26,8 +26,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"resource-quotas",
 		"Operations about resource quotas",
-		"",
-		"resource-quotas")
+		"")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getResourceQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setResourceQuota)

@@ -27,7 +27,6 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"auto-recovery",
 		"Operations about auto recovering",
-		"",
 		"")
 
 	commands := []func(*cmdutils.VerbCmd){
