@@ -57,6 +57,7 @@ function build_doc() {
 
 build amd64 linux ${version}
 build 386 linux
+build arm64 linux
 build amd64 darwin
 build arm64 darwin
 build amd64 windows
