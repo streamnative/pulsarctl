@@ -40,7 +40,7 @@ func TestCreateSourceFailedByClassname(t *testing.T) {
 	}
 
 	narErrInfo := "Source class org.apache.pulsar.io.kafka.KafkaBytesSource must be in class path"
-	narErrInfo2 := "Source class org.apache.pulsar.io.kafka.KafkaBytesSource not found in class path"
+	narErrInfo2 := "Source class org.apache.pulsar.io.kafka.KafkaBytesSource not found in class loader"
 	narOut, execErr, _ := TestSourcesCommands(createSourcesCmd, narFailArgs)
 	assert.True(t, strings.Contains(narOut.String(), narErrInfo) || strings.Contains(narOut.String(), narErrInfo2))
 	assert.NotNil(t, execErr)
