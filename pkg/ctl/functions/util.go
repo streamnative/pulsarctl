@@ -160,7 +160,7 @@ func processArgs(funcData *util.FunctionData) error {
 
 	if funcData.Parallelism != 0 {
 		funcData.FuncConf.Parallelism = funcData.Parallelism
-	} else {
+	} else if funcData.FuncConf.Parallelism <= 0 {
 		funcData.FuncConf.Parallelism = 1
 	}
 
