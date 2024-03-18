@@ -25,6 +25,7 @@ import (
 	"strconv"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/kris-nova/logger"
@@ -164,17 +165,21 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 			c.WebServiceURL = ctx.BrokerServiceURL
 			c.BKWebServiceURL = ctx.BookieServiceURL
 		}
-		auth, exist := ctxConf.AuthInfos[*contextName]
+		authInfo, exist := ctxConf.AuthInfos[*contextName]
 		if exist {
-			c.TLSTrustCertsFilePath = auth.TLSTrustCertsFilePath
-			c.TLSAllowInsecureConnection = auth.TLSAllowInsecureConnection
-			c.Token = auth.Token
-			c.TokenFile = auth.TokenFile
-			c.IssuerEndpoint = auth.IssuerEndpoint
-			c.ClientID = auth.ClientID
-			c.Audience = auth.Audience
-			c.KeyFile = auth.KeyFile
-			c.Scope = auth.Scope
+			c.TLSTrustCertsFilePath = authInfo.TLSTrustCertsFilePath
+			c.TLSAllowInsecureConnection = authInfo.TLSAllowInsecureConnection
+			c.Token = authInfo.Token
+			c.TokenFile = authInfo.TokenFile
+			c.IssuerEndpoint = authInfo.IssuerEndpoint
+			c.ClientID = authInfo.ClientID
+			c.Audience = authInfo.Audience
+			c.KeyFile = authInfo.KeyFile
+			c.Scope = authInfo.Scope
+			if len(authInfo.Token) == 0 && len(authInfo.TokenFile) == 0 {
+				// only if the token not provided, use the OAuth2
+				c.AuthPlugin = auth.OAuth2PluginName
+			}
 		}
 	}
 }
