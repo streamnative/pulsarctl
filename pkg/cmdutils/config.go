@@ -176,7 +176,10 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 			c.Audience = authInfo.Audience
 			c.KeyFile = authInfo.KeyFile
 			c.Scope = authInfo.Scope
-			c.AuthPlugin = auth.OAuth2PluginName
+			if len(authInfo.Token) == 0 && len(authInfo.TokenFile) == 0 {
+				// only if the token not provided, use the OAuth2
+				c.AuthPlugin = auth.OAuth2PluginName
+			}
 		}
 	}
 }
