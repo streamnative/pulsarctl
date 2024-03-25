@@ -11,6 +11,8 @@ jobs:
   packages-tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Login SN docker hub
+        run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
       - name: Set up Go 1.18
         uses: actions/setup-go@v1
         with:
