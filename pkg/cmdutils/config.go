@@ -176,8 +176,8 @@ func (c *ClusterConfig) ApplyContext(ctxConf *Config, contextName *string) {
 			c.Audience = authInfo.Audience
 			c.KeyFile = authInfo.KeyFile
 			c.Scope = authInfo.Scope
-			if len(authInfo.Token) == 0 && len(authInfo.TokenFile) == 0 {
-				// only if the token not provided, use the OAuth2
+			if len(authInfo.KeyFile) != 0 {
+				// auto active the OAuth2 if the key file is set
 				c.AuthPlugin = auth.OAuth2PluginName
 			}
 		}
