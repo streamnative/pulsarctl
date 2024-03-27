@@ -49,8 +49,7 @@ func TestSchemasCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	resourceCmd := cmdutils.NewResourceCmd(
 		"schemas",
 		"Operations about schemas",
-		"",
-		"schemas")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
