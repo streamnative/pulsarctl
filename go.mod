@@ -1,6 +1,6 @@
 module github.com/streamnative/pulsarctl
 
-go 1.18
+go 1.21
 
 require (
 	github.com/apache/pulsar-client-go v0.9.1-0.20230816081803-fbee610ddcbf

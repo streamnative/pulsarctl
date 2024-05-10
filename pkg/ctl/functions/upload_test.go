@@ -20,7 +20,6 @@ package functions
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -80,14 +79,14 @@ exec $JAVA $OPTS org.apache.pulsar.admin.cli.PulsarAdminTool $PULSAR_CLIENT_CONF
 `
 
 func TestUploadAndDownloadCommands(t *testing.T) {
-	f, err := ioutil.TempFile(".", "test")
+	f, err := os.CreateTemp(".", "test")
 	if err != nil {
 		log.Fatal(err)
 		t.Fail()
 		return
 	}
 	defer os.RemoveAll(f.Name())
-	err = ioutil.WriteFile(f.Name(), []byte(fileContent), os.ModePerm)
+	err = os.WriteFile(f.Name(), []byte(fileContent), os.ModePerm)
 	if err != nil {
 		log.Panic(err)
 		t.Fail()
@@ -132,7 +131,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 
 func getFileSha256(filename string) (string, error) {
 	hasher := sha256.New()
-	s, err := ioutil.ReadFile(filename)
+	s, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}

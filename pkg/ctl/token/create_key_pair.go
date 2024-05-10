@@ -18,7 +18,7 @@
 package token
 
 import (
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -123,13 +123,13 @@ func doCreateKeyPair(vc *cmdutils.VerbCmd, signatureAlgorithm, outputPrivateKeyF
 		return err
 	}
 
-	err = ioutil.WriteFile(outputPrivateKeyFilePath, privateKey, 0644)
+	err = os.WriteFile(outputPrivateKeyFilePath, privateKey, 0644)
 	if err != nil {
 		return errors.WithMessagef(err,
 			"failed to write private key to the file %s\n", outputPrivateKeyFilePath)
 	}
 
-	err = ioutil.WriteFile(outputPublicKeyFilePath, publicKey, 0644)
+	err = os.WriteFile(outputPublicKeyFilePath, publicKey, 0644)
 	if err != nil {
 		return errors.WithMessagef(err,
 			"failed to write public key to the file %s\n", outputPublicKeyFilePath)

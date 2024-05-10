@@ -19,7 +19,7 @@ package schemas
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/pflag"
@@ -90,7 +90,7 @@ func doUploadSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
 	var payload utils.PostSchemaPayload
 	topic := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	file, err := ioutil.ReadFile(schemaData.Filename)
+	file, err := os.ReadFile(schemaData.Filename)
 	if err != nil {
 		return err
 	}

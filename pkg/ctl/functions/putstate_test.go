@@ -20,7 +20,6 @@ package functions
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -156,7 +155,7 @@ func TestByteValue(t *testing.T) {
 	assert.Equal(t, out.String(), fmt.Sprintf("Created %s successfully\n", fName))
 
 	buf := "hello pulsar!"
-	file, err := ioutil.TempFile("", "byte-value-functions")
+	file, err := os.CreateTemp("", "byte-value-functions")
 	if err != nil {
 		t.Fatal(err)
 	}
