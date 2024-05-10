@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
       - name: InstallTool
         run: |
-          wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.45.2
+          wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.56.2
           ./bin/golangci-lint --version
       - name: Build
         run: go build .
