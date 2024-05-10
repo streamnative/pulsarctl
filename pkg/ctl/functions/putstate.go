@@ -18,7 +18,7 @@
 package functions
 
 import (
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
@@ -154,7 +154,7 @@ func doPutStateFunction(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) erro
 	case "-":
 		state.StringValue = strings.Join(vc.NameArgs[2:], " ")
 	case "=":
-		contents, err := ioutil.ReadFile(vc.NameArgs[2])
+		contents, err := os.ReadFile(vc.NameArgs[2])
 		if err != nil {
 			return err
 		}

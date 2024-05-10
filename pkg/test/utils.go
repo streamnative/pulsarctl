@@ -41,16 +41,14 @@ func NewNetwork(name string) (testcontainers.Network, error) {
 	return net, err
 }
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func RandomSuffix() string {
+	src := rand.NewSource(time.Now().UnixNano())
+	localRand := rand.New(src)
 	b := make([]rune, 6)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		b[i] = letterRunes[localRand.Intn(len(letterRunes))]
 	}
 	return string(b)
 }
