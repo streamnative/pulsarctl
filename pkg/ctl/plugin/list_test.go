@@ -18,7 +18,6 @@
 package plugin
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -39,14 +38,14 @@ func TestListCommand(t *testing.T) {
 	assert.Equal(t, "[]", out.String())
 
 	// create a temp plugin file pulsarctl-foo to test plugin list command
-	dir, err := ioutil.TempDir("", "plugins")
+	dir, err := os.MkdirTemp("", "plugins")
 	defer os.RemoveAll(dir)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	pluginFile := filepath.Join(dir, "plugin-test-foo")
-	if err := ioutil.WriteFile(pluginFile, []byte{}, 0777); err != nil {
+	if err := os.WriteFile(pluginFile, []byte{}, 0777); err != nil {
 		t.Fatal(err)
 	}
 

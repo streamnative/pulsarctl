@@ -20,7 +20,6 @@ package sources
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -43,7 +42,7 @@ func processArguments(sourceData *util.SourceData) error {
 	}
 
 	if sourceData.SourceConfigFile != "" {
-		yamlFile, err := ioutil.ReadFile(sourceData.SourceConfigFile)
+		yamlFile, err := os.ReadFile(sourceData.SourceConfigFile)
 		if err == nil {
 			err = yaml.Unmarshal(yamlFile, sourceData.SourceConf)
 			if err != nil {

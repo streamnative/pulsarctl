@@ -19,7 +19,6 @@ package cmdutils
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -142,7 +141,7 @@ func readConfigFile() (*Config, error) {
 		return nil, nil
 	}
 
-	content, err := ioutil.ReadFile(defaultPath)
+	content, err := os.ReadFile(defaultPath)
 	if err != nil {
 		return nil, err
 	}

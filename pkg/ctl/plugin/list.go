@@ -19,7 +19,6 @@ package plugin
 
 import (
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -70,7 +69,7 @@ func doListPlugins(vc *cmdutils.VerbCmd) error {
 	cache := make(map[string]bool)
 
 	for _, dir := range paths {
-		files, err := ioutil.ReadDir(dir)
+		files, err := os.ReadDir(dir)
 		if err != nil {
 			continue
 		}
