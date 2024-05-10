@@ -20,7 +20,6 @@ package internal
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -281,7 +280,7 @@ func (rules *ClientConfigLoadingRules) GetDefaultFilename() string {
 
 // LoadFromFile takes a filename and deserializes the contents into Config object
 func LoadFromFile(filename string) (*cmdutils.Config, error) {
-	pulsarconfigBytes, err := ioutil.ReadFile(filename)
+	pulsarconfigBytes, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -343,7 +342,7 @@ func WriteToFile(config cmdutils.Config, filename string) error {
 		}
 	}
 
-	if err := ioutil.WriteFile(filename, content, 0600); err != nil {
+	if err := os.WriteFile(filename, content, 0600); err != nil {
 		return err
 	}
 	return nil
