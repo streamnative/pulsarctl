@@ -20,7 +20,6 @@ package sinks
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -43,7 +42,7 @@ func processArguments(sinkData *util.SinkData) error {
 	}
 
 	if sinkData.SinkConfigFile != "" {
-		yamlFile, err := ioutil.ReadFile(sinkData.SinkConfigFile)
+		yamlFile, err := os.ReadFile(sinkData.SinkConfigFile)
 		if err == nil {
 			err = yaml.Unmarshal(yamlFile, sinkData.SinkConf)
 			if err != nil {

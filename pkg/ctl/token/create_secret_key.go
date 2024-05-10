@@ -20,7 +20,7 @@ package token
 import (
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
@@ -125,7 +125,7 @@ func doCreateSecretKey(vc *cmdutils.VerbCmd, signatureAlgorithm, outputFile stri
 	}
 
 	if outputFile != "" {
-		err := ioutil.WriteFile(outputFile, output, 0644)
+		err := os.WriteFile(outputFile, output, 0644)
 		if err != nil {
 			return errors.Errorf("writing the secret key to the file %s was failed\n", outputFile)
 		}

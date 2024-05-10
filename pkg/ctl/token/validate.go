@@ -19,7 +19,7 @@ package token
 
 import (
 	"encoding/base64"
-	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -156,7 +156,7 @@ func doValidate(vc *cmdutils.VerbCmd, args *validateCmdArgs) error {
 	case args.tokenString != "":
 		tokenString = args.tokenString
 	case args.tokenFile != "":
-		data, err := ioutil.ReadFile(args.tokenFile)
+		data, err := os.ReadFile(args.tokenFile)
 		if err != nil {
 			return err
 		}
@@ -225,15 +225,15 @@ func readValidateKeyData(args *validateCmdArgs) (interface{}, error) {
 	case args.secretKeyString != "" && args.base64Encoded:
 		return base64.StdEncoding.DecodeString(args.secretKeyString)
 	case args.secretKeyFile != "":
-		return ioutil.ReadFile(args.secretKeyFile)
+		return os.ReadFile(args.secretKeyFile)
 	case args.secretKeyFile != "" && args.base64Encoded:
-		data, err := ioutil.ReadFile(args.secretKeyFile)
+		data, err := os.ReadFile(args.secretKeyFile)
 		if err != nil {
 			return nil, err
 		}
 		return base64.StdEncoding.DecodeString(string(data))
 	case args.publicKeyFile != "":
-		data, err := ioutil.ReadFile(args.publicKeyFile)
+		data, err := os.ReadFile(args.publicKeyFile)
 		if err != nil {
 			return nil, err
 		}

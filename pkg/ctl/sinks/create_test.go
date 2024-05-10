@@ -18,7 +18,6 @@
 package sinks
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -26,7 +25,7 @@ import (
 )
 
 func TestCreateSinkFailedByEmptyFile(t *testing.T) {
-	file, err := ioutil.TempFile("", "test")
+	file, err := os.CreateTemp("", "test")
 	if err != nil {
 		t.Fatal(err)
 	}

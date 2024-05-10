@@ -20,7 +20,6 @@ package functions
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -53,7 +52,7 @@ func processArgs(funcData *util.FunctionData) error {
 	}
 
 	if funcData.FunctionConfigFile != "" {
-		yamlFile, err := ioutil.ReadFile(funcData.FunctionConfigFile)
+		yamlFile, err := os.ReadFile(funcData.FunctionConfigFile)
 		if err == nil {
 			err = yaml.Unmarshal(yamlFile, funcData.FuncConf)
 			if err != nil {

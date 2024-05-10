@@ -19,7 +19,7 @@ package token
 
 import (
 	"encoding/base64"
-	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -197,15 +197,15 @@ func parseSigningKeyData(args *createCmdArgs) (interface{}, error) {
 	case args.secretKeyString != "" && args.base64Encoded:
 		return base64.StdEncoding.DecodeString(args.secretKeyString)
 	case args.secretKeyFile != "":
-		return ioutil.ReadFile(args.secretKeyFile)
+		return os.ReadFile(args.secretKeyFile)
 	case args.secretKeyFile != "" && args.base64Encoded:
-		data, err := ioutil.ReadFile(args.secretKeyFile)
+		data, err := os.ReadFile(args.secretKeyFile)
 		if err != nil {
 			return nil, err
 		}
 		return base64.StdEncoding.DecodeString(string(data))
 	case args.privateKeyFile != "":
-		data, err := ioutil.ReadFile(args.privateKeyFile)
+		data, err := os.ReadFile(args.privateKeyFile)
 		if err != nil {
 			return nil, err
 		}
