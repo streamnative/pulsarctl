@@ -37,8 +37,8 @@ type Token interface {
 	CreateSecretKey(algorithm.Algorithm) ([]byte, error)
 
 	// Create creates a token object using the specified signature algorithm, private key,
-	// object and the expire time
-	Create(algorithm.Algorithm, interface{}, string, int64) (string, error)
+	// object and the expire time and header
+	Create(algorithm.Algorithm, interface{}, string, int64, map[string]interface{}) (string, error)
 
 	// CreateToken creates a token object using the specified signature algorithm, private key
 	// custom claim and header
@@ -74,7 +74,7 @@ func (t *token) CreateSecretKey(signatureAlgorithm algorithm.Algorithm) ([]byte,
 }
 
 func (t *token) Create(algorithm algorithm.Algorithm, signKey interface{}, subject string,
-	expireTime int64) (string, error) {
+	expireTime int64, headers map[string]interface{}) (string, error) {
 
 	var claims *jwt.MapClaims
 	if expireTime <= 0 {
@@ -88,7 +88,7 @@ func (t *token) Create(algorithm algorithm.Algorithm, signKey interface{}, subje
 		}
 	}
 
-	return t.CreateToken(algorithm, signKey, claims, nil)
+	return t.CreateToken(algorithm, signKey, claims, headers)
 }
 
 func (t *token) CreateToken(

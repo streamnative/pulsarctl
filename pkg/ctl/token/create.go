@@ -37,6 +37,7 @@ type createCmdArgs struct {
 	signatureAlgorithm string
 	subject            string
 	expireTime         string
+	headers            string
 	secretKeyString    string
 	secretKeyFile      string
 	privateKeyFile     string
@@ -71,12 +72,19 @@ func create(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl token create --secret-key-string (secret-key-string) --subject (subject) --expire 1m",
 	}
 
+	createTokenWithHeaders := cmdutils.Example{
+		Desc: "Create a token with headers.",
+		Command: "pulsarctl token create --secret-key-string (secret-key-string) --subject (subject)" +
+			" -headers kid=kid1,key2=value2",
+	}
+
 	createTokenWithBase64EncodedSecretKeyString := cmdutils.Example{
 		Desc:    "Create a token using a base64 encoded secret key.",
 		Command: "pulsarctl token create --secret-key-string (secret-key-string) --base64 --subject (subject)",
 	}
 	examples = append(examples, createTokenWithSecretKeyString, createTokenWithSecretKeyFile,
-		createTokenWithPrivateKeyFile, createTokenWithExpireTime, createTokenWithBase64EncodedSecretKeyString)
+		createTokenWithPrivateKeyFile, createTokenWithExpireTime, createTokenWithBase64EncodedSecretKeyString,
+		createTokenWithHeaders)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
@@ -126,6 +134,8 @@ func create(vc *cmdutils.VerbCmd) {
 			"The expire time for a token. e.g. 1s, 1m, 1h")
 		set.BoolVar(&args.base64Encoded, "base64", false,
 			"The secret key is base64 encoded or not.")
+		set.StringVar(&args.headers, "headers", "",
+			"The headers for a token. e.g. key1=value1,key2=value2")
 		cobra.MarkFlagRequired(set, "subject")
 	})
 	vc.EnableOutputFlagSet()
@@ -153,13 +163,42 @@ func doCreate(vc *cmdutils.VerbCmd, args *createCmdArgs) error {
 		expireTime = time.Now().Add(d).Unix()
 	}
 
-	tokenString, err := token.Create(algorithm.Algorithm(args.signatureAlgorithm), signKey, args.subject, expireTime)
+	headers, err := parseMapArgs(args.headers)
+	if err != nil {
+		return err
+	}
+
+	tokenString, err := token.Create(algorithm.Algorithm(args.signatureAlgorithm), signKey, args.subject, expireTime,
+		headers)
 	if err != nil {
 		return err
 	}
 	vc.Command.Println(tokenString)
 
 	return nil
+}
+
+func parseMapArgs(args string) (map[string]interface{}, error) {
+	params := make(map[string]interface{})
+
+	if args == "" {
+		return params, nil
+	}
+
+	pairs := strings.Split(args, ",")
+
+	for _, pair := range pairs {
+		parts := strings.Split(pair, "=")
+		if len(parts) == 2 {
+			key := parts[0]
+			value := parts[1]
+			params[key] = value
+		} else {
+			return nil, errors.New("invalid format of the headers")
+		}
+	}
+
+	return params, nil
 }
 
 func createCmdCheckArgs(args *createCmdArgs) error {
@@ -187,6 +226,7 @@ func trimSpaceArgs(args *createCmdArgs) *createCmdArgs {
 		secretKeyString:    strings.TrimSpace(args.secretKeyString),
 		secretKeyFile:      strings.TrimSpace(args.secretKeyFile),
 		privateKeyFile:     strings.TrimSpace(args.privateKeyFile),
+		headers:            strings.TrimSpace(args.headers),
 	}
 }
 
