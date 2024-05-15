@@ -8,7 +8,7 @@ USER root
 ENV GOLANG_VERSION 1.18.1
 
 # install curl, git, build-essential, includes gcc, g++ and make.
-RUN apk install curl git build-essential
+RUN apk add curl git build-essential
 
 RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz \
 		| tar -C /usr/local -xz
