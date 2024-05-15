@@ -6,16 +6,13 @@ USER root
 
 # install golang
 ENV GOLANG_VERSION 1.18.1
+
+# install curl, git, build-base.
+RUN apk update && apk add curl git build-base
+
 RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz \
 		| tar -C /usr/local -xz
 ENV PATH /usr/local/go/bin:$PATH
-
-# install git
-RUN apt update
-RUN apt install git -y
-
-# install build-essential, includes gcc, g++ and make.
-RUN apt install build-essential -y
 
 # copy the code into image
 COPY . /pulsarctl
