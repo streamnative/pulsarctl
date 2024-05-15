@@ -7,8 +7,8 @@ USER root
 # install golang
 ENV GOLANG_VERSION 1.18.1
 
-# install curl, git, build-essential, includes gcc, g++ and make.
-RUN apk update && apk add curl git build-dependencies
+# install curl, git, build-base.
+RUN apk update && apk add curl git build-base
 
 RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz \
 		| tar -C /usr/local -xz
