@@ -38,7 +38,7 @@ type ClusterDef struct {
 	test.Cluster
 	clusterSpec      *ClusterSpec
 	networkName      string
-	network          testcontainers.Network
+	network          *testcontainers.DockerNetwork
 	zkContainer      *test.BaseContainer
 	bookieContainers map[string]*test.BaseContainer
 }
