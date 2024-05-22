@@ -36,9 +36,10 @@ var (
 
 type ClusterDef struct {
 	test.Cluster
-	clusterSpec      *ClusterSpec
-	networkName      string
-	network          *testcontainers.DockerNetwork
+	clusterSpec *ClusterSpec
+	networkName string
+	//nolint:staticcheck
+	network          testcontainers.Network
 	zkContainer      *test.BaseContainer
 	bookieContainers map[string]*test.BaseContainer
 }
