@@ -24,20 +24,14 @@ import (
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/network"
 )
 
 // NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
+func NewNetwork(name string) (*testcontainers.DockerNetwork, error) {
 	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
+	net, err := network.New(ctx, network.WithCheckDuplicate(), network.WithDriver(name))
 	return net, err
 }
 
