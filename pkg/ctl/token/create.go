@@ -27,6 +27,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -37,6 +38,7 @@ type createCmdArgs struct {
 	signatureAlgorithm string
 	subject            string
 	expireTime         string
+	headers            map[string]string
 	secretKeyString    string
 	secretKeyFile      string
 	privateKeyFile     string
@@ -71,12 +73,19 @@ func create(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl token create --secret-key-string (secret-key-string) --subject (subject) --expire 1m",
 	}
 
+	createTokenWithHeaders := cmdutils.Example{
+		Desc: "Create a token with headers.",
+		Command: "pulsarctl token create --secret-key-string (secret-key-string) --subject (subject)" +
+			" -headers kid=kid1,key2=value2",
+	}
+
 	createTokenWithBase64EncodedSecretKeyString := cmdutils.Example{
 		Desc:    "Create a token using a base64 encoded secret key.",
 		Command: "pulsarctl token create --secret-key-string (secret-key-string) --base64 --subject (subject)",
 	}
 	examples = append(examples, createTokenWithSecretKeyString, createTokenWithSecretKeyFile,
-		createTokenWithPrivateKeyFile, createTokenWithExpireTime, createTokenWithBase64EncodedSecretKeyString)
+		createTokenWithPrivateKeyFile, createTokenWithExpireTime, createTokenWithBase64EncodedSecretKeyString,
+		createTokenWithHeaders)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
@@ -126,6 +135,8 @@ func create(vc *cmdutils.VerbCmd) {
 			"The expire time for a token. e.g. 1s, 1m, 1h")
 		set.BoolVar(&args.base64Encoded, "base64", false,
 			"The secret key is base64 encoded or not.")
+		set.StringToStringVar(&args.headers, "headers", nil,
+			"The headers for a token. e.g. key1=value1,key2=value2")
 		cobra.MarkFlagRequired(set, "subject")
 	})
 	vc.EnableOutputFlagSet()
@@ -153,7 +164,27 @@ func doCreate(vc *cmdutils.VerbCmd, args *createCmdArgs) error {
 		expireTime = time.Now().Add(d).Unix()
 	}
 
-	tokenString, err := token.Create(algorithm.Algorithm(args.signatureAlgorithm), signKey, args.subject, expireTime)
+	var claims *jwt.MapClaims
+	if expireTime <= 0 {
+		claims = &jwt.MapClaims{
+			"sub": args.subject,
+		}
+	} else {
+		claims = &jwt.MapClaims{
+			"sub": args.subject,
+			"exp": jwt.NewNumericDate(time.Unix(expireTime, 0)),
+		}
+	}
+
+	// Covert headers to map[string]interface{}
+	headers := make(map[string]interface{})
+	if len(args.headers) > 0 {
+		for key, value := range args.headers {
+			headers[key] = value
+		}
+	}
+
+	tokenString, err := token.CreateToken(algorithm.Algorithm(args.signatureAlgorithm), signKey, claims, headers)
 	if err != nil {
 		return err
 	}
@@ -187,6 +218,7 @@ func trimSpaceArgs(args *createCmdArgs) *createCmdArgs {
 		secretKeyString:    strings.TrimSpace(args.secretKeyString),
 		secretKeyFile:      strings.TrimSpace(args.secretKeyFile),
 		privateKeyFile:     strings.TrimSpace(args.privateKeyFile),
+		headers:            args.headers,
 	}
 }
 

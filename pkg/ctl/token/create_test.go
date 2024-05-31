@@ -18,9 +18,12 @@
 package token
 
 import (
+	"fmt"
+	"os"
 	"strings"
 	"testing"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -167,4 +170,32 @@ func TestTrimSpaceForCreadCmdArgs(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, errNoKeySpecified.Error(), execErr.Error())
+}
+
+func TestWithHeaders(t *testing.T) {
+	secretKeyFile := keyFiles[0]
+	args := []string{"create",
+		"--signature-algorithm", "HS256",
+		"--secret-key-file", secretKeyFile,
+		"--subject", "subject",
+		"--headers", "kid=kid1,test-k=test-v"}
+	out, execErr, err := testTokenCommands(create, args)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+	fmt.Print(out.String())
+
+	tokenString := strings.TrimSpace(out.String())
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		key, err2 := os.ReadFile(secretKeyFile)
+		if err2 != nil {
+			return nil, err2
+		}
+		return key, nil
+	})
+	assert.Nil(t, err)
+
+	assert.NotNil(t, token.Header)
+	assert.Equal(t, "kid1", token.Header["kid"])
+	assert.Equal(t, "test-v", token.Header["test-k"])
 }
