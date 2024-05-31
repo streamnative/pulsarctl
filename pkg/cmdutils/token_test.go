@@ -34,7 +34,7 @@ func TestCreateToken(t *testing.T) {
 	require.NoError(t, err)
 
 	subject := "test-role"
-	myToken, err := tokenProvider.Create(alg, key, subject, 0, nil)
+	myToken, err := tokenProvider.Create(alg, key, subject, 0)
 	require.NoError(t, err)
 
 	parsedSubject, exp, err := tokenProvider.Validate(alg, myToken, key)
@@ -52,7 +52,7 @@ func TestCreateTokenWithExp(t *testing.T) {
 
 	subject := "test-role"
 	exp := time.Now().Add(time.Hour).Unix()
-	myToken, err := tokenProvider.Create(alg, key, subject, exp, nil)
+	myToken, err := tokenProvider.Create(alg, key, subject, exp)
 	require.NoError(t, err)
 
 	parsedSubject, exp, err := tokenProvider.Validate(alg, myToken, key)

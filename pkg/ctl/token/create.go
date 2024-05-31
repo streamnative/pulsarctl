@@ -27,6 +27,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/algorithm"
 	"github.com/streamnative/pulsarctl/pkg/pulsar/common/algorithm/keypair"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -168,8 +169,19 @@ func doCreate(vc *cmdutils.VerbCmd, args *createCmdArgs) error {
 		return err
 	}
 
-	tokenString, err := token.Create(algorithm.Algorithm(args.signatureAlgorithm), signKey, args.subject, expireTime,
-		headers)
+	var claims *jwt.MapClaims
+	if expireTime <= 0 {
+		claims = &jwt.MapClaims{
+			"sub": args.subject,
+		}
+	} else {
+		claims = &jwt.MapClaims{
+			"sub": args.subject,
+			"exp": jwt.NewNumericDate(time.Unix(expireTime, 0)),
+		}
+	}
+
+	tokenString, err := token.CreateToken(algorithm.Algorithm(args.signatureAlgorithm), signKey, claims, headers)
 	if err != nil {
 		return err
 	}
