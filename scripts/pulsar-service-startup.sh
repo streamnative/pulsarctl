@@ -11,7 +11,7 @@ if [ ${FUNCTION_ENABLE} ]; then
 else
     bin/pulsar-daemon start standalone -nss -nfw
 fi
-until curl http://localhost:8080/admin/v2/tenants > /dev/null 2>&1
+until curl http://localhost:8080/admin/v2/tenants > /dev/null
 do
     sleep 1
     echo "Wait for pulsar service to be ready...$(date +%H:%M:%S)"
