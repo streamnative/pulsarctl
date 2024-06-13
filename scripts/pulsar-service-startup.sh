@@ -7,9 +7,9 @@ echo "--- Run pulsar service at the directory ${PULSAR_HOME} ---"
 pushd ${PULSAR_HOME}
 bin/apply-config-from-env.py conf/standalone.conf
 if [ ${FUNCTION_ENABLE} ]; then
-    bin/pulsar-daemon start standalone
+    bin/pulsar-daemon start standalone --wipe-data
 else
-    bin/pulsar-daemon start standalone -nss -nfw
+    bin/pulsar-daemon start standalone -nfw
 fi
 until curl http://127.0.0.1:8080/admin/v2/tenants > /dev/null
 do
