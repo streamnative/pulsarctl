@@ -82,7 +82,9 @@ func TestParseOauthConfiguration(t *testing.T) {
 	defer os.Remove(path)
 
 	setOauthConfigArgs := []string{"set", "oauth",
-		"--auth-params", "{\"audience\":\"audience\",\"issuerUrl\":\"https://test-endpoint\",\"privateKey\":\"/tmp/auth.json\",\"scope\":\"profile api://test-endpoint\",\"clientId\":\"clientid\"}",
+		"--auth-params",
+		"{\"audience\":\"audience\",\"issuerUrl\":\"https://test-endpoint\",\"privateKey\":\"/tmp/auth.json\"," +
+			"\"scope\":\"profile api://test-endpoint\",\"clientId\":\"clientid\"}",
 	}
 	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
 	if err != nil {
