@@ -18,12 +18,15 @@
 package context
 
 import (
+	"encoding/json"
+
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin"
 	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/bookkeeper"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 	"github.com/streamnative/pulsarctl/pkg/ctl/context/internal"
+	"github.com/streamnative/pulsarctl/pkg/oauth2"
 )
 
 func setContextCmd(vc *cmdutils.VerbCmd) {
@@ -157,6 +160,20 @@ func (o *createContextOptions) modifyContextConf(existingContext cmdutils.Contex
 	}
 	if f.Changed("tls-allow-insecure") {
 		modifiedAuth.TLSAllowInsecureConnection = o.flags.TLSAllowInsecureConnection
+	}
+	// try to parse the OAuth2 params and ignore the error
+	if f.Changed("auth-params") {
+		var paramsJSON oauth2.ClientCredentials
+		err := json.Unmarshal([]byte(o.flags.AuthParams), &paramsJSON)
+		// ignore the parse error
+		if err != nil {
+			return modifiedContext, modifiedAuth
+		}
+		modifiedAuth.IssuerEndpoint = paramsJSON.IssuerURL
+		modifiedAuth.Audience = paramsJSON.Audience
+		modifiedAuth.Scope = paramsJSON.Scope
+		modifiedAuth.KeyFile = paramsJSON.PrivateKey
+		modifiedAuth.ClientID = paramsJSON.ClientID
 	}
 	if f.Changed("issuer-endpoint") {
 		modifiedAuth.IssuerEndpoint = o.flags.IssuerEndpoint
