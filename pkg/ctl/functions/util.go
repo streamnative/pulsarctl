@@ -408,8 +408,9 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 	return nil
 }
 
-// the UserConfig and Secrets fields of FunctionConfig are a map[string]interface{}, and the type of value can be a map[interface{}]interface{}
-// which cannot be marshaled by json, so we need to convert the map[interface{}]interface{} to a map[string]interface{}
+// the UserConfig and Secrets fields of FunctionConfig are a map[string]interface{},
+// and the type of value can be a map[interface{}]interface{} which cannot be marshaled by json,
+// so we need to convert the map[interface{}]interface{} to a map[string]interface{}
 func formatFuncConf(funcConf *util.FunctionConfig) {
 	if funcConf == nil {
 		return
