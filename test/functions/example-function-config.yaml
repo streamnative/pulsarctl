@@ -25,3 +25,19 @@ inputs: ["test_src"]
 output: "test_result"
 autoAck: true
 parallelism: 1
+secrets:
+  stringKey: "stringSecret"
+  mapKey:
+    path: "secret"
+    key: "password"
+  arrayMapKey:
+    - path: "secret2"
+      key: "password2"
+userConfig:
+  stringKey: "stringValue"
+  mapKey:
+    path: "config"
+    key: "value"
+  arrayMapKey:
+    - path: "config2"
+      key: "value2"
