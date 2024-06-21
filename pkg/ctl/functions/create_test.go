@@ -57,3 +57,22 @@ func TestCreatePyFunction(t *testing.T) {
 	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, argsWithFileURLPy)
 	FailImmediatelyIfErrorNotNil(t, execErr, err)
 }
+
+func TestCreateFunctionWithConfigFile(t *testing.T) {
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+	fName := "jf" + test.RandomSuffix()
+	configFile := path.Join(ResourceDir(), "example-function-config.yaml")
+	args := []string{
+		"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", fName,
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--jar", jarName,
+		"--function-config-file", configFile,
+		"--processing-guarantees", "EFFECTIVELY_ONCE"}
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+}

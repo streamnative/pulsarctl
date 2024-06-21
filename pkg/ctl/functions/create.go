@@ -508,6 +508,8 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 		return err
 	}
 
+	formatFuncConf(funcData.FuncConf)
+
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 
 	if utils.IsPackageURLSupported(funcData.UserCodeFile) {
