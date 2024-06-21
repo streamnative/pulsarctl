@@ -34,3 +34,4 @@ jobs:
           format: 'table'
           exit-code: '1'
           severity: "MEDIUM,HIGH,CRITICAL"
+          vuln-type: "library"
