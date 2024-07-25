@@ -31,7 +31,7 @@ import (
 func NewNetwork(name string) (*testcontainers.DockerNetwork, error) {
 	ctx := context.Background()
 
-	net, err := network.New(ctx, network.WithCheckDuplicate(), network.WithDriver(name))
+	net, err := network.New(ctx, network.WithDriver(name))
 	return net, err
 }
 
