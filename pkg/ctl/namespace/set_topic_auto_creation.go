@@ -103,7 +103,7 @@ func doSetTopicAutoCreation(vc *cmdutils.VerbCmd, disable bool, topicType string
 			return err
 		}
 		config.Type = parsedTopicType
-		config.Partitions = partitions
+		config.Partitions = &partitions
 	}
 
 	err = admin.Namespaces().SetTopicAutoCreation(*ns, config)
