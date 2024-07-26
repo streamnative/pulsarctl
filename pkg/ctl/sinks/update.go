@@ -341,7 +341,7 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 
-	latestConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)
+	latestConfig, err := admin.Sinks().GetSink(sinkData.SinkConf.Tenant, sinkData.SinkConf.Namespace, sinkData.Name)
 	if err != nil {
 		return err
 	}
