@@ -21,8 +21,8 @@ jobs:
     - name: Run bookKeeper service
       run: |
         pushd test/docker
-        docker-compose pull
-        docker-compose up -d
+        docker compose pull
+        docker compose up -d
         popd
     - name: Check bookKeeper service
       run: |
