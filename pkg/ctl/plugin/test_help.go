@@ -36,7 +36,11 @@ func testPluginCommands(newVerb func(*cmdutils.VerbCmd), args []string) (out *by
 	rootCmd.SetArgs(append([]string{"plugin"}, args...))
 	flagGrouping := cmdutils.NewGrouping()
 	rootCmd.AddCommand(Command(flagGrouping))
-	resourceCmd := cmdutils.NewResourceCmd("plugin", "", "")
+	resourceCmd := cmdutils.NewResourceCmd(
+		"plugin",
+		"Operations about plugins",
+		"",
+		"plugins")
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	err = rootCmd.Execute()
 	return

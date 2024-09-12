@@ -55,8 +55,7 @@ func TestNsIsolationPolicyCommands(newVerb func(cmd *cmdutils.VerbCmd), args []s
 	resourceCmd := cmdutils.NewResourceCmd(
 		"ns-isolation-policy",
 		"Operations about namespace isolation policy",
-		"",
-		"ns-isolation-policy")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
