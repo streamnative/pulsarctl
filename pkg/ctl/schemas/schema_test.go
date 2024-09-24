@@ -58,6 +58,14 @@ func TestSchema(t *testing.T) {
 	assert.True(t, strings.Contains(getOut.String(), "AVRO"))
 	assert.True(t, strings.Contains(getOut.String(), "test-schema"))
 
+	getAllArgs := []string{"get-all", "test-schema"}
+	getAllOut, _, err := TestSchemasCommands(getAllSchemas, getAllArgs)
+
+	fmt.Print(getAllOut.String())
+	assert.Nil(t, err)
+	assert.True(t, strings.Contains(getAllOut.String(), "AVRO"))
+	assert.True(t, strings.Contains(getAllOut.String(), "test-schema"))
+
 	delArgs := []string{"delete", "test-schema"}
 	delOut, _, err := TestSchemasCommands(deleteSchema, delArgs)
 	assert.Nil(t, err)
