@@ -38,10 +38,20 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	)
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSchema)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAllSchemas)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSchema)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, uploadSchema)
 
 	return resourceCmd
+}
+
+func PrintSchemas(w io.Writer, schemas []*utils.SchemaInfoWithVersion) {
+	_, _ = fmt.Fprintln(w, "[")
+	for _, schema := range schemas {
+		PrintSchema(w, schema)
+		_, _ = fmt.Fprint(w, "\n")
+	}
+	_, _ = fmt.Fprintln(w, "]")
 }
 
 func PrintSchema(w io.Writer, schema *utils.SchemaInfoWithVersion) {

@@ -22,6 +22,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
+replace github.com/apache/pulsar-client-go v0.13.0-candidate-1.0.20240813105849-ab042ae714d1 => ../pulsar-client-go
+
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
