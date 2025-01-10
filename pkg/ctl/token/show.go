@@ -18,7 +18,6 @@
 package token
 
 import (
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -126,7 +125,7 @@ func readToken(tokenString, tokenFile string) (string, error) {
 	case tokenString != "":
 		return tokenString, nil
 	case tokenFile != "":
-		data, err := ioutil.ReadFile(tokenFile)
+		data, err := os.ReadFile(tokenFile)
 		if err != nil {
 			return "", err
 		}

@@ -24,33 +24,25 @@ import (
 	"time"
 
 	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/network"
 )
 
 // NewNetwork creates a network.
-func NewNetwork(name string) (testcontainers.Network, error) {
+func NewNetwork(name string) (*testcontainers.DockerNetwork, error) {
 	ctx := context.Background()
-	dp, err := testcontainers.NewDockerProvider()
-	if err != nil {
-		return nil, err
-	}
 
-	net, err := dp.CreateNetwork(ctx, testcontainers.NetworkRequest{
-		Name:           name,
-		CheckDuplicate: true,
-	})
+	net, err := network.New(ctx, network.WithDriver(name))
 	return net, err
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func RandomSuffix() string {
+	src := rand.NewSource(time.Now().UnixNano())
+	localRand := rand.New(src)
 	b := make([]rune, 6)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		b[i] = letterRunes[localRand.Intn(len(letterRunes))]
 	}
 	return string(b)
 }

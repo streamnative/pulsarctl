@@ -20,7 +20,6 @@ package functions
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -53,7 +52,7 @@ func processArgs(funcData *util.FunctionData) error {
 	}
 
 	if funcData.FunctionConfigFile != "" {
-		yamlFile, err := ioutil.ReadFile(funcData.FunctionConfigFile)
+		yamlFile, err := os.ReadFile(funcData.FunctionConfigFile)
 		if err == nil {
 			err = yaml.Unmarshal(yamlFile, funcData.FuncConf)
 			if err != nil {
@@ -407,6 +406,38 @@ func validateFunctionConfigs(functionConfig *util.FunctionConfig) error {
 	}
 
 	return nil
+}
+
+// the UserConfig and Secrets fields of FunctionConfig are a map[string]interface{},
+// and the type of value can be a map[interface{}]interface{} which cannot be marshaled by json,
+// so we need to convert the map[interface{}]interface{} to a map[string]interface{}
+func formatFuncConf(funcConf *util.FunctionConfig) {
+	if funcConf == nil {
+		return
+	}
+	for k, v := range funcConf.UserConfig {
+		funcConf.UserConfig[k] = convertMap(v)
+	}
+	for k, v := range funcConf.Secrets {
+		funcConf.Secrets[k] = convertMap(v)
+	}
+}
+
+// convertMap converts a map[interface{}]interface{} to map[string]interface{}
+func convertMap(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m := make(map[string]interface{})
+		for k, v := range x {
+			m[k.(string)] = convertMap(v)
+		}
+		return m
+	case []interface{}:
+		for i, v := range x {
+			x[i] = convertMap(v)
+		}
+	}
+	return i
 }
 
 func processBaseArguments(funcData *util.FunctionData) error {

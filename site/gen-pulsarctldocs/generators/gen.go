@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -55,7 +54,7 @@ func GenerateFiles() {
 		os.Exit(2)
 	}
 
-	contents, err := ioutil.ReadFile(getTocFile())
+	contents, err := os.ReadFile(getTocFile())
 	if err != nil {
 		fmt.Printf("Failed to read yaml file %s: %v", getTocFile(), err)
 	}
@@ -262,10 +261,10 @@ func WriteCategoryFile(c Category) {
 
 	fn := strings.ReplaceAll(c.Name, " ", "_")
 	f, err := os.Create(*GenPulsarctlDir + "/includes/_generated_category_" + strings.ToLower(fmt.Sprintf("%s.md", fn)))
-	defer f.Close()
 	if err != nil {
 		log.Panicf("Failed to open index: %v", err)
 	}
+	defer f.Close()
 	err = ct.Execute(f, c)
 	if err != nil {
 		log.Panicf("Failed to execute template: %v", err)
