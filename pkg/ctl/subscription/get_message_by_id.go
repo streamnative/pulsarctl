@@ -85,14 +85,33 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, legerID int64, entryID int64) error 
 		return fmt.Errorf("no message found with the given legerID and entryID")
 	}
 	message := messages[0]
+
 	propertiesJSON, err := json.Marshal(message.GetProperties())
 	if err != nil {
 		return err
 	}
 
-	vc.Command.Println(fmt.Sprintf(`Message ID: %s
+	textOutput := fmt.Sprintf(`Message ID: %s
 Properties: %s
-Message: %s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload)))
+Message: %s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload))
 
-	return nil
+	oc := cmdutils.NewOutputContent().
+		WithObject(&ReadMessage{
+			MessageId:     message.GetMessageID(),
+			Properties:    message.GetProperties(),
+			Payload:       message.Payload,
+			PayloadString: string(message.Payload),
+		}).
+		WithText(textOutput)
+
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
+	return err
+}
+
+type ReadMessage struct {
+	Properties    map[string]string `json:"properties"`
+	MessageId     utils.MessageID   `json:"messageId"`
+	Payload       []byte            `json:"payload"`
+	PayloadString string            `json:"PayloadString"`
 }
