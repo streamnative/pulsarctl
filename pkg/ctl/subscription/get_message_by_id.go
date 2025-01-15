@@ -29,6 +29,13 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
+type readMessage struct {
+	Properties      map[string]string `json:"properties"`
+	MessageId       utils.MessageID   `json:"messageId"`
+	Payload         []byte            `json:"payload"`
+	PayloadAsString string            `json:"PayloadString"`
+}
+
 func GetMessageByIDCmd(vc *cmdutils.VerbCmd) {
 	var desc cmdutils.LongDescription
 	desc.CommandUsedFor = "This command is used for getting messages by the given ledgerID and entryID" +
@@ -85,14 +92,28 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 		return fmt.Errorf("no message found with the given ledgerID and entryID")
 	}
 	message := messages[0]
+
 	propertiesJSON, err := json.Marshal(message.GetProperties())
 	if err != nil {
 		return err
 	}
 
-	vc.Command.Println(fmt.Sprintf(`Message ID: %s
-Properties: %s
-Message: %s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload)))
+	textOutput := fmt.Sprintf(
+		`Message ID: %s
+		Properties: %s
+		Message: 
+				%s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload))
 
-	return nil
+	oc := cmdutils.NewOutputContent().
+		WithObject(&readMessage{
+			MessageId:       message.GetMessageID(),
+			Properties:      message.GetProperties(),
+			Payload:         message.Payload,
+			PayloadAsString: string(message.Payload),
+		}).
+		WithText(textOutput)
+
+	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+
+	return err
 }
