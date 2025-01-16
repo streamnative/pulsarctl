@@ -31,7 +31,7 @@ import (
 
 type readMessage struct {
 	Properties      map[string]string `json:"properties"`
-	MessageId       utils.MessageID   `json:"messageId"`
+	MessageID       utils.MessageID   `json:"messageId"`
 	Payload         []byte            `json:"payload"`
 	PayloadAsString string            `json:"PayloadString"`
 }
@@ -106,7 +106,7 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 
 	oc := cmdutils.NewOutputContent().
 		WithObject(&readMessage{
-			MessageId:       message.GetMessageID(),
+			MessageID:       message.GetMessageID(),
 			Properties:      message.GetProperties(),
 			Payload:         message.Payload,
 			PayloadAsString: string(message.Payload),
