@@ -204,3 +204,20 @@ func NumProvidedStrings(sPointers ...*string) int {
 	}
 	return out
 }
+
+// ConvertMap converts a map[interface{}]interface{} to map[string]interface{}
+func ConvertMap(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m := make(map[string]interface{})
+		for k, v := range x {
+			m[k.(string)] = ConvertMap(v)
+		}
+		return m
+	case []interface{}:
+		for i, v := range x {
+			x[i] = ConvertMap(v)
+		}
+	}
+	return i
+}

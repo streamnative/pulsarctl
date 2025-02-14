@@ -416,28 +416,11 @@ func formatFuncConf(funcConf *util.FunctionConfig) {
 		return
 	}
 	for k, v := range funcConf.UserConfig {
-		funcConf.UserConfig[k] = convertMap(v)
+		funcConf.UserConfig[k] = utils.ConvertMap(v)
 	}
 	for k, v := range funcConf.Secrets {
-		funcConf.Secrets[k] = convertMap(v)
+		funcConf.Secrets[k] = utils.ConvertMap(v)
 	}
-}
-
-// convertMap converts a map[interface{}]interface{} to map[string]interface{}
-func convertMap(i interface{}) interface{} {
-	switch x := i.(type) {
-	case map[interface{}]interface{}:
-		m := make(map[string]interface{})
-		for k, v := range x {
-			m[k.(string)] = convertMap(v)
-		}
-		return m
-	case []interface{}:
-		for i, v := range x {
-			x[i] = convertMap(v)
-		}
-	}
-	return i
 }
 
 func processBaseArguments(funcData *util.FunctionData) error {

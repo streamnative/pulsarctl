@@ -468,6 +468,8 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 		return err
 	}
 
+	formatFuncConf(funcData.FuncConf)
+
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 
 	updateOptions := util.NewUpdateOptions()
