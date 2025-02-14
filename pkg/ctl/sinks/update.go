@@ -339,6 +339,11 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 
 	checkArgsForUpdate(sinkData.SinkConf)
 
+	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
+	for k, v := range sinkData.SinkConf.Secrets {
+		sinkData.SinkConf.Secrets[k] = utils.ConvertMap(v)
+	}
+
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 
 	latestConfig, err := admin.Sinks().GetSink(sinkData.Tenant, sinkData.Namespace, sinkData.Name)

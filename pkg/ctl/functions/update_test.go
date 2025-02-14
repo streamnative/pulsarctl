@@ -74,6 +74,55 @@ func TestUpdateFunctions(t *testing.T) {
 	assert.Equal(t, functionConfig.Resources.CPU, 5.0)
 }
 
+func TestUpdateFunctionsWithConfigFile(t *testing.T) {
+	fName := "function-updates-test" + test.RandomSuffix()
+	jarName := path.Join(ResourceDir(), "api-examples.jar")
+	configFile := path.Join(ResourceDir(), "example-update-function-config.yaml")
+	args := []string{"create",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", fName,
+		"--inputs", "test-input-topic",
+		"--output", "persistent://public/default/test-output-topic",
+		"--classname", "org.apache.pulsar.functions.api.examples.ExclamationFunction",
+		"--jar", jarName,
+	}
+
+	_, execErr, err := TestFunctionsCommands(createFunctionsCmd, args)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+
+	updateArgs := []string{"update",
+		"--function-config-file", configFile,
+	}
+
+	_, execErr, err = TestFunctionsCommands(updateFunctionsCmd, updateArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+
+	getArgs := []string{"get",
+		"--tenant", "public",
+		"--namespace", "default",
+		"--name", fName,
+	}
+
+	out, execErr, err := TestFunctionsCommands(getFunctionsCmd, getArgs)
+	FailImmediatelyIfErrorNotNil(t, execErr, err)
+
+	var functionConfig utils.FunctionConfig
+	err = json.Unmarshal(out.Bytes(), &functionConfig)
+	assert.Nil(t, err)
+
+	assert.Equal(t, functionConfig.Tenant, "public")
+	assert.Equal(t, functionConfig.Namespace, "default")
+	assert.Equal(t, functionConfig.Name, fName)
+	data, err := json.Marshal(functionConfig.Secrets)
+	assert.Nil(t, err)
+	assert.Equal(t, data, []byte(`{"stringKey":"stringSecret","mapKey":{"key":"password","path":"secret"},"arrayMapKey":[{"key":"password2","path":"secret2"}]}`))
+
+	userdata, err := json.Marshal(functionConfig.UserConfig)
+	assert.Nil(t, err)
+	assert.Equal(t, userdata, []byte(`{"stringKey":"stringSecret","mapKey":{"key":"value","path":"config"},"arrayMapKey":[{"key":"value2","path":"config2"}]}`))
+}
+
 func TestUpdateFunctionsFailure(t *testing.T) {
 	fname := "function-updates-test-failed" + test.RandomSuffix()
 	jarName := path.Join(ResourceDir(), "api-examples.jar")

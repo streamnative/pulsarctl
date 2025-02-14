@@ -355,6 +355,11 @@ func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 		return err
 	}
 
+	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
+	for k, v := range sinkData.SinkConf.Secrets {
+		sinkData.SinkConf.Secrets[k] = utils.ConvertMap(v)
+	}
+
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	if utils.IsPackageURLSupported(sinkData.Archive) {
 		err = admin.Sinks().CreateSinkWithURL(sinkData.SinkConf, sinkData.Archive)
