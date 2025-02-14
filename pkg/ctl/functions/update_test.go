@@ -116,11 +116,15 @@ func TestUpdateFunctionsWithConfigFile(t *testing.T) {
 	assert.Equal(t, functionConfig.Name, fName)
 	data, err := json.Marshal(functionConfig.Secrets)
 	assert.Nil(t, err)
-	assert.Equal(t, data, []byte(`{"stringKey":"stringSecret","mapKey":{"key":"password","path":"secret"},"arrayMapKey":[{"key":"password2","path":"secret2"}]}`))
+	assert.Equal(t, data,
+		[]byte(`{"stringKey":"stringSecret","mapKey":{"key":"password","path":"secret"},`+
+			`"arrayMapKey":[{"key":"password2","path":"secret2"}]}`))
 
 	userdata, err := json.Marshal(functionConfig.UserConfig)
 	assert.Nil(t, err)
-	assert.Equal(t, userdata, []byte(`{"stringKey":"stringSecret","mapKey":{"key":"value","path":"config"},"arrayMapKey":[{"key":"value2","path":"config2"}]}`))
+	assert.Equal(t, userdata,
+		[]byte(`{"stringKey":"stringSecret","mapKey":{"key":"value","path":"config"},`+
+			`"arrayMapKey":[{"key":"value2","path":"config2"}]}`))
 }
 
 func TestUpdateFunctionsFailure(t *testing.T) {
