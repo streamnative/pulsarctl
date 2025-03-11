@@ -284,6 +284,11 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 		return err
 	}
 
+	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
+	for k, v := range sourceData.SourceConf.Secrets {
+		sourceData.SourceConf.Secrets[k] = utils.ConvertMap(v)
+	}
+
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 	if utils.IsPackageURLSupported(sourceData.Archive) {
 		err = admin.Sources().CreateSourceWithURL(sourceData.SourceConf, sourceData.Archive)
