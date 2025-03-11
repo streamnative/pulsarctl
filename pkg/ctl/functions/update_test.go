@@ -92,6 +92,7 @@ func TestUpdateFunctionsWithConfigFile(t *testing.T) {
 	FailImmediatelyIfErrorNotNil(t, execErr, err)
 
 	updateArgs := []string{"update",
+		"--name", fName,
 		"--function-config-file", configFile,
 	}
 
