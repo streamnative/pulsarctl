@@ -57,7 +57,11 @@ func TestSetContextCmd(t *testing.T) {
 func TestOauthConfiguration(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
-	defer assert.NoError(t, os.Remove(path))
+	defer func() {
+		if _, err := os.Stat(path); err == nil {
+			assert.NoError(t, os.Remove(path))
+		}
+	}()
 
 	setOauthConfigArgs := []string{"set", "oauth",
 		"--issuer-endpoint", "https://test-endpoint",
