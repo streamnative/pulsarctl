@@ -8,7 +8,7 @@ USER root
 RUN apk update && apk add curl git build-base
 
 # install golang
-ENV GOLANG_VERSION 1.21.0
+ENV GOLANG_VERSION 1.24.0
 RUN curl -sSL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz \
 		| tar -C /usr/local -xz
 ENV PATH /usr/local/go/bin:$PATH
