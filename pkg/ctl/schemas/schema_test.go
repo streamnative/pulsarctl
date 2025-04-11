@@ -30,7 +30,7 @@ func TestSchema(t *testing.T) {
 	fileName := "avro-schema"
 	f, err := os.Create(fileName)
 	assert.Nil(t, err)
-	defer os.Remove(fileName)
+	defer assert.NoError(t, os.Remove(fileName))
 
 	_, err = f.WriteString("{\n" +
 		"   \"type\": \"AVRO\",\n" +

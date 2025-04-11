@@ -498,13 +498,13 @@ func createFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error {
 	err := processArgs(funcData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 
 	err = validateFunctionConfigs(funcData.FuncConf)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 

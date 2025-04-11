@@ -29,7 +29,7 @@ import (
 func TestRenameContextCmd(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
-	defer os.Remove(path)
+	defer assert.NoError(t, os.Remove(path))
 
 	renameArgs := []string{"rename", "test-old-context", "test-new-context"}
 	out, execErr, err := TestConfigCommands(renameContextCmd, renameArgs)

@@ -65,9 +65,9 @@ func GetMessageByIDCmd(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("GetMessageByID", func(set *pflag.FlagSet) {
 		set.Int64VarP(&ledgerID, "ledger-id", "l", 0, "ledger id pointing to the desired ledger")
-		cobra.MarkFlagRequired(set, "ledger-id")
+		_ = cobra.MarkFlagRequired(set, "ledger-id")
 		set.Int64VarP(&entryID, "entry-id", "e", 0, "entry id pointing to the desired entry")
-		cobra.MarkFlagRequired(set, "entry-id")
+		_ = cobra.MarkFlagRequired(set, "entry-id")
 	})
 	vc.EnableOutputFlagSet()
 }
@@ -104,6 +104,7 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 		Message: 
 				%s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload))
 
+	//nolint:govet
 	oc := cmdutils.NewOutputContent().
 		WithObject(&readMessage{
 			MessageID:       message.GetMessageID(),

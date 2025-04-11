@@ -81,7 +81,7 @@ func ExpireCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("ExpireMessages", func(set *pflag.FlagSet) {
 		set.Int64VarP(&time, "expire-time", "t", 0,
 			"Expire messages older than time in seconds")
-		cobra.MarkFlagRequired(set, "expire-time")
+		_ = cobra.MarkFlagRequired(set, "expire-time")
 		set.BoolVarP(&all, "all", "a", false, "Expire all messages")
 	})
 	vc.EnableOutputFlagSet()

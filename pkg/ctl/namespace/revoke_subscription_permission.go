@@ -78,7 +78,7 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Revoke Subscription Permissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "",
 			"Client role to which revoke permissions")
-		cobra.MarkFlagRequired(set, "role")
+		_ = cobra.MarkFlagRequired(set, "role")
 	})
 	vc.EnableOutputFlagSet()
 }

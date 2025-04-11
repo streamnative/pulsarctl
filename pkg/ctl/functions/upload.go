@@ -56,9 +56,9 @@ func uploadFunctionsCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Upload", func(set *pflag.FlagSet) {
 		set.StringVar(&sourceFile, "source-file", "",
 			"The file whose content will be uploaded")
-		cobra.MarkFlagRequired(set, "source-file")
+		_ = cobra.MarkFlagRequired(set, "source-file")
 		set.StringVar(&path, "path", "", "Path where the contents will to be stored")
-		cobra.MarkFlagRequired(set, "path")
+		_ = cobra.MarkFlagRequired(set, "path")
 	})
 
 }

@@ -31,7 +31,7 @@ import (
 func TestSetContextCmd(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
-	defer os.Remove(path)
+	defer assert.NoError(t, os.Remove(path))
 
 	setArgs := []string{"set", "test-set-context"}
 	out, _, err := TestConfigCommands(setContextCmd, setArgs)
@@ -55,7 +55,7 @@ func TestSetContextCmd(t *testing.T) {
 func TestOauthConfiguration(t *testing.T) {
 	home := utils.HomeDir()
 	path := fmt.Sprintf("%s/.config/pulsar/config", home)
-	defer os.Remove(path)
+	defer assert.NoError(t, os.Remove(path))
 
 	setOauthConfigArgs := []string{"set", "oauth",
 		"--issuer-endpoint", "https://test-endpoint",

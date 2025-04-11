@@ -73,7 +73,7 @@ func GenerateFiles() {
 	NormalizeSpec(&spec)
 
 	if _, err := os.Stat(*GenPulsarctlDir + "/includes"); os.IsNotExist(err) {
-		os.Mkdir(*GenPulsarctlDir+"/includes", os.FileMode(0700))
+		_ = os.Mkdir(*GenPulsarctlDir+"/includes", os.FileMode(0700))
 	}
 
 	WriteCommandFiles(manifest, toc, spec)

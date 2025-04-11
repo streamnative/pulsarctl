@@ -85,7 +85,8 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		t.Fail()
 		return
 	}
-	defer os.RemoveAll(f.Name())
+
+	defer assert.NoError(t, os.RemoveAll(f.Name()))
 	err = os.WriteFile(f.Name(), []byte(fileContent), os.ModePerm)
 	if err != nil {
 		log.Panic(err)
@@ -117,7 +118,7 @@ func TestUploadAndDownloadCommands(t *testing.T) {
 		"--path", pulsarPath,
 	}
 	out, execErr, err = TestFunctionsCommands(downloadFunctionsCmd, args)
-	defer os.RemoveAll(downloadFilePath)
+	defer assert.NoError(t, os.RemoveAll(downloadFilePath))
 	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.True(t, strings.Contains(out.String(), "successfully"))
 

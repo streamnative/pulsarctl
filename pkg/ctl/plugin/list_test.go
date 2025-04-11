@@ -39,7 +39,7 @@ func TestListCommand(t *testing.T) {
 
 	// create a temp plugin file pulsarctl-foo to test plugin list command
 	dir, err := os.MkdirTemp("", "plugins")
-	defer os.RemoveAll(dir)
+	defer assert.NoError(t, os.RemoveAll(dir))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func TestListCommand(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	os.Setenv("PATH", dir)
+	assert.NoError(t, os.Setenv("PATH", dir))
 
 	// test list the pulsarctl-foo plugin
 

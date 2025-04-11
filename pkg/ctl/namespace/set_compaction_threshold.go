@@ -64,7 +64,7 @@ func SetCompactionThresholdCmd(vc *cmdutils.VerbCmd) {
 		set.StringVar(&threshold, "size", "0",
 			"Maximum number of bytes in a topic backlog before compaction is triggered "+
 				"(e.g. 10M, 16G, 3T). 0 disable automatic compaction")
-		cobra.MarkFlagRequired(set, "size")
+		_ = cobra.MarkFlagRequired(set, "size")
 	})
 	vc.EnableOutputFlagSet()
 }

@@ -55,7 +55,7 @@ func TestUploadAndDownloadPackages(t *testing.T) {
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, output.String(),
 		fmt.Sprintf("The package '%s' downloaded to path '%s' successfully\n", packageURL, destinationFile))
-	os.Remove(destinationFile)
+	assert.NoError(t, os.Remove(destinationFile))
 }
 
 func TestDownloadPackagesWithFailure(t *testing.T) {

@@ -74,8 +74,7 @@ func doRunDeleteContext(vc *cmdutils.VerbCmd, ops *deleteContextOptions) error {
 
 	name := vc.NameArg
 	if len(name) == 0 {
-		vc.Command.Help()
-		return nil
+		return vc.Command.Help()
 	}
 
 	configFile := ops.access.GetDefaultFilename()

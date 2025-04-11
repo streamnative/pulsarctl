@@ -94,8 +94,8 @@ func createKeyPair(vc *cmdutils.VerbCmd) {
 			"The file that the private key is written to.")
 		set.StringVar(&outputPublicKeyPath, "output-public-key", "public.key",
 			"The file that the public key is written to.")
-		cobra.MarkFlagRequired(set, "output-private-key")
-		cobra.MarkFlagRequired(set, "output-private-key")
+		_ = cobra.MarkFlagRequired(set, "output-private-key")
+		_ = cobra.MarkFlagRequired(set, "output-private-key")
 	})
 	vc.EnableOutputFlagSet()
 }

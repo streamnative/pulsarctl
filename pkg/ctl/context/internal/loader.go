@@ -176,7 +176,9 @@ func (rules *ClientConfigLoadingRules) Load() (*cmdutils.Config, error) {
 	mapConfig := cmdutils.NewConfig()
 
 	for _, pulsarconfig := range pulsarconfigs {
-		mergo.MergeWithOverwrite(mapConfig, pulsarconfig)
+		if err := mergo.Merge(mapConfig, pulsarconfig, mergo.WithOverride); err != nil {
+			return nil, err
+		}
 	}
 
 	// merge all of the struct values in the reverse order so that priority is given correctly
@@ -184,14 +186,20 @@ func (rules *ClientConfigLoadingRules) Load() (*cmdutils.Config, error) {
 	nonMapConfig := cmdutils.NewConfig()
 	for i := len(pulsarconfigs) - 1; i >= 0; i-- {
 		pulsarconfig := pulsarconfigs[i]
-		mergo.MergeWithOverwrite(nonMapConfig, pulsarconfig)
+		if err := mergo.Merge(nonMapConfig, pulsarconfig, mergo.WithOverride); err != nil {
+			return nil, err
+		}
 	}
 
 	// since values are overwritten, but maps values are not, we can merge the non-map config on top of the map config and
 	// get the values we expect.
 	config := cmdutils.NewConfig()
-	mergo.MergeWithOverwrite(config, mapConfig)
-	mergo.MergeWithOverwrite(config, nonMapConfig)
+	if err := mergo.Merge(config, mapConfig, mergo.WithOverride); err != nil {
+		return nil, err
+	}
+	if err := mergo.Merge(config, nonMapConfig, mergo.WithOverride); err != nil {
+		return nil, err
+	}
 
 	return config, nil
 }
@@ -229,11 +237,13 @@ func (rules *ClientConfigLoadingRules) Migrate() error {
 		if err != nil {
 			return err
 		}
+		//nolint:errcheck
 		defer in.Close()
 		out, err := os.Create(destination)
 		if err != nil {
 			return err
 		}
+		//nolint:errcheck
 		defer out.Close()
 
 		if _, err = io.Copy(out, in); err != nil {
@@ -363,8 +373,7 @@ func lockFile(filename string) error {
 	if err != nil {
 		return err
 	}
-	f.Close()
-	return nil
+	return f.Close()
 }
 
 func unlockFile(filename string) error {

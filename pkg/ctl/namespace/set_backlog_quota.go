@@ -118,7 +118,7 @@ func setBacklogQuota(vc *cmdutils.VerbCmd) {
 			string(util.DestinationStorage),
 			"Backlog quota type to set.\n"+
 				"Valid options are: [destination_storage, message_age]")
-		cobra.MarkFlagRequired(flagSet, "policy")
+		_ = cobra.MarkFlagRequired(flagSet, "policy")
 	})
 	vc.EnableOutputFlagSet()
 }
