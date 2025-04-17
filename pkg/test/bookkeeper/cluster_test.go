@@ -37,7 +37,9 @@ func TestDefaultCluster(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer assert.NoError(t, bkCluster.Stop(ctx))
+	defer func() {
+		assert.NoError(t, bkCluster.Stop(ctx))
+	}()
 
 	path, err := bkCluster.GetHTTPServiceURL(ctx)
 	if err != nil {
@@ -46,7 +48,9 @@ func TestDefaultCluster(t *testing.T) {
 
 	resp, err := http.Get(path + "/api/v1/bookie/list_bookie_info")
 	// nolint
-	defer assert.NoError(t, resp.Body.Close())
+	defer func() {
+		assert.NoError(t, resp.Body.Close())
+	}()
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -84,7 +84,10 @@ func TestDeleteFunctionsWithFailure(t *testing.T) {
 	_, err := os.Create(jarName)
 	assert.Nil(t, err)
 
-	defer assert.NoError(t, os.Remove(jarName))
+	defer func() {
+		assert.NoError(t, os.Remove(jarName))
+	}()
+
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
