@@ -253,7 +253,7 @@ func updateSourcesCmd(vc *cmdutils.VerbCmd) {
 func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 	err := processArguments(sourceData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 

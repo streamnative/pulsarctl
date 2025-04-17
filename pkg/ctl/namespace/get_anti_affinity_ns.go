@@ -100,7 +100,7 @@ func getAntiAffinityNamespaces(vc *cmdutils.VerbCmd) {
 			"tenant is only used for authorization. \n"+
 				"Client has to be admin of any of the tenant to access this api")
 
-		cobra.MarkFlagRequired(flagSet, "group")
+		_ = cobra.MarkFlagRequired(flagSet, "group")
 	})
 	vc.EnableOutputFlagSet()
 }

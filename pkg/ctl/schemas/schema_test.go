@@ -30,7 +30,9 @@ func TestSchema(t *testing.T) {
 	fileName := "avro-schema"
 	f, err := os.Create(fileName)
 	assert.Nil(t, err)
-	defer os.Remove(fileName)
+	defer func(name string) {
+		_ = os.Remove(name)
+	}(fileName)
 
 	_, err = f.WriteString("{\n" +
 		"   \"type\": \"AVRO\",\n" +
@@ -47,14 +49,14 @@ func TestSchema(t *testing.T) {
 
 	args := []string{"upload", "test-schema", "-f", fileName}
 	out, _, err := TestSchemasCommands(uploadSchema, args)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "Upload test-schema successfully\n", out.String())
 
 	getArgs := []string{"get", "test-schema"}
 	getOut, _, err := TestSchemasCommands(getSchema, getArgs)
 
 	fmt.Print(getOut.String())
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, strings.Contains(getOut.String(), "AVRO"))
 	assert.True(t, strings.Contains(getOut.String(), "test-schema"))
 

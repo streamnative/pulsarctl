@@ -79,8 +79,8 @@ func updateDynamicConfig(vc *cmdutils.VerbCmd) {
 			"",
 			"service-configuration value")
 
-		cobra.MarkFlagRequired(flagSet, "config")
-		cobra.MarkFlagRequired(flagSet, "value")
+		_ = cobra.MarkFlagRequired(flagSet, "config")
+		_ = cobra.MarkFlagRequired(flagSet, "value")
 	})
 	vc.EnableOutputFlagSet()
 }

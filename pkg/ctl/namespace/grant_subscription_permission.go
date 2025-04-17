@@ -76,7 +76,7 @@ func GrantSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Grant Subscription Permissions", func(set *pflag.FlagSet) {
 		set.StringSliceVar(&role, "role", nil,
 			"Client role to which grant permissions")
-		cobra.MarkFlagRequired(set, "role")
+		_ = cobra.MarkFlagRequired(set, "role")
 	})
 	vc.EnableOutputFlagSet()
 }

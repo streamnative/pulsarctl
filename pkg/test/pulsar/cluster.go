@@ -229,6 +229,6 @@ func (c *ClusterDef) GetHTTPServiceURL(ctx context.Context) (string, error) {
 
 func (c *ClusterDef) Close(ctx context.Context) {
 	if c.network != nil {
-		c.network.Remove(ctx)
+		_ = c.network.Remove(ctx)
 	}
 }

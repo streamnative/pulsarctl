@@ -72,7 +72,7 @@ func deleteDynamicConfigCmd(vc *cmdutils.VerbCmd) {
 			"config",
 			"",
 			"service-configuration name")
-		cobra.MarkFlagRequired(flagSet, "config")
+		_ = cobra.MarkFlagRequired(flagSet, "config")
 	})
 	vc.EnableOutputFlagSet()
 }

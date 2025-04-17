@@ -103,6 +103,7 @@ func ModifyConfig(configAccess ConfigAccess, newConfig cmdutils.Config, relativi
 		if err := lockFile(filename); err != nil {
 			return err
 		}
+		//nolint:errcheck
 		defer unlockFile(filename)
 	}
 

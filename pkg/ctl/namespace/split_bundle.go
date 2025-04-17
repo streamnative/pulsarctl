@@ -104,7 +104,7 @@ func splitBundle(vc *cmdutils.VerbCmd) {
 			false,
 			"Unload newly split bundles after splitting old bundle")
 
-		cobra.MarkFlagRequired(flagSet, "bundle")
+		_ = cobra.MarkFlagRequired(flagSet, "bundle")
 	})
 	vc.EnableOutputFlagSet()
 }

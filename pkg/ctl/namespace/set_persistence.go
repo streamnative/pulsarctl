@@ -115,10 +115,10 @@ func setPersistence(vc *cmdutils.VerbCmd) {
 			0,
 			"Throttling rate of mark-delete operation (0 means no throttle)")
 
-		cobra.MarkFlagRequired(flagSet, "ensemble-size")
-		cobra.MarkFlagRequired(flagSet, "write-quorum-size")
-		cobra.MarkFlagRequired(flagSet, "ack-quorum-size")
-		cobra.MarkFlagRequired(flagSet, "ml-mark-delete-max-rate")
+		_ = cobra.MarkFlagRequired(flagSet, "ensemble-size")
+		_ = cobra.MarkFlagRequired(flagSet, "write-quorum-size")
+		_ = cobra.MarkFlagRequired(flagSet, "ack-quorum-size")
+		_ = cobra.MarkFlagRequired(flagSet, "ml-mark-delete-max-rate")
 	})
 	vc.EnableOutputFlagSet()
 }

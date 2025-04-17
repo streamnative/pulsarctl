@@ -115,11 +115,11 @@ func setResourceQuota(vc *cmdutils.VerbCmd) {
 			"dynamic",
 			false,
 			"dynamic (allow to be dynamically re-calculated) or not")
-		cobra.MarkFlagRequired(flagSet, "msgRateIn")
-		cobra.MarkFlagRequired(flagSet, "MsgRateOut")
-		cobra.MarkFlagRequired(flagSet, "bandwidthIn")
-		cobra.MarkFlagRequired(flagSet, "bandwidthOut")
-		cobra.MarkFlagRequired(flagSet, "memory")
+		_ = cobra.MarkFlagRequired(flagSet, "msgRateIn")
+		_ = cobra.MarkFlagRequired(flagSet, "MsgRateOut")
+		_ = cobra.MarkFlagRequired(flagSet, "bandwidthIn")
+		_ = cobra.MarkFlagRequired(flagSet, "bandwidthOut")
+		_ = cobra.MarkFlagRequired(flagSet, "memory")
 	})
 	vc.EnableOutputFlagSet()
 }

@@ -114,7 +114,7 @@ func stopSinksCmd(vc *cmdutils.VerbCmd) {
 func doStopSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)

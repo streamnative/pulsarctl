@@ -66,7 +66,7 @@ func SetOffloadThresholdCmd(vc *cmdutils.VerbCmd) {
 				"start being automatically offloaded to longterm  storage (e.g. 10m, 16g, 3t, 100)\n"+
 				"Negative values disable automatic offload.\n"+
 				"0 triggers offloading as soon as possible.")
-		cobra.MarkFlagRequired(set, "size")
+		_ = cobra.MarkFlagRequired(set, "size")
 	})
 }
 

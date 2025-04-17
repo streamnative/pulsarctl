@@ -99,8 +99,8 @@ func doSetDelayedDelivery(vc *cmdutils.VerbCmd, delayedDeliveryCmdData *utils.De
 	delayedDeliveryData := &utils.DelayedDeliveryData{}
 	if delayedDeliveryCmdData.Enable == delayedDeliveryCmdData.Disable {
 		msg := "Need to specify either --enable or --disable"
-		vc.Command.Printf(msg)
-		return errors.Errorf(msg)
+		vc.Command.Print(msg)
+		return errors.New(msg)
 	}
 	if delayedDeliveryCmdData.Enable {
 		tickTimeInSecond, err := ctlUtil.ParseRelativeTimeInSeconds(delayedDeliveryCmdData.DelayedDeliveryTimeStr)
