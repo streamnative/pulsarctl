@@ -39,10 +39,13 @@ func TestListCommand(t *testing.T) {
 
 	// create a temp plugin file pulsarctl-foo to test plugin list command
 	dir, err := os.MkdirTemp("", "plugins")
-	defer assert.NoError(t, os.RemoveAll(dir))
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	defer func() {
+		assert.NoError(t, os.RemoveAll(dir))
+	}()
 
 	pluginFile := filepath.Join(dir, "plugin-test-foo")
 	if err := os.WriteFile(pluginFile, []byte{}, 0777); err != nil {
