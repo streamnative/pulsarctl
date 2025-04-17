@@ -98,12 +98,6 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 		return err
 	}
 
-	textOutput := fmt.Sprintf(
-		`Message ID: %s
-		Properties: %s
-		Message: 
-				%s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload))
-
 	//nolint:govet
 	oc := cmdutils.NewOutputContent().
 		WithObject(&readMessage{
@@ -112,7 +106,10 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 			Payload:         message.Payload,
 			PayloadAsString: string(message.Payload),
 		}).
-		WithText(textOutput)
+		WithText(`Message ID: %s
+		Properties: %s
+		Message: 
+				%s`, message.GetMessageID(), propertiesJSON, hex.Dump(message.Payload))
 
 	err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 
