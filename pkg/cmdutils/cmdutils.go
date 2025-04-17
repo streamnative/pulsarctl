@@ -185,7 +185,7 @@ func PrintError(w io.Writer, err error) {
 		ae, _ := err.(rest.Error)
 		msg = ae.Reason
 	}
-	fmt.Fprintln(w, "error:", msg)
+	_, _ = fmt.Fprintln(w, "error:", msg)
 }
 
 func RunFuncWithTimeout(task func([]string, interface{}) bool, condition bool, timeout time.Duration,

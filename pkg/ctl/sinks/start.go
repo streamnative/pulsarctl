@@ -113,7 +113,7 @@ func startSinksCmd(vc *cmdutils.VerbCmd) {
 func doStartSink(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 	err := processBaseArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 

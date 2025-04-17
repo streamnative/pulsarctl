@@ -138,7 +138,7 @@ func startFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doStartFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 

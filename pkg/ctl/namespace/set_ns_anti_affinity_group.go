@@ -86,7 +86,7 @@ func setAntiAffinityGroup(vc *cmdutils.VerbCmd) {
 			"",
 			"Anti-affinity group name")
 
-		cobra.MarkFlagRequired(flagSet, "group")
+		_ = cobra.MarkFlagRequired(flagSet, "group")
 	})
 	vc.EnableOutputFlagSet()
 }

@@ -53,7 +53,7 @@ func TestDownloadFunctions(t *testing.T) {
 	outPut, execErr, err := TestFunctionsCommands(downloadFunctionsCmd, downloadArgs)
 	FailImmediatelyIfErrorNotNil(t, execErr, err)
 	assert.Equal(t, outPut.String(), "Downloaded ./dummyExample.jar successfully\n")
-	os.Remove(destinationFile)
+	assert.NoError(t, os.Remove(destinationFile))
 }
 
 func TestDownloadFunctionsWithFailure(t *testing.T) {

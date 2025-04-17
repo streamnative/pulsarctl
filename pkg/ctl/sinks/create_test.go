@@ -29,7 +29,9 @@ func TestCreateSinkFailedByEmptyFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(file.Name())
+	defer func() {
+		assert.NoError(t, os.Remove(file.Name()))
+	}()
 
 	failedArgs := []string{
 		"create",

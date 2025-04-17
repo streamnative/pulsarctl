@@ -91,7 +91,7 @@ func getOwnedNamespacesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"broker-url")
 
-		cobra.MarkFlagRequired(flagSet, "url")
+		_ = cobra.MarkFlagRequired(flagSet, "url")
 	})
 	vc.EnableOutputFlagSet()
 }

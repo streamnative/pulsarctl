@@ -345,13 +345,13 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	err := processArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 
 	err = validateSinkConfigs(sinkData.SinkConf)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 

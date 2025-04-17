@@ -151,8 +151,8 @@ func querystateFunctionsCmd(vc *cmdutils.VerbCmd) {
 			false,
 			"Watch for changes in the value associated with a key for a Pulsar Function")
 
-		cobra.MarkFlagRequired(flagSet, "key")
-		cobra.MarkFlagRequired(flagSet, "name")
+		_ = cobra.MarkFlagRequired(flagSet, "key")
+		_ = cobra.MarkFlagRequired(flagSet, "name")
 	})
 	vc.EnableOutputFlagSet()
 }

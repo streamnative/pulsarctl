@@ -65,7 +65,7 @@ func SetOffloadDeletionLagCmd(vc *cmdutils.VerbCmd) {
 		set.StringVarP(&d, "lag", "l", "",
 			"Duration to wait after offloading a ledger segment, before deleting the copy of that segment "+
 				"from cluster local storage. (e.g. 1s, 1m, 1h)")
-		cobra.MarkFlagRequired(set, "lag")
+		_ = cobra.MarkFlagRequired(set, "lag")
 	})
 	vc.EnableOutputFlagSet()
 }

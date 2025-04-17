@@ -85,7 +85,7 @@ func putPackageMetadataCmd(vc *cmdutils.VerbCmd) {
 			"P",
 			nil,
 			"external information of a package")
-		cobra.MarkFlagRequired(set, "description")
+		_ = cobra.MarkFlagRequired(set, "description")
 	})
 
 	vc.EnableOutputFlagSet()

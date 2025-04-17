@@ -74,7 +74,7 @@ func failImmediatelyIfErrorNotNil(t *testing.T, err ...error) {
 			if ok {
 				t.Logf("%s %d %s", file, line, e.Error())
 			}
-			t.Logf(e.Error())
+			t.Log(e.Error())
 			t.FailNow()
 		}
 	}

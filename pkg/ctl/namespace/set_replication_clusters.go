@@ -93,7 +93,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 			"",
 			"Replication Cluster Ids list (comma separated values)")
 
-		cobra.MarkFlagRequired(flagSet, "clusters")
+		_ = cobra.MarkFlagRequired(flagSet, "clusters")
 	})
 	vc.EnableOutputFlagSet()
 }

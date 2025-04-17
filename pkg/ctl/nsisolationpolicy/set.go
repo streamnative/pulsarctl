@@ -107,10 +107,10 @@ func setPolicy(vc *cmdutils.VerbCmd) {
 			"",
 			"comma separated name=value auto failover policy parameters")
 
-		cobra.MarkFlagRequired(flagSet, "namespaces")
-		cobra.MarkFlagRequired(flagSet, "primary")
-		cobra.MarkFlagRequired(flagSet, "auto-failover-policy-type")
-		cobra.MarkFlagRequired(flagSet, "auto-failover-policy-params")
+		_ = cobra.MarkFlagRequired(flagSet, "namespaces")
+		_ = cobra.MarkFlagRequired(flagSet, "primary")
+		_ = cobra.MarkFlagRequired(flagSet, "auto-failover-policy-type")
+		_ = cobra.MarkFlagRequired(flagSet, "auto-failover-policy-params")
 	},
 	)
 }

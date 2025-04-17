@@ -93,8 +93,8 @@ func uploadPackagesCmd(vc *cmdutils.VerbCmd) {
 			"",
 			"",
 			"file path of the package")
-		cobra.MarkFlagRequired(set, "description")
-		cobra.MarkFlagRequired(set, "path")
+		_ = cobra.MarkFlagRequired(set, "description")
+		_ = cobra.MarkFlagRequired(set, "path")
 	})
 
 	vc.EnableOutputFlagSet()

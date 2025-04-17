@@ -89,8 +89,8 @@ func doSetDeduplicationStatus(vc *cmdutils.VerbCmd, enable bool, disable bool) e
 	}
 	if enable == disable {
 		msg := "Need to specify either --enable or --disable"
-		vc.Command.Printf(msg)
-		return errors.Errorf(msg)
+		vc.Command.Print(msg)
+		return errors.New(msg)
 	}
 	var typeStr string
 	if enable {

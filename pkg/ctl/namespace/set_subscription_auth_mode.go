@@ -63,7 +63,7 @@ func SetSubscriptionAuthModeCmd(vc *cmdutils.VerbCmd) {
 	vc.FlagSetGroup.InFlagSet("Subscription Auth Mode", func(set *pflag.FlagSet) {
 		set.StringVarP(&mode, "mode", "m", "",
 			"Subscription authorization mode of a namespace. (e.g. None, Prefix)")
-		cobra.MarkFlagRequired(set, "mode")
+		_ = cobra.MarkFlagRequired(set, "mode")
 	})
 	vc.EnableOutputFlagSet()
 }
