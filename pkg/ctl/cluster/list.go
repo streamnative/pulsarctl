@@ -79,6 +79,7 @@ func doListClusters(vc *cmdutils.VerbCmd) error {
 		WithObject(clusters).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Cluster Name"})
 
 			for _, c := range clusters {
