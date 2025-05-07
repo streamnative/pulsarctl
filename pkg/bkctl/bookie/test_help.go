@@ -56,7 +56,6 @@ func testBookieCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out
 	resourceCmd := cmdutils.NewResourceCmd(
 		"bookie",
 		"Operations about bookie(s)",
-		"",
 		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
