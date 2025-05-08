@@ -84,20 +84,17 @@ func NewPulsarctlCmd() *cobra.Command {
 
 	cobra.OnInitialize(func() {
 		// Control colored output
-		color := false
 		fabulous := true
 		switch colorValue {
 		case "false":
-			color = false
+			fabulous = false
 		case "fabulous":
-			color = false
 			fabulous = true
 		}
-		logger.Color = color
-		logger.Fabulous = fabulous
-
+		// logger.Color and logger.Fabulous are deprecated in newer versions
+		// Use Writer directly for fabulous output
 		if fabulous {
-			logger.FabulousWriter = &lol.Writer{
+			logger.Writer = &lol.Writer{
 				Output:    colorOutput.Error,
 				ColorMode: 2,
 			}
