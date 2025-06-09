@@ -283,11 +283,11 @@ func TestGetPartitionedStatsWithNewFlags(t *testing.T) {
 }
 
 func TestGetPerPartitionStatsWithNewFlags(t *testing.T) {
-	args := []string{"create", "test-per-partition-stats-new-flags", "1"}
+	args := []string{"create", "test-per-part-stats-new-flags", "1"}
 	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"stats", "--partitioned-topic", "--per-partition", "--get-earliest-time-in-backlog", "test-per-partition-stats-new-flags"}
+	args = []string{"stats", "--partitioned-topic", "--per-partition", "--get-earliest-time-in-backlog", "test-per-part-stats-new-flags"}
 	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
 	assert.Nil(t, execErr)
 
@@ -310,7 +310,7 @@ func TestGetPerPartitionStatsWithNewFlags(t *testing.T) {
 		DeDuplicationStatus: "",
 		Metadata:            utils.PartitionedTopicMetadata{Partitions: 1},
 		Partitions: map[string]utils.TopicStats{
-			"persistent://public/default/test-per-partition-stats-new-flags-partition-0": {
+			"persistent://public/default/test-per-part-stats-new-flags-partition-0": {
 				MsgRateIn:           0,
 				MsgRateOut:          0,
 				MsgThroughputIn:     0,
