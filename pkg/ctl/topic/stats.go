@@ -155,11 +155,11 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 			"Get the partitioned topic stats")
 		set.BoolVarP(&perPartition, "per-partition", "", false,
 			"Get the per partition topic stats")
-		set.BoolVarP(&getPreciseBacklog, "get-precise-backlog", "gpb", false,
+		set.BoolVarP(&getPreciseBacklog, "get-precise-backlog", "", false,
 			"Get the precise backlog size")
-		set.BoolVarP(&subscriptionBacklogSize, "get-subscription-backlog-size", "sbs", true,
+		set.BoolVarP(&subscriptionBacklogSize, "get-subscription-backlog-size", "", true,
 			"Get the backlog size for each subscription")
-		set.BoolVarP(&getEarliestTimeInBacklog, "get-earliest-time-in-backlog", "etb", false,
+		set.BoolVarP(&getEarliestTimeInBacklog, "get-earliest-time-in-backlog", "", false,
 			"Get the earliest time in backlog")
 	})
 	vc.EnableOutputFlagSet()
