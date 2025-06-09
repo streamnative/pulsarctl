@@ -142,8 +142,12 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 
 	var partition bool
 	var perPartition bool
+	var getPreciseBacklog bool
+	var subscriptionBacklogSize bool
+	var getEarliestTimeInBacklog bool
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetStats(vc, partition, perPartition)
+		return doGetStats(vc, partition, perPartition, getPreciseBacklog, subscriptionBacklogSize, getEarliestTimeInBacklog)
 	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Stats", func(set *pflag.FlagSet) {
@@ -151,11 +155,17 @@ func GetStatsCmd(vc *cmdutils.VerbCmd) {
 			"Get the partitioned topic stats")
 		set.BoolVarP(&perPartition, "per-partition", "", false,
 			"Get the per partition topic stats")
+		set.BoolVarP(&getPreciseBacklog, "get-precise-backlog", "gpb", false,
+			"Get the precise backlog size")
+		set.BoolVarP(&subscriptionBacklogSize, "get-subscription-backlog-size", "sbs", true,
+			"Get the backlog size for each subscription")
+		set.BoolVarP(&getEarliestTimeInBacklog, "get-earliest-time-in-backlog", "etb", false,
+			"Get the earliest time in backlog")
 	})
 	vc.EnableOutputFlagSet()
 }
 
-func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error {
+func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool, getPreciseBacklog, subscriptionBacklogSize, getEarliestTimeInBacklog bool) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -166,10 +176,16 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error
 		return err
 	}
 
+	getStatsOptions := utils.GetStatsOptions{
+		GetPreciseBacklog:        getPreciseBacklog,
+		SubscriptionBacklogSize:  subscriptionBacklogSize,
+		GetEarliestTimeInBacklog: getEarliestTimeInBacklog,
+	}
+
 	admin := cmdutils.NewPulsarClient()
 
 	if partitionedTopic {
-		stats, err := admin.Topics().GetPartitionedStats(*topic, perPartition)
+		stats, err := admin.Topics().GetPartitionedStatsWithOption(*topic, perPartition, getStatsOptions)
 		if err == nil {
 			oc := cmdutils.NewOutputContent().WithObject(stats)
 			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
@@ -177,7 +193,7 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool) error
 		return err
 	}
 
-	topicStats, err := admin.Topics().GetStats(*topic)
+	topicStats, err := admin.Topics().GetStatsWithOption(*topic, getStatsOptions)
 	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(topicStats)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
