@@ -1,5 +1,5 @@
 ARG PULSAR_VERSION
-FROM apachepulsar/pulsar-all:$PULSAR_VERSION
+FROM snstage/pulsar-all:$PULSAR_VERSION
 
 # use root user
 USER root
