@@ -180,3 +180,150 @@ func TestGetNonPartitionedTopicStatsError(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Contains(t, execErr.Error(), "code: 404 reason: Partitioned Topic")
 }
+
+func TestGetStatsWithPreciseBacklog(t *testing.T) {
+	args := []string{"create", "test-stats-precise-backlog", "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--get-precise-backlog", "test-stats-precise-backlog"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.TopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, defaultStats, stats)
+}
+
+func TestGetStatsWithoutSubscriptionBacklogSize(t *testing.T) {
+	args := []string{"create", "test-stats-no-subscription-backlog", "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--get-subscription-backlog-size=false", "test-stats-no-subscription-backlog"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.TopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, defaultStats, stats)
+}
+
+func TestGetStatsWithEarliestTimeInBacklog(t *testing.T) {
+	args := []string{"create", "test-stats-earliest-time-backlog", "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--get-earliest-time-in-backlog", "test-stats-earliest-time-backlog"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.TopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, defaultStats, stats)
+}
+
+func TestGetStatsWithMultipleNewFlags(t *testing.T) {
+	args := []string{"create", "test-stats-multiple-flags", "0"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--get-precise-backlog", "--get-earliest-time-in-backlog", "test-stats-multiple-flags"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.TopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, defaultStats, stats)
+}
+
+func TestGetPartitionedStatsWithNewFlags(t *testing.T) {
+	args := []string{"create", "test-partitioned-stats-new-flags", "2"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--partitioned-topic", "--get-precise-backlog", "test-partitioned-stats-new-flags"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.PartitionedTopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, float64(0), stats.MsgRateIn)
+	assert.Equal(t, float64(0), stats.MsgRateOut)
+	assert.Equal(t, float64(0), stats.MsgThroughputIn)
+	assert.Equal(t, float64(0), stats.MsgThroughputOut)
+	assert.Equal(t, float64(0), stats.AverageMsgSize)
+	assert.Equal(t, int64(0), stats.StorageSize)
+	assert.Equal(t, 0, len(stats.Publishers))
+	assert.Equal(t, 0, len(stats.Subscriptions))
+	assert.Equal(t, 0, len(stats.Replication))
+	assert.Equal(t, "", stats.DeDuplicationStatus)
+	assert.Equal(t, 2, stats.Metadata.Partitions)
+	assert.Equal(t, 0, len(stats.Partitions))
+}
+
+func TestGetPerPartitionStatsWithNewFlags(t *testing.T) {
+	args := []string{"create", "test-per-part-stats-new-flags", "1"}
+	_, execErr, _, _ := TestTopicCommands(CreateTopicCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"stats", "--partitioned-topic", "--per-partition", "--get-earliest-time-in-backlog", "test-per-part-stats-new-flags"}
+	out, execErr, _, _ := TestTopicCommands(GetStatsCmd, args)
+	assert.Nil(t, execErr)
+
+	var stats utils.PartitionedTopicStats
+	err := json.Unmarshal(out.Bytes(), &stats)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defaultStats := utils.PartitionedTopicStats{
+		MsgRateIn:           0,
+		MsgRateOut:          0,
+		MsgThroughputIn:     0,
+		MsgThroughputOut:    0,
+		AverageMsgSize:      0,
+		StorageSize:         0,
+		Publishers:          []utils.PublisherStats{},
+		Subscriptions:       map[string]utils.SubscriptionStats{},
+		Replication:         map[string]utils.ReplicatorStats{},
+		DeDuplicationStatus: "",
+		Metadata:            utils.PartitionedTopicMetadata{Partitions: 1},
+		Partitions: map[string]utils.TopicStats{
+			"persistent://public/default/test-per-part-stats-new-flags-partition-0": {
+				MsgRateIn:           0,
+				MsgRateOut:          0,
+				MsgThroughputIn:     0,
+				MsgThroughputOut:    0,
+				AverageMsgSize:      0,
+				StorageSize:         0,
+				Publishers:          []utils.PublisherStats{},
+				Subscriptions:       map[string]utils.SubscriptionStats{},
+				Replication:         map[string]utils.ReplicatorStats{},
+				DeDuplicationStatus: "Disabled",
+			},
+		},
+	}
+
+	assert.Equal(t, defaultStats, stats)
+}
