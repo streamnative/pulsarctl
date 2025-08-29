@@ -137,7 +137,7 @@ func create(vc *cmdutils.VerbCmd) {
 			"The secret key is base64 encoded or not.")
 		set.StringToStringVar(&args.headers, "headers", nil,
 			"The headers for a token. e.g. key1=value1,key2=value2")
-		cobra.MarkFlagRequired(set, "subject")
+		_ = cobra.MarkFlagRequired(set, "subject")
 	})
 	vc.EnableOutputFlagSet()
 }

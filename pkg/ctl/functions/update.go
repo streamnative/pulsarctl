@@ -458,15 +458,17 @@ func updateFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error {
 	err := processArgs(funcData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 
 	err = checkArgsForUpdate(funcData.FuncConf)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
+
+	formatFuncConf(funcData.FuncConf)
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 

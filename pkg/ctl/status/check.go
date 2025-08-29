@@ -81,6 +81,6 @@ func doCheckStatus(vc *cmdutils.VerbCmd) error {
 	if err != nil {
 		return err
 	}
-	vc.Command.Printf(string(data))
+	vc.Command.Print(string(data))
 	return nil
 }

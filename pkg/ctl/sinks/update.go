@@ -323,9 +323,9 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 			false,
 			"Whether or not to update the auth data")
 
-		flagSet.MarkDeprecated("auto-ack", "this value is immutable")
-		flagSet.MarkDeprecated("processing-guarantees", "this value is immutable")
-		flagSet.MarkDeprecated("retain-ordering", "this value is immutable")
+		_ = flagSet.MarkDeprecated("auto-ack", "this value is immutable")
+		_ = flagSet.MarkDeprecated("processing-guarantees", "this value is immutable")
+		_ = flagSet.MarkDeprecated("retain-ordering", "this value is immutable")
 	})
 	vc.EnableOutputFlagSet()
 }
@@ -333,11 +333,16 @@ func updateSinksCmd(vc *cmdutils.VerbCmd) {
 func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	err := processArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 
 	checkArgsForUpdate(sinkData.SinkConf)
+
+	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
+	for k, v := range sinkData.SinkConf.Secrets {
+		sinkData.SinkConf.Secrets[k] = utils.ConvertMap(v)
+	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)
 

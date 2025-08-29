@@ -97,7 +97,7 @@ func deleteSourcesCmd(vc *cmdutils.VerbCmd) {
 func doDeleteSource(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 	err := processBaseArguments(sourceData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)

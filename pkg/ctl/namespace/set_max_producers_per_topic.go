@@ -62,7 +62,7 @@ func SetMaxProducersPerTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("Max Producers Per Topic", func(set *pflag.FlagSet) {
 		set.IntVar(&num, "size", -1, "max producers per topic")
-		cobra.MarkFlagRequired(set, "size")
+		_ = cobra.MarkFlagRequired(set, "size")
 	})
 	vc.EnableOutputFlagSet()
 }

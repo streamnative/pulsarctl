@@ -33,7 +33,7 @@ func TestGCDetailsCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 
 	var result []bkdata.GCStatus
-	json.Unmarshal(out.Bytes(), &result)
+	assert.NoError(t, json.Unmarshal(out.Bytes(), &result))
 	assert.Equal(t, 1, len(result))
 	assert.False(t, result[0].ForceCompacting)
 	assert.False(t, result[0].MajorCompacting)

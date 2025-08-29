@@ -70,7 +70,7 @@ func RevokePermissions(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("RevokePermissions", func(set *pflag.FlagSet) {
 		set.StringVar(&role, "role", "", "Client role to which revoke permissions")
-		cobra.MarkFlagRequired(set, "role")
+		_ = cobra.MarkFlagRequired(set, "role")
 	})
 }
 

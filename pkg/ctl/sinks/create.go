@@ -345,14 +345,19 @@ func createSinksCmd(vc *cmdutils.VerbCmd) {
 func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 	err := processArguments(sinkData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 
 	err = validateSinkConfigs(sinkData.SinkConf)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
+	}
+
+	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
+	for k, v := range sinkData.SinkConf.Secrets {
+		sinkData.SinkConf.Secrets[k] = utils.ConvertMap(v)
 	}
 
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)

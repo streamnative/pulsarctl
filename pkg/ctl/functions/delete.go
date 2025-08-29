@@ -125,7 +125,7 @@ func deleteFunctionsCmd(vc *cmdutils.VerbCmd) {
 func doDeleteFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 	err := processBaseArguments(funcData)
 	if err != nil {
-		vc.Command.Help()
+		_ = vc.Command.Help()
 		return err
 	}
 	admin := cmdutils.NewPulsarClientWithAPIVersion(config.V3)

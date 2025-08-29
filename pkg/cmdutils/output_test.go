@@ -74,7 +74,7 @@ func TestOutputContent(t *testing.T) {
 		"WithTextFunc": {
 			init: func(oc *OutputContent) {
 				oc.WithTextFunc(func(w io.Writer) error {
-					fmt.Fprint(w, "foobar")
+					_, _ = fmt.Fprint(w, "foobar")
 					return nil
 				})
 			},

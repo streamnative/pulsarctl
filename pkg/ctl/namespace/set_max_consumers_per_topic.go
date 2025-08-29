@@ -62,7 +62,7 @@ func SetMaxConsumersPerTopicCmd(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("Max Consumers Per Topic", func(set *pflag.FlagSet) {
 		set.IntVar(&num, "size", -1, "max consumers per topic")
-		cobra.MarkFlagRequired(set, "size")
+		_ = cobra.MarkFlagRequired(set, "size")
 	})
 	vc.EnableOutputFlagSet()
 }

@@ -35,7 +35,9 @@ func TestDefaultPulsarCluster(t *testing.T) {
 	}
 
 	err = pulsar.Start(ctx)
-	defer pulsar.Stop(ctx)
+	defer func() {
+		assert.NoError(t, pulsar.Stop(ctx))
+	}()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +49,9 @@ func TestDefaultPulsarCluster(t *testing.T) {
 
 	resp, err := http.Get(path + "/admin/v2/tenants")
 	// nolint
-	defer resp.Body.Close()
+	defer func() {
+		assert.NoError(t, resp.Body.Close())
+	}()
 	if err != nil {
 		t.Fatal(err)
 	}

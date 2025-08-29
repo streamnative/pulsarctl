@@ -33,7 +33,7 @@ func TestGetCmd(t *testing.T) {
 	assert.Nil(t, nameErr)
 	assert.Nil(t, execErr)
 
-	json.Unmarshal(out.Bytes(), &result)
+	assert.NoError(t, json.Unmarshal(out.Bytes(), &result))
 
 	assert.Equal(t, 1, len(result))
 	meta := result[0]
