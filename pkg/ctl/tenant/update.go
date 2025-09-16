@@ -106,7 +106,29 @@ func doUpdateTenant(vc *cmdutils.VerbCmd, data *utils.TenantData) error {
 
 	data.Name = vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	err := admin.Tenants().Update(*data)
+	tenantClient := admin.Tenants()
+
+	flags := vc.Command.Flags()
+	adminRolesFlag := flags.Lookup("admin-roles")
+	allowedClustersFlag := flags.Lookup("allowed-clusters")
+
+	adminRolesChanged := adminRolesFlag != nil && adminRolesFlag.Changed
+	allowedClustersChanged := allowedClustersFlag != nil && allowedClustersFlag.Changed
+
+	if !adminRolesChanged || !allowedClustersChanged {
+		current, err := tenantClient.Get(data.Name)
+		if err != nil {
+			return err
+		}
+		if !adminRolesChanged {
+			data.AdminRoles = current.AdminRoles
+		}
+		if !allowedClustersChanged {
+			data.AllowedClusters = current.AllowedClusters
+		}
+	}
+
+	err := tenantClient.Update(*data)
 	if err == nil {
 		vc.Command.Printf("Update tenant %s successfully\n", data.Name)
 	}
