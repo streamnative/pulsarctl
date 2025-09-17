@@ -63,6 +63,49 @@ func TestUpdateTenantCmd(t *testing.T) {
 	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
 }
 
+func TestUpdateTenantPartial(t *testing.T) {
+	args := []string{"create", "--admin-roles", "initial-role", "--allowed-clusters", "standalone", "update-tenant-partial"}
+	_, execErr, _, _ := TestTenantCommands(createTenantCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"update", "--allowed-clusters", "standalone", "update-tenant-partial"}
+	_, execErr, _, _ = TestTenantCommands(UpdateTenantCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"get", "update-tenant-partial"}
+	out, execErr, _, _ := TestTenantCommands(getTenantCmd, args)
+	assert.Nil(t, execErr)
+
+	var tenantData utils.TenantData
+	err := json.Unmarshal(out.Bytes(), &tenantData)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, 1, len(tenantData.AdminRoles))
+	assert.Equal(t, "initial-role", tenantData.AdminRoles[0])
+	assert.Equal(t, 1, len(tenantData.AllowedClusters))
+	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
+
+	args = []string{"update", "--admin-roles", "updated-role", "update-tenant-partial"}
+	_, execErr, _, _ = TestTenantCommands(UpdateTenantCmd, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"get", "update-tenant-partial"}
+	out, execErr, _, _ = TestTenantCommands(getTenantCmd, args)
+	assert.Nil(t, execErr)
+
+	err = json.Unmarshal(out.Bytes(), &tenantData)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, 1, len(tenantData.AdminRoles))
+	assert.Equal(t, "updated-role", tenantData.AdminRoles[0])
+	assert.Equal(t, 1, len(tenantData.AllowedClusters))
+	assert.Equal(t, "standalone", tenantData.AllowedClusters[0])
+}
+
 func TestUpdateArgsError(t *testing.T) {
 	args := []string{"update"}
 	_, _, nameErr, _ := TestTenantCommands(UpdateTenantCmd, args)
