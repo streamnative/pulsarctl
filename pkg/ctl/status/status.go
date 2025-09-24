@@ -26,8 +26,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	statusCmd := cmdutils.NewResourceCmd(
 		"status",
 		"Check service(broker or proxy) status",
-		"",
-		"status")
+		"")
 	cmdutils.AddVerbCmd(flagGrouping, statusCmd, checkStatusCmd)
 
 	return statusCmd
