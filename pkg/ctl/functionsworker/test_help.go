@@ -55,7 +55,7 @@ func TestFunctionsWorkerCmd(newVerb func(cmd *cmdutils.VerbCmd), args []string) 
 		"functions-worker",
 		"Operations to collect function-worker statistics",
 		"",
-		"functions-worker")
+		"pfw")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
