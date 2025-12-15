@@ -85,8 +85,7 @@ func GetInternalStatsCmd(vc *cmdutils.VerbCmd) {
 		"internal-stats",
 		"Get the internal stats of the specified topic",
 		desc.ToString(),
-		desc.ExampleToString(),
-		"")
+		desc.ExampleToString())
 
 	var partition int
 
