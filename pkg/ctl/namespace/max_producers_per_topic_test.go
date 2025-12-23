@@ -34,7 +34,7 @@ func TestMaxProducersPerTopicCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetMaxProducersPerTopicCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max producers per topic of the namespace %s is %d\n", ns, 0),
+		fmt.Sprintf("The max producers per topic of the namespace %s is not set\n", ns),
 		out.String())
 
 	args = []string{"set-max-producers-per-topic", "--size", "10", ns}

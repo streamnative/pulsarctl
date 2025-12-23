@@ -159,7 +159,9 @@ func TestByteValue(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(file.Name())
+	defer func(name string) {
+		_ = os.Remove(name)
+	}(file.Name())
 	if _, err := file.Write([]byte(buf)); err != nil {
 		t.Fatal(err)
 	}
