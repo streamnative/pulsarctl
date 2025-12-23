@@ -60,8 +60,8 @@ func TestCreateKeyPair(t *testing.T) {
 			fmt.Sprintf("The private key and public key are generated to %s and %s successfully.\n",
 				data.outputPrivateFilePath, data.outputPublicFilePath),
 			out.String())
-		os.Remove(data.outputPrivateFilePath)
-		os.Remove(data.outputPublicFilePath)
+		_ = os.Remove(data.outputPrivateFilePath)
+		_ = os.Remove(data.outputPublicFilePath)
 	}
 }
 

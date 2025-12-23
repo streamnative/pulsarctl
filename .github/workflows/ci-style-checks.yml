@@ -11,17 +11,17 @@ jobs:
   style-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.24
+      - name: Set up Go 1.25
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24
+          go-version: 1.25
         id: go
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: v1.64.8
+          version: v2.7.2
           args: --timeout=10m -v
       - name: Build
         run: go build .

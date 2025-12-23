@@ -34,7 +34,7 @@ func TestOffloadDeletionLagCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetOffloadDeletionLagCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The offload deletion lag of the namespace %s is %f minute(s)\n", ns, 0.000000),
+		fmt.Sprintf("The offload deletion lag of the namespace %s is not set\n", ns),
 		out.String())
 
 	args = []string{"set-offload-deletion-lag", "--lag", "10m", ns}
@@ -62,7 +62,7 @@ func TestOffloadDeletionLagCmd(t *testing.T) {
 	out, execErr, _, _ = TestNamespaceCommands(GetOffloadDeletionLagCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The offload deletion lag of the namespace %s is %f minute(s)\n", ns, 0.000000),
+		fmt.Sprintf("The offload deletion lag of the namespace %s is not set\n", ns),
 		out.String())
 
 }
