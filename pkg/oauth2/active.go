@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
 	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -98,17 +97,7 @@ func doActivate(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig) error {
 		return err
 	}
 
-	store, err := auth.MakeKeyringStore()
-	if err != nil {
-		return err
-	}
-
-	err = store.SaveGrant(config.Audience, *grant)
-	if err != nil {
-		return err
-	}
-
-	userName, err := store.WhoAmI(config.Audience)
+	userName, err := whoAmI(grant)
 	if err != nil {
 		return err
 	}

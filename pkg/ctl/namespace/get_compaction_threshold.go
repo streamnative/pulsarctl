@@ -65,8 +65,12 @@ func doGetCompactionThreshold(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	threshold, err := admin.Namespaces().GetCompactionThreshold(*ns)
 	if err == nil {
-		vc.Command.Printf("The compaction size threshold of the namespace %s is %d byte(s)\n",
-			ns.String(), threshold)
+		if threshold == -1 {
+			vc.Command.Printf("The compaction size threshold of the namespace %s is not set\n", ns.String())
+		} else {
+			vc.Command.Printf("The compaction size threshold of the namespace %s is %d byte(s)\n",
+				ns.String(), threshold)
+		}
 	}
 
 	return err

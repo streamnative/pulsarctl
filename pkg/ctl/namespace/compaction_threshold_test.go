@@ -34,7 +34,7 @@ func TestCompactionThresholdCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetCompactionThresholdCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The compaction size threshold of the namespace %s is %d byte(s)\n", ns, 0),
+		fmt.Sprintf("The compaction size threshold of the namespace %s is not set\n", ns),
 		out.String())
 
 	args = []string{"set-compaction-threshold", "--size", "10m", ns}

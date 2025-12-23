@@ -75,7 +75,9 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 	}
 	if outputFile != "" {
 		args = append(args, "--output-file", outputFile)
-		defer os.Remove(outputFile)
+		defer func(name string) {
+			_ = os.Remove(name)
+		}(outputFile)
 	}
 
 	out, execErr, _ := testTokenCommands(createSecretKey, args)
@@ -95,12 +97,12 @@ func testNormalCase(t *testing.T, signatureAlgorithm, outputFile string, encode 
 		output = out.Bytes()[:len(out.Bytes())-1]
 	}
 
-	switch {
-	case signatureAlgorithm == "HS256":
+	switch signatureAlgorithm {
+	case "HS256":
 		assert.Equal(t, 32, len(output))
-	case signatureAlgorithm == "HS384":
+	case "HS384":
 		assert.Equal(t, 48, len(output))
-	case signatureAlgorithm == "HS512":
+	case "HS512":
 		assert.Equal(t, 64, len(output))
 	default:
 		t.Fatal()

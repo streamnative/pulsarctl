@@ -73,7 +73,11 @@ func doGetMessageTTL(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	ttl, err := admin.Topics().GetMessageTTL(*topic)
 	if err == nil {
-		vc.Command.Print(ttl)
+		if ttl == -1 {
+			vc.Command.Print("not set")
+		} else {
+			vc.Command.Print(ttl)
+		}
 	}
 	return err
 }
