@@ -72,6 +72,10 @@ func doGetMaxUnackMessagesPerConsumer(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	value, err := admin.Topics().GetMaxUnackMessagesPerConsumer(*topic)
+	if value == -1 {
+		vc.Command.Print("not set")
+		return nil
+	}
 	if err == nil {
 		vc.Command.Print(value)
 	}

@@ -58,5 +58,5 @@ func TestCompactionThresholdCmd(t *testing.T) {
 	out, execErr, _, _ = TestTopicCommands(GetCompactionThresholdCmd, getArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, out.String(),
-		fmt.Sprintf("The compaction threshold of the topic %s is %d byte(s)", topicName, 0))
+		fmt.Sprintf("The compaction threshold of the topic %s is not set", topicName))
 }
