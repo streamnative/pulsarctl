@@ -142,8 +142,10 @@ func doTestShowCmd(t *testing.T, signatureAlgorithm, subject, tokenString string
 
 func TestShowWithEnvToken(t *testing.T) {
 	for _, data := range testTokenData {
-		os.Setenv("TOKEN", data.tokenString)
-		defer os.Unsetenv("TOKEN")
+		_ = os.Setenv("TOKEN", data.tokenString)
+		defer func() {
+			_ = os.Unsetenv("TOKEN")
+		}()
 		doTestShowWithEnvToken(t, data.signatureAlgorithm, data.subject)
 	}
 	os.Clearenv()

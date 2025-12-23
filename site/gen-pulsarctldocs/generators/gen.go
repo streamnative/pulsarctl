@@ -186,7 +186,9 @@ func WriteManifest(manifest *Manifest) {
 		if err != nil {
 			fmt.Printf("Could not create file %s due to error: %v.\n", JSONOutputFile, err)
 		} else {
-			defer jsonfile.Close()
+			defer func(jsonfile *os.File) {
+				_ = jsonfile.Close()
+			}(jsonfile)
 			_, err := jsonfile.Write(jsonbytes)
 			if err != nil {
 				fmt.Printf("Failed to write bytes %s to file %s: %v.\n", jsonbytes, JSONOutputFile, err)
@@ -264,7 +266,9 @@ func WriteCategoryFile(c Category) {
 	if err != nil {
 		log.Panicf("Failed to open index: %v", err)
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
 	err = ct.Execute(f, c)
 	if err != nil {
 		log.Panicf("Failed to execute template: %v", err)
@@ -285,7 +289,9 @@ func WriteCommandFile(manifest *Manifest, t *template.Template, params TopLevelC
 	if err != nil {
 		log.Panicf("Failed to open index: %v", err)
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
 	err = t.Execute(f, params)
 	if err != nil {
 		log.Panicf("Failed to execute template: %v", err)

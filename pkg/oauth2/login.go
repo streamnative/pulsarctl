@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	o "github.com/apache/pulsar-client-go/oauth2"
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/auth"
 	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -75,6 +74,23 @@ func loginCmd(vc *cmdutils.VerbCmd) {
 	vc.EnableOutputFlagSet()
 }
 
+func whoAmI(grant *o.AuthorizationGrant) (string, error) {
+	switch grant.Type {
+	case o.GrantTypeClientCredentials:
+		if grant.ClientCredentials == nil {
+			return "", errors.New("authentication data is not usable")
+		}
+		return grant.ClientCredentials.ClientEmail, nil
+	case o.GrantTypeDeviceCode:
+		if grant.Token == nil {
+			return "", errors.New("authentication data is not available")
+		}
+		return o.ExtractUserName(*grant.Token)
+	default:
+		return "", errors.New("authentication type is not supported")
+	}
+}
+
 func doLogin(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig, noRefresh bool) error {
 	config, err := applyClientCredentialsToConfig(config)
 	if err != nil {
@@ -107,17 +123,7 @@ func doLogin(vc *cmdutils.VerbCmd, config *cmdutils.ClusterConfig, noRefresh boo
 		return errors.New("login failed: " + err.Error())
 	}
 
-	store, err := auth.MakeKeyringStore()
-	if err != nil {
-		return err
-	}
-
-	err = store.SaveGrant(config.Audience, *grant)
-	if err != nil {
-		return err
-	}
-
-	userName, err := store.WhoAmI(config.Audience)
+	userName, err := whoAmI(grant)
 	if err != nil {
 		return err
 	}

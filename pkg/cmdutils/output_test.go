@@ -137,7 +137,8 @@ func TestOutputContent(t *testing.T) {
 					} else {
 						assert.NotNil(t, ow)
 						sb := &strings.Builder{}
-						assert.NoError(t, ow.WriteTo(sb))
+						_, err := ow.WriteTo(sb)
+						assert.NoError(t, err)
 						assert.Equal(t, expected, sb.String())
 					}
 				})

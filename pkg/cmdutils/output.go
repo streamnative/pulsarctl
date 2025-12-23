@@ -52,7 +52,7 @@ func (c *OutputConfig) WriteOutput(w io.Writer, f OutputNegotiable) error {
 	if ow == nil {
 		return fmt.Errorf("unsupported output format: %s", c.Format)
 	}
-	err := ow.WriteTo(w)
+	_, err := ow.WriteTo(w)
 	if err != nil {
 		return fmt.Errorf("output error: %v", err)
 	}
@@ -94,26 +94,26 @@ func (fmt OutputFormat) String() string {
 
 // OutputWritable indicates an object that is writable to a given io.Writer
 type OutputWritable interface {
-	WriteTo(w io.Writer) error
+	WriteTo(w io.Writer) (int64, error)
 }
 
 // OutputWritableFunc adapts a function as an OutputWritable
 type OutputWritableFunc func(w io.Writer) error
 
-func (f OutputWritableFunc) WriteTo(w io.Writer) error {
-	return f(w)
+func (f OutputWritableFunc) WriteTo(w io.Writer) (int64, error) {
+	return 0, f(w)
 }
 
 // byteOutputFunc adapts a function which produces bytes as an OutputWritable
 type byteOutputFunc func() ([]byte, error)
 
-func (f byteOutputFunc) WriteTo(w io.Writer) error {
+func (f byteOutputFunc) WriteTo(w io.Writer) (int64, error) {
 	b, err := f()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	_, err = w.Write(b)
-	return err
+	return 0, err
 }
 
 // endregion

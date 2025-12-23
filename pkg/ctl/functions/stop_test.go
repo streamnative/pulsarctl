@@ -78,7 +78,9 @@ func TestStopFunctionsWithFailure(t *testing.T) {
 	_, err := os.Create(jarName)
 	assert.Nil(t, err)
 
-	defer os.Remove(jarName)
+	defer func(name string) {
+		_ = os.Remove(name)
+	}(jarName)
 	args := []string{"create",
 		"--tenant", "public",
 		"--namespace", "default",
