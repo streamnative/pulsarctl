@@ -70,12 +70,12 @@ func doGetCompactionThreshold(vc *cmdutils.VerbCmd, applied bool) error {
 
 	admin := cmdutils.NewPulsarClient()
 	threshold, err := admin.Topics().GetCompactionThreshold(*topic, applied)
-	if threshold == -1 {
-		vc.Command.Printf("The compaction threshold of the topic %s is not set", topic)
-		return nil
-	}
 	if err == nil {
-		vc.Command.Printf("The compaction threshold of the topic %s is %d byte(s)", topic, threshold)
+		if threshold == -1 {
+			vc.Command.Printf("The compaction threshold of the topic %s is not set", topic)
+		} else {
+			vc.Command.Printf("The compaction threshold of the topic %s is %d byte(s)", topic, threshold)
+		}
 	}
 
 	return err

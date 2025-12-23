@@ -72,12 +72,12 @@ func doGetMaxProducers(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	value, err := admin.Topics().GetMaxProducers(*topic)
-	if value == -1 {
-		vc.Command.Print("not set")
-		return nil
-	}
 	if err == nil {
-		vc.Command.Print(value)
+		if value == -1 {
+			vc.Command.Print("not set")
+		} else {
+			vc.Command.Print(value)
+		}
 	}
 	return err
 }

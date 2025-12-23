@@ -56,7 +56,7 @@ func TestDelayedDelivery(t *testing.T) {
 
 	time.Sleep(time.Duration(1) * time.Second)
 	args = []string{"get-delayed-delivery", topicName}
-	out, execErr, _, _ = TestTopicCommands(GetDelayedDeliveryCmd, args)
+	out, _, _, _ = TestTopicCommands(GetDelayedDeliveryCmd, args)
 	assert.Equal(t, out.String(), "null")
 
 	// test specify either --enable or --disable
