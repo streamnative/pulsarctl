@@ -32,3 +32,6 @@ pulsarctl:
 .PHONY: install
 install:
 	go install github.com/streamnative/pulsarctl
+
+lint-docker:
+	docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v2.7.2 golangci-lint run -v

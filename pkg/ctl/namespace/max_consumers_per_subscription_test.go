@@ -34,7 +34,7 @@ func TestMaxConsumersPerSubscriptionCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetMaxConsumersPerSubscriptionCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t,
-		fmt.Sprintf("The max consumers per subscription of the namespace %s is %d\n", ns, 0),
+		fmt.Sprintf("The max consumers per subscription of the namespace %s is not set\n", ns),
 		out.String())
 
 	args = []string{"set-max-consumers-per-subscription", "--size", "10", ns}

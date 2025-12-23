@@ -71,6 +71,10 @@ func doGetOffloadDeletionLag(vc *cmdutils.VerbCmd) error {
 		return err
 	}
 
+	if ms == -1 {
+		vc.Command.Printf("The offload deletion lag of the namespace %s is not set\n", ns.String())
+		return nil
+	}
 	t, _ := time.ParseDuration(fmt.Sprintf("%dms", ms))
 	vc.Command.Printf("The offload deletion lag of the namespace %s is %f minute(s)\n",
 		ns.String(), t.Minutes())

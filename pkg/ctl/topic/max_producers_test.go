@@ -52,7 +52,7 @@ func TestMaxProducers(t *testing.T) {
 	g.Eventually(func(g gomega.Gomega) {
 		getOut, execErr, _, _ := TestTopicCommands(GetMaxProducersCmd, getArgs)
 		g.Expect(execErr).Should(gomega.BeNil())
-		g.Expect(getOut.String()).Should(gomega.Equal("0"))
+		g.Expect(getOut.String()).Should(gomega.Equal("not set"))
 	}).Should(gomega.Succeed())
 
 	// test negative value
