@@ -110,6 +110,7 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 	assert.Equal(t, "", stats.DeDuplicationStatus)
 	assert.Equal(t, 2, stats.Metadata.Partitions)
 	assert.Equal(t, 0, len(stats.Partitions))
+	assert.Greater(t, stats.TopicCreationTimeStamp, int64(0))
 }
 
 func TestGetPerPartitionedStatsCmd(t *testing.T) {
