@@ -52,6 +52,8 @@ func TestGetStatsCmd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0 // reset to zero for comparison
 
 	assert.Equal(t, defaultStats, stats)
 }
