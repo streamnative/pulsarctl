@@ -207,6 +207,8 @@ func TestGetStatsWithPreciseBacklog(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0
 
 	assert.Equal(t, defaultStats, stats)
 }
