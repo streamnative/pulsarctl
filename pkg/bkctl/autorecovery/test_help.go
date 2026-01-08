@@ -48,7 +48,6 @@ func testAutoRecoveryCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string
 	resourceCmd := cmdutils.NewResourceCmd(
 		"auto-recovery",
 		"Operations about auto recovering",
-		"",
 		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)

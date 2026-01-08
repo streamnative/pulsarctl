@@ -39,8 +39,7 @@ func testStatusCommands(newVerb func(*cmdutils.VerbCmd), args []string) (out *by
 	resourceCmd := cmdutils.NewResourceCmd(
 		"status",
 		"Check service(broker or proxy) status",
-		"",
-		"status")
+		"")
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	err = rootCmd.Execute()
 	return
