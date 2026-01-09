@@ -42,7 +42,7 @@ If you are stuck on Bash 3 (macOS) use
 source /dev/stdin <<<"$(pulsarctl completion bash)"
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return rootCmd.GenBashCompletion(os.Stdout)
+			return rootCmd.GenBashCompletionV2(os.Stdout, true)
 		},
 	}
 
