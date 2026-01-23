@@ -81,3 +81,49 @@ func TestOauthConfiguration(t *testing.T) {
 	assert.Equal(t, "audience", config.Audience)
 	assert.Equal(t, "profile api://test-endpoint", config.Scope)
 }
+
+func TestParseOauthConfiguration(t *testing.T) {
+	home := utils.HomeDir()
+	path := fmt.Sprintf("%s/.config/pulsar/config", home)
+	defer os.Remove(path)
+
+	setOauthConfigArgs := []string{"set", "oauth",
+		"--auth-params",
+		"{\"audience\":\"audience\",\"issuerUrl\":\"https://test-endpoint\",\"privateKey\":\"/tmp/auth.json\"," +
+			"\"scope\":\"profile api://test-endpoint\",\"clientId\":\"clientid\"}",
+	}
+	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	assert.Nil(t, execErr)
+
+	config := cmdutils.LoadFromEnv()
+	assert.Equal(t, "https://test-endpoint", config.IssuerEndpoint)
+	assert.Equal(t, "clientid", config.ClientID)
+	assert.Equal(t, "audience", config.Audience)
+	assert.Equal(t, "profile api://test-endpoint", config.Scope)
+	assert.Equal(t, "/tmp/auth.json", config.KeyFile)
+}
+
+func TestParseWrongFormatOauthConfiguration(t *testing.T) {
+	home := utils.HomeDir()
+	path := fmt.Sprintf("%s/.config/pulsar/config", home)
+	defer os.Remove(path)
+
+	setOauthConfigArgs := []string{"set", "oauth",
+		"--auth-params", "wrong_format",
+	}
+	_, execErr, err := TestConfigCommands(setContextCmd, setOauthConfigArgs)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	assert.Nil(t, execErr)
+
+	config := cmdutils.LoadFromEnv()
+	assert.Equal(t, "", config.IssuerEndpoint)
+	assert.Equal(t, "", config.ClientID)
+	assert.Equal(t, "", config.Audience)
+	assert.Equal(t, "", config.Scope)
+	assert.Equal(t, "", config.KeyFile)
+}
