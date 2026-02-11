@@ -94,5 +94,8 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetPublishRateCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetIsAllowAutoUpdateSchemaCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetIsAllowAutoUpdateSchemaCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetInactiveTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetInactiveTopicCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, RemoveInactiveTopicCmd)
 	return resourceCmd
 }
