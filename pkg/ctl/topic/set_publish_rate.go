@@ -67,13 +67,13 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 			"msg-publish-rate",
 			"",
 			-1,
-			"message-publish-rate (default -1 will be overwrite if not passed)")
+			"message-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
 		set.Int64VarP(
 			&publishRateData.PublishThrottlingRateInByte,
 			"byte-publish-rate",
 			"",
 			-1,
-			"byte-publish-rate (default -1 will be overwrite if not passed)")
+			"byte-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
 	})
 	vc.EnableOutputFlagSet()
 }

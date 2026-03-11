@@ -67,19 +67,19 @@ func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 			"msg-dispatch-rate",
 			"",
 			-1,
-			"message-dispatch-rate (default -1 will be overwrite if not passed)")
+			"message-dispatch-rate (defaults to -1 and overwrites the existing value when omitted)")
 		set.Int64VarP(
 			&dispatchRateData.DispatchThrottlingRateInByte,
 			"byte-dispatch-rate",
 			"",
 			-1,
-			"byte-dispatch-rate (default -1 will be overwrite if not passed)")
+			"byte-dispatch-rate (defaults to -1 and overwrites the existing value when omitted)")
 		set.Int64VarP(
 			&dispatchRateData.RatePeriodInSecond,
 			"dispatch-rate-period",
 			"",
 			1,
-			"dispatch-rate-period in second type (default 1 second will be overwrite if not passed)")
+			"dispatch-rate-period in second type (defaults to 1 second and overwrites the existing value when omitted)")
 		set.BoolVarP(
 			&dispatchRateData.RelativeToPublishRate,
 			"relative-to-publish-rate",
