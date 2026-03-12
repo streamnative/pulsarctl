@@ -46,12 +46,12 @@ func TestListNonExistNamespace(t *testing.T) {
 	args := []string{"topics", "public/non-exist-namespace"}
 	_, execErr, _, _ := TestNamespaceCommands(getTopics, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestListNonExistTenant(t *testing.T) {
 	args := []string{"topics", "non-exist-tenant/default"}
 	_, execErr, _, _ := TestNamespaceCommands(getTopics, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

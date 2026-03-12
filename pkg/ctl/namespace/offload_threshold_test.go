@@ -57,7 +57,7 @@ func TestSetOffloadThresholdOnNonExistingNs(t *testing.T) {
 	args := []string{"set-offload-threshold", "--size", "10m", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetOffloadThresholdCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestGetOffloadThresholdOnNonExistingNs(t *testing.T) {
@@ -65,5 +65,5 @@ func TestGetOffloadThresholdOnNonExistingNs(t *testing.T) {
 	args := []string{"get-offload-threshold", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetOffloadThresholdCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
