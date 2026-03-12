@@ -58,7 +58,7 @@ func TestSetCompactionThresholdOnNonExistingNs(t *testing.T) {
 	args := []string{"set-compaction-threshold", "--size", "10m", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetCompactionThresholdCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestGetCompactionThresholdOnNonExistingNs(t *testing.T) {
@@ -66,5 +66,5 @@ func TestGetCompactionThresholdOnNonExistingNs(t *testing.T) {
 	args := []string{"get-compaction-threshold", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetCompactionThresholdCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
