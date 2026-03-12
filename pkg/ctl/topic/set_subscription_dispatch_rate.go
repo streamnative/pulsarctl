@@ -24,16 +24,16 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
+func SetSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Set message publish rate for a topic"
+	desc.CommandUsedFor = "Set subscription message dispatch rate for a topic"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
 	msg := cmdutils.Example{
-		Desc: "Set message publish rate for a topic",
-		Command: "pulsarctl topics set-publish-rate topic " +
-			"--msg-publish-rate 4 --byte-publish-rate 5 --publish-rate-period 6 --relative-to-publish-rate",
+		Desc: "Set subscription message dispatch rate for a topic",
+		Command: "pulsarctl topics set-subscription-dispatch-rate topic " +
+			"--msg-dispatch-rate 4 --byte-dispatch-rate 5 --dispatch-rate-period 6 --relative-to-publish-rate",
 	}
 	examples = append(examples, msg)
 	desc.CommandExamples = examples
@@ -41,7 +41,7 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out:  "Set message publish rate successfully for [topic]",
+		Out:  "Set subscription message dispatch rate successfully for [topic]",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
@@ -50,35 +50,48 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"set-publish-rate",
-		"Set message publish rate for a topic",
+		"set-subscription-dispatch-rate",
+		"Set subscription message dispatch rate for a topic",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"set-publish-rate",
+		"set-subscription-dispatch-rate",
 	)
-	publishRateData := &utils.PublishRateData{}
+	dispatchRateData := &utils.DispatchRateData{}
 	vc.SetRunFuncWithNameArg(func() error {
-		return doSetPublishRate(vc, publishRateData)
+		return doSetSubscriptionDispatchRate(vc, dispatchRateData)
 	}, "the topic name is not specified or the topic name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("PublishRate", func(set *pflag.FlagSet) {
+	vc.FlagSetGroup.InFlagSet("SubscriptionDispatchRate", func(set *pflag.FlagSet) {
 		set.Int64VarP(
-			&publishRateData.PublishThrottlingRateInMsg,
-			"msg-publish-rate",
+			&dispatchRateData.DispatchThrottlingRateInMsg,
+			"msg-dispatch-rate",
 			"",
 			-1,
-			"message-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
+			"message-dispatch-rate (defaults to -1 and overwrites the existing value when omitted)")
 		set.Int64VarP(
-			&publishRateData.PublishThrottlingRateInByte,
-			"byte-publish-rate",
+			&dispatchRateData.DispatchThrottlingRateInByte,
+			"byte-dispatch-rate",
 			"",
 			-1,
-			"byte-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
+			"byte-dispatch-rate (defaults to -1 and overwrites the existing value when omitted)")
+		set.Int64VarP(
+			&dispatchRateData.RatePeriodInSecond,
+			"dispatch-rate-period",
+			"",
+			1,
+			"dispatch-rate-period in second type (defaults to 1 second and overwrites the existing value when omitted)")
+		set.BoolVarP(
+			&dispatchRateData.RelativeToPublishRate,
+			"relative-to-publish-rate",
+			"",
+			false,
+			"dispatch rate relative to publish-rate (if publish-relative flag is enabled "+
+				"then broker will apply throttling value to (publish-rate + dispatch rate))")
 	})
 	vc.EnableOutputFlagSet()
 }
 
-func doSetPublishRate(vc *cmdutils.VerbCmd, publishRateData *utils.PublishRateData) error {
+func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, dispatchRateData *utils.DispatchRateData) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -89,9 +102,9 @@ func doSetPublishRate(vc *cmdutils.VerbCmd, publishRateData *utils.PublishRateDa
 		return err
 	}
 	admin := cmdutils.NewPulsarClient()
-	err = admin.Topics().SetPublishRate(*topic, *publishRateData)
+	err = admin.Topics().SetSubscriptionDispatchRate(*topic, *dispatchRateData)
 	if err == nil {
-		vc.Command.Printf("Set message publish rate successfully for [%s]\n", topic.String())
+		vc.Command.Printf("Set subscription message dispatch rate successfully for [%s]\n", topic.String())
 	}
 	return err
 }
