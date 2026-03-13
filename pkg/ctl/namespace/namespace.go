@@ -43,6 +43,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setBacklogQuota)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, removeBacklogQuota)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, GetTopicAutoCreationCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, setTopicAutoCreation)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, removeTopicAutoCreation)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, SetSchemaValidationEnforcedCmd)
