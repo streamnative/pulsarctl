@@ -57,7 +57,7 @@ func TestSetMaxConsumersPerSubscriptionOnNonExistingTopic(t *testing.T) {
 	args := []string{"set-max-consumers-per-subscription", "--size", "10", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetMaxConsumersPerSubscriptionCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestSetMaxConsumersPerSubscriptionWithInvalidSize(t *testing.T) {
@@ -72,5 +72,5 @@ func TestGetMaxConsumersPerSubscriptionOnNonExistingTopic(t *testing.T) {
 	args := []string{"get-max-consumers-per-subscription", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetMaxConsumersPerSubscriptionCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

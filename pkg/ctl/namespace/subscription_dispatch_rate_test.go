@@ -111,5 +111,5 @@ func TestGetSubscriptionDispatchRateOnNonExistingNs(t *testing.T) {
 	args := []string{"get-subscription-dispatch-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetSubscriptionDispatchRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
