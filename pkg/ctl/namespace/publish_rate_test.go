@@ -102,5 +102,5 @@ func TestGetPublishRateOnNonExistingNs(t *testing.T) {
 	args := []string{"get-publish-rate", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetPublishRateCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
