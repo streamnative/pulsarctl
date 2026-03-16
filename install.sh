@@ -21,7 +21,7 @@
 set -e
 
 if [[ "x${version}" == "x" ]]; then
-    version=$(curl -s https://raw.githubusercontent.com/streamnative/pulsarctl/master/stable.txt)
+    version=$(curl -s https://api.github.com/repos/streamnative/pulsarctl/releases/latest | grep tag_name | sed -r 's/.*(v[[:digit:]]+(\.[[:digit:]]+)+).*/\1/')
 fi
 
 discoverArch() {
