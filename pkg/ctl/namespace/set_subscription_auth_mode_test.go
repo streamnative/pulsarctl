@@ -76,8 +76,7 @@ func TestSetSubscriptionAuthModeOnNonExistingNs(t *testing.T) {
 
 	args := []string{"set-subscription-auth-mode", "--mode", "Prefix", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetSubscriptionAuthModeCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestSetSubscriptionAuthModeWithInvalidMode(t *testing.T) {

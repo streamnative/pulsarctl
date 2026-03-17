@@ -57,7 +57,7 @@ func TestSetMaxProducersPerTopicOnNonExistingTopic(t *testing.T) {
 	args := []string{"set-max-producers-per-topic", "--size", "10", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetMaxProducersPerTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestSetMaxProducersPerTopicWithInvalidSize(t *testing.T) {
@@ -72,5 +72,5 @@ func TestGetMaxProducersPerTopicOnNonExistingTopic(t *testing.T) {
 	args := []string{"get-max-producers-per-topic", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetMaxProducersPerTopicCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
