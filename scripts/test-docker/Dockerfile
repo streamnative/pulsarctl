@@ -1,5 +1,6 @@
+ARG PULSAR_IMAGE=apachepulsar/pulsar-all
 ARG PULSAR_VERSION
-FROM snstage/pulsar-all:$PULSAR_VERSION
+FROM ${PULSAR_IMAGE}:${PULSAR_VERSION}
 
 # use root user
 USER root

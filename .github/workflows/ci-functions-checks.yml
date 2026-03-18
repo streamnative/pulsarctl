@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Login SN docker hub
+      if: github.actor == 'streamnativebot'
       run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
     - name: Set up Go 1.25.8
       uses: actions/setup-go@v6
@@ -22,6 +23,8 @@ jobs:
       uses: actions/checkout@v2
     - name: Function tests
       run: scripts/run-integration-tests.sh function
+      env:
+        PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
     - name: Setup tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
@@ -29,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login SN docker hub
+        if: github.actor == 'streamnativebot'
         run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
       - name: Set up Go 1.25.8
         uses: actions/setup-go@v6
@@ -39,10 +43,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Sink tests
         run: scripts/run-integration-tests.sh sink
+        env:
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
   source-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Login SN docker hub
+        if: github.actor == 'streamnativebot'
         run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
       - name: Set up Go 1.25.8
         uses: actions/setup-go@v6
@@ -53,3 +60,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Source tests
         run: scripts/run-integration-tests.sh source
+        env:
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
