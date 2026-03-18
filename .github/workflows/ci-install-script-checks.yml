@@ -10,6 +10,9 @@ jobs:
   install-script-check:
     runs-on: ubuntu-latest
     steps:
+    - name: Login SN docker hub
+      if: github.actor == 'streamnativebot'
+      run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
     - name: Test install
