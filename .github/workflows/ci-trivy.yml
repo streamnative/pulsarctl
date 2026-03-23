@@ -28,7 +28,7 @@ jobs:
         run: docker build -f docker/amd64-linux.Dockerfile -t pulsarctl .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: 'pulsarctl:latest'
           format: 'table'
