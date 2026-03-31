@@ -52,8 +52,7 @@ func TestSinksCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out 
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sinks",
 		"Operations about Pulsar Sinks",
-		"",
-		"sinks")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
