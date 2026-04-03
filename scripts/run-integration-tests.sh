@@ -3,7 +3,7 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="4.1.3"
+readonly PULSAR_DEFAULT_VERSION="4.0.9.6"
 readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 readonly PULSAR_IMAGE=${PULSAR_IMAGE:-"apachepulsar/pulsar-all"}
 
