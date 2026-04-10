@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package brokers
+package topicpolicies
 
 import (
 	"github.com/spf13/cobra"
@@ -24,21 +24,38 @@ import (
 
 func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
-		"brokers",
-		"Operations about broker(s)",
+		"topic-policies",
+		"Operations about topic policies",
 		"",
-		"broker")
+		"topic-policy",
+	)
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBrokerListCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, leaderBrokerCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getDynamicConfigListNameCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getOwnedNamespacesCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateDynamicConfig)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteDynamicConfigCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getAllDynamicConfigsCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getInternalConfigCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getRuntimeConfigCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, healthCheckCmd)
+	cmdutils.AddVerbCmds(flagGrouping, resourceCmd,
+		GetMaxMessageSizeCmd,
+		SetMaxMessageSizeCmd,
+		RemoveMaxMessageSizeCmd,
+		GetMaxSubscriptionsPerTopicCmd,
+		SetMaxSubscriptionsPerTopicCmd,
+		RemoveMaxSubscriptionsPerTopicCmd,
+		GetDeduplicationSnapshotIntervalCmd,
+		SetDeduplicationSnapshotIntervalCmd,
+		RemoveDeduplicationSnapshotIntervalCmd,
+		GetReplicatorDispatchRateCmd,
+		SetReplicatorDispatchRateCmd,
+		RemoveReplicatorDispatchRateCmd,
+		GetOffloadPoliciesCmd,
+		SetOffloadPoliciesCmd,
+		RemoveOffloadPoliciesCmd,
+		GetAutoSubscriptionCreationCmd,
+		SetAutoSubscriptionCreationCmd,
+		RemoveAutoSubscriptionCreationCmd,
+		GetSchemaCompatibilityStrategyCmd,
+		SetSchemaCompatibilityStrategyCmd,
+		RemoveSchemaCompatibilityStrategyCmd,
+		GetReplicationClustersCmd,
+		SetReplicationClustersCmd,
+		RemoveReplicationClustersCmd,
+	)
 
 	return resourceCmd
 }

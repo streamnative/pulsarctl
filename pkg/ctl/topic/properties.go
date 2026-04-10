@@ -1,0 +1,82 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+package topic
+
+import (
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
+	"github.com/spf13/pflag"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+)
+
+func getPropertiesCmd(vc *cmdutils.VerbCmd) {
+	vc.SetDescription("get-properties", "Get the topic properties", "Get the topic properties", "")
+	vc.EnableOutputFlagSet()
+	vc.SetRunFuncWithNameArg(func() error {
+		topic, err := utils.GetTopicName(vc.NameArg)
+		if err != nil {
+			return err
+		}
+		admin := cmdutils.NewPulsarClient()
+		properties, err := admin.Topics().GetProperties(*topic)
+		if err != nil {
+			return err
+		}
+		return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), cmdutils.NewOutputContent().WithObject(properties))
+	}, "the topic name is not specified or the topic name is specified more than one")
+}
+
+func updatePropertiesCmd(vc *cmdutils.VerbCmd) {
+	properties := map[string]string{}
+	vc.SetDescription("update-properties", "Update the topic properties", "Update the topic properties", "")
+	vc.FlagSetGroup.InFlagSet("TopicProperties", func(set *pflag.FlagSet) {
+		set.StringToStringVarP(&properties, "property", "p", nil, "properties in key=value,key2=value2 format")
+	})
+	vc.SetRunFuncWithNameArg(func() error {
+		topic, err := utils.GetTopicName(vc.NameArg)
+		if err != nil {
+			return err
+		}
+		admin := cmdutils.NewPulsarClient()
+		err = admin.Topics().UpdateProperties(*topic, properties)
+		if err == nil {
+			vc.Command.Printf("Updated properties successfully for [%s]\n", topic.String())
+		}
+		return err
+	}, "the topic name is not specified or the topic name is specified more than one")
+}
+
+func removePropertiesCmd(vc *cmdutils.VerbCmd) {
+	var key string
+	vc.SetDescription("remove-properties", "Remove a property from a topic", "Remove a property from a topic", "")
+	vc.FlagSetGroup.InFlagSet("TopicProperties", func(set *pflag.FlagSet) {
+		set.StringVarP(&key, "key", "k", "", "property key")
+	})
+	vc.SetRunFuncWithNameArg(func() error {
+		topic, err := utils.GetTopicName(vc.NameArg)
+		if err != nil {
+			return err
+		}
+		admin := cmdutils.NewPulsarClient()
+		err = admin.Topics().RemoveProperty(*topic, key)
+		if err == nil {
+			vc.Command.Printf("Removed property %s successfully for [%s]\n", key, topic.String())
+		}
+		return err
+	}, "the topic name is not specified or the topic name is specified more than one")
+}

@@ -19,6 +19,7 @@ package topic
 
 import (
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topicpolicies"
 
 	"github.com/spf13/cobra"
 )
@@ -93,10 +94,42 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		GetPublishRateCmd,
 		SetPublishRateCmd,
 		RemovePublishRateCmd,
+		getPropertiesCmd,
+		updatePropertiesCmd,
+		removePropertiesCmd,
+		getSchemaValidationEnforceCmd,
+		setSchemaValidationEnforceCmd,
 		GetInactiveTopicCmd,
 		SetInactiveTopicCmd,
 		RemoveInactiveTopicCmd,
 	}
+
+	commands = append(commands,
+		topicpolicies.GetMaxMessageSizeCmd,
+		topicpolicies.SetMaxMessageSizeCmd,
+		topicpolicies.RemoveMaxMessageSizeCmd,
+		topicpolicies.GetMaxSubscriptionsPerTopicCmd,
+		topicpolicies.SetMaxSubscriptionsPerTopicCmd,
+		topicpolicies.RemoveMaxSubscriptionsPerTopicCmd,
+		topicpolicies.GetDeduplicationSnapshotIntervalCmd,
+		topicpolicies.SetDeduplicationSnapshotIntervalCmd,
+		topicpolicies.RemoveDeduplicationSnapshotIntervalCmd,
+		topicpolicies.GetReplicatorDispatchRateCmd,
+		topicpolicies.SetReplicatorDispatchRateCmd,
+		topicpolicies.RemoveReplicatorDispatchRateCmd,
+		topicpolicies.GetOffloadPoliciesCmd,
+		topicpolicies.SetOffloadPoliciesCmd,
+		topicpolicies.RemoveOffloadPoliciesCmd,
+		topicpolicies.GetAutoSubscriptionCreationCmd,
+		topicpolicies.SetAutoSubscriptionCreationCmd,
+		topicpolicies.RemoveAutoSubscriptionCreationCmd,
+		topicpolicies.GetSchemaCompatibilityStrategyCmd,
+		topicpolicies.SetSchemaCompatibilityStrategyCmd,
+		topicpolicies.RemoveSchemaCompatibilityStrategyCmd,
+		topicpolicies.GetReplicationClustersCmd,
+		topicpolicies.SetReplicationClustersCmd,
+		topicpolicies.RemoveReplicationClustersCmd,
+	)
 
 	cmdutils.AddVerbCmds(flagGrouping, resourceCmd, commands...)
 

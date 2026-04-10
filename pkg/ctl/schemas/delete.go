@@ -18,6 +18,7 @@
 package schemas
 
 import (
+	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -31,7 +32,11 @@ func deleteSchema(vc *cmdutils.VerbCmd) {
 		Desc:    "Delete the latest schema for a topic",
 		Command: "pulsarctl schemas delete (topic name)",
 	}
-	examples = append(examples, del)
+	forceDel := cmdutils.Example{
+		Desc:    "Delete all schema resources for a topic",
+		Command: "pulsarctl schemas delete (topic name) --force",
+	}
+	examples = append(examples, del, forceDel)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
@@ -54,16 +59,31 @@ func deleteSchema(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"delete",
 	)
+	var force bool
+	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
+		flagSet.BoolVarP(
+			&force,
+			"force",
+			"f",
+			false,
+			"delete schema completely",
+		)
+	})
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doDeleteSchema(vc)
+		return doDeleteSchema(vc, force)
 	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
-func doDeleteSchema(vc *cmdutils.VerbCmd) error {
+func doDeleteSchema(vc *cmdutils.VerbCmd, force bool) error {
 	topic := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
-	err := admin.Schemas().DeleteSchema(topic)
+	var err error
+	if force {
+		err = admin.Schemas().ForceDeleteSchema(topic)
+	} else {
+		err = admin.Schemas().DeleteSchema(topic)
+	}
 	if err == nil {
 		vc.Command.Printf("Deleted %s successfully\n", topic)
 	}

@@ -64,6 +64,21 @@ func TestSchema(t *testing.T) {
 	delOut, _, err := TestSchemasCommands(deleteSchema, delArgs)
 	assert.Nil(t, err)
 	assert.Equal(t, delOut.String(), "Deleted test-schema successfully\n")
+
+	allArgs := []string{"get", "test-schema", "--all-version"}
+	allOut, _, err := TestSchemasCommands(getSchema, allArgs)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(allOut.String(), "version"))
+
+	compatibilityArgs := []string{"compatibility", "test-schema", "-f", fileName}
+	compatibilityOut, _, err := TestSchemasCommands(testCompatibility, compatibilityArgs)
+	assert.NoError(t, err)
+	assert.True(t, strings.Contains(compatibilityOut.String(), "compatibility"))
+
+	forceDeleteArgs := []string{"delete", "test-schema", "--force"}
+	forceDeleteOut, _, err := TestSchemasCommands(deleteSchema, forceDeleteArgs)
+	assert.Nil(t, err)
+	assert.Equal(t, forceDeleteOut.String(), "Deleted test-schema successfully\n")
 }
 
 func TestFailSchema(t *testing.T) {

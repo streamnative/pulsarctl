@@ -18,6 +18,7 @@
 package schemas
 
 import (
+	"errors"
 	"io"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
@@ -49,8 +50,13 @@ func getSchema(vc *cmdutils.VerbCmd) {
 		Command: "pulsarctl schemas get (topic name) \n" +
 			"\t--version 2",
 	}
+	delWithAllVersion := cmdutils.Example{
+		Desc: "Get all schema versions for a topic",
+		Command: "pulsarctl schemas get (topic name) \n" +
+			"\t--all-version",
+	}
 
-	examples = append(examples, del, delWithVersion)
+	examples = append(examples, del, delWithVersion, delWithAllVersion)
 	desc.CommandExamples = examples
 
 	var out []cmdutils.Output
@@ -105,9 +111,10 @@ func getSchema(vc *cmdutils.VerbCmd) {
 	)
 
 	schemaData := &utils.SchemaData{}
+	var allVersion bool
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doGetSchema(vc, schemaData)
+		return doGetSchema(vc, schemaData, allVersion)
 	}, "the topic name is not specified or the topic name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("SchemaConfig", func(flagSet *pflag.FlagSet) {
@@ -116,14 +123,30 @@ func getSchema(vc *cmdutils.VerbCmd) {
 			"version",
 			0,
 			"the schema version info")
+		flagSet.BoolVarP(
+			&allVersion,
+			"all-version",
+			"a",
+			false,
+			"get all schema versions")
 	})
 	vc.EnableOutputFlagSet()
 }
 
-func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData) error {
+func doGetSchema(vc *cmdutils.VerbCmd, schemaData *utils.SchemaData, allVersion bool) error {
 	topic := vc.NameArg
+	if allVersion && vc.Command.Flag("version").Changed {
+		return errors.New("only one or neither of --version and --all-version can be specified")
+	}
 
 	admin := cmdutils.NewPulsarClient()
+	if allVersion {
+		schemas, err := admin.Schemas().GetAllSchemas(topic)
+		if err == nil {
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), cmdutils.NewOutputContent().WithObject(schemas))
+		}
+		return err
+	}
 	if !vc.Command.Flag("version").Changed {
 		schemaInfoWithVersion, err := admin.Schemas().GetSchemaInfoWithVersion(topic)
 		if err == nil {
