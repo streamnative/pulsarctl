@@ -84,14 +84,13 @@ func doGetMessageByID(vc *cmdutils.VerbCmd, ledgerID int64, entryID int64) error
 	}
 
 	client := cmdutils.NewPulsarClient()
-	messages, err := client.Subscriptions().GetMessagesByID(*topic, ledgerID, entryID)
+	message, err := client.Subscriptions().GetMessageByID(*topic, ledgerID, entryID)
 	if err != nil {
 		return err
 	}
-	if len(messages) == 0 {
+	if message == nil {
 		return fmt.Errorf("no message found with the given ledgerID and entryID")
 	}
-	message := messages[0]
 
 	propertiesJSON, err := json.Marshal(message.GetProperties())
 	if err != nil {

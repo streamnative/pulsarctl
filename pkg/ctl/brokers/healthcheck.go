@@ -18,7 +18,6 @@
 package brokers
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
@@ -57,7 +56,7 @@ func healthCheckCmd(vc *cmdutils.VerbCmd) {
 
 func doHealthCheck(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
-	err := admin.Brokers().HealthCheckWithTopicVersion(utils.TopicVersionV1)
+	err := admin.Brokers().HealthCheck()
 	if err == nil {
 		vc.Command.Println("ok")
 	}
