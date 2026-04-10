@@ -18,7 +18,6 @@
 package topic
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/pflag"
 
@@ -177,44 +176,27 @@ func doGetStats(vc *cmdutils.VerbCmd, partitionedTopic, perPartition bool, getPr
 		return err
 	}
 
-	client, err := cmdutils.NewPulsarRESTClientWithAPIVersion(config.V2)
-	if err != nil {
-		return err
+	getStatsOptions := utils.GetStatsOptions{
+		GetPreciseBacklog:        getPreciseBacklog,
+		SubscriptionBacklogSize:  subscriptionBacklogSize,
+		GetEarliestTimeInBacklog: getEarliestTimeInBacklog,
 	}
 
-	params := map[string]string{
-		"getPreciseBacklog":        boolString(getPreciseBacklog),
-		"subscriptionBacklogSize":  boolString(subscriptionBacklogSize),
-		"getEarliestTimeInBacklog": boolString(getEarliestTimeInBacklog),
-	}
+	admin := cmdutils.NewPulsarClient()
 
 	if partitionedTopic {
-		params["perPartition"] = boolString(perPartition)
-		stats := utils.PartitionedTopicStats{}
-		endpoint := cmdutils.BuildAdminEndpoint(config.V2, "/persistent", topic.GetRestPath(), "partitioned-stats")
-		_, err := client.GetWithQueryParams(endpoint, &stats, params, true)
-		if err != nil {
-			return err
+		stats, err := admin.Topics().GetPartitionedStatsWithOption(*topic, perPartition, getStatsOptions)
+		if err == nil {
+			oc := cmdutils.NewOutputContent().WithObject(stats)
+			err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 		}
-
-		oc := cmdutils.NewOutputContent().WithObject(stats)
-		return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
-	}
-
-	topicStats := utils.TopicStats{}
-	endpoint := cmdutils.BuildAdminEndpoint(config.V2, "/persistent", topic.GetRestPath(), "stats")
-	_, err = client.GetWithQueryParams(endpoint, &topicStats, params, true)
-	if err != nil {
 		return err
 	}
 
-	oc := cmdutils.NewOutputContent().WithObject(topicStats)
-	return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
-}
-
-func boolString(value bool) string {
-	if value {
-		return "true"
+	topicStats, err := admin.Topics().GetStatsWithOption(*topic, getStatsOptions)
+	if err == nil {
+		oc := cmdutils.NewOutputContent().WithObject(topicStats)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
-	return "false"
+	return err
 }

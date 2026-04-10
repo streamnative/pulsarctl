@@ -18,7 +18,6 @@
 package topic
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/pflag"
 
@@ -102,14 +101,8 @@ func doSetSubscriptionDispatchRate(vc *cmdutils.VerbCmd, dispatchRateData *utils
 	if err != nil {
 		return err
 	}
-
-	client, err := cmdutils.NewPulsarRESTClientWithAPIVersion(config.V2)
-	if err != nil {
-		return err
-	}
-
-	endpoint := cmdutils.BuildAdminEndpoint(config.V2, "/persistent", topic.GetRestPath(), "subscriptionDispatchRate")
-	err = client.Post(endpoint, dispatchRateData)
+	admin := cmdutils.NewPulsarClient()
+	err = admin.Topics().SetSubscriptionDispatchRate(*topic, *dispatchRateData)
 	if err == nil {
 		vc.Command.Printf("Set subscription message dispatch rate successfully for [%s]\n", topic.String())
 	}

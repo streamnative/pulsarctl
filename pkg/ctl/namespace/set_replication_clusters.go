@@ -87,7 +87,7 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
-			&data.ClusterIds,
+			&data.ClusterIDs,
 			"clusters",
 			"c",
 			"",
@@ -102,7 +102,7 @@ func doSetReplicationClusters(vc *cmdutils.VerbCmd, data utils.NamespacesData) e
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
-	clusters := strings.Split(data.ClusterIds, ",")
+	clusters := strings.Split(data.ClusterIDs, ",")
 	err := admin.Namespaces().SetNamespaceReplicationClusters(ns, clusters)
 	if err == nil {
 		vc.Command.Printf("Set replication clusters successfully for %s\n", ns)

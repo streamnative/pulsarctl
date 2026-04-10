@@ -18,7 +18,6 @@
 package topic
 
 import (
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -72,13 +71,8 @@ func doRemoveSubscriptionDispatchRate(vc *cmdutils.VerbCmd) error {
 		return err
 	}
 
-	client, err := cmdutils.NewPulsarRESTClientWithAPIVersion(config.V2)
-	if err != nil {
-		return err
-	}
-
-	endpoint := cmdutils.BuildAdminEndpoint(config.V2, "/persistent", topic.GetRestPath(), "subscriptionDispatchRate")
-	err = client.Delete(endpoint)
+	admin := cmdutils.NewPulsarClient()
+	err = admin.Topics().RemoveSubscriptionDispatchRate(*topic)
 	if err == nil {
 		vc.Command.Printf("Remove subscription message dispatch rate successfully for [%s]\n", topic.String())
 	}

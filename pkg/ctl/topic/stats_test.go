@@ -52,6 +52,8 @@ func TestGetStatsCmd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0 // reset to zero for comparison
 
 	assert.Equal(t, defaultStats, stats)
 }
@@ -108,6 +110,7 @@ func TestGetPartitionedStatsCmd(t *testing.T) {
 	assert.Equal(t, "", stats.DeDuplicationStatus)
 	assert.Equal(t, 2, stats.Metadata.Partitions)
 	assert.Equal(t, 0, len(stats.Partitions))
+	assert.Greater(t, stats.TopicCreationTimeStamp, int64(0))
 }
 
 func TestGetPerPartitionedStatsCmd(t *testing.T) {
@@ -125,8 +128,14 @@ func TestGetPerPartitionedStatsCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	assert.Greater(t, stats.TopicCreationTimeStamp, int64(0))
+	stats.TopicCreationTimeStamp = 0
 	partitionKey := "persistent://public/default/test-topic-per-partitioned-stats-partition-0"
 	assert.Contains(t, stats.Partitions, partitionKey)
+	assert.Greaterf(t, stats.Partitions[partitionKey].TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	v := stats.Partitions[partitionKey]
+	v.TopicCreationTimeStamp = 0
+	stats.Partitions[partitionKey] = v
 
 	defaultStats := utils.PartitionedTopicStats{
 		MsgRateIn:           0,
@@ -198,6 +207,8 @@ func TestGetStatsWithPreciseBacklog(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0
 
 	assert.Equal(t, defaultStats, stats)
 }
@@ -216,6 +227,8 @@ func TestGetStatsWithoutSubscriptionBacklogSize(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0
 
 	assert.Equal(t, defaultStats, stats)
 }
@@ -234,6 +247,8 @@ func TestGetStatsWithEarliestTimeInBacklog(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0
 
 	assert.Equal(t, defaultStats, stats)
 }
@@ -252,6 +267,8 @@ func TestGetStatsWithMultipleNewFlags(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	assert.Greaterf(t, stats.TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	stats.TopicCreationTimeStamp = 0
 
 	assert.Equal(t, defaultStats, stats)
 }
@@ -300,8 +317,14 @@ func TestGetPerPartitionStatsWithNewFlags(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	assert.Greater(t, stats.TopicCreationTimeStamp, int64(0))
+	stats.TopicCreationTimeStamp = 0
 	partitionKey := "persistent://public/default/test-per-part-stats-new-flags-partition-0"
 	assert.Contains(t, stats.Partitions, partitionKey)
+	assert.Greaterf(t, stats.Partitions[partitionKey].TopicCreationTimeStamp, int64(0), "TopicCreationTimeStamp should be greater than 0")
+	v := stats.Partitions[partitionKey]
+	v.TopicCreationTimeStamp = 0
+	stats.Partitions[partitionKey] = v
 
 	defaultStats := utils.PartitionedTopicStats{
 		MsgRateIn:           0,

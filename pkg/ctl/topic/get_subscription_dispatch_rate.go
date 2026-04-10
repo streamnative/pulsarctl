@@ -18,9 +18,6 @@
 package topic
 
 import (
-	"encoding/json"
-
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/admin/config"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -76,25 +73,11 @@ func doGetSubscriptionDispatchRate(vc *cmdutils.VerbCmd) error {
 		return err
 	}
 
-	client, err := cmdutils.NewPulsarRESTClientWithAPIVersion(config.V2)
-	if err != nil {
-		return err
+	admin := cmdutils.NewPulsarClient()
+	dispatchRateData, err := admin.Topics().GetSubscriptionDispatchRate(*topic)
+	if err == nil {
+		oc := cmdutils.NewOutputContent().WithObject(dispatchRateData)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 	}
-
-	endpoint := cmdutils.BuildAdminEndpoint(config.V2, "/persistent", topic.GetRestPath(), "subscriptionDispatchRate")
-	body, err := client.GetWithQueryParams(endpoint, nil, nil, false)
-	if err != nil {
-		return err
-	}
-
-	var dispatchRateData *utils.DispatchRateData
-	if len(body) > 0 {
-		dispatchRateData = new(utils.DispatchRateData)
-		if err := json.Unmarshal(body, dispatchRateData); err != nil {
-			return err
-		}
-	}
-
-	oc := cmdutils.NewOutputContent().WithObject(dispatchRateData)
-	return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+	return err
 }
