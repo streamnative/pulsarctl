@@ -45,7 +45,7 @@ func GetSchemaCompatibilityStrategyCmd(vc *cmdutils.VerbCmd) {
 			return err
 		}
 		if value == nil {
-			return writePolicyOutput(vc, "", "\n")
+			return writePolicyOutput(vc, nil, "")
 		}
 		return writePolicyOutput(vc, value.String(), "%s\n", value.String())
 	}, "the topic name is not specified or the topic name is specified more than one")

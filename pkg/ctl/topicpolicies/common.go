@@ -18,6 +18,7 @@
 package topicpolicies
 
 import (
+	"context"
 	"fmt"
 	"io"
 
@@ -38,6 +39,18 @@ func topicPolicies(global bool) (adminpkg.TopicPolicies, error) {
 	return adminpkg.TopicPoliciesOf(cmdutils.NewPulsarClient(), global)
 }
 
+func topicPolicyResources(vc *cmdutils.VerbCmd, global bool) (adminpkg.TopicPolicies, *utils.TopicName, error) {
+	topic, err := topicName(vc)
+	if err != nil {
+		return nil, nil, err
+	}
+	policies, err := topicPolicies(global)
+	if err != nil {
+		return nil, nil, err
+	}
+	return policies, topic, nil
+}
+
 func addScopeFlags(vc *cmdutils.VerbCmd, global *bool, applied *bool) {
 	vc.FlagSetGroup.InFlagSet("TopicPolicyScope", func(set *pflag.FlagSet) {
 		if global != nil {
@@ -53,17 +66,119 @@ func writePolicyOutput(vc *cmdutils.VerbCmd, obj interface{}, text string, args 
 	if vc.OutputConfig == nil {
 		vc.EnableOutputFlagSet()
 	}
+	oc := cmdutils.NewOutputContent().WithObject(obj)
+	if text == "" {
+		return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+	}
 	return vc.OutputConfig.WriteOutput(
 		vc.Command.OutOrStdout(),
-		cmdutils.NewOutputContent().
-			WithObject(obj).
+		oc.
 			WithTextFunc(func(w io.Writer) error {
-				if text == "" {
-					_, err := fmt.Fprintln(w, obj)
-					return err
-				}
 				_, err := fmt.Fprintf(w, text, args...)
 				return err
 			}),
 	)
+}
+
+func getOptionalIntPolicyCmd(
+	vc *cmdutils.VerbCmd,
+	use string,
+	short string,
+	getter func(context.Context, adminpkg.TopicPolicies, utils.TopicName, bool) (*int, error),
+) {
+	var global bool
+	var applied bool
+	vc.SetDescription(use, short, short, "", use)
+	addScopeFlags(vc, &global, &applied)
+	vc.EnableOutputFlagSet()
+	vc.SetRunFuncWithNameArg(func() error {
+		policies, topic, err := topicPolicyResources(vc, global)
+		if err != nil {
+			return err
+		}
+		value, err := getter(vc.Command.Context(), policies, *topic, applied)
+		if err != nil {
+			return err
+		}
+		return writePolicyOutput(vc, value, "")
+	}, "the topic name is not specified or the topic name is specified more than one")
+}
+
+func getOptionalInt64PolicyCmd(
+	vc *cmdutils.VerbCmd,
+	use string,
+	short string,
+	getter func(context.Context, adminpkg.TopicPolicies, utils.TopicName, bool) (*int64, error),
+) {
+	var global bool
+	var applied bool
+	vc.SetDescription(use, short, short, "", use)
+	addScopeFlags(vc, &global, &applied)
+	vc.EnableOutputFlagSet()
+	vc.SetRunFuncWithNameArg(func() error {
+		policies, topic, err := topicPolicyResources(vc, global)
+		if err != nil {
+			return err
+		}
+		value, err := getter(vc.Command.Context(), policies, *topic, applied)
+		if err != nil {
+			return err
+		}
+		return writePolicyOutput(vc, value, "")
+	}, "the topic name is not specified or the topic name is specified more than one")
+}
+
+func getOptionalBoolPolicyCmd(
+	vc *cmdutils.VerbCmd,
+	use string,
+	short string,
+	getter func(context.Context, adminpkg.TopicPolicies, utils.TopicName, bool) (*bool, error),
+) {
+	var global bool
+	var applied bool
+	vc.SetDescription(use, short, short, "", use)
+	addScopeFlags(vc, &global, &applied)
+	vc.EnableOutputFlagSet()
+	vc.SetRunFuncWithNameArg(func() error {
+		policies, topic, err := topicPolicyResources(vc, global)
+		if err != nil {
+			return err
+		}
+		value, err := getter(vc.Command.Context(), policies, *topic, applied)
+		if err != nil {
+			return err
+		}
+		return writePolicyOutput(vc, value, "")
+	}, "the topic name is not specified or the topic name is specified more than one")
+}
+
+func setEnableDisablePolicyCmd(
+	vc *cmdutils.VerbCmd,
+	use string,
+	short string,
+	setter func(context.Context, adminpkg.TopicPolicies, utils.TopicName, bool) error,
+) {
+	var global bool
+	var enable bool
+	var disable bool
+	vc.SetDescription(use, short, short, "", use)
+	addScopeFlags(vc, &global, nil)
+	vc.FlagSetGroup.InFlagSet("Policy", func(set *pflag.FlagSet) {
+		set.BoolVarP(&enable, "enable", "e", false, "enable policy")
+		set.BoolVarP(&disable, "disable", "d", false, "disable policy")
+	})
+	vc.SetRunFuncWithNameArg(func() error {
+		if enable == disable {
+			return fmt.Errorf("need to specify either --enable or --disable")
+		}
+		policies, topic, err := topicPolicyResources(vc, global)
+		if err != nil {
+			return err
+		}
+		err = setter(vc.Command.Context(), policies, *topic, enable)
+		if err == nil {
+			vc.Command.Printf("%s successfully for [%s]\n", short, topic.String())
+		}
+		return err
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
