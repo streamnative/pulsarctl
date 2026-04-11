@@ -77,7 +77,7 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 		if err != nil {
 			return err
 		}
-		retentionTimeInSeconds, err := ctlutils.ParseRelativeTimeInSeconds(timeStr)
+		retentionDuration, err := ctlutils.ParseRelativeTimeInSeconds(timeStr)
 		if err != nil {
 			return err
 		}
@@ -86,8 +86,8 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 			return err
 		}
 		retentionTimeInMin := -1
-		if retentionTimeInSeconds != -1 {
-			retentionTimeInMin = int(retentionTimeInSeconds.Minutes())
+		if retentionDuration != -1 {
+			retentionTimeInMin = int(retentionDuration.Minutes())
 		}
 		retentionSizeInMB := -1
 		if sizeLimit != -1 {
@@ -297,18 +297,18 @@ func SetDelayedDeliveryCmd(vc *cmdutils.VerbCmd) {
 		if err != nil {
 			return err
 		}
-		tickTimeInSeconds, err := ctlutils.ParseRelativeTimeInSeconds(tickTime)
+		tickTimeDuration, err := ctlutils.ParseRelativeTimeInSeconds(tickTime)
 		if err != nil {
 			return err
 		}
-		maxDelayInSeconds, err := ctlutils.ParseRelativeTimeInSeconds(maxDelay)
+		maxDelayDuration, err := ctlutils.ParseRelativeTimeInSeconds(maxDelay)
 		if err != nil {
 			return err
 		}
 		data := util.NewDelayedDeliveryDataWithMaxDelay(
-			tickTimeInSeconds.Seconds()*1000,
+			tickTimeDuration.Seconds()*1000,
 			enable,
-			int64(maxDelayInSeconds.Seconds()*1000),
+			int64(maxDelayDuration.Seconds()*1000),
 		)
 		err = policies.SetDelayedDelivery(vc.Command.Context(), *topic, *data)
 		if err == nil {

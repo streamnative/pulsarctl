@@ -53,7 +53,7 @@ func TestNamespacePropertiesCmd(t *testing.T) {
 	assert.Nil(t, execErr)
 	assert.Equal(t, "v1\n", getPropertyOut.String())
 
-	args = []string{"set-property", ns, "-k", "k3", "-v", "v3"}
+	args = []string{"set-property", ns, "-k", "k3", "--value", "v3"}
 	setPropertyOut, execErr, _, _ := TestNamespaceCommands(SetPropertyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, fmt.Sprintf("Set property %q successfully for [%s]\n", "k3", ns), setPropertyOut.String())

@@ -18,8 +18,6 @@
 package topicpolicies
 
 import (
-	"fmt"
-
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
@@ -92,8 +90,4 @@ func RemoveSchemaCompatibilityStrategyCmd(vc *cmdutils.VerbCmd) {
 		}
 		return policies.RemoveSchemaCompatibilityStrategy(vc.Command.Context(), *topic)
 	})
-}
-
-func writePolicyOutputString(vc *cmdutils.VerbCmd, value string) error {
-	return writePolicyOutput(vc, value, fmt.Sprintf("%%s\n"), value)
 }

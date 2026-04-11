@@ -37,6 +37,5 @@ func TestDumpLoadReport(t *testing.T) {
 		t.FailNow()
 	}
 	defaultBrokerData := utils.NewLocalBrokerData()
-	defaultBrokerData.LastStats = nil
 	assert.Equal(t, defaultBrokerData, getBrokerData)
 }

@@ -25,6 +25,7 @@ categories:
   - completion
   - functions
   - namespaces
+  - topic-policies
   - schemas
   - sinks
   - sources

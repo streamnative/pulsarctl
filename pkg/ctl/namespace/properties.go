@@ -223,7 +223,7 @@ func SetPropertyCmd(vc *cmdutils.VerbCmd) {
 	var examples []cmdutils.Example
 	examples = append(examples, cmdutils.Example{
 		Desc:    "Set a single property of a namespace",
-		Command: "pulsarctl namespaces set-property tenant/namespace -k key -v value",
+		Command: "pulsarctl namespaces set-property tenant/namespace -k key --value value",
 	})
 	desc.CommandExamples = examples
 	desc.CommandOutput = append(desc.CommandOutput, ArgError, NsNotExistError)
@@ -240,7 +240,7 @@ func SetPropertyCmd(vc *cmdutils.VerbCmd) {
 	var value string
 	vc.FlagSetGroup.InFlagSet("Properties", func(set *pflag.FlagSet) {
 		set.StringVarP(&key, "key", "k", "", "property key")
-		set.StringVarP(&value, "value", "v", "", "property value")
+		set.StringVar(&value, "value", "", "property value")
 		_ = cobra.MarkFlagRequired(set, "key")
 		_ = cobra.MarkFlagRequired(set, "value")
 	})

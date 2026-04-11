@@ -55,9 +55,9 @@ func TestSchemaCompatibilityStrategyCmd(t *testing.T) {
 		getOut.String())
 
 	args = []string{"set-schema-compatibility-strategy", ns}
-	_, execErr, _, _ = TestNamespaceCommands(SetSchemaCompatibilityStrategyCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Contains(t, execErr.Error(), "required flag(s) \"compatibility\" not set")
+	_, _, _, err := TestNamespaceCommands(SetSchemaCompatibilityStrategyCmd, args)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "required flag(s) \"compatibility\" not set")
 
 	args = []string{"set-schema-compatibility-strategy", "--compatibility", "INVALID", ns}
 	_, execErr, _, _ = TestNamespaceCommands(SetSchemaCompatibilityStrategyCmd, args)
