@@ -68,3 +68,20 @@ func setSchemaValidationEnforceCmd(vc *cmdutils.VerbCmd) {
 		return err
 	}, "the topic name is not specified or the topic name is specified more than one")
 }
+
+func RemoveSchemaValidationEnforceCmd(vc *cmdutils.VerbCmd) {
+	vc.SetDescription("remove-schema-validation-enforce", "Remove schema validation enforce flag for a topic",
+		"Remove schema validation enforce flag for a topic", "")
+	vc.SetRunFuncWithNameArg(func() error {
+		topic, err := utils.GetTopicName(vc.NameArg)
+		if err != nil {
+			return err
+		}
+		admin := cmdutils.NewPulsarClient()
+		err = admin.Topics().RemoveSchemaValidationEnforced(*topic)
+		if err == nil {
+			vc.Command.Printf("Remove schema validation enforce successfully for [%s]\n", topic.String())
+		}
+		return err
+	}, "the topic name is not specified or the topic name is specified more than one")
+}

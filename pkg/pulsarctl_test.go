@@ -37,3 +37,31 @@ func TestNewPulsarctlCmdBuildsAndShowsHelp(t *testing.T) {
 		require.NoError(t, cmd.Execute())
 	})
 }
+
+func TestTopicPoliciesHelpShowsSchemaValidationEnforced(t *testing.T) {
+	var cmd = NewPulsarctlCmd()
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.SetOut(&stdout)
+	cmd.SetErr(&stderr)
+	cmd.SetArgs([]string{"topic-policies", "--help"})
+
+	require.NoError(t, cmd.Execute())
+	require.Contains(t, stdout.String(), "get-schema-validation-enforced")
+	require.Contains(t, stdout.String(), "set-schema-validation-enforced")
+	require.Contains(t, stdout.String(), "remove-schema-validation-enforced")
+}
+
+func TestTopicsHelpShowsRemoveSchemaValidationEnforce(t *testing.T) {
+	var cmd = NewPulsarctlCmd()
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.SetOut(&stdout)
+	cmd.SetErr(&stderr)
+	cmd.SetArgs([]string{"topics", "--help"})
+
+	require.NoError(t, cmd.Execute())
+	require.Contains(t, stdout.String(), "remove-schema-validation-enforce")
+}

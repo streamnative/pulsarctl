@@ -372,3 +372,35 @@ func RemoveDeduplicationCmd(vc *cmdutils.VerbCmd) {
 		return policies.RemoveDeduplicationStatus(vc.Command.Context(), *topic)
 	})
 }
+
+func GetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
+	getOptionalBoolPolicyCmd(
+		vc,
+		"get-schema-validation-enforced",
+		"Get schema validation enforced for a topic",
+		func(ctx context.Context, policies admin.TopicPolicies, topic utils.TopicName, applied bool) (*bool, error) {
+			return policies.GetSchemaValidationEnforced(ctx, topic, applied)
+		},
+	)
+}
+
+func SetSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
+	setEnableDisablePolicyCmd(
+		vc,
+		"set-schema-validation-enforced",
+		"Set schema validation enforced for a topic",
+		func(ctx context.Context, policies admin.TopicPolicies, topic utils.TopicName, enabled bool) error {
+			return policies.SetSchemaValidationEnforced(ctx, topic, enabled)
+		},
+	)
+}
+
+func RemoveSchemaValidationEnforcedCmd(vc *cmdutils.VerbCmd) {
+	removePolicyCmd(vc, "remove-schema-validation-enforced", "Removed schema validation enforced for a topic", func(global bool) error {
+		policies, topic, err := topicPolicyResources(vc, global)
+		if err != nil {
+			return err
+		}
+		return policies.RemoveSchemaValidationEnforced(vc.Command.Context(), *topic)
+	})
+}

@@ -106,6 +106,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		removePropertiesCmd,
 		getSchemaValidationEnforceCmd,
 		setSchemaValidationEnforceCmd,
+		RemoveSchemaValidationEnforceCmd,
 		GetInactiveTopicCmd,
 		SetInactiveTopicCmd,
 		RemoveInactiveTopicCmd,
