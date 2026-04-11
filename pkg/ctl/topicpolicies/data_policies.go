@@ -68,7 +68,7 @@ func SetRetentionCmd(vc *cmdutils.VerbCmd) {
 	addScopeFlags(vc, &global, nil)
 	vc.FlagSetGroup.InFlagSet("Retention", func(set *pflag.FlagSet) {
 		set.StringVarP(&timeStr, "time", "t", "", "retention time with optional time unit suffix")
-		set.StringVarP(&sizeStr, "size", "s", "", "retention size limit")
+		set.StringVar(&sizeStr, "size", "", "retention size limit")
 		_ = cobra.MarkFlagRequired(set, "time")
 		_ = cobra.MarkFlagRequired(set, "size")
 	})

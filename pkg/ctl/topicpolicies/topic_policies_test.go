@@ -40,3 +40,10 @@ func TestTopicPoliciesEnableDisableValidation(t *testing.T) {
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to specify either --enable or --disable", execErr.Error())
 }
+
+func TestTopicPoliciesSetRetentionHelp(t *testing.T) {
+	assert.NotPanics(t, func() {
+		_, _, _, err := TestTopicPoliciesCommands(SetRetentionCmd, []string{"set-retention", "--help"})
+		assert.NoError(t, err)
+	})
+}
