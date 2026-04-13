@@ -20,6 +20,8 @@ package namespace
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -102,4 +104,23 @@ func TestGetMissingPropertyCmd(t *testing.T) {
 	out, execErr, _, _ := TestNamespaceCommands(GetPropertyCmd, args)
 	assert.Nil(t, execErr)
 	assert.Equal(t, "null\n", out.String())
+}
+
+func TestRemovePropertyCmdUsesSinglePropertyEndpoint(t *testing.T) {
+	ns := "public/test-namespace-properties"
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodDelete, r.Method)
+		assert.Equal(t,
+			"/admin/v2/namespaces/public/test-namespace-properties/property/k2",
+			r.URL.Path)
+		_, _ = w.Write([]byte("v2"))
+	}))
+	defer srv.Close()
+
+	withNamespaceAdminURLForTest(t, srv.URL)
+
+	out, execErr, _, err := TestNamespaceCommands(RemovePropertyCmd, []string{"remove-property", ns, "-k", "k2"})
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "v2\n", out.String())
 }

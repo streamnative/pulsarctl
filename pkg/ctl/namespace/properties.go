@@ -297,25 +297,17 @@ func RemovePropertyCmd(vc *cmdutils.VerbCmd) {
 }
 
 func doRemoveProperty(vc *cmdutils.VerbCmd, key string) error {
-	ns, properties, err := getNamespaceProperties(vc.NameArg)
+	ns, err := utils.GetNamespaceName(vc.NameArg)
 	if err != nil {
 		return err
 	}
-	value, ok := properties[key]
-	if !ok {
-		return writeNullablePropertyValue(vc, key, nil)
-	}
-	delete(properties, key)
 
-	if len(properties) == 0 {
-		err = removeNamespaceProperties(ns)
-	} else {
-		err = updateNamespaceProperties(ns, properties)
+	value, err := removeNamespaceProperty(*ns, key)
+	if err != nil {
+		return err
 	}
-	if err == nil {
-		return writeNullablePropertyValue(vc, key, &value)
-	}
-	return err
+
+	return writeNullablePropertyValue(vc, key, value)
 }
 
 func writeNullablePropertyValue(vc *cmdutils.VerbCmd, key string, value *string) error {

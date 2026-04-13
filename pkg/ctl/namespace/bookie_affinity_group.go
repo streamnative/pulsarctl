@@ -18,6 +18,9 @@
 package namespace
 
 import (
+	"strings"
+
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/rest"
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -63,11 +66,19 @@ func GetBookieAffinityGroupCmd(vc *cmdutils.VerbCmd) {
 func doGetBookieAffinityGroup(vc *cmdutils.VerbCmd) error {
 	admin := cmdutils.NewPulsarClient()
 	group, err := admin.Namespaces().GetBookieAffinityGroup(vc.NameArg)
-	if err == nil {
-		oc := cmdutils.NewOutputContent().WithObject(group)
-		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+	if err != nil {
+		if restErr, ok := err.(rest.Error); ok && restErr.Code == 404 &&
+			strings.Contains(strings.ToLower(restErr.Reason), "local-policies") {
+			return vc.OutputConfig.WriteOutput(
+				vc.Command.OutOrStdout(),
+				cmdutils.NewOutputContent().WithObject(nil),
+			)
+		}
+		return err
 	}
-	return err
+
+	oc := cmdutils.NewOutputContent().WithObject(group)
+	return vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
 }
 
 func SetBookieAffinityGroupCmd(vc *cmdutils.VerbCmd) {

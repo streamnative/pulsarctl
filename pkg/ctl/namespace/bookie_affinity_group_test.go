@@ -20,6 +20,8 @@ package namespace
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
@@ -68,4 +70,25 @@ func TestBookieAffinityGroupCmd(t *testing.T) {
 	err = json.Unmarshal(getOut.Bytes(), &afterDeleteGroup)
 	assert.Nil(t, err)
 	assert.Equal(t, initialGroup, afterDeleteGroup)
+}
+
+func TestGetBookieAffinityGroupCmdLocalPoliciesMissing(t *testing.T) {
+	ns := "public/test-bookie-affinity-group"
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		assert.Equal(t,
+			"/admin/v2/namespaces/public/test-bookie-affinity-group/persistence/bookieAffinity",
+			r.URL.Path)
+
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(`{"reason":"Namespace local-policies does not exist"}`))
+	}))
+	defer srv.Close()
+
+	withNamespaceAdminURLForTest(t, srv.URL)
+
+	out, execErr, _, err := TestNamespaceCommands(GetBookieAffinityGroupCmd, []string{"get-bookie-affinity-group", ns})
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+	assert.Equal(t, "null", out.String())
 }
