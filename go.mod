@@ -3,7 +3,7 @@ module github.com/streamnative/pulsarctl
 go 1.25.9
 
 require (
-	github.com/apache/pulsar-client-go v0.18.0-candidate-1.0.20251222030102-3bb7d4eff361
+	github.com/apache/pulsar-client-go v0.19.0-candidate-1
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.7.0
 	github.com/ghodss/yaml v1.0.0
@@ -24,6 +24,7 @@ require (
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
+	github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 // indirect
 	github.com/AthenZ/athenz v1.12.31 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/DataDog/zstd v1.5.7 // indirect

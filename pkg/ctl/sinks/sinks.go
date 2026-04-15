@@ -41,6 +41,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSinksCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSinksCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listBuiltInSinksCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, reloadSinksCmd)
 
 	return resourceCmd
 }

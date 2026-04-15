@@ -36,6 +36,7 @@ import (
 	"github.com/streamnative/pulsarctl/pkg/ctl/tenant"
 	"github.com/streamnative/pulsarctl/pkg/ctl/token"
 	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topicpolicies"
 	"github.com/streamnative/pulsarctl/pkg/oauth2"
 
 	function "github.com/streamnative/pulsarctl/pkg/ctl/functions"
@@ -119,6 +120,7 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(source.Command(flagGrouping))
 	rootCmd.AddCommand(sink.Command(flagGrouping))
 	rootCmd.AddCommand(topic.Command(flagGrouping))
+	rootCmd.AddCommand(topicpolicies.Command(flagGrouping))
 	rootCmd.AddCommand(namespace.Command(flagGrouping))
 	rootCmd.AddCommand(schema.Command(flagGrouping))
 	rootCmd.AddCommand(subscription.Command(flagGrouping))
