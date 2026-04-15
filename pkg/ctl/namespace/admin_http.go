@@ -53,10 +53,13 @@ func newNamespaceRESTClient() (*rest.Client, error) {
 	}, nil
 }
 
-func namespaceAdminEndpoint(parts ...string) string {
-	escapedParts := make([]string, len(parts))
-	for i, part := range parts {
-		escapedParts[i] = url.PathEscape(part)
+func namespaceAdminEndpoint(ns utils.NameSpaceName, parts ...string) string {
+	escapedParts := make([]string, 0, len(parts)+2)
+	for _, segment := range strings.Split(ns.String(), "/") {
+		escapedParts = append(escapedParts, url.PathEscape(segment))
+	}
+	for _, part := range parts {
+		escapedParts = append(escapedParts, url.PathEscape(part))
 	}
 
 	return path.Join(
@@ -93,7 +96,7 @@ func removeNamespaceProperty(ns utils.NameSpaceName, key string) (*string, error
 		return nil, err
 	}
 
-	endpoint := namespaceAdminEndpoint(ns.String(), "property", key)
+	endpoint := namespaceAdminEndpoint(ns, "property", key)
 	resp, err := client.MakeRequest(http.MethodDelete, endpoint)
 	if err != nil {
 		return nil, err

@@ -19,6 +19,7 @@ package topicpolicies
 
 import (
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -56,6 +57,7 @@ func SetSchemaCompatibilityStrategyCmd(vc *cmdutils.VerbCmd) {
 	addScopeFlags(vc, &global, nil)
 	vc.FlagSetGroup.InFlagSet("SchemaCompatibilityStrategy", func(set *pflag.FlagSet) {
 		set.StringVarP(&strategy, "compatibility", "c", "", "schema compatibility strategy")
+		_ = cobra.MarkFlagRequired(set, "compatibility")
 	})
 	vc.SetRunFuncWithNameArg(func() error {
 		topic, err := topicName(vc)

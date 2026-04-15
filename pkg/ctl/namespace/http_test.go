@@ -20,7 +20,9 @@ package namespace
 import (
 	"testing"
 
+	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/stretchr/testify/assert"
 )
 
 func withNamespaceAdminURLForTest(t *testing.T, webServiceURL string) {
@@ -31,4 +33,13 @@ func withNamespaceAdminURLForTest(t *testing.T, webServiceURL string) {
 	t.Cleanup(func() {
 		cmdutils.PulsarCtlConfig.WebServiceURL = oldURL
 	})
+}
+
+func TestNamespaceAdminEndpointEscapesNamespaceSegments(t *testing.T) {
+	ns, err := utils.GetNamespaceName("public/test-namespace-properties")
+	assert.NoError(t, err)
+
+	assert.Equal(t,
+		"/admin/v2/namespaces/public/test-namespace-properties/property/k%2F2",
+		namespaceAdminEndpoint(*ns, "property", "k/2"))
 }

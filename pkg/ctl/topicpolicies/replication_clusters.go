@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
+	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -56,9 +57,14 @@ func SetReplicationClustersCmd(vc *cmdutils.VerbCmd) {
 	addScopeFlags(vc, &global, nil)
 	vc.FlagSetGroup.InFlagSet("ReplicationClusters", func(set *pflag.FlagSet) {
 		set.StringVarP(&clusterIDs, "clusters", "c", "", "comma separated cluster names")
+		_ = cobra.MarkFlagRequired(set, "clusters")
 	})
 	vc.SetRunFuncWithNameArg(func() error {
 		topic, err := topicName(vc)
+		if err != nil {
+			return err
+		}
+		clusters, err := parseReplicationClusters(clusterIDs)
 		if err != nil {
 			return err
 		}
@@ -66,7 +72,7 @@ func SetReplicationClustersCmd(vc *cmdutils.VerbCmd) {
 		if err != nil {
 			return err
 		}
-		err = policies.SetReplicationClusters(vc.Command.Context(), *topic, strings.Split(clusterIDs, ","))
+		err = policies.SetReplicationClusters(vc.Command.Context(), *topic, clusters)
 		if err == nil {
 			vc.Command.Printf("Set replication clusters successfully for [%s]\n", topic.String())
 		}
@@ -86,6 +92,19 @@ func RemoveReplicationClustersCmd(vc *cmdutils.VerbCmd) {
 		}
 		return policies.RemoveReplicationClusters(vc.Command.Context(), *topic)
 	})
+}
+
+func parseReplicationClusters(clusterIDs string) ([]string, error) {
+	rawClusters := strings.Split(clusterIDs, ",")
+	clusters := make([]string, 0, len(rawClusters))
+	for _, cluster := range rawClusters {
+		trimmed := strings.TrimSpace(cluster)
+		if trimmed == "" {
+			return nil, errors.New("cluster names must be non-empty")
+		}
+		clusters = append(clusters, trimmed)
+	}
+	return clusters, nil
 }
 
 func GetAutoSubscriptionCreationCmd(vc *cmdutils.VerbCmd) {

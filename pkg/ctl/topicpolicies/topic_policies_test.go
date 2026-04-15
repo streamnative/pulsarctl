@@ -24,26 +24,54 @@ import (
 )
 
 func TestTopicPoliciesNameError(t *testing.T) {
-	_, _, nameErr, _ := TestTopicPoliciesCommands(GetMessageTTLCmd, []string{"get-message-ttl"})
+	_, _, nameErr, _ := TestTopicPoliciesCommands(t, GetMessageTTLCmd, []string{"get-message-ttl"})
 	assert.NotNil(t, nameErr)
 	assert.Equal(t, "the topic name is not specified or the topic name is specified more than one", nameErr.Error())
 }
 
 func TestTopicPoliciesRequiredFlag(t *testing.T) {
-	_, _, _, err := TestTopicPoliciesCommands(SetMessageTTLCmd, []string{"set-message-ttl", "persistent://public/default/test"})
+	_, _, _, err := TestTopicPoliciesCommands(t, SetMessageTTLCmd, []string{"set-message-ttl", "persistent://public/default/test"})
 	assert.NotNil(t, err)
 	assert.Equal(t, "required flag(s) \"ttl\" not set", err.Error())
 }
 
 func TestTopicPoliciesEnableDisableValidation(t *testing.T) {
-	_, execErr, _, _ := TestTopicPoliciesCommands(SetDeduplicationCmd, []string{"set-deduplication", "persistent://public/default/test"})
+	_, execErr, _, _ := TestTopicPoliciesCommands(t, SetDeduplicationCmd, []string{"set-deduplication", "persistent://public/default/test"})
 	assert.NotNil(t, execErr)
 	assert.Equal(t, "need to specify either --enable or --disable", execErr.Error())
 }
 
+func TestTopicPoliciesSchemaCompatibilityRequiredFlag(t *testing.T) {
+	_, _, _, err := TestTopicPoliciesCommands(t, SetSchemaCompatibilityStrategyCmd, []string{
+		"set-schema-compatibility-strategy",
+		"persistent://public/default/test",
+	})
+	assert.NotNil(t, err)
+	assert.Equal(t, "required flag(s) \"compatibility\" not set", err.Error())
+}
+
+func TestTopicPoliciesReplicationClustersRequiredFlag(t *testing.T) {
+	_, _, _, err := TestTopicPoliciesCommands(t, SetReplicationClustersCmd, []string{
+		"set-replication-clusters",
+		"persistent://public/default/test",
+	})
+	assert.NotNil(t, err)
+	assert.Equal(t, "required flag(s) \"clusters\" not set", err.Error())
+}
+
+func TestTopicPoliciesReplicationClustersValidation(t *testing.T) {
+	_, execErr, _, _ := TestTopicPoliciesCommands(t, SetReplicationClustersCmd, []string{
+		"set-replication-clusters",
+		"--clusters", "usw,,use",
+		"persistent://public/default/test",
+	})
+	assert.NotNil(t, execErr)
+	assert.Equal(t, "cluster names must be non-empty", execErr.Error())
+}
+
 func TestTopicPoliciesSetRetentionHelp(t *testing.T) {
 	assert.NotPanics(t, func() {
-		_, _, _, err := TestTopicPoliciesCommands(SetRetentionCmd, []string{"set-retention", "--help"})
+		_, _, _, err := TestTopicPoliciesCommands(t, SetRetentionCmd, []string{"set-retention", "--help"})
 		assert.NoError(t, err)
 	})
 }

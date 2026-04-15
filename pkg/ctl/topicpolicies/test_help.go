@@ -19,22 +19,33 @@ package topicpolicies
 
 import (
 	"bytes"
+	"testing"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func TestTopicPoliciesCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error) {
+func TestTopicPoliciesCommands(t *testing.T, newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer, execErr, nameErr, err error) {
+	t.Helper()
+
+	oldExecErrorHandler := cmdutils.ExecErrorHandler
 	var execError error
 	cmdutils.ExecErrorHandler = func(err error) {
 		execError = err
 	}
+	t.Cleanup(func() {
+		cmdutils.ExecErrorHandler = oldExecErrorHandler
+	})
 
+	oldCheckNameArgError := cmdutils.CheckNameArgError
 	var parsedNameError error
 	cmdutils.CheckNameArgError = func(err error) {
 		parsedNameError = err
 	}
+	t.Cleanup(func() {
+		cmdutils.CheckNameArgError = oldCheckNameArgError
+	})
 
 	rootCmd := &cobra.Command{
 		Use:   "pulsarctl [command]",

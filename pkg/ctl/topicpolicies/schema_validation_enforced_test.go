@@ -24,7 +24,7 @@ import (
 )
 
 func TestTopicPoliciesSetSchemaValidationEnforcedValidation(t *testing.T) {
-	_, execErr, _, _ := TestTopicPoliciesCommands(SetSchemaValidationEnforcedCmd, []string{
+	_, execErr, _, _ := TestTopicPoliciesCommands(t, SetSchemaValidationEnforcedCmd, []string{
 		"set-schema-validation-enforced",
 		"persistent://public/default/test",
 	})
@@ -33,7 +33,7 @@ func TestTopicPoliciesSetSchemaValidationEnforcedValidation(t *testing.T) {
 }
 
 func TestTopicPoliciesRemoveSchemaValidationEnforcedNameError(t *testing.T) {
-	_, _, nameErr, _ := TestTopicPoliciesCommands(RemoveSchemaValidationEnforcedCmd, []string{
+	_, _, nameErr, _ := TestTopicPoliciesCommands(t, RemoveSchemaValidationEnforcedCmd, []string{
 		"remove-schema-validation-enforced",
 	})
 	assert.NotNil(t, nameErr)
