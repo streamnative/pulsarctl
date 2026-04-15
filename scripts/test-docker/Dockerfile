@@ -9,7 +9,7 @@ USER root
 RUN apk update && apk add curl git build-base
 
 # install golang
-COPY --from=golang:1.25.8-alpine /usr/local/go/ /usr/local/go/
+COPY --from=golang:1.25.9-alpine /usr/local/go/ /usr/local/go/
 ENV PATH /usr/local/go/bin:$PATH
 
 
