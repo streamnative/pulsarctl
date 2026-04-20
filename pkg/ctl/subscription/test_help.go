@@ -57,7 +57,7 @@ func TestSubCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *b
 		"subscriptions",
 		"Operations about subscription(s)",
 		"",
-		"subscription")
+		"subscription", "subs", "sub")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)

@@ -55,7 +55,7 @@ func TestBrokersCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 		"brokers",
 		"Operations about broker(s)",
 		"",
-		"brokers")
+		"broker")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)

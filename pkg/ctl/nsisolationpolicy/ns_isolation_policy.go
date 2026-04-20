@@ -35,8 +35,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"ns-isolation-policy",
 		"Operations about namespace isolation policy",
-		"",
-		"ns-isolation-policy")
+		"")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNsIsolationPolicy)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getNsIsolationPolicies)

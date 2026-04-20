@@ -27,8 +27,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"token",
 		"Operations of token",
-		"You can use this tool to generate secret key, private/public key, and token.",
-		"")
+		"You can use this tool to generate secret key, private/public key, and token.")
 
 	cmds := []func(*cmdutils.VerbCmd){
 		createKeyPair,

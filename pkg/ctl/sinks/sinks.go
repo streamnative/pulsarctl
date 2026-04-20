@@ -27,9 +27,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sinks",
 		"Interface for managing Pulsar IO sinks (egress data from Pulsar)",
-		"",
-		"sinks",
-	)
+		"")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSinksCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSinksCmd)

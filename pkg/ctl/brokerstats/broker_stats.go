@@ -26,8 +26,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"broker-stats",
 		"Operations to collect broker statistics",
-		"",
-		"broker-stats")
+		"")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, dumpMonitoringMetrics)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, dumpMBeans)

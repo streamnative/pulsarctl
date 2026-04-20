@@ -55,8 +55,7 @@ func TestResourceQuotaCommands(newVerb func(cmd *cmdutils.VerbCmd), args []strin
 	resourceCmd := cmdutils.NewResourceCmd(
 		"resource-quota",
 		"Operations about resource quotas",
-		"",
-		"resource-quota")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)

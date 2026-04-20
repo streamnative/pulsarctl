@@ -27,7 +27,6 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"ledger",
 		"Operations about ledger",
-		"",
 		"")
 
 	commands := []func(*cmdutils.VerbCmd){

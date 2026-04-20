@@ -53,7 +53,7 @@ func TestFunctionsCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (
 		"functions",
 		"Operations about Pulsar Functions",
 		"",
-		"functions")
+		"pf")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)

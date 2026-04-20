@@ -51,8 +51,7 @@ func TestPackagesCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (o
 	resourceCmd := cmdutils.NewResourceCmd(
 		"packages",
 		"Operations about packages",
-		"",
-		"packages")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
