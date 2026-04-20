@@ -102,6 +102,7 @@ func doListSources(vc *cmdutils.VerbCmd, sourceData *utils.SourceData) error {
 		WithObject(sources).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Pulsar Sources Name"})
 
 			for _, f := range sources {

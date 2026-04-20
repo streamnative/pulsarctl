@@ -102,6 +102,7 @@ func doListSinks(vc *cmdutils.VerbCmd, sinkData *utils.SinkData) error {
 		WithObject(sinks).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Pulsar Sinks Name"})
 
 			for _, f := range sinks {

@@ -75,6 +75,7 @@ func doListTenant(vc *cmdutils.VerbCmd) error {
 		WithObject(tenants).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Tenant Name"})
 
 			for _, t := range tenants {

@@ -79,6 +79,7 @@ func doGetPeerClusters(vc *cmdutils.VerbCmd) error {
 		WithObject(peerClusters).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Peer clusters"})
 
 			for _, c := range peerClusters {

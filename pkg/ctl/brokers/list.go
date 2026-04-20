@@ -82,6 +82,7 @@ func doListCluster(vc *cmdutils.VerbCmd) error {
 		WithObject(brokersData).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Brokers List"})
 
 			for _, c := range brokersData {
