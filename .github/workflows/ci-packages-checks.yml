@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login SN docker hub
-        if: github.actor == 'streamnativebot'
         run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
       - name: Set up Go 1.25.9
         uses: actions/setup-go@v5
@@ -24,7 +23,7 @@ jobs:
       - name: Packages tests
         run: scripts/run-integration-tests.sh packages
         env:
-          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
+          PULSAR_IMAGE: snstage/pulsar-all
       - name: Setup tmate session
         if: failure()
         uses: mxschmitt/action-tmate@v3
