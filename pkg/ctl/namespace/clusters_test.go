@@ -56,20 +56,25 @@ func TestClusters(t *testing.T) {
 	assert.True(t, strings.Contains(getOut.String(), "test-replication-cluster"))
 
 	// reset namespace clusters for other test case
-	updateTenantArgs = []string{"update", "--allowed-clusters", "standalone", "public"}
-	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
-	assert.Nil(t, err)
-	assert.Nil(t, execErr)
-
 	setArgs = []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "standalone"}
 	setOut, execErr, _, _ = TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.Nil(t, execErr)
 	assert.Equal(t, setOut.String(), "Set replication clusters successfully for public/test-cluster-namespace\n")
+
+	updateTenantArgs = []string{"update", "--allowed-clusters", "standalone", "public"}
+	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 }
 
 func TestFailureCluster(t *testing.T) {
-	setArgs := []string{"set-clusters", "public/test-cluster-namespace", "--clusters", "invalid-cluster"}
-	_, execErr, _, _ := TestNamespaceCommands(setReplicationClusters, setArgs)
+	args := []string{"create", "public/test-cluster-namespace-failure"}
+	_, execErr, _, err := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+
+	setArgs := []string{"set-clusters", "public/test-cluster-namespace-failure", "--clusters", "invalid-cluster"}
+	_, execErr, _, _ = TestNamespaceCommands(setReplicationClusters, setArgs)
 	assert.NotNil(t, execErr)
 	assert.Equal(t, execErr.Error(), "code: 403 reason: Invalid cluster id: invalid-cluster")
 }
