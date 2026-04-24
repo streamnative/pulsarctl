@@ -130,6 +130,11 @@ func TestCreateNsForCluster(t *testing.T) {
 	assert.Equal(t, "test-cluster", police.ReplicationClusters[0])
 
 	// reset namespace clusters for other test case
+	resetNsArgs := []string{"set-clusters", "public/test-namespace-cluster", "--clusters", "standalone"}
+	_, execErr, _, err = TestNamespaceCommands(setReplicationClusters, resetNsArgs)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+
 	updateTenantArgs = []string{"update", "--allowed-clusters", "standalone", "public"}
 	_, execErr, _, err = tenant.TestTenantCommands(tenant.UpdateTenantCmd, updateTenantArgs)
 	assert.Nil(t, err)
