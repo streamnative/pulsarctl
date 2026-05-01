@@ -5,6 +5,31 @@ set -e
 readonly PULSARCTL_HOME=${PULSARCTL_HOME:-"/pulsarctl"}
 readonly TEST_ARGS=${TEST_ARGS:-""}
 
+function ensureJavaInPath() {
+    if command -v java >/dev/null 2>&1; then
+        return
+    fi
+
+    for dir in \
+        /opt/jvm/bin \
+        /opt/java/openjdk/bin \
+        /usr/local/openjdk-17/bin \
+        /usr/local/openjdk-11/bin \
+        /usr/lib/jvm/default-jvm/bin \
+        /usr/lib/jvm/java-17-openjdk/bin \
+        /usr/lib/jvm/java-11-openjdk/bin
+    do
+        if [[ -x "${dir}/java" ]]; then
+            export PATH="${dir}:${PATH}"
+            export JAVA_HOME="${dir%/bin}"
+            return
+        fi
+    done
+
+    echo "java executable not found in PATH or common JDK locations"
+    exit 1
+}
+
 function checkFunctionWorker() {
     failed=0
     until curl --fail --silent --show-error localhost:8080/admin/v2/persistent/public/functions/coordinate/stats >/dev/null; do
@@ -20,6 +45,7 @@ function checkFunctionWorker() {
 }
 
 pushd ${PULSARCTL_HOME}
+ensureJavaInPath
 # startup pulsar service
 scripts/pulsar-service-startup.sh
 
