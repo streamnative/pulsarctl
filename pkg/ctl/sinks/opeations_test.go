@@ -28,19 +28,25 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
+	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
 // This tests will test all sink operations
 func TestSinksOperations(t *testing.T) {
 	narFile := path.Join(resourceDir(), "data-generator.nar")
-	sinkName := "test-sink-opt" + test.RandomSuffix()
+	suffix := test.RandomSuffix()
+	sinkName := "test-sink-opt" + suffix
+	inputTopic := "persistent://public/default/sink-input-" + suffix
 
 	defaultArgs := []string{
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", sinkName,
 	}
+
+	_, execErr, _, err := topic.TestTopicCommands(topic.CreateTopicCmd, []string{inputTopic, "0"})
+	failImmediatelyIfErrorNotNil(t, execErr, err)
 
 	listArgs := []string{"list"}
 	out, execErr, err := TestSinksCommands(listSinksCmd, listArgs)
@@ -49,7 +55,7 @@ func TestSinksOperations(t *testing.T) {
 
 	createArgs := []string{
 		"create",
-		"--inputs", "sink-input",
+		"--inputs", inputTopic,
 		"--archive", narFile,
 	}
 	out, execErr, err = TestSinksCommands(createSinksCmd, append(createArgs, defaultArgs...))
