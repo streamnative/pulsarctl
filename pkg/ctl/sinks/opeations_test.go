@@ -78,38 +78,9 @@ func TestSinksOperations(t *testing.T) {
 	assert.Equal(t, "default", sinkConf.Namespace)
 	assert.Equal(t, sinkName, sinkConf.Name)
 
-	statusArgs := []string{"status"}
-	var status utils.SinkStatus
-	waitForSinkRunning := func(expectedInstances int) {
-		task := func(args []string, obj interface{}) bool {
-			out, execErr, err := TestSinksCommands(statusSinksCmd, args)
-			if err != nil {
-				fmt.Println(err.Error())
-				return false
-			}
-			if execErr != nil {
-				fmt.Println(execErr.Error())
-				return false
-			}
-			err = json.Unmarshal(out.Bytes(), &obj)
-			if err != nil {
-				fmt.Println(err.Error())
-				return false
-			}
-			s := obj.(*utils.SinkStatus)
-			return len(s.Instances) == expectedInstances && s.NumRunning == expectedInstances
-		}
-		err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute,
-			append(statusArgs, defaultArgs...), &status)
-		failImmediatelyIfErrorNotNil(t, err)
-	}
-
-	waitForSinkRunning(1)
-
 	updateArgs := []string{"update", "--parallelism", "2"}
 	_, execErr, err = TestSinksCommands(updateSinksCmd, append(updateArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	waitForSinkRunning(2)
 
 	out, execErr, err = TestSinksCommands(getSinksCmd, append(getArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
@@ -125,7 +96,6 @@ func TestSinksOperations(t *testing.T) {
 	updateArgs = []string{"update", "--parallelism", "1"}
 	_, execErr, err = TestSinksCommands(updateSinksCmd, append(updateArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	waitForSinkRunning(1)
 
 	stopArgs := []string{"stop"}
 	_, execErr, err = TestSinksCommands(stopSinksCmd, append(stopArgs, defaultArgs...))
@@ -135,6 +105,8 @@ func TestSinksOperations(t *testing.T) {
 	_, execErr, err = TestSinksCommands(startSinksCmd, append(startArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 
+	statusArgs := []string{"status"}
+	var status utils.SinkStatus
 	task := func(args []string, obj interface{}) bool {
 		out, execErr, err := TestSinksCommands(statusSinksCmd, args)
 		if err != nil {

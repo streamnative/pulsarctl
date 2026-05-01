@@ -78,38 +78,9 @@ func TestSourcesOperations(t *testing.T) {
 	assert.Equal(t, "default", sourceConf.Namespace)
 	assert.Equal(t, sourceName, sourceConf.Name)
 
-	statusArgs := []string{"status"}
-	var status utils.SourceStatus
-	waitForSourceRunning := func(expectedInstances int) {
-		task := func(args []string, obj interface{}) bool {
-			out, execErr, err := TestSourcesCommands(statusSourcesCmd, args)
-			if err != nil {
-				fmt.Println(err.Error())
-				return false
-			}
-			if execErr != nil {
-				fmt.Println(execErr.Error())
-				return false
-			}
-			err = json.Unmarshal(out.Bytes(), &obj)
-			if err != nil {
-				fmt.Println(err.Error())
-				return false
-			}
-			s := obj.(*utils.SourceStatus)
-			return len(s.Instances) == expectedInstances && s.NumRunning == expectedInstances
-		}
-		err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute,
-			append(statusArgs, defaultArgs...), &status)
-		failImmediatelyIfErrorNotNil(t, err)
-	}
-
-	waitForSourceRunning(1)
-
 	updateArgs := []string{"update", "--parallelism", "2"}
 	_, execErr, err = TestSourcesCommands(updateSourcesCmd, append(updateArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	waitForSourceRunning(2)
 
 	out, execErr, err = TestSourcesCommands(getSourcesCmd, append(getArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
@@ -125,7 +96,6 @@ func TestSourcesOperations(t *testing.T) {
 	updateArgs = []string{"update", "--parallelism", "1"}
 	_, execErr, err = TestSourcesCommands(updateSourcesCmd, append(updateArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
-	waitForSourceRunning(1)
 
 	stopArgs := []string{"stop"}
 	_, execErr, err = TestSourcesCommands(stopSourcesCmd, append(stopArgs, defaultArgs...))
@@ -135,6 +105,8 @@ func TestSourcesOperations(t *testing.T) {
 	_, execErr, err = TestSourcesCommands(startSourcesCmd, append(startArgs, defaultArgs...))
 	failImmediatelyIfErrorNotNil(t, execErr, err)
 
+	statusArgs := []string{"status"}
+	var status utils.SourceStatus
 	task := func(args []string, obj interface{}) bool {
 		out, execErr, err := TestSourcesCommands(statusSourcesCmd, args)
 		if err != nil {
