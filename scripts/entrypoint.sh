@@ -11,6 +11,7 @@ function ensureJavaInPath() {
     fi
 
     for dir in \
+        /opt/jvm/bin \
         /opt/java/openjdk/bin \
         /usr/local/openjdk-17/bin \
         /usr/local/openjdk-11/bin \
