@@ -81,6 +81,7 @@ func TestSourcesOperations(t *testing.T) {
 	statusArgs := []string{"status"}
 	var status utils.SourceStatus
 	waitForSourceRunning := func(expectedInstances int) {
+		lastStatus := ""
 		task := func(args []string, obj interface{}) bool {
 			out, execErr, err := TestSourcesCommands(statusSourcesCmd, args)
 			if err != nil {
@@ -91,6 +92,7 @@ func TestSourcesOperations(t *testing.T) {
 				fmt.Println(execErr.Error())
 				return false
 			}
+			lastStatus = out.String()
 			err = json.Unmarshal(out.Bytes(), &obj)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -101,6 +103,9 @@ func TestSourcesOperations(t *testing.T) {
 		}
 		err = cmdutils.RunFuncWithTimeout(task, true, 3*time.Minute,
 			append(statusArgs, defaultArgs...), &status)
+		if err != nil && lastStatus != "" {
+			t.Logf("last source status before timeout: %s", lastStatus)
+		}
 		failImmediatelyIfErrorNotNil(t, err)
 	}
 
