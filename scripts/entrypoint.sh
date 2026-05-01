@@ -7,7 +7,7 @@ readonly TEST_ARGS=${TEST_ARGS:-""}
 
 function checkFunctionWorker() {
     failed=0
-    until curl --silent localhost:8080/admin/v2/persistent/public/functions/coordinate/stats; do
+    until curl --fail --silent --show-error localhost:8080/admin/v2/persistent/public/functions/coordinate/stats >/dev/null; do
         echo "waiting function worker service start..."
         failed=`expr ${failed} + 1`
         if [[ ${failed} == 30 ]]; then
