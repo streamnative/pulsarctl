@@ -24,7 +24,7 @@ jobs:
     - name: Function tests
       run: scripts/run-integration-tests.sh function
       env:
-        PULSAR_IMAGE: snstage/pulsar-all
+        PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
     - name: Setup tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
@@ -44,7 +44,7 @@ jobs:
       - name: Sink tests
         run: scripts/run-integration-tests.sh sink
         env:
-          PULSAR_IMAGE: snstage/pulsar-all
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
   source-tests:
     runs-on: ubuntu-latest
     steps:
@@ -61,4 +61,4 @@ jobs:
       - name: Source tests
         run: scripts/run-integration-tests.sh source
         env:
-          PULSAR_IMAGE: snstage/pulsar-all
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}

@@ -18,8 +18,8 @@ jobs:
       - name: Run token tests
         run: scripts/run-integration-tests.sh token
         env:
-          PULSAR_IMAGE: snstage/pulsar-all
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
       - name: Run TLS tests
         run: scripts/run-integration-tests.sh tls
         env:
-          PULSAR_IMAGE: snstage/pulsar-all
+          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
