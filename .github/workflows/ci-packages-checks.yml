@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login SN docker hub
+        if: github.actor == 'streamnativebot'
         run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
       - name: Set up Go 1.25.9
         uses: actions/setup-go@v5
