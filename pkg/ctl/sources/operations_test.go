@@ -28,25 +28,19 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
-	"github.com/streamnative/pulsarctl/pkg/ctl/topic"
 	"github.com/streamnative/pulsarctl/pkg/test"
 )
 
 // This tests will test all source operations
 func TestSourcesOperations(t *testing.T) {
 	narFile := path.Join(resourceDir(), "data-generator.nar")
-	suffix := test.RandomSuffix()
-	sourceName := "test-source-opt" + suffix
-	destinationTopic := "persistent://public/default/source-input-" + suffix
+	sourceName := "test-source-opt" + test.RandomSuffix()
 
 	defaultArgs := []string{
 		"--tenant", "public",
 		"--namespace", "default",
 		"--name", sourceName,
 	}
-
-	_, execErr, _, err := topic.TestTopicCommands(topic.CreateTopicCmd, []string{destinationTopic, "0"})
-	failImmediatelyIfErrorNotNil(t, execErr, err)
 
 	listArgs := []string{"list"}
 	out, execErr, err := TestSourcesCommands(listSourcesCmd, listArgs)
@@ -55,7 +49,7 @@ func TestSourcesOperations(t *testing.T) {
 
 	createArgs := []string{
 		"create",
-		"--destination-topic-name", destinationTopic,
+		"--destination-topic-name", "source-input",
 		"--archive", narFile,
 	}
 	out, execErr, err = TestSourcesCommands(createSourcesCmd, append(createArgs, defaultArgs...))
