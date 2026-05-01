@@ -17,4 +17,4 @@ jobs:
     - name: Run tests
       run: scripts/run-integration-tests.sh
       env:
-        PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
+        PULSAR_IMAGE: snstage/pulsar-all
