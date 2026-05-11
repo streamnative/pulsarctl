@@ -30,6 +30,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"broker")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getBrokerListCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, leaderBrokerCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getDynamicConfigListNameCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getOwnedNamespacesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateDynamicConfig)

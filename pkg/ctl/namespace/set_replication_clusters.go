@@ -20,7 +20,6 @@ package namespace
 import (
 	"strings"
 
-	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
@@ -79,15 +78,15 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 		"set-clusters",
 	)
 
-	var data utils.NamespacesData
+	var clusterIDs string
 
 	vc.SetRunFuncWithNameArg(func() error {
-		return doSetReplicationClusters(vc, data)
+		return doSetReplicationClusters(vc, clusterIDs)
 	}, "the cluster name is not specified or the cluster name is specified more than one")
 
 	vc.FlagSetGroup.InFlagSet("Namespaces", func(flagSet *pflag.FlagSet) {
 		flagSet.StringVarP(
-			&data.ClusterIDs,
+			&clusterIDs,
 			"clusters",
 			"c",
 			"",
@@ -98,11 +97,11 @@ func setReplicationClusters(vc *cmdutils.VerbCmd) {
 	vc.EnableOutputFlagSet()
 }
 
-func doSetReplicationClusters(vc *cmdutils.VerbCmd, data utils.NamespacesData) error {
+func doSetReplicationClusters(vc *cmdutils.VerbCmd, clusterIDs string) error {
 	ns := vc.NameArg
 	admin := cmdutils.NewPulsarClient()
 
-	clusters := strings.Split(data.ClusterIDs, ",")
+	clusters := strings.Split(clusterIDs, ",")
 	err := admin.Namespaces().SetNamespaceReplicationClusters(ns, clusters)
 	if err == nil {
 		vc.Command.Printf("Set replication clusters successfully for %s\n", ns)

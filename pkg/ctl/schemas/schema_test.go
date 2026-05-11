@@ -18,7 +18,6 @@
 package schemas
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -48,22 +47,41 @@ func TestSchema(t *testing.T) {
 	assert.Nil(t, err)
 
 	args := []string{"upload", "test-schema", "-f", fileName}
-	out, _, err := TestSchemasCommands(uploadSchema, args)
+	out, execErr, err := TestSchemasCommands(uploadSchema, args)
 	assert.NoError(t, err)
+	assert.NoError(t, execErr)
 	assert.Equal(t, "Upload test-schema successfully\n", out.String())
 
 	getArgs := []string{"get", "test-schema"}
-	getOut, _, err := TestSchemasCommands(getSchema, getArgs)
-
-	fmt.Print(getOut.String())
+	getOut, execErr, err := TestSchemasCommands(getSchema, getArgs)
 	assert.NoError(t, err)
+	assert.NoError(t, execErr)
 	assert.True(t, strings.Contains(getOut.String(), "AVRO"))
 	assert.True(t, strings.Contains(getOut.String(), "test-schema"))
 
+	allArgs := []string{"get", "test-schema", "--all-version"}
+	allOut, execErr, err := TestSchemasCommands(getSchema, allArgs)
+	assert.NoError(t, err)
+	assert.NoError(t, execErr)
+	assert.True(t, strings.Contains(allOut.String(), "version"))
+
+	compatibilityArgs := []string{"compatibility", "test-schema", "-f", fileName}
+	compatibilityOut, execErr, err := TestSchemasCommands(testCompatibility, compatibilityArgs)
+	assert.NoError(t, err)
+	assert.NoError(t, execErr)
+	assert.True(t, strings.Contains(compatibilityOut.String(), "compatibility"))
+
 	delArgs := []string{"delete", "test-schema"}
-	delOut, _, err := TestSchemasCommands(deleteSchema, delArgs)
+	delOut, execErr, err := TestSchemasCommands(deleteSchema, delArgs)
 	assert.Nil(t, err)
+	assert.Nil(t, execErr)
 	assert.Equal(t, delOut.String(), "Deleted test-schema successfully\n")
+
+	forceDeleteArgs := []string{"delete", "test-schema", "--force"}
+	forceDeleteOut, execErr, err := TestSchemasCommands(deleteSchema, forceDeleteArgs)
+	assert.Nil(t, err)
+	assert.Nil(t, execErr)
+	assert.Equal(t, forceDeleteOut.String(), "Deleted test-schema successfully\n")
 }
 
 func TestFailSchema(t *testing.T) {
