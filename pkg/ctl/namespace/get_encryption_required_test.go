@@ -18,33 +18,32 @@
 package namespace
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRevokeSubPermissionsCmd(t *testing.T) {
-	ns := "public/test-revoke-sub-permissions-ns"
+func TestGetEncryptionRequiredArgsError(t *testing.T) {
+	args := []string{"get-encryption-required"}
+	_, _, nameErr, _ := TestNamespaceCommands(GetEncryptionRequiredCmd, args)
+	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
+		nameErr.Error())
+}
+
+func TestGetEncryptionRequiredCmd(t *testing.T) {
+	ns := "public/test-get-encryption-required-ns"
 
 	args := []string{"create", ns}
 	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
 	assert.Nil(t, execErr)
 
-	args = []string{"revoke-subscription-permission", "--role", "test-role", ns, "test-revoke-sub"}
-	_, execErr, _, _ = TestNamespaceCommands(RevokeSubPermissionsCmd, args)
+	args = []string{"get-encryption-required", ns}
+	out, execErr, _, _ := TestNamespaceCommands(GetEncryptionRequiredCmd, args)
 	assert.Nil(t, execErr)
-}
 
-func TestRevokeSubPermissionsArgsError(t *testing.T) {
-	ns := "public/revoke-sub-permissions-args-tests"
-
-	args := []string{"revoke-subscription-permission", ns}
-	_, _, _, err := TestNamespaceCommands(RevokeSubPermissionsCmd, args)
-	assert.NotNil(t, err)
-	assert.Equal(t, "required flag(s) \"role\" not set", err.Error())
-
-	args = []string{"revoke-subscription-permission", "--role", "test-role"}
-	_, _, nameErr, _ := TestNamespaceCommands(RevokeSubPermissionsCmd, args)
-	assert.NotNil(t, nameErr)
-	assert.Equal(t, "need to specified namespace name and subscription name", nameErr.Error())
+	var enabled bool
+	err := json.Unmarshal(out.Bytes(), &enabled)
+	assert.Nil(t, err)
+	assert.False(t, enabled)
 }
