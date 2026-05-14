@@ -9,11 +9,7 @@ USER root
 RUN apk update && apk add curl git build-base
 
 # install golang
-<<<<<<< Updated upstream
-COPY --from=golang:1.25.9-alpine /usr/local/go/ /usr/local/go/
-=======
 COPY --from=golang:1.25.10-alpine /usr/local/go/ /usr/local/go/
->>>>>>> Stashed changes
 ENV PATH /usr/local/go/bin:$PATH
 
 
