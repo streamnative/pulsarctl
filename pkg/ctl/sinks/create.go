@@ -349,6 +349,12 @@ func doCreateSinks(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 		return err
 	}
 
+	err = applySinkRuntimeOptions(sinkData, vc.RuntimeOptions, cmdutils.RuntimeOperationCreate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	err = validateSinkConfigs(sinkData.SinkConf)
 	if err != nil {
 		_ = vc.Command.Help()
