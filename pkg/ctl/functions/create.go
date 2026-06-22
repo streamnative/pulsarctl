@@ -502,6 +502,12 @@ func doCreateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 		return err
 	}
 
+	err = applyFunctionRuntimeOptions(funcData, vc.RuntimeOptions, cmdutils.RuntimeOperationCreate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	err = validateFunctionConfigs(funcData.FuncConf)
 	if err != nil {
 		_ = vc.Command.Help()

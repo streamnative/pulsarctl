@@ -462,6 +462,12 @@ func doUpdateFunctions(vc *cmdutils.VerbCmd, funcData *util.FunctionData) error 
 		return err
 	}
 
+	err = applyFunctionRuntimeOptions(funcData, vc.RuntimeOptions, cmdutils.RuntimeOperationUpdate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	err = checkArgsForUpdate(funcData.FuncConf)
 	if err != nil {
 		_ = vc.Command.Help()

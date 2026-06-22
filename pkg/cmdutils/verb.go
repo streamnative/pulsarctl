@@ -34,12 +34,24 @@ type VerbCmd struct {
 	NameError             error // for testing
 	OutputConfig          *OutputConfig
 	ClusterConfigOverride *ClusterConfig
+	RuntimeOptions        RuntimeOptionsConfig
 }
 
 // AddVerbCmd create a registers a new command under the given resource command
 func AddVerbCmd(flagGrouping *FlagGrouping, parentResourceCmd *cobra.Command, newVerbCmd func(*VerbCmd)) {
+	AddVerbCmdWithRuntimeOptions(flagGrouping, parentResourceCmd, RuntimeOptionsConfig{}, newVerbCmd)
+}
+
+// AddVerbCmdWithRuntimeOptions creates and registers a new command under the given resource command.
+func AddVerbCmdWithRuntimeOptions(
+	flagGrouping *FlagGrouping,
+	parentResourceCmd *cobra.Command,
+	runtimeOptions RuntimeOptionsConfig,
+	newVerbCmd func(*VerbCmd),
+) {
 	verb := &VerbCmd{
-		Command: &cobra.Command{},
+		Command:        &cobra.Command{},
+		RuntimeOptions: ResolveRuntimeOptions(runtimeOptions),
 	}
 	verb.FlagSetGroup = flagGrouping.New(verb.Command)
 	newVerbCmd(verb)

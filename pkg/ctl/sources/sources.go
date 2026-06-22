@@ -23,7 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+func Command(flagGrouping *cmdutils.FlagGrouping, runtimeOptions ...cmdutils.RuntimeOptionsConfig) *cobra.Command {
+	resolvedRuntimeOptions := cmdutils.ResolveRuntimeOptions(runtimeOptions...)
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sources",
 		"Interface for managing Pulsar IO Sources (ingress data into Pulsar)",
@@ -31,8 +32,8 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"sources",
 	)
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createSourcesCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateSourcesCmd)
+	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, createSourcesCmd)
+	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, updateSourcesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSourcesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSourcesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listSourcesCmd)
