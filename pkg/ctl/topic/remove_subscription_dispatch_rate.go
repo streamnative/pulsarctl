@@ -19,21 +19,19 @@ package topic
 
 import (
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
-	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
-func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
+func RemoveSubscriptionDispatchRateCmd(vc *cmdutils.VerbCmd) {
 	desc := cmdutils.LongDescription{}
-	desc.CommandUsedFor = "Set message publish rate for a topic"
+	desc.CommandUsedFor = "Remove subscription message dispatch rate for a topic"
 	desc.CommandPermission = "This command requires tenant admin permissions."
 
 	var examples []cmdutils.Example
 	msg := cmdutils.Example{
-		Desc: "Set message publish rate for a topic",
-		Command: "pulsarctl topics set-publish-rate topic " +
-			"--msg-publish-rate 4 --byte-publish-rate 5 --publish-rate-period 6 --relative-to-publish-rate",
+		Desc:    "Remove subscription message dispatch rate for a topic",
+		Command: "pulsarctl topics remove-subscription-dispatch-rate topic",
 	}
 	examples = append(examples, msg)
 	desc.CommandExamples = examples
@@ -41,7 +39,7 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 	var out []cmdutils.Output
 	successOut := cmdutils.Output{
 		Desc: "normal output",
-		Out:  "Set message publish rate successfully for [topic]",
+		Out:  "Remove subscription message dispatch rate successfully for [topic]",
 	}
 	out = append(out, successOut, ArgError)
 	out = append(out, TopicNameErrors...)
@@ -50,35 +48,19 @@ func SetPublishRateCmd(vc *cmdutils.VerbCmd) {
 	desc.CommandOutput = out
 
 	vc.SetDescription(
-		"set-publish-rate",
-		"Set message publish rate for a topic",
+		"remove-subscription-dispatch-rate",
+		"Remove subscription message dispatch rate for a topic",
 		desc.ToString(),
 		desc.ExampleToString(),
-		"set-publish-rate",
+		"remove-subscription-dispatch-rate",
 	)
-	publishRateData := &utils.PublishRateData{}
-	vc.SetRunFuncWithNameArg(func() error {
-		return doSetPublishRate(vc, publishRateData)
-	}, "the topic name is not specified or the topic name is specified more than one")
 
-	vc.FlagSetGroup.InFlagSet("PublishRate", func(set *pflag.FlagSet) {
-		set.Int64VarP(
-			&publishRateData.PublishThrottlingRateInMsg,
-			"msg-publish-rate",
-			"",
-			-1,
-			"message-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
-		set.Int64VarP(
-			&publishRateData.PublishThrottlingRateInByte,
-			"byte-publish-rate",
-			"",
-			-1,
-			"byte-publish-rate (defaults to -1 and overwrites the existing value when omitted)")
-	})
-	vc.EnableOutputFlagSet()
+	vc.SetRunFuncWithNameArg(func() error {
+		return doRemoveSubscriptionDispatchRate(vc)
+	}, "the topic name is not specified or the topic name is specified more than one")
 }
 
-func doSetPublishRate(vc *cmdutils.VerbCmd, publishRateData *utils.PublishRateData) error {
+func doRemoveSubscriptionDispatchRate(vc *cmdutils.VerbCmd) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -88,10 +70,11 @@ func doSetPublishRate(vc *cmdutils.VerbCmd, publishRateData *utils.PublishRateDa
 	if err != nil {
 		return err
 	}
+
 	admin := cmdutils.NewPulsarClient()
-	err = admin.Topics().SetPublishRate(*topic, *publishRateData)
+	err = admin.Topics().RemoveSubscriptionDispatchRate(*topic)
 	if err == nil {
-		vc.Command.Printf("Set message publish rate successfully for [%s]\n", topic.String())
+		vc.Command.Printf("Remove subscription message dispatch rate successfully for [%s]\n", topic.String())
 	}
 	return err
 }

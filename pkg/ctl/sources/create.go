@@ -278,6 +278,12 @@ func doCreateSources(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 		return err
 	}
 
+	err = applySourceRuntimeOptions(sourceData, vc.RuntimeOptions, cmdutils.RuntimeOperationCreate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	err = validateSourceConfigs(sourceData.SourceConf)
 	if err != nil {
 		_ = vc.Command.Help()

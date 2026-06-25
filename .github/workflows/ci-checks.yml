@@ -12,7 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Login SN docker hub
+      if: github.actor == 'streamnativebot'
       run: docker login -u="${{ secrets.DOCKER_USER }}" -p="${{ secrets.DOCKER_PASSWORD}}"
     - uses: actions/checkout@v2
     - name: Run tests
       run: scripts/run-integration-tests.sh
+      env:
+        PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}

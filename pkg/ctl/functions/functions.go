@@ -32,7 +32,8 @@ var checkPutStateArgs = func(args []string) error {
 	return nil
 }
 
-func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
+func Command(flagGrouping *cmdutils.FlagGrouping, runtimeOptions ...cmdutils.RuntimeOptionsConfig) *cobra.Command {
+	resolvedRuntimeOptions := cmdutils.ResolveRuntimeOptions(runtimeOptions...)
 	resourceCmd := cmdutils.NewResourceCmd(
 		"functions",
 		"Interface for managing Pulsar Functions "+
@@ -41,14 +42,14 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 		"pf",
 	)
 
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, createFunctionsCmd)
+	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, createFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, stopFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, startFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getFunctionsCmd)
-	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, updateFunctionsCmd)
+	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, updateFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statsFunctionsCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, querystateFunctionsCmd)

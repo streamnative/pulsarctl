@@ -257,6 +257,12 @@ func doUpdateSource(vc *cmdutils.VerbCmd, sourceData *util.SourceData) error {
 		return err
 	}
 
+	err = applySourceRuntimeOptions(sourceData, vc.RuntimeOptions, cmdutils.RuntimeOperationUpdate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	checkArgsForUpdate(sourceData.SourceConf)
 
 	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal

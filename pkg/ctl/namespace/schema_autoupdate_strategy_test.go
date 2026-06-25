@@ -76,7 +76,7 @@ func TestSetSchemaAutoUpdateStrategyOnNonExistingNs(t *testing.T) {
 	args := []string{"set-schema-autoupdate-strategy", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetSchemaAutoUpdateStrategyCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestGetSchemaAutoUpdateStrategyOnNonExistingNs(t *testing.T) {
@@ -84,5 +84,5 @@ func TestGetSchemaAutoUpdateStrategyOnNonExistingNs(t *testing.T) {
 	args := []string{"get-schema-autoupdate-strategy", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetSchemaAutoUpdateStrategyCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

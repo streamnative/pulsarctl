@@ -51,7 +51,7 @@ func TestSetSchemaValidationEnforcedOnNonExistingNs(t *testing.T) {
 	args := []string{"set-schema-validation-enforced", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetSchemaValidationEnforcedCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestGetSchemaValidationEnforcedOnNonExistingNs(t *testing.T) {
@@ -59,5 +59,5 @@ func TestGetSchemaValidationEnforcedOnNonExistingNs(t *testing.T) {
 	args := []string{"get-schema-validation-enforced", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetSchemaValidationEnforcedCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

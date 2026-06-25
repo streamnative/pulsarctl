@@ -1,5 +1,6 @@
+ARG PULSAR_IMAGE=apachepulsar/pulsar-all
 ARG PULSAR_VERSION
-FROM snstage/pulsar-all:$PULSAR_VERSION
+FROM ${PULSAR_IMAGE}:${PULSAR_VERSION}
 
 # use root user
 USER root
@@ -8,7 +9,7 @@ USER root
 RUN apk update && apk add curl git build-base
 
 # install golang
-COPY --from=golang:1.25.5-alpine /usr/local/go/ /usr/local/go/
+COPY --from=golang:1.25.11-alpine /usr/local/go/ /usr/local/go/
 ENV PATH /usr/local/go/bin:$PATH
 
 

@@ -72,7 +72,7 @@ func TestOffloadDeletionLagOnNonExistingNs(t *testing.T) {
 	args := []string{"set-offload-deletion-lag", "--lag", "10m", ns}
 	_, execErr, _, _ := TestNamespaceCommands(SetOffloadDeletionLagCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestGetOfloadThresholdOnNonExistingNs(t *testing.T) {
@@ -80,7 +80,7 @@ func TestGetOfloadThresholdOnNonExistingNs(t *testing.T) {
 	args := []string{"get-offload-deletion-lag", ns}
 	_, execErr, _, _ := TestNamespaceCommands(GetOffloadDeletionLagCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }
 
 func TestClearOffloadDeletionLagOnNonExistingNs(t *testing.T) {
@@ -88,5 +88,5 @@ func TestClearOffloadDeletionLagOnNonExistingNs(t *testing.T) {
 	args := []string{"clear-offload-deletion-lag", ns}
 	_, execErr, _, _ := TestNamespaceCommands(ClearOffloadDeletionLagCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

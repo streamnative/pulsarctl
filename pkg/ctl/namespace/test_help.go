@@ -19,12 +19,30 @@ package namespace
 
 import (
 	"bytes"
+	"testing"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 
 	"github.com/kris-nova/logger"
 	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
+
+func assertNamespaceNotExistError(t *testing.T, err error) {
+	t.Helper()
+
+	if !assert.Error(t, err) {
+		return
+	}
+
+	assert.Contains(t,
+		[]string{
+			"code: 404 reason: Namespace does not exist",
+			"code: 404 reason: Namespace not found",
+		},
+		err.Error(),
+	)
+}
 
 func TestNamespaceCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out *bytes.Buffer,
 	execErr, nameErr, err error) {

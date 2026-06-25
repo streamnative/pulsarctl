@@ -50,7 +50,15 @@ import (
 	lol "github.com/kris-nova/lolgopher"
 )
 
-func NewPulsarctlCmd() *cobra.Command {
+func NewPulsarctlCmd(opts ...Option) *cobra.Command {
+	resolvedOptions := defaultOptions()
+	for _, opt := range opts {
+		if opt != nil {
+			opt(&resolvedOptions)
+		}
+	}
+	runtimeOptions := resolvedOptions.runtimeOptionsConfig()
+
 	var colorValue string
 	flagGrouping := cmdutils.NewGrouping()
 
@@ -115,9 +123,9 @@ func NewPulsarctlCmd() *cobra.Command {
 	rootCmd.AddCommand(cluster.Command(flagGrouping))
 	rootCmd.AddCommand(tenant.Command(flagGrouping))
 	rootCmd.AddCommand(completion.Command(rootCmd))
-	rootCmd.AddCommand(function.Command(flagGrouping))
-	rootCmd.AddCommand(source.Command(flagGrouping))
-	rootCmd.AddCommand(sink.Command(flagGrouping))
+	rootCmd.AddCommand(function.Command(flagGrouping, runtimeOptions))
+	rootCmd.AddCommand(source.Command(flagGrouping, runtimeOptions))
+	rootCmd.AddCommand(sink.Command(flagGrouping, runtimeOptions))
 	rootCmd.AddCommand(topic.Command(flagGrouping))
 	rootCmd.AddCommand(namespace.Command(flagGrouping))
 	rootCmd.AddCommand(schema.Command(flagGrouping))

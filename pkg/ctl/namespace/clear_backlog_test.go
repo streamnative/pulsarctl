@@ -72,10 +72,10 @@ func TestClearBacklogOnNonExistingNs(t *testing.T) {
 	args := []string{"clear-backlog", "-f", "--bundle", "0xc0000000_0xffffffff", ns}
 	_, execErr, _, _ := TestNamespaceCommands(ClearBacklogCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 
 	args = []string{"clear-backlog", "-f", "--sub", "sub", "--bundle", "0xc0000000_0xffffffff", ns}
 	_, execErr, _, _ = TestNamespaceCommands(ClearBacklogCmd, args)
 	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

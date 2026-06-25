@@ -66,6 +66,5 @@ func TestUnsubscribeOnNonExistingNs(t *testing.T) {
 
 	args := []string{"unsubscribe", "--bundle", "0xc0000000_0xffffffff", ns, "non-existing-sub"}
 	_, execErr, _, _ := TestNamespaceCommands(UnsubscribeCmd, args)
-	assert.NotNil(t, execErr)
-	assert.Equal(t, "code: 404 reason: Namespace does not exist", execErr.Error())
+	assertNamespaceNotExistError(t, execErr)
 }

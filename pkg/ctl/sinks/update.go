@@ -337,6 +337,12 @@ func doUpdateSink(vc *cmdutils.VerbCmd, sinkData *util.SinkData) error {
 		return err
 	}
 
+	err = applySinkRuntimeOptions(sinkData, vc.RuntimeOptions, cmdutils.RuntimeOperationUpdate)
+	if err != nil {
+		_ = vc.Command.Help()
+		return err
+	}
+
 	checkArgsForUpdate(sinkData.SinkConf)
 
 	// convert the map[interface{}]interface{} to a map[string]interface{} for unmarshal
