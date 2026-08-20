@@ -40,6 +40,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSchema)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSchema)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, uploadSchema)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, testCompatibility)
 
 	return resourceCmd
 }
