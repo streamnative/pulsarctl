@@ -80,6 +80,7 @@ func doListBuiltInSources(vc *cmdutils.VerbCmd) error {
 		WithObject(connectorDefinition).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Name", "Description", "ClassName"})
 			table.SetColWidth(500)
 

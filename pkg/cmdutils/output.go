@@ -23,6 +23,7 @@ import (
 	"io"
 
 	"github.com/ghodss/yaml"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/pflag"
 )
 
@@ -32,6 +33,8 @@ import (
 type OutputConfig struct {
 	// the output format (Table, Plain, Json, Yaml)
 	Format string
+
+	noBoarder bool
 }
 
 // AddTo registers the output flagset into a group
@@ -43,7 +46,16 @@ func (c *OutputConfig) AddTo(group *NamedFlagSetGroup) {
 			"o",
 			string(TextOutputFormat),
 			"The output format (text,json,yaml)")
+		flags.BoolVar(&c.noBoarder, "no-boarder", false, "Whether have board for the output table")
 	})
+}
+
+func (c *OutputConfig) TableConfig(table *tablewriter.Table) {
+	if c.noBoarder {
+		table.SetBorder(false)
+		table.SetHeaderLine(false)
+		table.SetColumnSeparator("\t")
+	}
 }
 
 // WriteOutput writes output based on the configured output format and on available content
