@@ -62,7 +62,7 @@ func RevokeSubPermissionsCmd(vc *cmdutils.VerbCmd) {
 		"revoke-subscription-permission",
 		"Revoke a client role permissions of accessing a subscription of a namespace",
 		desc.ToString(),
-		desc.ToString())
+		desc.ExampleToString())
 
 	var role string
 
