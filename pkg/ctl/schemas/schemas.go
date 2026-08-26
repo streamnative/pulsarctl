@@ -33,9 +33,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping) *cobra.Command {
 	resourceCmd := cmdutils.NewResourceCmd(
 		"schemas",
 		"Operations related to Schemas associated with Pulsar topics",
-		"",
-		"schemas",
-	)
+		"")
 
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, getSchema)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, deleteSchema)

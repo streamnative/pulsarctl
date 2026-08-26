@@ -56,8 +56,7 @@ func LookUpTopicCmd(vc *cmdutils.VerbCmd) {
 		"lookup",
 		"Look up a topic",
 		desc.ToString(),
-		desc.ExampleToString(),
-		"")
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doLookupTopic(vc)

@@ -38,7 +38,10 @@ func testTokenCommands(newVerb func(*cmdutils.VerbCmd), args []string) (out *byt
 	rootCmd.SetArgs(append([]string{"token"}, args...))
 	flagGrouping := cmdutils.NewGrouping()
 	rootCmd.AddCommand(Command(flagGrouping))
-	resourceCmd := cmdutils.NewResourceCmd("token", "", "")
+	resourceCmd := cmdutils.NewResourceCmd(
+		"token",
+		"Operations of token",
+		"You can use this tool to generate secret key, private/public key, and token.")
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	err = rootCmd.Execute()
 

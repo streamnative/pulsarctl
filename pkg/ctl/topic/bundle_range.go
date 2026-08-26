@@ -51,8 +51,7 @@ func GetBundleRangeCmd(vc *cmdutils.VerbCmd) {
 		"bundle-range",
 		"Get the namespace bundle range of a topic",
 		desc.ToString(),
-		desc.ExampleToString(),
-		"")
+		desc.ExampleToString())
 
 	vc.SetRunFuncWithNameArg(func() error {
 		return doGetBundleRange(vc)

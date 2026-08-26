@@ -56,7 +56,6 @@ func ListClustersCmd(vc *cmdutils.VerbCmd) {
 		"List the available pulsar clusters",
 		"This command is used for listing the list of available pulsar clusters.",
 		desc.ExampleToString(),
-		"",
 	)
 
 	// set the run function
