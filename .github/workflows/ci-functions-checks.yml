@@ -24,7 +24,7 @@ jobs:
     - name: Function tests
       run: scripts/run-integration-tests.sh function
       env:
-        PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
+        PULSAR_IMAGE: ${{ vars.PULSAR_IMAGE || (github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar') }}
     - name: Setup tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
@@ -44,7 +44,10 @@ jobs:
       - name: Sink tests
         run: scripts/run-integration-tests.sh sink
         env:
-          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
+          PULSAR_IMAGE: ${{ vars.PULSAR_IMAGE || (github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar') }}
+          PULSAR_IO_IMAGE: ${{ vars.PULSAR_IO_IMAGE || (github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all') }}
+          PULSAR_IO_IMAGE_VERSION: ${{ vars.PULSAR_IO_IMAGE_VERSION }}
+          PULSAR_IO_CONNECTORS_DIR: ${{ vars.PULSAR_IO_CONNECTORS_DIR }}
   source-tests:
     runs-on: ubuntu-latest
     steps:
@@ -61,4 +64,7 @@ jobs:
       - name: Source tests
         run: scripts/run-integration-tests.sh source
         env:
-          PULSAR_IMAGE: ${{ github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all' }}
+          PULSAR_IMAGE: ${{ vars.PULSAR_IMAGE || (github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar') }}
+          PULSAR_IO_IMAGE: ${{ vars.PULSAR_IO_IMAGE || (github.actor == 'streamnativebot' && 'snstage/pulsar-all' || 'apachepulsar/pulsar-all') }}
+          PULSAR_IO_IMAGE_VERSION: ${{ vars.PULSAR_IO_IMAGE_VERSION }}
+          PULSAR_IO_CONNECTORS_DIR: ${{ vars.PULSAR_IO_CONNECTORS_DIR }}

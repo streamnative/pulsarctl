@@ -1,6 +1,11 @@
-ARG PULSAR_IMAGE=apachepulsar/pulsar-all
-ARG PULSAR_VERSION
-FROM ${PULSAR_IMAGE}:${PULSAR_VERSION}
+ARG PULSAR_IMAGE=apachepulsar/pulsar
+ARG PULSAR_VERSION=latest
+ARG PULSAR_IO_IMAGE=apachepulsar/pulsar-all
+ARG PULSAR_IO_IMAGE_VERSION=${PULSAR_VERSION}
+
+FROM ${PULSAR_IO_IMAGE}:${PULSAR_IO_IMAGE_VERSION} AS connectors
+
+FROM ${PULSAR_IMAGE}:${PULSAR_VERSION} AS tests
 
 # use root user
 USER root
@@ -23,3 +28,7 @@ ENV PULSAR_HOME /pulsar
 ENV PULSARCTL_HOME /pulsarctl
 
 ENTRYPOINT /pulsarctl/scripts/entrypoint.sh
+
+FROM tests AS tests-with-connectors
+ARG PULSAR_IO_CONNECTORS_DIR=/pulsar/connectors
+COPY --from=connectors ${PULSAR_IO_CONNECTORS_DIR}/ /pulsar/connectors/
