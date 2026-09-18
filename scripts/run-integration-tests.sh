@@ -3,12 +3,27 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="4.1.3"
+readonly PULSAR_DEFAULT_VERSION="latest"
 readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
-readonly PULSAR_IMAGE=${PULSAR_IMAGE:-"apachepulsar/pulsar-all"}
+# Sink/source tests copy connector files from this image into the broker image.
+readonly PULSAR_IO_IMAGE=${PULSAR_IO_IMAGE:-"apachepulsar/pulsar-all"}
+readonly PULSAR_IO_IMAGE_VERSION=${PULSAR_IO_IMAGE_VERSION:-${PULSAR_VERSION}}
+readonly PULSAR_IO_CONNECTORS_DIR=${PULSAR_IO_CONNECTORS_DIR:-"/pulsar/connectors"}
+readonly PULSAR_IMAGE=${PULSAR_IMAGE:-"apachepulsar/pulsar"}
 
-docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
+build_target=tests
+case ${1} in
+    sink|source)
+        build_target=tests-with-connectors
+        ;;
+esac
+
+docker build --target ${build_target} \
+             --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
              --build-arg PULSAR_IMAGE=${PULSAR_IMAGE} \
+             --build-arg PULSAR_IO_IMAGE=${PULSAR_IO_IMAGE} \
+             --build-arg PULSAR_IO_IMAGE_VERSION=${PULSAR_IO_IMAGE_VERSION} \
+             --build-arg PULSAR_IO_CONNECTORS_DIR=${PULSAR_IO_CONNECTORS_DIR} \
              -t ${IMAGE_NAME} \
              -f ${PROJECT_ROOT}/scripts/test-docker/Dockerfile ${PROJECT_ROOT}
 case ${1} in
@@ -37,4 +52,3 @@ case ${1} in
         docker run --env-file ${env_file} ${IMAGE_NAME}
         ;;
 esac
-

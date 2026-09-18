@@ -75,3 +75,41 @@ add the license at the beginning of each file. The location of the header file: 
 ## Update dependencies
 
 The `pulsarctl` uses [Go 1.11 module](https://github.com/golang/go/wiki/Modules) to manage dependencies. To add or update a dependency, use the `go mod edit` command to change the dependency.
+
+## Integration test images
+
+Run the general integration suite with `scripts/run-integration-tests.sh`. All
+suites use `apachepulsar/pulsar:latest` as the broker image by default. The `sink`
+and `source` suites copy Pulsar IO connector files from
+`apachepulsar/pulsar-all:latest` into that image before running the tests.
+
+Configure the images with these environment variables:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PULSAR_IMAGE` | `apachepulsar/pulsar` | Broker image repository, without a tag |
+| `PULSAR_VERSION` | `latest` | Broker image tag |
+| `PULSAR_IO_IMAGE` | `apachepulsar/pulsar-all` | Connector file image repository, without a tag |
+| `PULSAR_IO_IMAGE_VERSION` | `PULSAR_VERSION` | Independent connector image tag |
+| `PULSAR_IO_CONNECTORS_DIR` | `/pulsar/connectors` | Connector directory inside the connector image |
+
+Unset or empty variables use the defaults above. Only sink/source tests build
+with the connector image. It is used solely as a source of files and can be a
+scratch image; it does not need a shell, Java, or a Pulsar installation. Its
+connector directory must include the data-generator NAR used by the tests.
+
+For Pulsar 5, select the separately published connector image and its independent
+release tag. For example, using a placeholder scratch image with files at its root:
+
+```bash
+PULSAR_VERSION=5.0.0 \
+PULSAR_IO_IMAGE=registry.example.com/pulsar-connectors \
+PULSAR_IO_IMAGE_VERSION=1.0.0 \
+PULSAR_IO_CONNECTORS_DIR=/ \
+scripts/run-integration-tests.sh sink
+```
+
+GitHub Actions reads the repository variables `PULSAR_IMAGE`, `PULSAR_IO_IMAGE`,
+`PULSAR_IO_IMAGE_VERSION`, and `PULSAR_IO_CONNECTORS_DIR`, so CI can select the
+connector image, tag, and file location without editing workflows. StreamNative
+bot runs retain their staging image defaults unless overridden.
