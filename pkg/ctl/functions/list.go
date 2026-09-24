@@ -102,6 +102,7 @@ func doListFunctions(vc *cmdutils.VerbCmd, funcData *utils.FunctionData) error {
 		WithObject(functions).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Pulsar Function Name"})
 
 			for _, f := range functions {

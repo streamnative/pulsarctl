@@ -90,6 +90,7 @@ func doListNamespaces(vc *cmdutils.VerbCmd) error {
 		WithObject(listNamespaces).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Namespace Name"})
 			for _, ns := range listNamespaces {
 				table.Append([]string{ns})

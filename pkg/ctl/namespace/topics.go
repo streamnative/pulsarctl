@@ -93,6 +93,7 @@ func doListTopics(vc *cmdutils.VerbCmd) error {
 		WithObject(listTopics).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Topics Name"})
 			for _, topic := range listTopics {
 				table.Append([]string{topic})

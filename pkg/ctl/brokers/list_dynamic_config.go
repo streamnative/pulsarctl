@@ -74,6 +74,7 @@ func doGetDynamicConfigListName(vc *cmdutils.VerbCmd) error {
 		WithObject(nameListData).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Dynamic Config Names"})
 
 			for _, c := range nameListData {

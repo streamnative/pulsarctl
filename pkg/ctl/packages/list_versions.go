@@ -87,6 +87,7 @@ func doListPackageVersions(vc *cmdutils.VerbCmd) error {
 		WithObject(packages).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Pulsar Package Version"})
 
 			for _, f := range packages {
