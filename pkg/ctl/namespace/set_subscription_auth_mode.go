@@ -82,7 +82,7 @@ func doSetSubscriptionAuthMode(vc *cmdutils.VerbCmd, mode string) error {
 	admin := cmdutils.NewPulsarClient()
 	err = admin.Namespaces().SetSubscriptionAuthMode(*ns, m)
 	if err == nil {
-		vc.Command.Printf("Successfully set the default subscription auth mode of namespace %s to %s",
+		vc.Command.Printf("Successfully set the default subscription auth mode of namespace %s to %s\n",
 			ns.String(), m.String())
 	}
 

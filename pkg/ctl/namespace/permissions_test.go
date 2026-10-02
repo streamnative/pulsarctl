@@ -54,3 +54,32 @@ func TestGetPermissionsArgsError(t *testing.T) {
 	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
 		nameErr.Error())
 }
+
+func TestSubPermissionsCmd(t *testing.T) {
+	ns := "public/test-sub-permissions-ns"
+
+	args := []string{"create", ns}
+	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"subscription-permission", ns}
+	out, execErr, _, _ := TestNamespaceCommands(GetSubPermissionsCmd, args)
+	assert.Nil(t, execErr)
+
+	var permissions map[string][]string
+	err := json.Unmarshal(out.Bytes(), &permissions)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	empty := make(map[string][]string)
+	assert.Equal(t, empty, permissions)
+}
+
+func TestGetSubPermissionsArgsError(t *testing.T) {
+	args := []string{"subscription-permission"}
+	_, _, nameErr, _ := TestNamespaceCommands(GetSubPermissionsCmd, args)
+	assert.NotNil(t, nameErr.Error())
+	assert.Equal(t, "the namespace name is not specified or the namespace name is specified more than one",
+		nameErr.Error())
+}
