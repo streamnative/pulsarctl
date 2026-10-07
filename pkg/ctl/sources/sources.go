@@ -42,6 +42,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping, runtimeOptions ...cmdutils.Run
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, restartSourcesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, statusSourcesCmd)
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, listBuiltInSourcesCmd)
+	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, reloadSourcesCmd)
 
 	return resourceCmd
 }

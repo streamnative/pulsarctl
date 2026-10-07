@@ -22,6 +22,7 @@ import (
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 
 	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
@@ -64,12 +65,17 @@ func CreateTopicCmd(vc *cmdutils.VerbCmd) {
 		desc.ExampleToString(),
 		"c")
 
+	metadata := map[string]string{}
+	vc.FlagSetGroup.InFlagSet("CreateTopic", func(set *pflag.FlagSet) {
+		set.StringToStringVarP(&metadata, "metadata", "m", nil, "topic metadata in key=value,key2=value2 format")
+	})
+
 	vc.SetRunFuncWithMultiNameArgs(func() error {
-		return doCreateTopic(vc)
+		return doCreateTopic(vc, metadata)
 	}, CheckTopicNameTwoArgs)
 }
 
-func doCreateTopic(vc *cmdutils.VerbCmd) error {
+func doCreateTopic(vc *cmdutils.VerbCmd, metadata map[string]string) error {
 	// for testing
 	if vc.NameError != nil {
 		return vc.NameError
@@ -86,7 +92,11 @@ func doCreateTopic(vc *cmdutils.VerbCmd) error {
 	}
 
 	admin := cmdutils.NewPulsarClient()
-	err = admin.Topics().Create(*topic, partitions)
+	if len(metadata) == 0 {
+		err = admin.Topics().Create(*topic, partitions)
+	} else {
+		err = admin.Topics().CreateWithProperties(*topic, partitions, metadata)
+	}
 	if err == nil {
 		vc.Command.Printf("Create topic %s with %d partitions successfully\n", topic.String(), partitions)
 	}
