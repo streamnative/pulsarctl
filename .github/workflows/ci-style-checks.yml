@@ -19,9 +19,6 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v9
-        with:
-          version: v2.7.2
-          args: --timeout=10m -v
+        run: go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.7.2 run --timeout=10m -v
       - name: Build
         run: go build .
