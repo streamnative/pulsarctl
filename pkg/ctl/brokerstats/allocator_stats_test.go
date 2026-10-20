@@ -23,6 +23,9 @@ import (
 
 	"github.com/apache/pulsar-client-go/pulsaradmin/pkg/utils"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/streamnative/pulsarctl/pkg/cmdutils"
 )
 
 func TestDumpAllocatorStats(t *testing.T) {
@@ -31,14 +34,19 @@ func TestDumpAllocatorStats(t *testing.T) {
 	failOut := "the namespace name is not specified or the namespace name is specified more than one"
 	assert.Equal(t, failOut, nameErr.Error())
 
+	expectedStats, err := cmdutils.NewPulsarClient().BrokerStats().GetAllocatorStats("default")
+	require.NoError(t, err)
+
 	successArgs := []string{"allocator-stats", "default"}
-	statsOut, _, nameErr, _ := TestBrokerStatsCommands(dumpAllocatorStats, successArgs)
-	assert.Nil(t, nameErr)
+	statsOut, execErr, nameErr, err := TestBrokerStatsCommands(dumpAllocatorStats, successArgs)
+	require.NoError(t, err)
+	require.NoError(t, nameErr)
+	require.NoError(t, execErr)
 
 	var allocatorStats utils.AllocatorStats
-	err := json.Unmarshal(statsOut.Bytes(), &allocatorStats)
-	assert.Nil(t, err)
-	assert.Equal(t, 0, allocatorStats.TinyCacheSize)
-	assert.Equal(t, 256, allocatorStats.SmallCacheSize)
-	assert.Equal(t, 64, allocatorStats.NormalCacheSize)
+	err = json.Unmarshal(statsOut.Bytes(), &allocatorStats)
+	require.NoError(t, err)
+	assert.Equal(t, expectedStats.TinyCacheSize, allocatorStats.TinyCacheSize)
+	assert.Equal(t, expectedStats.SmallCacheSize, allocatorStats.SmallCacheSize)
+	assert.Equal(t, expectedStats.NormalCacheSize, allocatorStats.NormalCacheSize)
 }
