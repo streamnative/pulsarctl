@@ -4,8 +4,13 @@ set -e
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
 readonly PULSAR_DEFAULT_VERSION="5.0.0.101"
-readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
 readonly PULSAR_IMAGE=${PULSAR_IMAGE:-"apachepulsar/pulsar-all"}
+# Apache and StreamNative publish different version tags.
+if [[ "${PULSAR_IMAGE}" == "apachepulsar/pulsar-all" ]]; then
+    readonly PULSAR_VERSION=${PULSAR_VERSION:-"4.2.5"}
+else
+    readonly PULSAR_VERSION=${PULSAR_VERSION:-${PULSAR_DEFAULT_VERSION}}
+fi
 
 docker build --build-arg PULSAR_VERSION=${PULSAR_VERSION} \
              --build-arg PULSAR_IMAGE=${PULSAR_IMAGE} \
