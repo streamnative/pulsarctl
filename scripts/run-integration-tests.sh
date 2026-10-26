@@ -3,7 +3,7 @@ set -e
 
 readonly PROJECT_ROOT=`cd $(dirname $0)/..; pwd`
 readonly IMAGE_NAME=pulsarctl-test
-readonly PULSAR_DEFAULT_VERSION="5.0.0.101"
+readonly PULSAR_DEFAULT_VERSION="5.0.0.105"
 readonly PULSAR_IMAGE=${PULSAR_IMAGE:-"apachepulsar/pulsar-all"}
 # Apache and StreamNative publish different version tags.
 if [[ "${PULSAR_IMAGE}" == "apachepulsar/pulsar-all" ]]; then
