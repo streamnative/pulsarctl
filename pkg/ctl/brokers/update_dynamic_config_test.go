@@ -26,7 +26,7 @@ import (
 )
 
 func TestUpdateDynamicConfig(t *testing.T) {
-	args := []string{"update-dynamic-config", "--config", "dispatchThrottlingRatePerTopicInMsg", "--value", "true"}
+	args := []string{"update-dynamic-config", "--config", "dispatchThrottlingRatePerTopicInMsg", "--value", "100"}
 	listOut, execErr, _, _ := TestBrokersCommands(updateDynamicConfig, args)
 	assert.Nil(t, execErr)
 	expectedOut := "Update dynamic config: dispatchThrottlingRatePerTopicInMsg successful\n"
@@ -43,5 +43,5 @@ func TestUpdateDynamicConfig(t *testing.T) {
 	var tmpMap map[string]string
 	err := json.Unmarshal(getOut.Bytes(), &tmpMap)
 	assert.Nil(t, err)
-	assert.Equal(t, "true", tmpMap["dispatchThrottlingRatePerTopicInMsg"])
+	assert.Equal(t, "100", tmpMap["dispatchThrottlingRatePerTopicInMsg"])
 }
