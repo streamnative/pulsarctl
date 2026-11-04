@@ -27,9 +27,13 @@ jobs:
       - name: Build docker image
         run: docker build -f docker/amd64-linux.Dockerfile -t pulsarctl .
 
+      - name: Install Trivy from GitHub Releases
+        run: bash scripts/install-trivy.sh v0.69.3
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.35.0
         with:
+          skip-setup-trivy: 'true'
           image-ref: 'pulsarctl:latest'
           format: 'table'
           exit-code: '1'
