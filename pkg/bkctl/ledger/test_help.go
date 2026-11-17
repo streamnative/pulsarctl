@@ -56,7 +56,6 @@ func testLedgerCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (out
 	resourceCmd := cmdutils.NewResourceCmd(
 		"ledger",
 		"Operations about bookie(s)",
-		"",
 		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)

@@ -28,9 +28,7 @@ func Command(flagGrouping *cmdutils.FlagGrouping, runtimeOptions ...cmdutils.Run
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sources",
 		"Interface for managing Pulsar IO Sources (ingress data into Pulsar)",
-		"",
-		"sources",
-	)
+		"")
 
 	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, createSourcesCmd)
 	cmdutils.AddVerbCmdWithRuntimeOptions(flagGrouping, resourceCmd, resolvedRuntimeOptions, updateSourcesCmd)

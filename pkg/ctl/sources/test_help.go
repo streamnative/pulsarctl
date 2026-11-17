@@ -52,8 +52,7 @@ func TestSourcesCommands(newVerb func(cmd *cmdutils.VerbCmd), args []string) (ou
 	resourceCmd := cmdutils.NewResourceCmd(
 		"sources",
 		"Operations about Pulsar Sources",
-		"",
-		"sources")
+		"")
 	flagGrouping := cmdutils.NewGrouping()
 	cmdutils.AddVerbCmd(flagGrouping, resourceCmd, newVerb)
 	rootCmd.AddCommand(resourceCmd)
