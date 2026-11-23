@@ -50,18 +50,20 @@ func setReadonlyStateCmd(vc *cmdutils.VerbCmd) {
 		desc.ToString(),
 		desc.ExampleToString())
 
+	force := vc.Command.Flags().BoolP("force", "f", false, "force to set readonly state")
+
 	vc.SetRunFuncWithNameArg(func() error {
-		return doSetReadonlyState(vc)
+		return doSetReadonlyState(vc, *force)
 	}, "the readonly state is boolean")
 }
 
-func doSetReadonlyState(vc *cmdutils.VerbCmd) error {
+func doSetReadonlyState(vc *cmdutils.VerbCmd, force bool) error {
 	admin := cmdutils.NewBookieClient()
 	readonly, err := strconv.ParseBool(vc.NameArg)
 	if err != nil {
 		return err
 	}
-	err = admin.Bookie().SetReadonlyState(readonly)
+	err = admin.Bookie().SetReadonlyState(readonly, force)
 	if err == nil {
 		cmdutils.PrintJSON(vc.Command.OutOrStdout(), "Successfully set the readonly state of a bookie")
 	}
