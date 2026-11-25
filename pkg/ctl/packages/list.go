@@ -100,6 +100,7 @@ func doListPackages(vc *cmdutils.VerbCmd, packageType string) error {
 		WithObject(packages).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Pulsar Package Name"})
 
 			for _, f := range packages {

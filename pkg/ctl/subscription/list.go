@@ -89,6 +89,7 @@ func doList(vc *cmdutils.VerbCmd) error {
 		WithObject(r).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"Subscriptions"})
 			for _, v := range r {
 				table.Append([]string{v})

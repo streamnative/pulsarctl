@@ -92,6 +92,7 @@ func doListPlugins(vc *cmdutils.VerbCmd) error {
 		WithObject(plugins).
 		WithTextFunc(func(w io.Writer) error {
 			table := tablewriter.NewWriter(w)
+			vc.OutputConfig.TableConfig(table)
 			table.SetHeader([]string{"plugins"})
 			for _, v := range plugins {
 				table.Append([]string{v})
