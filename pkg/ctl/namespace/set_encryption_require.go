@@ -38,7 +38,7 @@ func SetEncryptionRequiredCmd(vc *cmdutils.VerbCmd) {
 
 	disable := cmdutils.Example{
 		Desc:    "Disable messages encryption for the namespace (namespace-name)",
-		Command: "pulsarct. namespaces messages-encryption --disable (namespace-name)",
+		Command: "pulsarctl namespaces messages-encryption --disable (namespace-name)",
 	}
 	examples = append(examples, enable, disable)
 	desc.CommandExamples = examples
@@ -85,8 +85,8 @@ func doSetEncryptionRequired(vc *cmdutils.VerbCmd, disable bool) error {
 		} else {
 			out = "Disable"
 		}
-		vc.Command.Printf("%s messages encryption of the namespace %s", out, ns.String())
+		vc.Command.Printf("%s messages encryption of the namespace %s\n", out, ns.String())
 	}
 
-	return nil
+	return err
 }

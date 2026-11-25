@@ -23,6 +23,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestRevokeSubPermissionsCmd(t *testing.T) {
+	ns := "public/test-revoke-sub-permissions-ns"
+
+	args := []string{"create", ns}
+	_, execErr, _, _ := TestNamespaceCommands(createNs, args)
+	assert.Nil(t, execErr)
+
+	args = []string{"revoke-subscription-permission", "--role", "test-role", ns, "test-revoke-sub"}
+	_, execErr, _, _ = TestNamespaceCommands(RevokeSubPermissionsCmd, args)
+	assert.Nil(t, execErr)
+}
+
 func TestRevokeSubPermissionsArgsError(t *testing.T) {
 	ns := "public/revoke-sub-permissions-args-tests"
 

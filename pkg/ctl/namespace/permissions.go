@@ -62,6 +62,45 @@ func GetPermissionsCmd(vc *cmdutils.VerbCmd) {
 	vc.EnableOutputFlagSet()
 }
 
+func GetSubPermissionsCmd(vc *cmdutils.VerbCmd) {
+	var desc cmdutils.LongDescription
+	desc.CommandUsedFor = "This command is used for getting subscription permissions of a namespace."
+	desc.CommandPermission = "This command requires tenant admin permissions."
+
+	var examples []cmdutils.Example
+	getNs := cmdutils.Example{
+		Desc:    "Get subscription permissions of a namespace (tenant)/(namespace)",
+		Command: "pulsarctl namespaces subscription-permission (tenant)/(namespace)",
+	}
+	examples = append(examples, getNs)
+	desc.CommandExamples = examples
+
+	var out []cmdutils.Output
+	successOut := cmdutils.Output{
+		Desc: "normal output",
+		Out: "{\n" +
+			"  \"<subscription>\": [\n" +
+			"    \"<role>\"\n" +
+			"  ]" +
+			"\n}",
+	}
+	out = append(out, successOut, ArgError)
+	out = append(out, NsErrors...)
+	desc.CommandOutput = out
+
+	vc.SetDescription(
+		"subscription-permission",
+		"Get subscription permissions of a namespace",
+		desc.ToString(),
+		desc.ExampleToString())
+
+	vc.SetRunFuncWithNameArg(func() error {
+		return doGetSubPermissions(vc)
+	}, "the namespace name is not specified or the namespace name is specified more than one")
+
+	vc.EnableOutputFlagSet()
+}
+
 func doGetPermissions(vc *cmdutils.VerbCmd) error {
 	// for testing
 	if vc.NameError != nil {
@@ -75,6 +114,27 @@ func doGetPermissions(vc *cmdutils.VerbCmd) error {
 
 	admin := cmdutils.NewPulsarClient()
 	data, err := admin.Namespaces().GetNamespacePermissions(*ns)
+	if err == nil {
+		oc := cmdutils.NewOutputContent().WithObject(data)
+		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
+	}
+
+	return err
+}
+
+func doGetSubPermissions(vc *cmdutils.VerbCmd) error {
+	// for testing
+	if vc.NameError != nil {
+		return vc.NameError
+	}
+
+	ns, err := utils.GetNamespaceName(vc.NameArg)
+	if err != nil {
+		return err
+	}
+
+	admin := cmdutils.NewPulsarClient()
+	data, err := admin.Namespaces().GetSubPermissions(*ns)
 	if err == nil {
 		oc := cmdutils.NewOutputContent().WithObject(data)
 		err = vc.OutputConfig.WriteOutput(vc.Command.OutOrStdout(), oc)
